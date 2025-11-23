@@ -39,9 +39,9 @@ would improve and aid the management of blood donations for the hospitals.
 
 <img src="./docs/use-case-diagram.png" alt="Diagrama de casos de uso" width="600">
 
-## Classes diagram
+## Class diagram
 
-<img src="./docs/classes-diagram.png" alt="Classes diagram" width="600">
+<img src="./docs/class-diagram.png" alt="Classes diagram" width="600">
 
 # Backend
 
@@ -117,7 +117,7 @@ firebase deploy
 Next there will be an explanation for the automatic
 deployment (automatic integration).
 
-You need to generate a secret key at console firebase page in project configuration, it results in a file .json format that need the ```firebase.json``` reference for github 
+You need to generate a secret key at console firebase page in project configuration, it results in a file .json format that need the ```firebase.json``` reference for github
 
 ### GitHub Actions + Firebase Hosting Flow (for better explanation we did a diagram simulation)
 
@@ -170,4 +170,3 @@ You need to generate a secret key at console firebase page in project configurat
 |--------------|-------------------|
 | Xiomara      | Jiménez Velázquez |
 | Juan Antonio | Sánchez Martel    |
-
