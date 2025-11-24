@@ -1,4 +1,4 @@
-import Logo from "../images/LogoShadow.webp"
+import Logo from "../assets/images/LogoShadow.webp"
 
 function Index() {
   return (

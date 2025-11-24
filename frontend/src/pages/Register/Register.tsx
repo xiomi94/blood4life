@@ -1,9 +1,10 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import Button from '../../components/Button/Button'
 
 const Register: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 min-h-screen">
       <div className="text-center mb-12">
         <h1 className="w-2text-4xl md:text-5xl font-bold text-gray-800 mb-4">
           Bienvenido a Blood4Life
@@ -33,15 +34,12 @@ const Register: React.FC = () => {
             <h2 className="text-2xl font-bold text-gray-800 mb-8">
               Soy Donante
             </h2>
-            <Link
-              to="/registerbloodDonor"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 inline-flex items-center justify-center"
-            >
+            <Button to="/registerbloodDonor">
               Registrarme como Donante
               <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6"/>
               </svg>
-            </Link>
+            </Button>
           </div>
         </div>
         <div className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 w-auto">
@@ -64,15 +62,12 @@ const Register: React.FC = () => {
             <h2 className="text-2xl font-bold text-gray-800 mb-8">
               Soy Hospital / Centro
             </h2>
-            <Link
-              to="/registerhospital"
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300 inline-flex items-center justify-center"
-            >
+            <Button to="/registerhospital">
               Registrarme como Hospital
               <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6"/>
               </svg>
-            </Link>
+            </Button>
           </div>
         </div>
       </div>

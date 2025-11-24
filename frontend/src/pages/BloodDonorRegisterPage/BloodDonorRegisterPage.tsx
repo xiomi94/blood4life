@@ -1,6 +1,6 @@
 import ImageUpload from "../../components/ImageUpload/ImageUpload.tsx";
 import React, {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import Button from '../../components/Button/Button'
 
 interface BloodDonor {
   id?: number,
@@ -506,11 +506,7 @@ const BloodDonorRegisterPage: React.FC = () => {
               </div>
 
               <div className="flex gap-3 mt-6">
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed drop-shadow"
-                >
+                <Button type="submit" disabled={loading}>
                   {loading ? (
                     <>
                       <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -521,40 +517,20 @@ const BloodDonorRegisterPage: React.FC = () => {
                       </svg>
                       Procesando...
                     </>) : 'Actualizar datos'}
-                </button>
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  disabled={loading}
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-                >
+                </Button>
+                <Button type="button" onClick={resetForm} disabled={loading}>
                   Restablecer
-                </button>
+                </Button>
               </div>
             </form>
           </div>
-
           <div className="flex flex-row w-full justify-center">
             <ImageUpload
               onImageChange={(file: File | null) => {
                 console.log("Imagen seleccionada:", file);
               }}
             />
-
           </div>
-        </div>
-
-        <div className="flex flex-col items-center m-5">
-          <li className="list-none">
-            <Link to="/index">
-              <button
-                type="button"
-                className="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-bold rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Inicio
-              </button>
-            </Link>
-          </li>
         </div>
       </div>
     </div>

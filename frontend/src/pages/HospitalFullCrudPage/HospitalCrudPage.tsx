@@ -1,7 +1,7 @@
 import {useHospitalCrud} from '../../hooks/useHospitalCrud.ts';
 import {Link} from "react-router";
-import Edit from "../../images/edit-icon.webp"
-import Delete from "../../images/trashcan-icon.webp"
+import Edit from "../../assets/images/LogoShadow.webp"
+import Delete from "../../assets/images/trashcan-icon.webp"
 
 function HospitalCrudPage() {
   const {
