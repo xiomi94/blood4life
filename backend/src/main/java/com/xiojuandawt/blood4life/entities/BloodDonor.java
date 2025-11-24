@@ -17,18 +17,24 @@ public class BloodDonor {
   private String lastName;
   private String gender;
 
+  @ManyToOne
   @JoinColumn(name = "blood_type_id")
-  private String bloodType;
+  private BloodType bloodType;
 
   private String email;
   private String phoneNumber;
   private Date dateOfBirth;
   private String password;
 
+  @ManyToOne
+  @JoinColumn(name = "image_id", nullable = true)
+  private Image image;
+
   public BloodDonor() {
   }
 
-  public BloodDonor(String dni, String firstName, String lastName, String gender, String bloodType,
+  // Constructor sin imagen
+  public BloodDonor(String dni, String firstName, String lastName, String gender, BloodType bloodType,
                     String email, String phoneNumber, Date dateOfBirth, String password) {
     this.dni = dni;
     this.firstName = firstName;
@@ -41,7 +47,8 @@ public class BloodDonor {
     this.password = password;
   }
 
-  public BloodDonor(int id, String dni, String firstName, String lastName, String gender, String bloodType,
+  // Constructor con ID
+  public BloodDonor(int id, String dni, String firstName, String lastName, String gender, BloodType bloodType,
                     String email, String phoneNumber, Date dateOfBirth, String password) {
     this.id = id;
     this.dni = dni;
@@ -55,7 +62,8 @@ public class BloodDonor {
     this.password = password;
   }
 
-  // Getters y setters
+  // --- Getters y setters ---
+
   public Integer getId() {
     return id;
   }
@@ -96,11 +104,11 @@ public class BloodDonor {
     this.gender = gender;
   }
 
-  public String getBloodType() {
+  public BloodType getBloodType() {
     return bloodType;
   }
 
-  public void setBloodType(String bloodType) {
+  public void setBloodType(BloodType bloodType) {
     this.bloodType = bloodType;
   }
 
@@ -136,6 +144,14 @@ public class BloodDonor {
     this.password = password;
   }
 
+  public Image getImage() {
+    return image;
+  }
+
+  public void setImage(Image image) {
+    this.image = image;
+  }
+
   @Override
   public String toString() {
     return "BloodDonor{" +
@@ -149,6 +165,7 @@ public class BloodDonor {
       ", phoneNumber='" + phoneNumber + '\'' +
       ", dateOfBirth=" + dateOfBirth +
       ", password='" + password + '\'' +
+      ", image=" + image +
       '}';
   }
 }

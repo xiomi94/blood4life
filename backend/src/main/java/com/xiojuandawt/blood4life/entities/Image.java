@@ -8,6 +8,8 @@ public class Image {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
+
+  @Column(name = "file_name")
   private String name;
 
   // Constructor vacío (obligatorio para JPA)

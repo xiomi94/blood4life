@@ -1,5 +1,6 @@
 package com.xiojuandawt.blood4life.controllers;
 
+import com.xiojuandawt.blood4life.entities.Image;
 import com.xiojuandawt.blood4life.services.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,23 +23,27 @@ public class ImageController {
   private ImageService imageService;
 
   @PostMapping("/upload")
-  public ResponseEntity<Map<String, String>> uploadImage(@RequestParam("image") MultipartFile file) {
+  public ResponseEntity<Map<String, Object>> uploadImage(@RequestParam("image") MultipartFile file) {
     try {
+      // Obtener extensión original
       String originalFilename = file.getOriginalFilename();
       String extension = "";
-
       if (originalFilename != null && originalFilename.contains(".")) {
         extension = originalFilename.substring(originalFilename.lastIndexOf("."));
       }
 
+      // Generar nombre único
       String newFileName = UUID.randomUUID().toString() + extension;
 
-      imageService.saveImage(file, newFileName);
+      // Guardar imagen en disco y en base de datos
+      Image image = imageService.saveImage(file, newFileName);
 
-      Map<String, String> response = new HashMap<>();
+      // Crear respuesta
+      Map<String, Object> response = new HashMap<>();
       response.put("message", "Imagen subida exitosamente");
-      response.put("filename", newFileName);
-      response.put("url", "/api/images/" + newFileName);
+      response.put("id", image.getId());          // <-- Devuelve ID de la imagen
+      response.put("filename", image.getName());
+      response.put("url", "/api/images/" + image.getName());
 
       return ResponseEntity.ok(response);
 
@@ -68,14 +73,8 @@ public class ImageController {
 
   private String determineContentType(String filename) {
     filename = filename.toLowerCase();
-
-    if (filename.endsWith(".png")) {
-      return "image/png";
-    }
-    if (filename.endsWith(".jpg") || filename.endsWith(".jpeg")) {
-      return "image/jpeg";
-    }
-
+    if (filename.endsWith(".png")) return "image/png";
+    if (filename.endsWith(".jpg") || filename.endsWith(".jpeg")) return "image/jpeg";
     return "application/octet-stream";
   }
 }
