@@ -1,5 +1,5 @@
 import './App.css'
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router';
 import BloodDonorCrudPage from "./pages/BloodDonorFullCrudPage/BloodDonorCrudPage.tsx";
 import BloodDonorRegisterPage from "./pages/BloodDonorRegisterPage/BloodDonorRegisterPage.tsx";
 import HospitalCrudPage from "./pages/HospitalFullCrudPage/HospitalCrudPage.tsx";

@@ -3,7 +3,6 @@ import { bloodDonorService } from "../../services/bloodDonorService.ts";
 import type { BloodDonor } from "../../models/BloodDonor.ts";
 import BloodDonorTableItem from "../../components/BloodDonorTableIItem/BloodDonorTableItem.tsx";
 import BloodDonorForm from "../../components/BloodDonorForm/BloodDonorForm.tsx";
-import { Link } from "react-router";
 
 function BloodDonorCrudPage() {
 
@@ -90,18 +89,6 @@ function BloodDonorCrudPage() {
             <tbody>{bloodDonorRenderList}</tbody>
           </table>
         )}
-      </div>
-
-      <div className="flex justify-center mt-6">
-        <Link to="/index">
-          <button
-            type="button"
-            className="cursor-pointer inline-flex items-center px-4 py-2 text-sm font-medium
-                       rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
-          >
-            Inicio
-          </button>
-        </Link>
       </div>
     </div>
   );

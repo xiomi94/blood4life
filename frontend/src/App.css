@@ -1,11 +1,12 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  --font-roboto: Roboto, sans-serif;
+:root {
+  --font-roboto: 'Roboto', sans-serif;
 }
 
-@layer base {
-  body {
-    font-family: var(--font-roboto);
-  }
+body {
+  font-family: var(--font-roboto);
 }
+
