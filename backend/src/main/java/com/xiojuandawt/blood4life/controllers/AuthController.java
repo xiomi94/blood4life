@@ -32,7 +32,7 @@ public class AuthController {
   @Autowired
   private PasswordEncoder passwordEncoder;
 
-  // 🔹 Registro de nuevo donante
+
   @PostMapping("/bloodDonor/register")
   public ResponseEntity<Map<String, String>> registerBloodDonor(@RequestBody BloodDonor bloodDonor) {
     // Comprobamos que no exista otro usuario con el mismo email
