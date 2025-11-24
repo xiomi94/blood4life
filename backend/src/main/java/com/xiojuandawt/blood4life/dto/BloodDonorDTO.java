@@ -1,5 +1,7 @@
 package com.xiojuandawt.blood4life.dto;
 
+import com.xiojuandawt.blood4life.entities.BloodType;
+
 import java.util.Date;
 
 public class BloodDonorDTO {
@@ -9,6 +11,7 @@ public class BloodDonorDTO {
   private String firstName;
   private String lastName;
   private String gender;
+  private String bloodType;
   private String email;
   private String phoneNumber;
   private Date dateOfBirth;
@@ -16,16 +19,18 @@ public class BloodDonorDTO {
   public BloodDonorDTO() {
   }
 
-  public BloodDonorDTO(int id, String dni, String firstName, String lastName, String gender, String email, String phoneNumber, Date dateOfBirth) {
+  public BloodDonorDTO(int id, String dni, String firstName, String lastName, String gender, String bloodType, String email, String phoneNumber, Date dateOfBirth) {
     this.id = id;
     this.dni = dni;
     this.firstName = firstName;
     this.lastName = lastName;
     this.gender = gender;
+    this.bloodType = bloodType;
     this.email = email;
     this.phoneNumber = phoneNumber;
     this.dateOfBirth = dateOfBirth;
   }
+
 
   public int getId() {
     return id;
@@ -65,6 +70,14 @@ public class BloodDonorDTO {
 
   public void setGender(String gender) {
     this.gender = gender;
+  }
+
+  public String getBloodType() {
+    return this.bloodType;
+  }
+
+  public void setBloodType(String bloodType) {
+    this.bloodType = bloodType;
   }
 
   public String getEmail() {
