@@ -2,8 +2,10 @@ package com.xiojuandawt.blood4life.services;
 
 import com.xiojuandawt.blood4life.dto.BloodDonorDTO;
 import com.xiojuandawt.blood4life.entities.BloodDonor;
+import com.xiojuandawt.blood4life.entities.BloodType;
 import com.xiojuandawt.blood4life.exception.ResourceNotFoundException;
 import com.xiojuandawt.blood4life.repositories.BloodDonorRepository;
+import com.xiojuandawt.blood4life.repositories.BloodTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,9 @@ public class BloodDonorServiceImpl implements BloodDonorService{
 
   @Autowired
   private BloodDonorRepository bloodDonorRepository;
+
+  @Autowired
+  private BloodTypeRepository bloodTypeRepository;
 
   @Override
   public List<BloodDonorDTO> findAll() {
@@ -77,6 +82,12 @@ public class BloodDonorServiceImpl implements BloodDonorService{
 
     return bloodDonorDTO;
   }
+
+  @Override
+  public Optional<BloodType> findBloodTypeById(Integer bloodTypeId) {
+    return bloodTypeRepository.findById(bloodTypeId);
+  }
+
 
   @Override
   public Optional<BloodDonor> findByIdWithRole(Integer id) {

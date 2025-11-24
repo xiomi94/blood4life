@@ -24,6 +24,7 @@ public class BloodDonorController {
   @GetMapping("/me")
   public ResponseEntity<?> obtainMe(Authentication authentication) {
     BloodDonor me = (BloodDonor) authentication.getPrincipal();
+    String imageName = me.getImage() != null ? me.getImage().getName() : null;
     BloodDonorDTO meDTO = new BloodDonorDTO(
       me.getId(),
       me.getDni(),
@@ -33,7 +34,9 @@ public class BloodDonorController {
       me.getBloodType(),
       me.getEmail(),
       me.getPhoneNumber(),
-      me.getDateOfBirth()
+      me.getDateOfBirth(),
+      imageName
+
     );
     return ResponseEntity
       .status(HttpStatus.OK).body(me);

@@ -1,5 +1,8 @@
 package com.xiojuandawt.blood4life.services;
 
+import com.xiojuandawt.blood4life.entities.Image;
+import com.xiojuandawt.blood4life.repositories.ImageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,32 +14,23 @@ import java.nio.file.Paths;
 @Service
 public class ImageService {
 
-  // Carpeta absoluta para evitar problemas de ruta
-  private final String uploadDir = System.getProperty("user.dir") + "/uploads";
+  @Autowired
+  private ImageRepository imageRepository;
 
-  public String saveImage(MultipartFile file, String filename) throws IOException {
-    Path uploadPath = Paths.get(uploadDir);
+  private final String uploadDir = "uploads/";
 
-    // Crear directorio si no existe
-    if (!Files.exists(uploadPath)) {
-      Files.createDirectories(uploadPath);
-    }
+  public Image saveImage(MultipartFile multipartFile, String fileName) throws IOException {
 
-    Path filePath = uploadPath.resolve(filename);
+    Path filepath = Paths.get(uploadDir + fileName);
+    Files.createDirectories(filepath.getParent());
+    Files.write(filepath, multipartFile.getBytes());
 
-    // Guardar el archivo de forma segura usando InputStream
-    Files.copy(file.getInputStream(), filePath);
-
-    return filename;
+    Image image = new Image(fileName);
+    return imageRepository.save(image);
   }
 
   public byte[] getImage(String filename) throws IOException {
-    Path filePath = Paths.get(uploadDir).resolve(filename);
-
-    if (!Files.exists(filePath)) {
-      throw new IOException("Archivo no encontrado: " + filename);
-    }
-
-    return Files.readAllBytes(filePath);
+    Path path = Paths.get(uploadDir + filename);
+    return Files.readAllBytes(path);
   }
 }

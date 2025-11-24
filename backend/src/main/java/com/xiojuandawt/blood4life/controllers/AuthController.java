@@ -1,20 +1,24 @@
 package com.xiojuandawt.blood4life.controllers;
 
+import com.xiojuandawt.blood4life.dto.BloodDonorDTO;
 import com.xiojuandawt.blood4life.entities.BloodDonor;
+import com.xiojuandawt.blood4life.entities.BloodType;
 import com.xiojuandawt.blood4life.entities.Hospital;
+import com.xiojuandawt.blood4life.entities.Image;
 import com.xiojuandawt.blood4life.services.BloodDonorService;
 import com.xiojuandawt.blood4life.services.HospitalService;
+import com.xiojuandawt.blood4life.services.ImageService;
 import com.xiojuandawt.blood4life.services.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -32,23 +36,100 @@ public class AuthController {
   @Autowired
   private PasswordEncoder passwordEncoder;
 
+  @Autowired
+  private ImageService imageService;
+
+
+//  @PostMapping("/bloodDonor/register")
+//  public ResponseEntity<Map<String, String>> registerBloodDonor(@RequestBody BloodDonor bloodDonor) {
+//    // Comprobamos que no exista otro usuario con el mismo email
+//    Optional<BloodDonor> emailExisting = bloodDonorService.findByEmail(bloodDonor.getEmail());
+//    if (emailExisting.isPresent()) {
+//      return ResponseEntity.status(HttpStatus.CONFLICT)
+//        .body(Map.of("error", "Email already registered"));
+//    }
+//
+//    // Encriptar contraseña
+//    bloodDonor.setPassword(passwordEncoder.encode(bloodDonor.getPassword()));
+//    bloodDonorService.createNew(bloodDonor);
+//
+//    return ResponseEntity.status(HttpStatus.CREATED)
+//      .body(Map.of("status", "OK"));
+//  }
 
   @PostMapping("/bloodDonor/register")
-  public ResponseEntity<Map<String, String>> registerBloodDonor(@RequestBody BloodDonor bloodDonor) {
-    // Comprobamos que no exista otro usuario con el mismo email
-    Optional<BloodDonor> existing = bloodDonorService.findByEmail(bloodDonor.getEmail());
-    if (existing.isPresent()) {
-      return ResponseEntity.status(HttpStatus.CONFLICT)
-        .body(Map.of("error", "Email already registered"));
+  public ResponseEntity<?> registerBloodDonor(
+    @RequestParam("dni") String dni,
+    @RequestParam("firstName") String firstName,
+    @RequestParam("lastName") String lastName,
+    @RequestParam("gender") String gender,
+    @RequestParam("bloodTypeId") Integer bloodTypeId,
+    @RequestParam("email") String email,
+    @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
+    @RequestParam(value = "dateOfBirth", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date dateOfBirth,
+    @RequestParam("password") String password,
+    @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+
+    try {
+      Optional<BloodDonor> existing = bloodDonorService.findByEmail(email);
+      if (existing.isPresent()) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+          .body(Map.of("error", "Email already registered"));
+      }
+
+      // Guardar imagen
+      Image imageEntity = null;
+      if (imageFile != null && !imageFile.isEmpty()) {
+        String originalFilename = imageFile.getOriginalFilename();
+        String extension = "";
+        if (originalFilename != null && originalFilename.contains(".")) {
+          extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        }
+        String imageFileName = UUID.randomUUID().toString() + extension;
+        imageEntity = imageService.saveImage(imageFile, imageFileName);
+      }
+
+      // Crear BloodDonor
+      BloodType bloodType = bloodDonorService.findBloodTypeById(bloodTypeId)
+        .orElseThrow(() -> new IllegalArgumentException("Invalid blood type ID"));
+
+      BloodDonor bloodDonor = new BloodDonor();
+      bloodDonor.setDni(dni);
+      bloodDonor.setFirstName(firstName);
+      bloodDonor.setLastName(lastName);
+      bloodDonor.setGender(gender);
+      bloodDonor.setBloodType(bloodType);
+      bloodDonor.setEmail(email);
+      bloodDonor.setPhoneNumber(phoneNumber);
+      bloodDonor.setDateOfBirth(dateOfBirth);
+      bloodDonor.setPassword(passwordEncoder.encode(password));
+      bloodDonor.setImage(imageEntity);
+
+      bloodDonorService.createNew(bloodDonor);
+
+      // Crear DTO
+      BloodDonorDTO responseDTO = new BloodDonorDTO();
+      responseDTO.setId(bloodDonor.getId());
+      responseDTO.setDni(bloodDonor.getDni());
+      responseDTO.setFirstName(bloodDonor.getFirstName());
+      responseDTO.setLastName(bloodDonor.getLastName());
+      responseDTO.setGender(bloodDonor.getGender());
+      responseDTO.setBloodType(bloodType);
+      responseDTO.setEmail(bloodDonor.getEmail());
+      responseDTO.setPhoneNumber(bloodDonor.getPhoneNumber());
+      responseDTO.setDateOfBirth(bloodDonor.getDateOfBirth());
+      responseDTO.setImageName(imageEntity != null ? imageEntity.getName() : null);
+
+      return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(Map.of("error", e.getMessage()));
     }
-
-    // Encriptar contraseña
-    bloodDonor.setPassword(passwordEncoder.encode(bloodDonor.getPassword()));
-    bloodDonorService.createNew(bloodDonor);
-
-    return ResponseEntity.status(HttpStatus.CREATED)
-      .body(Map.of("status", "OK"));
   }
+
+
+
 
   // 🔹 Login con Authorization: Basic base64(email:password)
   @PostMapping("/bloodDonor/login")
