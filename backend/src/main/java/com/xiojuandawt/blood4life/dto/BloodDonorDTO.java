@@ -1,6 +1,7 @@
 package com.xiojuandawt.blood4life.dto;
 
 import com.xiojuandawt.blood4life.entities.BloodType;
+import com.xiojuandawt.blood4life.entities.Image;
 
 import java.util.Date;
 
@@ -11,15 +12,16 @@ public class BloodDonorDTO {
   private String firstName;
   private String lastName;
   private String gender;
-  private String bloodType;
+  private BloodType bloodType;
   private String email;
   private String phoneNumber;
   private Date dateOfBirth;
+  private String imageName;
 
   public BloodDonorDTO() {
   }
 
-  public BloodDonorDTO(int id, String dni, String firstName, String lastName, String gender, String bloodType, String email, String phoneNumber, Date dateOfBirth) {
+  public BloodDonorDTO(int id, String dni, String firstName, String lastName, String gender, BloodType bloodType, String email, String phoneNumber, Date dateOfBirth, String imageName) {
     this.id = id;
     this.dni = dni;
     this.firstName = firstName;
@@ -29,8 +31,8 @@ public class BloodDonorDTO {
     this.email = email;
     this.phoneNumber = phoneNumber;
     this.dateOfBirth = dateOfBirth;
+    this.imageName = imageName;
   }
-
 
   public int getId() {
     return id;
@@ -72,11 +74,11 @@ public class BloodDonorDTO {
     this.gender = gender;
   }
 
-  public String getBloodType() {
+  public BloodType getBloodType() {
     return this.bloodType;
   }
 
-  public void setBloodType(String bloodType) {
+  public void setBloodType(BloodType bloodType) {
     this.bloodType = bloodType;
   }
 
@@ -102,5 +104,13 @@ public class BloodDonorDTO {
 
   public void setDateOfBirth(Date dateOfBirth) {
     this.dateOfBirth = dateOfBirth;
+  }
+
+  public String getImageName() {
+    return imageName;
+  }
+
+  public void setImageName(String imageName) {
+    this.imageName = imageName;
   }
 }

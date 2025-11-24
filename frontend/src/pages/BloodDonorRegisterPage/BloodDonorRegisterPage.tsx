@@ -1,6 +1,7 @@
 import ImageUpload from "../../components/ImageUpload/ImageUpload.tsx";
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
+import axios from "axios";
 
 interface BloodDonor {
   id?: number,
@@ -8,7 +9,7 @@ interface BloodDonor {
   firstName: string,
   lastName: string,
   gender: string,
-  bloodtype: string,
+  bloodType: string,
   email: string,
   phoneNumber: string,
   dateOfBirth: string,
@@ -20,7 +21,7 @@ interface BloodDonorFormData {
   firstName: string,
   lastName: string,
   gender: string,
-  bloodtype: string,
+  bloodType: string,
   email: string,
   phoneNumber: string,
   dateOfBirth: string,
@@ -32,7 +33,7 @@ interface ValidationErrors {
   firstName?: string;
   lastName?: string;
   gender?: string;
-  bloodtype?: string;
+  bloodType?: string;
   email?: string;
   phoneNumber?: string;
   dateOfBirth?: string;
@@ -45,7 +46,7 @@ const BloodDonorRegisterPage: React.FC = () => {
     firstName: '',
     lastName: '',
     gender: '',
-    bloodtype: '',
+    bloodType: '',
     email: '',
     phoneNumber: '',
     dateOfBirth: '',
@@ -56,6 +57,8 @@ const BloodDonorRegisterPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [currentBloodDonor, setCurrentBloodDonor] = useState<BloodDonor | null>(null);
   const [errors, setErrors] = useState<ValidationErrors>({});
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
 
   useEffect(() => {
     const bloodDonorData: BloodDonor = {
@@ -64,7 +67,7 @@ const BloodDonorRegisterPage: React.FC = () => {
       firstName: 'Xiomara',
       lastName: 'Jiménez Velázquez',
       gender: 'Femenino',
-      bloodtype: '0+',
+      bloodType: '0+',
       email: 'xiomarajimenezvelazquez@alumno.ieselrincon.es',
       phoneNumber: '658663494',
       dateOfBirth: '',
@@ -77,7 +80,7 @@ const BloodDonorRegisterPage: React.FC = () => {
       firstName: bloodDonorData.firstName,
       lastName: bloodDonorData.lastName,
       gender: bloodDonorData.gender,
-      bloodtype: bloodDonorData.bloodtype,
+      bloodType: bloodDonorData.bloodType,
       email: bloodDonorData.email,
       phoneNumber: bloodDonorData.phoneNumber,
       dateOfBirth: bloodDonorData.dateOfBirth,
@@ -188,54 +191,45 @@ const BloodDonorRegisterPage: React.FC = () => {
       return;
     }
 
-    if (!currentBloodDonor) {
-      alert('No hay datos del donante disponibles');
-      return;
-    }
-
     setLoading(true);
 
     try {
-      // Crear FormData como lo hace tu compañero
       const submitData = new FormData();
       submitData.append('dni', formData.dni);
       submitData.append('firstName', formData.firstName);
       submitData.append('lastName', formData.lastName);
       submitData.append('gender', formData.gender);
-      submitData.append('bloodtype', formData.bloodtype);
+      submitData.append('bloodtype', formData.bloodType);
       submitData.append('email', formData.email);
       submitData.append('phoneNumber', formData.phoneNumber);
       submitData.append('dateOfBirth', formData.dateOfBirth);
+      if (formData.password) submitData.append('password', formData.password);
 
-      if (formData.password) {
-        submitData.append('password', formData.password);
+      // Agregar la imagen si existe
+      if (selectedImage) {
+        submitData.append('image', selectedImage);
       }
 
-      console.log('Actualizando donante:', Object.fromEntries(submitData));
+      const response = await axios.post('http://TU_BACKEND_URL/api/register', submitData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      console.log('Respuesta del backend:', response.data);
+      alert('Donante registrado correctamente');
+      resetForm();
+      setSelectedImage(null);
 
-      setCurrentBloodDonor(prev => prev ? {
-        ...prev,
-        dni: formData.dni,
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        gender: formData.gender,
-        bloodtype: formData.bloodtype,
-        email: formData.email,
-        phoneNumber: formData.phoneNumber,
-        dateOfBirth: formData.dateOfBirth,
-        password: formData.password
-      } : null);
-
-      alert('Datos del donante actualizados exitosamente');
-    } catch (error) {
-      console.error('Error actualizando donante:', error);
-      alert('Error al actualizar los datos del donante');
+    } catch (err: unknown) {
+        const error = err as { response?: { data?: { message?: string } } };
+        console.error('Error registrando donante:', error);
+        alert(error.response?.data?.message || 'Error al registrar los datos del donante');
     } finally {
       setLoading(false);
     }
   };
+
 
   const resetForm = () => {
     if (currentBloodDonor) {
@@ -244,7 +238,7 @@ const BloodDonorRegisterPage: React.FC = () => {
         firstName: currentBloodDonor.firstName,
         lastName: currentBloodDonor.lastName,
         gender: currentBloodDonor.gender,
-        bloodtype: currentBloodDonor.bloodtype,
+        bloodType: currentBloodDonor.bloodType,
         email: currentBloodDonor.email,
         phoneNumber: currentBloodDonor.phoneNumber,
         dateOfBirth: currentBloodDonor.dateOfBirth,
@@ -381,12 +375,12 @@ const BloodDonorRegisterPage: React.FC = () => {
                   <select
                     id="bloodtype"
                     name="bloodtype"
-                    value={formData.bloodtype}
+                    value={formData.bloodType}
                     onChange={handleInputChange}
                     required
                     disabled={loading}
                     className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 bg-white drop-shadow ${
-                      errors.bloodtype ? 'border-red-500' : 'border-gray-300'
+                      errors.bloodType ? 'border-red-500' : 'border-gray-300'
                     }`}
                   >
                     <option value="">Seleccione un tipo de sangre *</option>
@@ -399,7 +393,7 @@ const BloodDonorRegisterPage: React.FC = () => {
                     <option value="0+">0+</option>
                     <option value="0-">0-</option>
                   </select>
-                  {errors.bloodtype && <p className="text-red-500 text-sm mt-1">{errors.bloodtype}</p>}
+                  {errors.bloodType && <p className="text-red-500 text-sm mt-1">{errors.bloodType}</p>}
                 </div>
 
                 <div className="w-full">
@@ -509,7 +503,7 @@ const BloodDonorRegisterPage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed drop-shadow"
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed drop-shadow"
                 >
                   {loading ? (
                     <>
@@ -537,7 +531,7 @@ const BloodDonorRegisterPage: React.FC = () => {
           <div className="flex flex-row w-full justify-center">
             <ImageUpload
               onImageChange={(file: File | null) => {
-                console.log("Imagen seleccionada:", file);
+                setSelectedImage(file);
               }}
             />
 

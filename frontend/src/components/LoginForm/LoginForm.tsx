@@ -4,7 +4,7 @@ function LoginForm() {
   return (
     <>
       <form className="flex flex-col w-1/4 h-auto rounded-xl text-2xl gap-2">
-        <label>Nombre de usuario</label>
+        <label className="text-base">Nombre de usuario</label>
         <input type="text" className="border-white text-lg px-1 py-7px drop-shadow-md rounded-md bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"/>
         <label>Contraseña</label>
         <input type="password" className="border-white text-lg px-1 py-7px drop-shadow-md rounded-md bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"/>
