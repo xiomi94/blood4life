@@ -284,29 +284,29 @@ const HospitalRegisterPage: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col w-full min-h-screen items-center bg-gray-100">
-      <div className="flex flex-col w-11/12 max-w-6xl">
-        <div className="flex flex-col gap-8 pt-10">
-          {/* Solo cambié las clases de texto aquí */}
-          <h2 className="text-display text-center font-semibold text-gray-800 mb-1">
-            Registrar nuevo hospital
-          </h2>
-
+    <div className="flex flex-col w-full min-h-screen items-center bg-gray-100 px-4 sm:px-6 py-6">
+      <div className="flex flex-col w-full max-w-6xl">
+        <div className="flex flex-col gap-6 md:gap-8 pt-6 md:pt-10">
+          {/* Header */}
+          <div className="text-center">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-800 mb-2">
+              Registrar nuevo hospital
+            </h2>
+          </div>
           <div className="flex flex-row w-full justify-center">
-            <div className="w-full">
+            <div className="w-full max-w-md">
               <ImageUpload onImageChange={setProfileImage}/>
             </div>
           </div>
-
           <div className="flex-1">
             <form
               onSubmit={handleSubmit}
-              className="flex flex-col p-6 bg-gray-200 rounded-2xl drop-shadow w-full"
+              className="flex flex-col p-4 sm:p-6 bg-white rounded-xl md:rounded-2xl shadow-sm w-full"
             >
-              {/* Solo cambié las clases de texto aquí */}
-              <p className="text-body-lg text-gray-600 mb-5">Todos los datos son obligatorios</p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+              <p className="text-sm md:text-base text-gray-500 mb-4 md:mb-5 text-center">
+                Todos los datos son obligatorios
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full">
                 <FormField
                   type="text"
                   id="cif"
@@ -318,40 +318,37 @@ const HospitalRegisterPage: React.FC = () => {
                   disabled={loading}
                   error={errors.cif}
                   placeholder="Ingrese el CIF"
-                  labelClass="text-body-sm"
+                  containerClass="w-full"
                 />
-                <div className="flex justify-center">
-                  <FormField
-                    type="text"
-                    id="name"
-                    name="name"
-                    label="Nombre"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                    disabled={loading}
-                    error={errors.name}
-                    placeholder="Ingrese el nombre"
-                    containerClass="w-full"
-                    labelClass="text-body-sm w-fit"
-                  />
-                </div>
-                <div className="flex flex-row justify-end">
-                  <FormField
-                    type="text"
-                    id="address"
-                    name="address"
-                    label="Dirección"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    required
-                    disabled={loading}
-                    error={errors.address}
-                    placeholder="Ingrese la dirección"
-                    containerClass="w-full"
-                    labelClass="text-body-sm"
-                  />
-                </div>
+
+                <FormField
+                  type="text"
+                  id="name"
+                  name="name"
+                  label="Nombre"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                  disabled={loading}
+                  error={errors.name}
+                  placeholder="Ingrese el nombre"
+                  containerClass="w-full"
+                />
+
+                <FormField
+                  type="text"
+                  id="address"
+                  name="address"
+                  label="Dirección"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  required
+                  disabled={loading}
+                  error={errors.address}
+                  placeholder="Ingrese la dirección"
+                  containerClass="w-full"
+                />
+
                 <FormField
                   type="email"
                   id="email"
@@ -363,65 +360,63 @@ const HospitalRegisterPage: React.FC = () => {
                   disabled={loading}
                   error={errors.email}
                   placeholder="Ingrese el email"
-                  labelClass="text-body-sm"
+                  containerClass="w-full"
                 />
-                <div className="flex justify-center">
-                  <FormField
-                    type="tel"
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    label="Teléfono"
-                    value={formData.phoneNumber}
-                    onChange={handleInputChange}
-                    required
-                    disabled={loading}
-                    error={errors.phoneNumber}
-                    placeholder="Ingrese el teléfono"
-                    containerClass="w-full"
-                    labelClass="text-body-sm"
-                  />
-                </div>
-                <div className="flex flex-row justify-end">
-                  <FormField
-                    type="password"
-                    id="password"
-                    name="password"
-                    label="Contraseña"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required
-                    disabled={loading}
-                    error={errors.password}
-                    placeholder="Ingrese la contraseña"
-                    containerClass="w-full"
-                    labelClass="text-body-sm"
-                    showPasswordToggle={true}
-                    isPasswordVisible={showPassword}
-                    onTogglePassword={() => setShowPassword(!showPassword)}
-                  />
-                </div>
+
+                <FormField
+                  type="tel"
+                  id="phoneNumber"
+                  name="phoneNumber"
+                  label="Teléfono"
+                  value={formData.phoneNumber}
+                  onChange={handleInputChange}
+                  required
+                  disabled={loading}
+                  error={errors.phoneNumber}
+                  placeholder="Ingrese el teléfono"
+                  containerClass="w-full"
+                />
+
+                <FormField
+                  type="password"
+                  id="password"
+                  name="password"
+                  label="Contraseña"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                  disabled={loading}
+                  error={errors.password}
+                  placeholder="Ingrese la contraseña"
+                  containerClass="w-full"
+                  showPasswordToggle={true}
+                  isPasswordVisible={showPassword}
+                  onTogglePassword={() => setShowPassword(!showPassword)}
+                />
               </div>
 
-              <div className="flex gap-3 mt-6">
+              <div className="flex flex-row justify-center sm:flex-row gap-3 mt-6 md:mt-8">
                 <Button
                   type="submit"
                   disabled={loading}
+                  className="w-fit sm:flex-1 text-body-sm"
                 >
                   {loading ? (
                     <>
-                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                      <svg className="animate-spin ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                                 strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor"
                               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
                       Procesando...
-                    </>) : 'Registrar nuevo hospital'}
+                    </>) : 'Registrar'}
                 </Button>
                 <Button
                   type="button"
                   onClick={resetForm}
                   disabled={loading}
+                  className="w-fit sm:flex-1 text-body-sm"
                 >
                   Restablecer
                 </Button>
