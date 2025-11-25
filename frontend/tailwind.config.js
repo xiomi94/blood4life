@@ -7,21 +7,18 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'poppins': ['Poppins', 'sans-serif'],
-        'roboto': ['Roboto', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif'],
+        roboto: ['Roboto', 'sans-serif'],
       },
-      // Solo definimos tamaños básicos aquí
       fontSize: {
-        'xs': '12px',
-        'sm': '14px',
-        'base': '16px',
-        'lg': '18px',
-        'xl': '20px',
-        '2xl': '24px',
-        '3xl': '30px',
-        '4xl': '36px',
-        '5xl': '48px',
-        '6xl': '64px',
+        'display': ['4rem', { lineHeight: '1.1' }],        // 64px
+        'h1': ['3.5rem', { lineHeight: '1.2' }],           // 56px
+        'h2': ['3rem', { lineHeight: '1.3' }],             // 48px
+        'h3': ['2.5rem', { lineHeight: '1.4' }],           // 40px
+        'body': ['1.5rem', { lineHeight: '1.6' }],         // 24px
+        'body-lg': ['1.125rem', { lineHeight: '1.6' }],    // 18px
+        'body-sm': ['1rem', { lineHeight: '1.5' }],        // 16px
+        'caption': ['0.875rem', { lineHeight: '1.4' }],    // 14px
       },
     },
   },

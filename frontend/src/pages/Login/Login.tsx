@@ -7,7 +7,7 @@ function Login() {
     <>
       <div className="min-h-screen">
         <div className="flex flex-row justify-center">
-          <img className="m-5 w-auto h-auto" src={Logo} alt="Logo"/>
+          <img className="m-5 w-50 w-50" src={Logo} alt="Logo"/>
         </div>
         <div className="flex flex-col items-center w-full h-auto gap-4">
           <LoginForm/>

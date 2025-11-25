@@ -38,18 +38,19 @@ const Button: React.FC<Props> = ({
   };
 
   const baseClassName = `
-    inline-flex items-center 
-    px-4 py-2 
-    rounded-md 
-    shadow-sm 
-    bg-${backgroundColor} 
-    ${textColorClass[textColor]}
-    hover:bg-blue-700
-    focus:outline-none
-    transform transition duration-150
-    active:scale-95
-    ${disabled ? 'opacity-50 cursor-not-allowed hover:bg-${backgroundColor}' : ''}
-  `;
+  inline-flex items-center justify-center
+  px-4 py-2 
+  rounded-md 
+  shadow-sm 
+  bg-${backgroundColor} 
+  ${textColorClass[textColor]}
+  hover:bg-blue-700
+  focus:outline-none focus:ring-2 focus:ring-offset-2
+  transform transition duration-150
+  active:scale-95
+  text-center
+  ${disabled ? 'opacity-50 cursor-not-allowed hover:bg-${backgroundColor}' : ''}
+`;
 
   return (
     <button

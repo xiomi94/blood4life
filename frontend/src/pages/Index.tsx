@@ -7,7 +7,7 @@ function Index() {
         <div className="flex flex-row justify-center aspect-auto">
           <img className="m-5 w-100 h-100" src={Logo} alt="Logo"/>
         </div>
-        <div className="text-5xl font-bold mb-4">Blood4Life</div>
+        <div className="text-display font-bold mb-4">Blood4Life</div>
       </div>
     </>
   )
