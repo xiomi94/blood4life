@@ -1,6 +1,6 @@
 // components/Header/Header.tsx
 import {useLocation, Link} from 'react-router-dom';
-import Logo from "../../../assets/images/LogoShadow.webp";
+import Logo from "../../../assets/images/LogoShadowMini.webp";
 import Button from "../Button/Button.tsx"
 
 function Header() {

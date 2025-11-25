@@ -45,7 +45,7 @@ const ImageUpload = ({ onImageChange }: ImageUploadProps) => {
   };
 
   return (
-    <div className="flex flex-col w-1/2 items-center space-y-4 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+    <div className="flex flex-col w-full items-center space-y-4 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
       <h3 className="text-lg font-semibold text-gray-800">Foto de Perfil</h3>
       <div className="flex flex-col items-center space-y-4 w-full">
         {previewUrl ? (
