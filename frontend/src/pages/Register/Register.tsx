@@ -1,10 +1,10 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-import Button from '../../components/Button/Button'
+import Button from '../../components/UI/Button/Button'
 
 const Register: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 min-h-screen">
+    <div className="flex flex-col min-h-screen items-center justify-center bg-gray-100">
       <div className="text-center mb-12">
         <h1 className="w-2text-4xl md:text-5xl font-bold text-gray-800 mb-4">
           Bienvenido a Blood4Life
@@ -44,9 +44,9 @@ const Register: React.FC = () => {
         </div>
         <div className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-300 w-auto">
           <div className="flex flex-col items-center">
-            <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mb-6">
+            <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-6">
               <svg
-                className="w-10 h-10 text-indigo-600"
+                className="w-10 h-10 text-blue-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"

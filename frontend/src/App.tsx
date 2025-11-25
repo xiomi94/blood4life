@@ -7,8 +7,8 @@ import HospitalRegisterPage from "./pages/HospitalRegisterPage/HospitalRegisterP
 import Index from "./pages/Index.tsx";
 import Login from "./pages/Login/Login.tsx";
 import Register from "./pages/Register/Register.tsx";
-import Header from "./components/Header/Header.tsx";
-import Footer from "./components/Footer/Footer.tsx";
+import Header from "./components/UI/Header/Header.tsx";
+import Footer from "./components/UI/Footer/Footer.tsx";
 
 function App() {
   return (
