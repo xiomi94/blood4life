@@ -1,7 +1,7 @@
 // components/Header/Header.tsx
 import {useLocation, Link} from 'react-router-dom';
-import Logo from "../../assets/images/LogoShadow.webp";
-import Button from "../../components/Button/Button"
+import Logo from "../../../assets/images/LogoShadow.webp";
+import Button from "../Button/Button.tsx"
 
 function Header() {
   const location = useLocation();
