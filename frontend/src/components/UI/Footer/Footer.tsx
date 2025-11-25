@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import Logo from "../../../assets/images/LogoShadow.webp";
+import Logo from "../../../assets/images/LogoShadowMini.webp";
 
 const Footer: React.FC = () => {
   const [active, setActive] = useState(false);

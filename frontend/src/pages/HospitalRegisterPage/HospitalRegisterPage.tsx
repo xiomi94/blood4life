@@ -271,7 +271,7 @@ const HospitalRegisterPage: React.FC = () => {
   if (!currentHospital) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="inline-flex items-center">
+        <div className="inline-flex items-center text-body-lg">
           <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor"
@@ -287,15 +287,25 @@ const HospitalRegisterPage: React.FC = () => {
     <div className="flex flex-col w-full min-h-screen items-center bg-gray-100">
       <div className="flex flex-col w-11/12 max-w-6xl">
         <div className="flex flex-col gap-8 pt-10">
+          {/* Solo cambié las clases de texto aquí */}
+          <h2 className="text-display text-center font-semibold text-gray-800 mb-1">
+            Registrar nuevo hospital
+          </h2>
+
+          <div className="flex flex-row w-full justify-center">
+            <div className="w-full">
+              <ImageUpload onImageChange={setProfileImage}/>
+            </div>
+          </div>
+
           <div className="flex-1">
             <form
               onSubmit={handleSubmit}
-              className="flex flex-col p-6 bg-gray-200 rounded-2xl drop-shadow"
+              className="flex flex-col p-6 bg-gray-200 rounded-2xl drop-shadow w-full"
             >
-              <h2 className="text-xl font-semibold text-gray-800 mb-1">
-                Registrar nuevo hospital
-              </h2>
-              <p className="text-gray-600 mb-5">Todos los datos son obligatorios</p>
+              {/* Solo cambié las clases de texto aquí */}
+              <p className="text-body-lg text-gray-600 mb-5">Todos los datos son obligatorios</p>
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
                 <FormField
                   type="text"
@@ -308,6 +318,7 @@ const HospitalRegisterPage: React.FC = () => {
                   disabled={loading}
                   error={errors.cif}
                   placeholder="Ingrese el CIF"
+                  labelClass="text-body-sm"
                 />
                 <div className="flex justify-center">
                   <FormField
@@ -322,7 +333,7 @@ const HospitalRegisterPage: React.FC = () => {
                     error={errors.name}
                     placeholder="Ingrese el nombre"
                     containerClass="w-full"
-                    labelClass="w-fit"
+                    labelClass="text-body-sm w-fit"
                   />
                 </div>
                 <div className="flex flex-row justify-end">
@@ -338,6 +349,7 @@ const HospitalRegisterPage: React.FC = () => {
                     error={errors.address}
                     placeholder="Ingrese la dirección"
                     containerClass="w-full"
+                    labelClass="text-body-sm"
                   />
                 </div>
                 <FormField
@@ -350,7 +362,8 @@ const HospitalRegisterPage: React.FC = () => {
                   required
                   disabled={loading}
                   error={errors.email}
-                  placeholder="Ingrese el email *"
+                  placeholder="Ingrese el email"
+                  labelClass="text-body-sm"
                 />
                 <div className="flex justify-center">
                   <FormField
@@ -365,6 +378,7 @@ const HospitalRegisterPage: React.FC = () => {
                     error={errors.phoneNumber}
                     placeholder="Ingrese el teléfono"
                     containerClass="w-full"
+                    labelClass="text-body-sm"
                   />
                 </div>
                 <div className="flex flex-row justify-end">
@@ -380,12 +394,14 @@ const HospitalRegisterPage: React.FC = () => {
                     error={errors.password}
                     placeholder="Ingrese la contraseña"
                     containerClass="w-full"
+                    labelClass="text-body-sm"
                     showPasswordToggle={true}
                     isPasswordVisible={showPassword}
                     onTogglePassword={() => setShowPassword(!showPassword)}
                   />
                 </div>
               </div>
+
               <div className="flex gap-3 mt-6">
                 <Button
                   type="submit"
@@ -411,9 +427,6 @@ const HospitalRegisterPage: React.FC = () => {
                 </Button>
               </div>
             </form>
-          </div>
-          <div className="flex flex-row w-full justify-center">
-            <ImageUpload onImageChange={setProfileImage}/>
           </div>
         </div>
       </div>

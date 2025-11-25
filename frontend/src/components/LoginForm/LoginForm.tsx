@@ -1,25 +1,87 @@
 import {Link} from 'react-router-dom';
-import Button from '../../components/UI/Button/Button.tsx'
+import Button from '../../components/UI/Button/Button.tsx';
+import FormField from '../../components/FormField/FormField.tsx';
+import { useState } from 'react';
 
 function LoginForm() {
+  const [formData, setFormData] = useState({
+    username: '',
+    password: ''
+  });
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Lógica de login aquí
+    console.log('Datos de login:', formData);
+  };
+
   return (
-    <>
-      <form className="flex flex-col w-1/4 h-auto rounded-xl text-2xl gap-2">
-        <div className="flex flex-row w-full justify-center text-4xl font-bold mb-4">
-          <p>Iniciar sesión</p>
+    <div className="flex justify-center items-center">
+      <form
+        className="flex flex-col w-96 bg-white rounded-2xl shadow-xl p-8 gap-6"
+        onSubmit={handleSubmit}
+      >
+        {/* Título - Grande para desktop */}
+        <div className="flex flex-row w-full justify-center mb-2">
+          <h1 className="text-3xl font-bold text-gray-800 text-center">
+            Iniciar sesión
+          </h1>
         </div>
-        <label className="text-base">Nombre de usuario</label>
-        <input type="text"
-               className="border-white text-base px-1 py-7px drop-shadow-md rounded-md bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"/>
-        <label className="text-base">Contraseña</label>
-        <input type="password"
-               className="border-white text-base px-1 py-7px drop-shadow-md rounded-md bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"/>
-        <div className="flex flex-row w-full justify-center text-lg mt-10">
-          <Button>
+
+        {/* Campo de usuario */}
+        <FormField
+          type="text"
+          id="username"
+          name="username"
+          label="Nombre de usuario"
+          value={formData.username}
+          onChange={handleInputChange}
+          required
+          placeholder="Ingrese su nombre de usuario"
+          containerClass="mb-2"
+          labelClass="text-base font-medium"
+          autoComplete="username"
+        />
+
+        {/* Campo de contraseña */}
+        <FormField
+          type="password"
+          id="password"
+          name="password"
+          label="Contraseña"
+          value={formData.password}
+          onChange={handleInputChange}
+          required
+          placeholder="Ingrese su contraseña"
+          containerClass="mb-4"
+          labelClass="text-base font-medium"
+          showPasswordToggle={true}
+          isPasswordVisible={showPassword}
+          onTogglePassword={() => setShowPassword(!showPassword)}
+          autoComplete="current-password"
+        />
+
+        {/* Botón de enviar */}
+        <div className="flex flex-row w-full justify-center mt-6 mb-4">
+          <Button
+            type="submit"
+            className="px-12 py-3 text-lg font-semibold"
+          >
             Enviar
           </Button>
         </div>
-        <div className="text-center mt-4">
+
+        {/* Enlace de registro */}
+        <div className="text-center">
           <span className="text-sm text-gray-600">
             ¿No tiene una cuenta? Regístrate haciendo click {" "}
             <Link
@@ -31,7 +93,7 @@ function LoginForm() {
           </span>
         </div>
       </form>
-    </>
+    </div>
   )
 }
 

@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .text-display {
+    @apply text-display leading-display font-poppins font-bold;
+  }
+
+  .text-h1 {
+    @apply text-h1 leading-h1 font-poppins font-bold;
+  }
+
+  .text-h2 {
+    @apply text-h2 leading-h2 font-poppins font-semibold;
+  }
+
+  .text-h3 {
+    @apply text-h3 leading-h3 font-poppins font-semibold;
+  }
+
+  .text-body {
+    @apply text-body leading-body font-roboto font-normal;
+  }
+
+  .text-body-lg {
+    @apply text-body-lg leading-body-lg font-roboto font-normal;
+  }
+
+  .text-body-sm {
+    @apply text-body-sm leading-body-sm font-roboto font-normal;
+  }
+
+  .text-caption {
+    @apply text-caption leading-caption font-roboto font-normal;
+  }
+}
