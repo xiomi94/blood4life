@@ -64,7 +64,7 @@ function LoginForm() {
           onTogglePassword={() => setShowPassword(!showPassword)}
           autoComplete="current-password"
         />
-        <div className="flex flex-row w-full justify-center mt-6 mb-4">
+        <div className="flex flex-row w-full justify-center">
           <Button
             type="submit"
             className="px-8 py-3 text-body"
@@ -73,7 +73,7 @@ function LoginForm() {
           </Button>
         </div>
         <div className="text-center">
-          <span className="text-sm text-gray-600">
+          <span className="text-body-sm text-gray-600">
             ¿No tiene una cuenta? Regístrate haciendo click {" "}
             <Link
               to="/register"

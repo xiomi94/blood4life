@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import Logo from "../../../assets/images/LogoShadowMini.webp";
-import Button from '../../UI/Button/Button';
+import ButtonFooter from '../../UI/ButtonFooter/ButtonFooter';
 
 const Footer: React.FC = () => {
   const [active, setActive] = useState(false);
@@ -47,9 +47,9 @@ const Footer: React.FC = () => {
           <div className="flex flex-row w-full items-center">
             <img src={Logo} alt="Logo" className="h-14 w-14 cursor-pointer hover:opacity-80 transition-opacity"/>
             <div className="flex flex-row w-full justify-around text-gray-800">
-              <Button>Política de privacidad</Button>
-              <Button>Uso y protección de datos</Button>
-              <Button>Sobre nosotros</Button>
+              <ButtonFooter>Política de privacidad</ButtonFooter>
+              <ButtonFooter>Sobre nosotros</ButtonFooter>
+              <p className="text-gray-700">Copyright © 2025</p>
             </div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
