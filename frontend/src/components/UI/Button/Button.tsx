@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 interface Props {
   children: React.ReactNode;
@@ -55,7 +55,6 @@ const Button: React.FC<Props> = ({
     rounded-md shadow-sm
     text-body-sm md:text-body font-poppins font-medium
     transition-all duration-150 transform active:scale-95
-    focus:outline-none focus:ring-2 focus:ring-offset-2
   `;
 
   return (

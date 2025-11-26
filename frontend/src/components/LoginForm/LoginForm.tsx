@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import Button from '../../components/UI/Button/Button';
 import FormField from '../../components/FormField/FormField';
 import { useState } from 'react';
@@ -71,7 +71,7 @@ function LoginForm() {
         <div className="flex justify-center">
           <Button
             type="submit"
-            className="px-6 sm:px-8 py-2 sm:py-3 text-body w-full sm:w-auto sm:max-w-64"
+            className="px-6 sm:px-8 py-2 sm:py-3 text-body w-auto sm:w-auto sm:max-w-64"
           >
             Enviar
           </Button>

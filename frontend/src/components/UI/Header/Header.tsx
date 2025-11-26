@@ -1,5 +1,5 @@
 // components/Header/Header.tsx
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router';
 import Logo from "../../../assets/images/LogoShadowMini.webp";
 import Button from "../Button/Button.tsx"
 
@@ -7,7 +7,7 @@ function Header() {
   const location = useLocation();
 
   return (
-    <div className="flex flex-row h-20 w-full bg-red-200 items-center justify-between">
+    <div className="flex flex-row h-20 w-full items-center justify-end">
       {(location.pathname === '/register' || location.pathname === '/registerbloodDonor' || location.pathname === '/registerhospital') ? (
         <>
           <div className="flex flex-row w-full justify-between p-3 items-center">
@@ -19,7 +19,6 @@ function Header() {
         </>
       ) : (
         <>
-          <div></div>
           {(location.pathname === '/index' || location.pathname === '/') && (
             <div className="flex items-center space-x-3 pr-4">
               <Button to="/login">
