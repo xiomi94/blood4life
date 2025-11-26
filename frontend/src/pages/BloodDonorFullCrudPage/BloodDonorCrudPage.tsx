@@ -44,10 +44,10 @@ function BloodDonorCrudPage() {
   }, []);
 
   return (
-    <div className="min-w-6xl max-w-6xl mx-auto">
+    <div className="min-w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
       <div className="bg-white shadow p-6 rounded-lg mb-8">
-        <h2 className="text-xl font-semibold mb-6">
+        <h2 className="font-poppins font-semibold text-body-lg sm:text-h3 mb-6">
           {selectedBloodDonor ? "Editar donante" : "Crear nuevo donante"}
         </h2>
 
@@ -60,7 +60,7 @@ function BloodDonorCrudPage() {
 
       <div className="bg-white shadow rounded-lg p-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Lista de donantes</h2>
+          <h2 className="font-poppins font-semibold text-body-lg sm:text-h3">Lista de donantes</h2>
 
           <button
             onClick={() => window.location.reload()}
@@ -72,22 +72,24 @@ function BloodDonorCrudPage() {
         </div>
 
         {bloodDonors.length === 0 ? (
-          <div className="py-10 text-center text-gray-500">
+          <div className="py-10 text-center font-roboto text-body-sm text-gray-500">
             <div className="text-5xl mb-4">📋</div>
             <p>No hay donantes registrados</p>
           </div>
         ) : (
-          <table className="w-full border border-gray-300">
-            <thead className="bg-gray-50">
-            <tr>
-              <th className="border px-3 py-2">DNI</th>
-              <th className="border px-3 py-2">Nombre</th>
-              <th className="border px-3 py-2">Apellidos</th>
-              <th className="border px-3 py-2">Acciones</th>
-            </tr>
-            </thead>
-            <tbody>{bloodDonorRenderList}</tbody>
-          </table>
+          <div className="overflow-x-auto">
+            <table className="w-full border border-gray-300 font-roboto text-body-sm md:text-body">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="border px-3 py-2">DNI</th>
+                  <th className="border px-3 py-2">Nombre</th>
+                  <th className="border px-3 py-2">Apellidos</th>
+                  <th className="border px-3 py-2">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>{bloodDonorRenderList}</tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>

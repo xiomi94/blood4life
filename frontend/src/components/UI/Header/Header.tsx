@@ -1,5 +1,5 @@
 // components/Header/Header.tsx
-import {useLocation, Link} from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import Logo from "../../../assets/images/LogoShadowMini.webp";
 import Button from "../Button/Button.tsx"
 
@@ -12,7 +12,7 @@ function Header() {
         <>
           <div className="flex flex-row w-full justify-between p-3 items-center">
             <Link to="/index">
-              <img src={Logo} alt="Logo" className="h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity"/>
+              <img src={Logo} alt="Logo" className="h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
             </Link>
             <Button to="/index">Inicio</Button>
           </div>

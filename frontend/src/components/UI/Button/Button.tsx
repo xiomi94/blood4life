@@ -1,63 +1,75 @@
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   children: React.ReactNode;
-  backgroundColor?: string;
-  onButtonClick?: () => void; // funcionalidad opcional
-  textColor?: 'black' | 'white';
+  variant?: "blue" | "red" | "green" | "gray";
+  onButtonClick?: () => void;
+  textColor?: "black" | "white";
   type?: "button" | "submit" | "reset";
-  to?: string; // para navegación
+  to?: string;
   disabled?: boolean;
-  className?: string; // permite pasar clases personalizadas
-  onClick?: () => void; // para compatibilidad con TS
+  className?: string;
+  onClick?: () => void;
 }
 
 const Button: React.FC<Props> = ({
-                                   children,
-                                   backgroundColor = 'blue-600',
-                                   onButtonClick,
-                                   textColor = 'white',
-                                   type = "button",
-                                   to,
-                                   disabled = false,
-                                   className = '',
-                                   onClick,
-                                 }) => {
+  children,
+  variant = "blue",
+  onButtonClick,
+  textColor = "white",
+  type = "button",
+  to,
+  disabled = false,
+  className = "",
+  onClick,
+}) => {
   const navigate = useNavigate();
-
-  const textColorClass = {
-    black: 'text-black',
-    white: 'text-white'
-  };
 
   const handleClick = () => {
     if (disabled) return;
     if (onButtonClick) onButtonClick();
-    if (onClick) onClick(); // permite usar onClick directamente
+    if (onClick) onClick();
     if (to) navigate(to);
   };
 
-  const baseClassName = `
-  inline-flex items-center justify-center
-  px-4 py-2 
-  rounded-md 
-  shadow-sm 
-  bg-${backgroundColor} 
-  ${textColorClass[textColor]}
-  hover:bg-blue-700
-  focus:outline-none focus:ring-2 focus:ring-offset-2
-  transform transition duration-150
-  active:scale-95
-  text-center
-  ${disabled ? 'opacity-50 cursor-not-allowed hover:bg-${backgroundColor}' : ''}
-`;
+  // 🎨 Variantes seguras para Tailwind
+  const colorVariants: Record<string, string> = {
+    blue: "bg-blue-600 hover:bg-blue-700",
+    red: "bg-red-600 hover:bg-red-700",
+    green: "bg-green-600 hover:bg-green-700",
+    gray: "bg-gray-500 hover:bg-gray-600",
+  };
+
+  const textColorClasses = {
+    black: "text-black",
+    white: "text-white",
+  };
+
+  const disabledStyles = disabled
+    ? "opacity-50 cursor-not-allowed"
+    : "";
+
+  const baseStyles = `
+    inline-flex items-center justify-center
+    px-3 py-2 sm:px-4 sm:py-2.5 md:px-5 md:py-3
+    rounded-md shadow-sm
+    text-body-sm md:text-body font-poppins font-medium
+    transition-all duration-150 transform active:scale-95
+    focus:outline-none focus:ring-2 focus:ring-offset-2
+  `;
 
   return (
     <button
       type={type}
       onClick={handleClick}
       disabled={disabled}
-      className={`${baseClassName} ${className}`}
+      className={`
+        ${baseStyles}
+        ${colorVariants[variant]}
+        ${textColorClasses[textColor]}
+        ${disabledStyles}
+        ${className}
+      `}
     >
       {children}
     </button>
