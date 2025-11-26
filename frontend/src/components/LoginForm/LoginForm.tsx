@@ -1,6 +1,6 @@
-import {Link} from 'react-router-dom';
-import Button from '../../components/UI/Button/Button.tsx';
-import FormField from '../../components/FormField/FormField.tsx';
+import { Link } from 'react-router-dom';
+import Button from '../../components/UI/Button/Button';
+import FormField from '../../components/FormField/FormField';
 import { useState } from 'react';
 
 function LoginForm() {
@@ -20,21 +20,21 @@ function LoginForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Lógica de login aquí
     console.log('Datos de login:', formData);
   };
 
   return (
-    <div className="flex w-4/12 justify-center items-center">
+    <div className="flex justify-center items-center w-full px-4 sm:px-6 md:px-0">
       <form
-        className="flex flex-col w-full bg-white rounded-2xl shadow-xl p-8 gap-6"
+        className="flex flex-col w-full max-w-md bg-white rounded-2xl shadow-xl p-6 sm:p-8 gap-4 sm:gap-6"
         onSubmit={handleSubmit}
       >
-        <div className="flex flex-row w-full justify-center mb-2">
-          <p className="text-h2 font-bold text-gray-800 text-center">
-            Iniciar sesión
-          </p>
-        </div>
+        {/* Título */}
+        <h2 className="font-poppins font-bold text-h3 sm:text-h2 text-gray-800 text-center mb-4">
+          Iniciar sesión
+        </h2>
+
+        {/* Username */}
         <FormField
           type="text"
           id="username"
@@ -45,9 +45,11 @@ function LoginForm() {
           required
           placeholder="Ingrese su nombre de usuario"
           containerClass="mb-2"
-          labelClass="text-body"
+          labelClass="text-sm sm:text-base"
           autoComplete="username"
         />
+
+        {/* Password */}
         <FormField
           type="password"
           id="password"
@@ -58,26 +60,30 @@ function LoginForm() {
           required
           placeholder="Ingrese su contraseña"
           containerClass="mb-4"
-          labelClass="text-body"
+          labelClass="text-sm sm:text-base"
           showPasswordToggle={true}
           isPasswordVisible={showPassword}
           onTogglePassword={() => setShowPassword(!showPassword)}
           autoComplete="current-password"
         />
-        <div className="flex flex-row w-full justify-center mt-6 mb-4">
+
+        {/* Botón enviar */}
+        <div className="flex justify-center">
           <Button
             type="submit"
-            className="px-8 py-3 text-body"
+            className="px-6 sm:px-8 py-2 sm:py-3 text-body w-full sm:w-auto sm:max-w-64"
           >
             Enviar
           </Button>
         </div>
-        <div className="text-center">
-          <span className="text-sm text-gray-600">
-            ¿No tiene una cuenta? Regístrate haciendo click {" "}
+
+        {/* Link registro */}
+        <div className="text-center mt-2">
+          <span className="text-sm sm:text-base text-gray-600">
+            ¿No tiene una cuenta? Regístrate haciendo click{' '}
             <Link
               to="/register"
-              className="text-blue-600 hover:text-blue-800 underline bg-transparent border-none cursor-pointer text-sm"
+              className="text-blue-600 hover:text-blue-800 underline"
             >
               aquí
             </Link>
@@ -85,7 +91,7 @@ function LoginForm() {
         </div>
       </form>
     </div>
-  )
+  );
 }
 
 export default LoginForm;

@@ -1,7 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import ImageUpload from "../../components/ImageUpload/ImageUpload.tsx";
-import Button from '../../components/UI/Button/Button'
-import FormField from '../../components/FormField/FormField'
+import Button from '../../components/UI/Button/Button';
+import FormField from '../../components/FormField/FormField';
 
 interface Hospital {
   id: number;
@@ -39,7 +39,6 @@ const HospitalRegisterPage: React.FC = () => {
     phoneNumber: '',
     password: ''
   });
-
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [currentHospital, setCurrentHospital] = useState<Hospital | null>(null);
@@ -47,19 +46,11 @@ const HospitalRegisterPage: React.FC = () => {
   const [profileImage, setProfileImage] = useState<File | null>(null);
 
   useEffect(() => {
-    const hospitalData: Hospital = {
-      id: 0,
-      cif: '',
-      name: '',
-      address: '',
-      email: '',
-      phoneNumber: ''
-    };
+    const hospitalData: Hospital = { id: 0, cif: '', name: '', address: '', email: '', phoneNumber: '' };
     setCurrentHospital(hospitalData);
   }, []);
 
   const validateField = (name: string, value: string): string => {
-    // Declaraciones movidas fuera del switch
     let words: string[];
     let addressParts: string[];
     let hasStreetAndNumber: boolean;
@@ -73,6 +64,7 @@ const HospitalRegisterPage: React.FC = () => {
       /^[a-zA-Z]+\s+\d+/,
     ];
     let domain: string | undefined;
+
     switch (name) {
       case 'cif':
         if (!value.trim()) return 'El CIF es obligatorio';
@@ -146,123 +138,49 @@ const HospitalRegisterPage: React.FC = () => {
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
-
     Object.keys(formData).forEach(key => {
       const error = validateField(key, formData[key as keyof HospitalFormData]);
-      if (error) {
-        newErrors[key as keyof FormErrors] = error;
-      }
+      if (error) newErrors[key as keyof FormErrors] = error;
     });
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
-
-    let sanitizedValue = value;
-
-    switch (name) {
-      case 'name':
-        sanitizedValue = value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s\-.&()]/g, '');
-        if (sanitizedValue.length > 100) sanitizedValue = sanitizedValue.substring(0, 100);
-        break;
-      case 'cif':
-        sanitizedValue = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
-        if (sanitizedValue.length > 10) sanitizedValue = sanitizedValue.substring(0, 10);
-        break;
-      case 'phoneNumber':
-        sanitizedValue = value.replace(/[^\d+\-\s()]/g, '');
-        if (sanitizedValue.length > 15) sanitizedValue = sanitizedValue.substring(0, 15);
-        break;
-      case 'email':
-        sanitizedValue = value.toLowerCase().replace(/\s/g, '');
-        if (sanitizedValue.length > 100) sanitizedValue = sanitizedValue.substring(0, 100);
-        break;
-      case 'password':
-        sanitizedValue = value.replace(/\s/g, '');
-        if (sanitizedValue.length > 32) sanitizedValue = sanitizedValue.substring(0, 32);
-        break;
-      case 'address':
-        sanitizedValue = value.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ\s\-.,#ºª°/:()&]/g, '');
-        sanitizedValue = sanitizedValue.replace(/[.,]{3,}/g, match => match.substring(0, 2));
-        sanitizedValue = sanitizedValue.replace(/\s{2,}/g, ' ');
-        sanitizedValue = sanitizedValue.replace(/\b\w/g, char => char.toUpperCase());
-        if (sanitizedValue.length > 200) sanitizedValue = sanitizedValue.substring(0, 200);
-        break;
-    }
-
-    setFormData(prev => ({
-      ...prev,
-      [name]: sanitizedValue
-    }));
-
-    const error = validateField(name, sanitizedValue);
-    setErrors(prev => ({
-      ...prev,
-      [name]: error
-    }));
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    const error = validateField(name, value);
+    setErrors(prev => ({ ...prev, [name]: error }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validateForm()) {
-      alert('Por favor, corrige los errores en el formulario');
+      alert('Corrige los errores del formulario');
       return;
     }
-
     setLoading(true);
-
     try {
       const submitData = new FormData();
-      submitData.append('cif', formData.cif);
-      submitData.append('name', formData.name);
-      submitData.append('address', formData.address);
-      submitData.append('email', formData.email);
-      submitData.append('phoneNumber', formData.phoneNumber);
-      submitData.append('password', formData.password);
+      Object.entries(formData).forEach(([key, val]) => submitData.append(key, val));
+      if (profileImage) submitData.append('profileImage', profileImage);
 
-      if (profileImage) {
-        submitData.append('profileImage', profileImage);
-      }
-
-      console.log('Registrando hospital:', Object.fromEntries(submitData));
-      console.log('Imagen de perfil:', profileImage);
-
+      console.log('Datos enviados:', Object.fromEntries(submitData));
       await new Promise(resolve => setTimeout(resolve, 1000));
-
       alert('Hospital registrado exitosamente');
-
-      setFormData({
-        cif: '',
-        name: '',
-        address: '',
-        email: '',
-        phoneNumber: '',
-        password: ''
-      });
+      setFormData({ cif: '', name: '', address: '', email: '', phoneNumber: '', password: '' });
       setProfileImage(null);
       setErrors({});
-
-    } catch (error) {
-      console.error('Error registrando hospital:', error);
-      alert('Error al registrar el hospital');
+    } catch (err) {
+      console.error(err);
+      alert('Error al registrar hospital');
     } finally {
       setLoading(false);
     }
   };
 
   const resetForm = () => {
-    setFormData({
-      cif: '',
-      name: '',
-      address: '',
-      email: '',
-      phoneNumber: '',
-      password: ''
-    });
+    setFormData({ cif: '', name: '', address: '', email: '', phoneNumber: '', password: '' });
     setProfileImage(null);
     setErrors({});
     setShowPassword(false);
@@ -275,154 +193,60 @@ const HospitalRegisterPage: React.FC = () => {
           <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
             <path className="opacity-75" fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
           </svg>
-          Cargando...
+          <span className="font-roboto text-body-sm">Cargando...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col w-full min-h-screen items-center bg-gray-100 px-4 sm:px-6 py-6">
-      <div className="flex flex-col w-full max-w-6xl">
-        <div className="flex flex-col gap-6 md:gap-8 pt-6 md:pt-10">
-          {/* Header */}
-          <div className="text-center">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-gray-800 mb-2">
-              Registrar nuevo hospital
-            </h2>
+    <div className="flex flex-col flex-grow items-center bg-gray-100 px-4 sm:px-6 md:px-8 lg:px-12 py-6">
+      <div className="w-full max-w-6xl flex flex-col gap-6 md:gap-8">
+        {/* Título */}
+        <div className="text-center">
+          <h2 className="font-poppins font-semibold text-h3 sm:text-h2 md:text-h1 text-gray-800 mb-2">
+            Registrar nuevo hospital
+          </h2>
+          <p className="font-roboto text-caption sm:text-body-sm md:text-body text-gray-500 mb-4 md:mb-5">
+            Todos los datos son obligatorios
+          </p>
+        </div>
+        <div className="flex flex-col lg:flex-row w-full gap-6 lg:gap-12 items-center">
+          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
+            <ImageUpload onImageChange={setProfileImage} />
           </div>
-          <div className="flex flex-row w-full justify-center">
-            <div className="w-full max-w-md">
-              <ImageUpload onImageChange={setProfileImage}/>
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col w-full max-w-4xl bg-white rounded-xl md:rounded-2xl shadow-sm p-4 sm:p-6 md:p-8"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full">
+              <FormField type="text" id="cif" name="cif" label="CIF" value={formData.cif} onChange={handleInputChange} required disabled={loading} error={errors.cif} placeholder="Ingrese CIF" />
+              <FormField type="text" id="name" name="name" label="Nombre" value={formData.name} onChange={handleInputChange} required disabled={loading} error={errors.name} placeholder="Ingrese nombre" />
+              <FormField type="text" id="address" name="address" label="Dirección" value={formData.address} onChange={handleInputChange} required disabled={loading} error={errors.address} placeholder="Ingrese dirección" />
+              <FormField type="email" id="email" name="email" label="Email" value={formData.email} onChange={handleInputChange} required disabled={loading} error={errors.email} placeholder="Ingrese email" />
+              <FormField type="tel" id="phoneNumber" name="phoneNumber" label="Teléfono" value={formData.phoneNumber} onChange={handleInputChange} required disabled={loading} error={errors.phoneNumber} placeholder="Ingrese teléfono" />
+              <FormField type="password" id="password" name="password" label="Contraseña" value={formData.password} onChange={handleInputChange} required disabled={loading} error={errors.password} placeholder="Ingrese contraseña" showPasswordToggle={true} isPasswordVisible={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} />
             </div>
-          </div>
-          <div className="flex-1">
-            <form
-              onSubmit={handleSubmit}
-              className="flex flex-col p-4 sm:p-6 bg-white rounded-xl md:rounded-2xl shadow-sm w-full"
-            >
-              <p className="text-sm md:text-base text-gray-500 mb-4 md:mb-5 text-center">
-                Todos los datos son obligatorios
-              </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full">
-                <FormField
-                  type="text"
-                  id="cif"
-                  name="cif"
-                  label="CIF"
-                  value={formData.cif}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                  error={errors.cif}
-                  placeholder="Ingrese el CIF"
-                  containerClass="w-full"
-                />
-
-                <FormField
-                  type="text"
-                  id="name"
-                  name="name"
-                  label="Nombre"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                  error={errors.name}
-                  placeholder="Ingrese el nombre"
-                  containerClass="w-full"
-                />
-
-                <FormField
-                  type="text"
-                  id="address"
-                  name="address"
-                  label="Dirección"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                  error={errors.address}
-                  placeholder="Ingrese la dirección"
-                  containerClass="w-full"
-                />
-
-                <FormField
-                  type="email"
-                  id="email"
-                  name="email"
-                  label="Email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                  error={errors.email}
-                  placeholder="Ingrese el email"
-                  containerClass="w-full"
-                />
-
-                <FormField
-                  type="tel"
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  label="Teléfono"
-                  value={formData.phoneNumber}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                  error={errors.phoneNumber}
-                  placeholder="Ingrese el teléfono"
-                  containerClass="w-full"
-                />
-
-                <FormField
-                  type="password"
-                  id="password"
-                  name="password"
-                  label="Contraseña"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                  error={errors.password}
-                  placeholder="Ingrese la contraseña"
-                  containerClass="w-full"
-                  showPasswordToggle={true}
-                  isPasswordVisible={showPassword}
-                  onTogglePassword={() => setShowPassword(!showPassword)}
-                />
-              </div>
-
-              <div className="flex flex-row justify-center sm:flex-row gap-3 mt-6 md:mt-8">
-                <Button
-                  type="submit"
-                  disabled={loading}
-                  className="w-fit sm:flex-1 text-body-sm"
-                >
-                  {loading ? (
-                    <>
-                      <svg className="animate-spin ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Procesando...
-                    </>) : 'Registrar'}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={resetForm}
-                  disabled={loading}
-                  className="w-fit sm:flex-1 text-body-sm"
-                >
-                  Restablecer
-                </Button>
-              </div>
-            </form>
-          </div>
+            <div className="flex flex-row justify-center sm:flex-row gap-3 mt-8">
+              <Button
+                type="submit"
+                disabled={loading}
+                className="px-6 py-3 text-body-sm w-full sm:flex-1 sm:max-w-48"
+              >
+                {loading ? 'Procesando...' : 'Registrar'}
+              </Button>
+              <Button
+                type="button"
+                onClick={resetForm}
+                disabled={loading}
+                className="px-6 py-3 text-body-sm w-full sm:flex-1 sm:max-w-48"
+              >
+                Restablecer
+              </Button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

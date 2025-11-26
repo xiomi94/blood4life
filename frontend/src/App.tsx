@@ -12,25 +12,27 @@ import Footer from "./components/UI/Footer/Footer.tsx";
 
 function App() {
   return (
-    <div className="bg-gray-100">
+    <div className="bg-gray-100 min-h-screen flex flex-col">
       <BrowserRouter>
-        <Header/>
-        <main>
+        <Header />
+
+        <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <Routes>
-            <Route path='/index' element={<Index/>}/>
-            <Route path='/login' element={<Login/>}/>
-            <Route path='/register' element={<Register/>}/>
-            <Route path='/bloodDonors' element={<BloodDonorCrudPage/>}/>
-            <Route path='/registerbloodDonor' element={<BloodDonorRegisterPage/>}/>
-            <Route path='/hospitals' element={<HospitalCrudPage/>}/>
-            <Route path='/registerHospital' element={<HospitalRegisterPage/>}/>
-            <Route path='/' element={<Index/>}/>
+            <Route path="/index" element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/bloodDonors" element={<BloodDonorCrudPage />} />
+            <Route path="/registerbloodDonor" element={<BloodDonorRegisterPage />} />
+            <Route path="/hospitals" element={<HospitalCrudPage />} />
+            <Route path="/registerHospital" element={<HospitalRegisterPage />} />
+            <Route path="/" element={<Index />} />
           </Routes>
         </main>
-        <Footer/>
+
+        <Footer />
       </BrowserRouter>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Logo from "../../../assets/images/LogoShadowMini.webp";
 import Button from '../../UI/Button/Button';
+import ButtonFooter from '../ButtonFooter/ButtonFooter';
 
 const Footer: React.FC = () => {
   const [active, setActive] = useState(false);
@@ -45,11 +46,11 @@ const Footer: React.FC = () => {
       {active && (
         <div className="relative top-0 left-0 w-full h-full bg-red-200 text-white flex flex-col pl-8 pr-8 pt-4 pb-4">
           <div className="flex flex-row w-full items-center">
-            <img src={Logo} alt="Logo" className="h-14 w-14 cursor-pointer hover:opacity-80 transition-opacity"/>
+            <img src={Logo} alt="Logo" className="h-14 w-14 cursor-pointer hover:opacity-80 transition-opacity" />
             <div className="flex flex-row w-full justify-around text-gray-800">
-              <Button>Política de privacidad</Button>
-              <Button>Uso y protección de datos</Button>
-              <Button>Sobre nosotros</Button>
+              <ButtonFooter className="font-roboto text-caption sm:text-body-sm md:text-body whitespace-nowrap">Política de privacidad</ButtonFooter>
+              <ButtonFooter className="font-roboto text-caption sm:text-body-sm md:text-body whitespace-nowrap">Uso y protección de datos</ButtonFooter>
+              <ButtonFooter className="font-roboto text-caption sm:text-body-sm md:text-body whitespace-nowrap">Sobre nosotros</ButtonFooter>
             </div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
