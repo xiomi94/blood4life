@@ -1,8 +1,40 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
+@theme {
+  --font-roboto: "Roboto", sans-serif;
+  --font-poppins: "Poppins", sans-serif;
+}
+
 @layer base {
-  html {
-    font-family: 'Roboto', sans-serif;
+  body {
+    font-family: var(--font-roboto), sans-serif;
+    @apply text-2xl;
+  }
+
+  body-large {
+    font-family: var(--font-roboto), sans-serif;
+    @apply text-lg;
+  }
+
+  body-small {
+    font-family: var(--font-roboto), sans-serif;
+    @apply text-base;
+  }
+
+  caption {
+    font-family: var(--font-roboto), sans-serif;
+    @apply text-sm;
+  }
+
+  display, h1, h2 {
+    font-family: var(--font-poppins), sans-serif;
+    @apply font-bold;
+  }
+
+  h3 {
+    font-family: var(--font-poppins), sans-serif;
+    @apply font-semibold;
   }
 }
