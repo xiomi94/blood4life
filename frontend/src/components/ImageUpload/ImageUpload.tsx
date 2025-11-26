@@ -1,10 +1,10 @@
-import {useState, useRef, useEffect} from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface ImageUploadProps {
   onImageChange: (file: File | null) => void;
 }
 
-const ImageUpload = ({onImageChange}: ImageUploadProps) => {
+const ImageUpload = ({ onImageChange }: ImageUploadProps) => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -48,7 +48,7 @@ const ImageUpload = ({onImageChange}: ImageUploadProps) => {
     <div className="flex items-center justify-center w-full">
       <div
         className="flex flex-col w-full md:w-5/12 items-center justify-center space-y-4 p-4 md:p-6 bg-white rounded-lg border border-gray-200 shadow-sm mx-4 md:mx-0">
-        <h3 className="text-xl md:text-2xl font-semibold text-gray-800 text-center">Foto de Perfil</h3>
+        <h3 className="font-poppins font-semibold text-body-lg md:text-h3 text-gray-800 text-center">Foto de Perfil</h3>
         <div className="flex flex-col items-center space-y-4 w-full">
           {previewUrl ? (
             <div className="relative">
@@ -87,7 +87,7 @@ const ImageUpload = ({onImageChange}: ImageUploadProps) => {
                     d="M12 6v6m0 0v6m0-6h6m-6 0H6"
                   />
                 </svg>
-                <span className="text-xs text-gray-600 font-medium">Subir foto</span>
+                <span className="font-roboto text-caption text-gray-600 font-medium">Subir foto</span>
               </div>
             </button>
           )}
@@ -101,19 +101,19 @@ const ImageUpload = ({onImageChange}: ImageUploadProps) => {
             aria-describedby="file-requirements"
           />
           <div id="file-requirements" className="text-center">
-            <p className="text-xs text-gray-600">
+            <p className="font-roboto text-caption text-gray-600">
               Formatos: JPG, PNG
             </p>
-            <p className="text-xs text-gray-600">
+            <p className="font-roboto text-caption text-gray-600">
               Máximo: 5MB
             </p>
           </div>
           {previewUrl && (
             <div className="text-center">
-              <p className="text-sm text-green-600 font-medium">
+              <p className="font-roboto text-body-sm text-green-600 font-medium">
                 ✓ Imagen lista para guardar
               </p>
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="font-roboto text-caption text-gray-500 mt-1">
                 Se guardará al registrar el hospital
               </p>
             </div>
