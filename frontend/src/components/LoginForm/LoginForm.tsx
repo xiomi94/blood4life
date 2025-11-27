@@ -1,14 +1,22 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../../components/UI/Button/Button';
 import FormField from '../../components/FormField/FormField';
 import { useState } from 'react';
+import { authService } from '../../services/authService';
+import { useAuth } from '../../context/AuthContext';
 
 function LoginForm() {
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   });
+  const [userType, setUserType] = useState<'bloodDonor' | 'hospital'>('bloodDonor');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -18,9 +26,27 @@ function LoginForm() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Datos de login:', formData);
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      await authService.login(formData.username, formData.password, userType);
+      login(userType);
+
+      // Redirect based on user type
+      if (userType === 'bloodDonor') {
+        navigate('/bloodDonors');
+      } else {
+        navigate('/hospitals');
+      }
+    } catch (err: any) {
+      console.error(err);
+      setError(err.response?.data?.error || 'Error al iniciar sesión. Verifique sus credenciales.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -34,19 +60,51 @@ function LoginForm() {
           Iniciar sesión
         </h2>
 
-        {/* Username */}
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <span className="block sm:inline">{error}</span>
+          </div>
+        )}
+
+        {/* User Type Selection */}
+        <div className="flex justify-center gap-4 mb-2">
+          <label className="inline-flex items-center cursor-pointer">
+            <input
+              type="radio"
+              className="form-radio text-blue-600"
+              name="userType"
+              value="bloodDonor"
+              checked={userType === 'bloodDonor'}
+              onChange={() => setUserType('bloodDonor')}
+            />
+            <span className="ml-2 text-gray-700">Donante</span>
+          </label>
+          <label className="inline-flex items-center cursor-pointer">
+            <input
+              type="radio"
+              className="form-radio text-blue-600"
+              name="userType"
+              value="hospital"
+              checked={userType === 'hospital'}
+              onChange={() => setUserType('hospital')}
+            />
+            <span className="ml-2 text-gray-700">Hospital</span>
+          </label>
+        </div>
+
+        {/* Username (Email) */}
         <FormField
-          type="text"
+          type="email"
           id="username"
           name="username"
-          label="Nombre de usuario"
+          label="Correo electrónico"
           value={formData.username}
           onChange={handleInputChange}
           required
-          placeholder="Ingrese su nombre de usuario"
+          placeholder="Ingrese su correo"
           containerClass="mb-2"
           labelClass="text-sm sm:text-base"
-          autoComplete="username"
+          autoComplete="email"
         />
 
         {/* Password */}
@@ -71,9 +129,10 @@ function LoginForm() {
         <div className="flex justify-center">
           <Button
             type="submit"
-            className="px-6 sm:px-8 py-2 sm:py-3 text-body w-full sm:w-auto sm:max-w-64"
+            className="px-6 sm:px-8 py-2 sm:py-3 text-body w-full sm:w-auto sm:max-w-64 disabled:opacity-50"
+            disabled={isLoading}
           >
-            Enviar
+            {isLoading ? 'Cargando...' : 'Enviar'}
           </Button>
         </div>
 

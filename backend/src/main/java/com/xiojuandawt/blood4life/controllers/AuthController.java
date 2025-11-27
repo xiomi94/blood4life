@@ -11,7 +11,9 @@ import com.xiojuandawt.blood4life.services.ImageService;
 import com.xiojuandawt.blood4life.services.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -39,42 +41,43 @@ public class AuthController {
   @Autowired
   private ImageService imageService;
 
-
-//  @PostMapping("/bloodDonor/register")
-//  public ResponseEntity<Map<String, String>> registerBloodDonor(@RequestBody BloodDonor bloodDonor) {
-//    // Comprobamos que no exista otro usuario con el mismo email
-//    Optional<BloodDonor> emailExisting = bloodDonorService.findByEmail(bloodDonor.getEmail());
-//    if (emailExisting.isPresent()) {
-//      return ResponseEntity.status(HttpStatus.CONFLICT)
-//        .body(Map.of("error", "Email already registered"));
-//    }
-//
-//    // Encriptar contraseña
-//    bloodDonor.setPassword(passwordEncoder.encode(bloodDonor.getPassword()));
-//    bloodDonorService.createNew(bloodDonor);
-//
-//    return ResponseEntity.status(HttpStatus.CREATED)
-//      .body(Map.of("status", "OK"));
-//  }
+  // @PostMapping("/bloodDonor/register")
+  // public ResponseEntity<Map<String, String>> registerBloodDonor(@RequestBody
+  // BloodDonor bloodDonor) {
+  // // Comprobamos que no exista otro usuario con el mismo email
+  // Optional<BloodDonor> emailExisting =
+  // bloodDonorService.findByEmail(bloodDonor.getEmail());
+  // if (emailExisting.isPresent()) {
+  // return ResponseEntity.status(HttpStatus.CONFLICT)
+  // .body(Map.of("error", "Email already registered"));
+  // }
+  //
+  // // Encriptar contraseña
+  // bloodDonor.setPassword(passwordEncoder.encode(bloodDonor.getPassword()));
+  // bloodDonorService.createNew(bloodDonor);
+  //
+  // return ResponseEntity.status(HttpStatus.CREATED)
+  // .body(Map.of("status", "OK"));
+  // }
 
   @PostMapping("/bloodDonor/register")
   public ResponseEntity<?> registerBloodDonor(
-    @RequestParam("dni") String dni,
-    @RequestParam("firstName") String firstName,
-    @RequestParam("lastName") String lastName,
-    @RequestParam("gender") String gender,
-    @RequestParam("bloodTypeId") Integer bloodTypeId,
-    @RequestParam("email") String email,
-    @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
-    @RequestParam(value = "dateOfBirth", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date dateOfBirth,
-    @RequestParam("password") String password,
-    @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+      @RequestParam("dni") String dni,
+      @RequestParam("firstName") String firstName,
+      @RequestParam("lastName") String lastName,
+      @RequestParam("gender") String gender,
+      @RequestParam("bloodTypeId") Integer bloodTypeId,
+      @RequestParam("email") String email,
+      @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
+      @RequestParam(value = "dateOfBirth", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateOfBirth,
+      @RequestParam("password") String password,
+      @RequestParam(value = "image", required = false) MultipartFile imageFile) {
 
     try {
       Optional<BloodDonor> existing = bloodDonorService.findByEmail(email);
       if (existing.isPresent()) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
-          .body(Map.of("error", "Email already registered"));
+            .body(Map.of("error", "Email already registered"));
       }
 
       // Guardar imagen
@@ -91,7 +94,7 @@ public class AuthController {
 
       // Crear BloodDonor
       BloodType bloodType = bloodDonorService.findBloodTypeById(bloodTypeId)
-        .orElseThrow(() -> new IllegalArgumentException("Invalid blood type ID"));
+          .orElseThrow(() -> new IllegalArgumentException("Invalid blood type ID"));
 
       BloodDonor bloodDonor = new BloodDonor();
       bloodDonor.setDni(dni);
@@ -124,12 +127,9 @@ public class AuthController {
 
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-        .body(Map.of("error", e.getMessage()));
+          .body(Map.of("error", e.getMessage()));
     }
   }
-
-
-
 
   // 🔹 Login con Authorization: Basic base64(email:password)
   @PostMapping("/bloodDonor/login")
@@ -141,12 +141,11 @@ public class AuthController {
       String email = credentials[0];
       String password = credentials[1];
 
-
       Optional<BloodDonor> bloodDonorOpt = bloodDonorService.findByEmail(email);
 
       if (bloodDonorOpt.isEmpty()) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(Map.of("error", "Invalid credentials"));
+            .body(Map.of("error", "Invalid credentials"));
       }
 
       BloodDonor bloodDonor = bloodDonorOpt.get();
@@ -155,22 +154,29 @@ public class AuthController {
       if (!passwordEncoder.matches(password, bloodDonor.getPassword())) {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(Map.of("error", "Invalid credentials"));
+            .body(Map.of("error", "Invalid credentials"));
       }
 
       // Generar token JWT
       String token = jwtService.generateToken(bloodDonor.getId(), "bloodDonor");
 
-      Map<String, String> responseBody = new HashMap<>();
-      responseBody.put("token", token);
+      // Crear Cookie HttpOnly
+      ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
+          .httpOnly(true)
+          .secure(false) // Cambiar a true en producción con HTTPS
+          .path("/")
+          .maxAge(24 * 60 * 60) // 1 día
+          .sameSite("Strict")
+          .build();
 
-      responseBody.put("status", "OK");
-      return ResponseEntity.ok(responseBody);
+      return ResponseEntity.ok()
+          .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+          .body(Map.of("status", "OK", "message", "Login successful"));
 
     } catch (IllegalArgumentException e) {
 
       return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        .body(Map.of("error", e.getMessage()));
+          .body(Map.of("error", e.getMessage()));
     }
   }
 
@@ -198,7 +204,7 @@ public class AuthController {
     Optional<Hospital> existing = hospitalService.findHospitalByEmail(hospital.getEmail());
     if (existing.isPresent()) {
       return ResponseEntity.status(HttpStatus.CONFLICT)
-        .body(Map.of("error", "The email is already registered"));
+          .body(Map.of("error", "The email is already registered"));
     }
 
     // Encriptar contraseña
@@ -206,7 +212,7 @@ public class AuthController {
     hospitalService.createNew(hospital);
 
     return ResponseEntity.status(HttpStatus.CREATED)
-      .body(Map.of("status", "OK"));
+        .body(Map.of("status", "OK"));
   }
 
   // 🔹 Login con Authorization: Basic base64(email:password)
@@ -219,36 +225,41 @@ public class AuthController {
       String email = credentials[0];
       String password = credentials[1];
 
-
       Optional<Hospital> hospitalOpt = hospitalService.findHospitalByEmail(email);
 
       if (hospitalOpt.isEmpty()) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(Map.of("error", "Invalid credentials"));
+            .body(Map.of("error", "Invalid credentials"));
       }
 
       Hospital hospital = hospitalOpt.get();
-
 
       // Comparar contraseñas
       if (!passwordEncoder.matches(password, hospital.getPassword())) {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-          .body(Map.of("error", "Invalid credentials"));
+            .body(Map.of("error", "Invalid credentials"));
       }
       // Generar token JWT
       String token = jwtService.generateToken(hospital.getId(), "hospital");
 
-      Map<String, String> responseBody = new HashMap<>();
-      responseBody.put("token", token);
+      // Crear Cookie HttpOnly
+      ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
+          .httpOnly(true)
+          .secure(false) // Cambiar a true en producción con HTTPS
+          .path("/")
+          .maxAge(24 * 60 * 60) // 1 día
+          .sameSite("Strict")
+          .build();
 
-      responseBody.put("status", "OK");
-      return ResponseEntity.ok(responseBody);
+      return ResponseEntity.ok()
+          .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+          .body(Map.of("status", "OK", "message", "Login successful"));
 
     } catch (IllegalArgumentException e) {
 
       return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        .body(Map.of("error", e.getMessage()));
+          .body(Map.of("error", e.getMessage()));
     }
   }
 }
