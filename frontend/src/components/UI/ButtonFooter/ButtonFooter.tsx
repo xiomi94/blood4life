@@ -9,12 +9,12 @@ interface Props {
 }
 
 const FooterLink: React.FC<Props> = ({
-                                       children,
-                                       onButtonClick,
-                                       to,
-                                       className = '',
-                                       onClick,
-                                     }) => {
+  children,
+  onButtonClick,
+  to,
+  className = '',
+  onClick,
+}) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
