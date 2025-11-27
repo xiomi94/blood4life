@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import Button from '../../components/UI/Button/Button';
 
 const Register: React.FC = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div className="flex flex-col flex-grow items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
       {/* Título */}
@@ -16,7 +27,7 @@ const Register: React.FC = () => {
       </div>
 
       {/* Tarjetas */}
-      <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 mb-8 w-full max-w-6xl justify-center items-start">
+      <div className={`flex ${isMobile ? 'flex-col items-center' : 'flex-row items-start'} gap-4 sm:gap-6 md:gap-8 mb-8 w-full max-w-6xl justify-center`}>
         {/* Donante */}
         <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 w-full sm:w-5/12 lg:w-1/3 flex flex-col items-center">
           <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-6">
