@@ -46,7 +46,9 @@ public class SecurityConfig {
         .csrf(csrf -> csrf
             .ignoringRequestMatchers(
                 "/api/auth/bloodDonor/register",
-                "/api/auth/bloodDonor/login"))
+                "/api/auth/bloodDonor/login",
+                "/api/auth/hospital/register",
+                "/api/auth/hospital/login"))
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/api/hospital/**").permitAll()

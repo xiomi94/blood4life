@@ -3,32 +3,37 @@ package com.xiojuandawt.blood4life.dto;
 public class HospitalDTO {
 
   private int id;
-
   private String cif;
   private String name;
   private String address;
   private String email;
   private String phoneNumber;
+  private String imageName; // nuevo campo para la imagen
 
   public HospitalDTO() {
   }
 
-  public HospitalDTO(int id, String cif, String name, String address, String email, String phoneNumber) {
+  public HospitalDTO(int id, String cif, String name, String address, String email, String phoneNumber,
+      String imageName) {
     this.id = id;
     this.cif = cif;
     this.name = name;
     this.address = address;
     this.email = email;
     this.phoneNumber = phoneNumber;
+    this.imageName = imageName;
   }
 
-  public HospitalDTO(String cif, String name, String address, String email, String phoneNumber) {
+  public HospitalDTO(String cif, String name, String address, String email, String phoneNumber, String imageName) {
     this.cif = cif;
     this.name = name;
     this.address = address;
     this.email = email;
     this.phoneNumber = phoneNumber;
+    this.imageName = imageName;
   }
+
+  // getters y setters
 
   public int getId() {
     return id;
@@ -76,5 +81,13 @@ public class HospitalDTO {
 
   public void setPhoneNumber(String phoneNumber) {
     this.phoneNumber = phoneNumber;
+  }
+
+  public String getImageName() {
+    return imageName;
+  }
+
+  public void setImageName(String imageName) {
+    this.imageName = imageName;
   }
 }

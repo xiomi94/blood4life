@@ -1,6 +1,7 @@
 package com.xiojuandawt.blood4life.controllers;
 
 import com.xiojuandawt.blood4life.dto.BloodDonorDTO;
+import com.xiojuandawt.blood4life.dto.HospitalDTO;
 import com.xiojuandawt.blood4life.entities.BloodDonor;
 import com.xiojuandawt.blood4life.entities.BloodType;
 import com.xiojuandawt.blood4life.entities.Hospital;
@@ -9,6 +10,7 @@ import com.xiojuandawt.blood4life.services.BloodDonorService;
 import com.xiojuandawt.blood4life.services.HospitalService;
 import com.xiojuandawt.blood4life.services.ImageService;
 import com.xiojuandawt.blood4life.services.JwtService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -19,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -54,27 +55,22 @@ public class AuthController {
       @RequestParam(value = "dateOfBirth", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateOfBirth,
       @RequestParam("password") String password,
       @RequestParam(value = "image", required = false) MultipartFile imageFile) {
-
     try {
       Optional<BloodDonor> existing = bloodDonorService.findByEmail(email);
       if (existing.isPresent()) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-            .body(Map.of("error", "Email already registered"));
+        return errorResponse("Email already registered", HttpStatus.CONFLICT);
       }
 
-      // Guardar imagen
       Image imageEntity = null;
       if (imageFile != null && !imageFile.isEmpty()) {
         String originalFilename = imageFile.getOriginalFilename();
-        String extension = "";
-        if (originalFilename != null && originalFilename.contains(".")) {
-          extension = originalFilename.substring(originalFilename.lastIndexOf("."));
-        }
+        String extension = originalFilename != null && originalFilename.contains(".")
+            ? originalFilename.substring(originalFilename.lastIndexOf("."))
+            : "";
         String imageFileName = UUID.randomUUID().toString() + extension;
         imageEntity = imageService.saveImage(imageFile, imageFileName);
       }
 
-      // Crear BloodDonor
       BloodType bloodType = bloodDonorService.findBloodTypeById(bloodTypeId)
           .orElseThrow(() -> new IllegalArgumentException("Invalid blood type ID"));
 
@@ -92,7 +88,6 @@ public class AuthController {
 
       bloodDonorService.createNew(bloodDonor);
 
-      // Crear DTO
       BloodDonorDTO responseDTO = new BloodDonorDTO();
       responseDTO.setId(bloodDonor.getId());
       responseDTO.setDni(bloodDonor.getDni());
@@ -108,22 +103,18 @@ public class AuthController {
       return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 
     } catch (Exception e) {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-          .body(Map.of("error", e.getMessage()));
+      return errorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   @PostMapping("/bloodDonor/login")
-  public ResponseEntity<?> loginBloodDonor(@RequestHeader(value = "Authorization", required = true) String authHeader) {
+  public ResponseEntity<?> loginBloodDonor(@RequestHeader("Authorization") String authHeader) {
     try {
-
       String[] credentials = extractCredentials(authHeader);
-
       String email = credentials[0];
       String password = credentials[1];
 
       Optional<BloodDonor> bloodDonorOpt = bloodDonorService.findByEmail(email);
-
       if (bloodDonorOpt.isEmpty()) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(Map.of("error", "Credenciales no válidos"));
@@ -133,9 +124,7 @@ public class AuthController {
 
       // Compare passwords
       if (!passwordEncoder.matches(password, bloodDonor.getPassword())) {
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(Map.of("error", "Invalid credentials"));
+        return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
       }
 
       // Generate JWT token
@@ -144,9 +133,9 @@ public class AuthController {
       // Create Cookie HttpOnly
       ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
           .httpOnly(true)
-          .secure(false) // Cambiar a true en producción con HTTPS
+          .secure(false)
           .path("/")
-          .maxAge(24 * 60 * 60) // 1 día
+          .maxAge(24 * 60 * 60)
           .sameSite("Strict")
           .build();
 
@@ -154,10 +143,10 @@ public class AuthController {
           .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
           .body(Map.of("status", "OK", "message", "Login con éxito"));
 
-    } catch (IllegalArgumentException e) {
+      return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(response);
 
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body(Map.of("error", e.getMessage()));
+    } catch (IllegalArgumentException e) {
+      return errorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -167,16 +156,37 @@ public class AuthController {
       throw new IllegalArgumentException("Missing or invalid Authorization header");
     }
 
-    String base64Credentials = authHeader.substring("Basic ".length());
-    byte[] decodedBytes = Base64.getDecoder().decode(base64Credentials);
-    String decodedString = new String(decodedBytes);
+      Image imageEntity = null;
+      if (imageFile != null && !imageFile.isEmpty()) {
+        String originalFilename = imageFile.getOriginalFilename();
+        String extension = originalFilename != null && originalFilename.contains(".")
+            ? originalFilename.substring(originalFilename.lastIndexOf("."))
+            : "";
+        String imageFileName = UUID.randomUUID().toString() + extension;
+        imageEntity = imageService.saveImage(imageFile, imageFileName);
+      }
 
-    if (!decodedString.contains(":")) {
-      throw new IllegalArgumentException("Invalid Basic Auth format. Expected 'email:password'");
-    }
+      Hospital hospital = new Hospital();
+      hospital.setCif(cif);
+      hospital.setName(name);
+      hospital.setAddress(address);
+      hospital.setEmail(email);
+      hospital.setPhoneNumber(phoneNumber);
+      hospital.setPassword(passwordEncoder.encode(password));
+      hospital.setImage(imageEntity);
 
-    return decodedString.split(":", 2);
-  }
+      hospitalService.createNew(hospital);
+
+      HospitalDTO responseDTO = new HospitalDTO();
+      responseDTO.setId(hospital.getId());
+      responseDTO.setCif(hospital.getCif());
+      responseDTO.setName(hospital.getName());
+      responseDTO.setAddress(hospital.getAddress());
+      responseDTO.setEmail(hospital.getEmail());
+      responseDTO.setPhoneNumber(hospital.getPhoneNumber());
+      responseDTO.setImageName(imageEntity != null ? imageEntity.getName() : null);
+
+      return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 
   // Register of new bloodDonor
   @PostMapping("/hospital/register")
@@ -196,51 +206,59 @@ public class AuthController {
         .body(Map.of("status", "OK"));
   }
 
-  // 🔹 Login con Authorization: Basic base64(email:password)
   @PostMapping("/hospital/login")
-  public ResponseEntity<?> loginHospital(@RequestHeader(value = "Authorization", required = true) String authHeader) {
+  public ResponseEntity<?> loginHospital(@RequestHeader("Authorization") String authHeader) {
     try {
-
       String[] credentials = extractCredentials(authHeader);
-
       String email = credentials[0];
       String password = credentials[1];
 
       Optional<Hospital> hospitalOpt = hospitalService.findHospitalByEmail(email);
-
       if (hospitalOpt.isEmpty()) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(Map.of("error", "Invalid credentials"));
+        return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
       }
 
       Hospital hospital = hospitalOpt.get();
-
-      // Comparar contraseñas
       if (!passwordEncoder.matches(password, hospital.getPassword())) {
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-            .body(Map.of("error", "Invalid credentials"));
+        return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
       }
-      // Generar token JWT
-      String token = jwtService.generateToken(hospital.getId(), "hospital");
 
-      // Crear Cookie HttpOnly
+      String token = jwtService.generateToken(hospital.getId(), "hospital");
       ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
           .httpOnly(true)
-          .secure(false) // Cambiar a true en producción con HTTPS
+          .secure(false)
           .path("/")
-          .maxAge(24 * 60 * 60) // 1 día
+          .maxAge(24 * 60 * 60)
           .sameSite("Strict")
           .build();
 
-      return ResponseEntity.ok()
-          .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-          .body(Map.of("status", "OK", "message", "Login successful"));
+      Map<String, Object> response = new HashMap<>();
+      response.put("status", "OK");
+      response.put("message", "Login successful");
+
+      return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(response);
 
     } catch (IllegalArgumentException e) {
-
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-          .body(Map.of("error", e.getMessage()));
+      return errorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
+  }
+
+  // ----------------- UTIL -----------------
+  private String[] extractCredentials(String authHeader) {
+    if (authHeader == null || !authHeader.startsWith("Basic ")) {
+      throw new IllegalArgumentException("Missing or invalid Authorization header");
+    }
+    String base64Credentials = authHeader.substring("Basic ".length());
+    String decodedString = new String(Base64.getDecoder().decode(base64Credentials));
+    if (!decodedString.contains(":")) {
+      throw new IllegalArgumentException("Invalid Basic Auth format. Expected 'email:password'");
+    }
+    return decodedString.split(":", 2);
+  }
+
+  private ResponseEntity<Map<String, String>> errorResponse(String message, HttpStatus status) {
+    Map<String, String> body = new HashMap<>();
+    body.put("error", message);
+    return ResponseEntity.status(status).body(body);
   }
 }
