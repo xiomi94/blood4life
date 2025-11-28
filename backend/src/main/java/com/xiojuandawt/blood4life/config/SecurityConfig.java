@@ -43,21 +43,18 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
-      .csrf(csrf -> csrf
-        .ignoringRequestMatchers(
-          "/api/auth/bloodDonor/register",
-          "/api/auth/bloodDonor/login"
-        )
-      )
-      .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/api/auth/**").permitAll()
-        .requestMatchers("/api/hospital/**").permitAll()
-        .requestMatchers("/api/auth/bloodDonor/login").permitAll()
-        .anyRequest().authenticated()
-      )
-      .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-      .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+        .csrf(csrf -> csrf
+            .ignoringRequestMatchers(
+                "/api/auth/bloodDonor/register",
+                "/api/auth/bloodDonor/login"))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/hospital/**").permitAll()
+            .requestMatchers("/api/auth/bloodDonor/login").permitAll()
+            .anyRequest().authenticated())
+        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
     return http.build();
   }
