@@ -92,7 +92,6 @@ public class AuthController {
         imageEntity = imageService.saveImage(imageFile, imageFileName);
       }
 
-      // Crear BloodDonor
       BloodType bloodType = bloodDonorService.findBloodTypeById(bloodTypeId)
           .orElseThrow(() -> new IllegalArgumentException("Invalid blood type ID"));
 
@@ -110,7 +109,6 @@ public class AuthController {
 
       bloodDonorService.createNew(bloodDonor);
 
-      // Crear DTO
       BloodDonorDTO responseDTO = new BloodDonorDTO();
       responseDTO.setId(bloodDonor.getId());
       responseDTO.setDni(bloodDonor.getDni());
@@ -215,7 +213,70 @@ public class AuthController {
         .body(Map.of("status", "OK"));
   }
 
-  // 🔹 Login con Authorization: Basic base64(email:password)
+  @PostMapping("/bloodDonor/register")
+  public ResponseEntity<?> registerBloodDonor(
+      @RequestParam("dni") String dni,
+      @RequestParam("firstName") String firstName,
+      @RequestParam("lastName") String lastName,
+      @RequestParam("gender") String gender,
+      @RequestParam("bloodTypeId") Integer bloodTypeId,
+      @RequestParam("email") String email,
+      @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
+      @RequestParam(value = "dateOfBirth", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateOfBirth,
+      @RequestParam("password") String password,
+      @RequestParam(value = "image", required = false) MultipartFile imageFile) {
+
+    try {
+      Optional<BloodDonor> existing = bloodDonorService.findByEmail(email);
+      if (existing.isPresent()) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+            .body(Map.of("error", "Email already registered"));
+      }
+
+      // Guardar imagen
+      Image imageEntity = null;
+      if (imageFile != null && !imageFile.isEmpty()) {
+        String originalFilename = imageFile.getOriginalFilename();
+        String extension = "";
+        if (originalFilename != null && originalFilename.contains(".")) {
+          extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        }
+        String imageFileName = UUID.randomUUID().toString() + extension;
+        imageEntity = imageService.saveImage(imageFile, imageFileName);
+      }
+
+      // Crear BloodDonor
+      Hospital hospital = hospitalService.findHospitalById(hospitalId)
+          .orElseThrow(() -> new IllegalArgumentException("Invalid hospital ID"));
+
+      Hospital hospital = new Hospital();
+      hospital.setCif(cif);
+      hospital.setName(name);
+      hospital.setAddress(address);
+      hospital.setEmail(email);
+      hospital.setPhoneNumber(phoneNumber);
+      hospital.setPassword(passwordEncoder.encode(password));
+      hospital.setImage(imageEntity);
+
+      hospitalService.createNew(hospital);
+
+      HospitalDTO responseDTO = new HospitalDTO();
+      responseDTO.setId(hospital.getId());
+      responseDTO.setCif(hospital.getCif());
+      responseDTO.setName(hospital.getName());
+      responseDTO.setAddress(hospital.getAddress());
+      responseDTO.setEmail(hospital.getEmail());
+      responseDTO.setPhoneNumber(hospital.getPhoneNumber());
+      responseDTO.setImageName(imageEntity != null ? imageEntity.getName() : null);
+
+      return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(Map.of("error", e.getMessage("Error, hospital not created")));
+    }
+  }
+
   @PostMapping("/hospital/login")
   public ResponseEntity<?> loginHospital(@RequestHeader(value = "Authorization", required = true) String authHeader) {
     try {
@@ -225,7 +286,7 @@ public class AuthController {
       String email = credentials[0];
       String password = credentials[1];
 
-      Optional<Hospital> hospitalOpt = hospitalService.findHospitalByEmail(email);
+      Optional<Hospital> hospitalOpt = hospitalService.findByEmail(email);
 
       if (hospitalOpt.isEmpty()) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -234,21 +295,19 @@ public class AuthController {
 
       Hospital hospital = hospitalOpt.get();
 
-      // Comparar contraseñas
       if (!passwordEncoder.matches(password, hospital.getPassword())) {
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(Map.of("error", "Invalid credentials"));
       }
-      // Generar token JWT
+
       String token = jwtService.generateToken(hospital.getId(), "hospital");
 
-      // Crear Cookie HttpOnly
       ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
           .httpOnly(true)
-          .secure(false) // Cambiar a true en producción con HTTPS
+          .secure(false)
           .path("/")
-          .maxAge(24 * 60 * 60) // 1 día
+          .maxAge(24 * 60 * 60)
           .sameSite("Strict")
           .build();
 
@@ -261,5 +320,36 @@ public class AuthController {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST)
           .body(Map.of("error", e.getMessage()));
     }
+  }
+
+  private String[] extractCredentials(String authHeader) {
+    if (authHeader == null || !authHeader.startsWith("Basic ")) {
+      throw new IllegalArgumentException("Missing or invalid Authorization header");
+    }
+
+    String base64Credentials = authHeader.substring("Basic ".length());
+    byte[] decodedBytes = Base64.getDecoder().decode(base64Credentials);
+    String decodedString = new String(decodedBytes);
+
+    if (!decodedString.contains(":")) {
+      throw new IllegalArgumentException("Invalid Basic Auth format. Expected 'email:password'");
+    }
+
+    return decodedString.split(":", 2);
+  }
+
+  @PostMapping("/hospital/register")
+  public ResponseEntity<Map<String, String>> registerHospital(@RequestBody Hospital hospital) {
+    Optional<Hospital> existing = hospitalService.findHospitalByEmail(hospital.getEmail());
+    if (existing.isPresent()) {
+      return ResponseEntity.status(HttpStatus.CONFLICT)
+          .body(Map.of("error", "The email is already registered"));
+    }
+
+    hospital.setPassword(passwordEncoder.encode(hospital.getPassword()));
+    hospitalService.createNew(hospital);
+
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(Map.of("status", "OK"));
   }
 }

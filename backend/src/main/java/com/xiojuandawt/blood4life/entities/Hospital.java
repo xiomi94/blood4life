@@ -17,10 +17,15 @@ public class Hospital {
   private String phoneNumber;
   private String password;
 
+  @ManyToOne
+  @JoinColumn(name = "image_id", nullable = true)
+  private Image image;
+
   public Hospital() {
   }
 
-  public Hospital(int id, String cif, String name, String address, String email, String phoneNumber, String password) {
+  public Hospital(int id, String cif, String name, String address, String email, String phoneNumber, String password,
+      Image image) {
     this.id = id;
     this.cif = cif;
     this.name = name;
@@ -28,15 +33,18 @@ public class Hospital {
     this.email = email;
     this.phoneNumber = phoneNumber;
     this.password = password;
+    this.image = image;
   }
 
-  public Hospital(String cif, String name, String address, String email, String phoneNumber, String password) {
+  public Hospital(String cif, String name, String address, String email, String phoneNumber, String password,
+      Image image) {
     this.cif = cif;
     this.name = name;
     this.address = address;
     this.email = email;
     this.phoneNumber = phoneNumber;
     this.password = password;
+    this.image = image;
   }
 
   public int getId() {
@@ -91,7 +99,29 @@ public class Hospital {
     return password;
   }
 
+  public Image getImage() {
+    return image;
+  }
+
+  public void setImage(Image image) {
+    this.image = image;
+  }
+
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  @Override
+  public String toString() {
+    return "Hospital{" +
+        "id=" + id +
+        ", cif='" + cif + '\'' +
+        ", name='" + name + '\'' +
+        ", address='" + address + '\'' +
+        ", email='" + email + '\'' +
+        ", phoneNumber='" + phoneNumber + '\'' +
+        ", password='" + password + '\'' +
+        ", image=" + image +
+        '}';
   }
 }
