@@ -42,7 +42,7 @@ public class AuthController {
   @Autowired
   private ImageService imageService;
 
-  // ----------------- BLOOD DONOR -----------------
+
   @PostMapping("/bloodDonor/register")
   public ResponseEntity<?> registerBloodDonor(
       @RequestParam("dni") String dni,
@@ -116,15 +116,21 @@ public class AuthController {
 
       Optional<BloodDonor> bloodDonorOpt = bloodDonorService.findByEmail(email);
       if (bloodDonorOpt.isEmpty()) {
-        return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(Map.of("error", "Credenciales no válidos"));
       }
 
       BloodDonor bloodDonor = bloodDonorOpt.get();
+
+      // Compare passwords
       if (!passwordEncoder.matches(password, bloodDonor.getPassword())) {
         return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
       }
 
+      // Generate JWT token
       String token = jwtService.generateToken(bloodDonor.getId(), "bloodDonor");
+
+      // Create Cookie HttpOnly
       ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
           .httpOnly(true)
           .secure(false)
@@ -133,9 +139,9 @@ public class AuthController {
           .sameSite("Strict")
           .build();
 
-      Map<String, Object> response = new HashMap<>();
-      response.put("status", "OK");
-      response.put("message", "Login successful");
+      return ResponseEntity.ok()
+          .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+          .body(Map.of("status", "OK", "message", "Login con éxito"));
 
       return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(response);
 
@@ -144,21 +150,11 @@ public class AuthController {
     }
   }
 
-  // ----------------- HOSPITAL -----------------
-  @PostMapping("/hospital/register")
-  public ResponseEntity<?> registerHospital(
-      @RequestParam("cif") String cif,
-      @RequestParam("name") String name,
-      @RequestParam("address") String address,
-      @RequestParam("email") String email,
-      @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
-      @RequestParam("password") String password,
-      @RequestParam(value = "image", required = false) MultipartFile imageFile) {
-    try {
-      Optional<Hospital> existing = hospitalService.findHospitalByEmail(email);
-      if (existing.isPresent()) {
-        return errorResponse("Email already registered", HttpStatus.CONFLICT);
-      }
+  // Extract user and password from header Basic Auth
+  private String[] extractCredentials(String authHeader) {
+    if (authHeader == null || !authHeader.startsWith("Basic ")) {
+      throw new IllegalArgumentException("Missing or invalid Authorization header");
+    }
 
       Image imageEntity = null;
       if (imageFile != null && !imageFile.isEmpty()) {
@@ -192,9 +188,22 @@ public class AuthController {
 
       return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 
-    } catch (Exception e) {
-      return errorResponse(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+  // Register of new bloodDonor
+  @PostMapping("/hospital/register")
+  public ResponseEntity<Map<String, String>> registerHospital(@RequestBody Hospital hospital) {
+    // Comprobamos que no exista otro usuario con el mismo email
+    Optional<Hospital> existing = hospitalService.findHospitalByEmail(hospital.getEmail());
+    if (existing.isPresent()) {
+      return ResponseEntity.status(HttpStatus.CONFLICT)
+          .body(Map.of("error", "The email is already registered"));
     }
+
+    // Encrypt password
+    hospital.setPassword(passwordEncoder.encode(hospital.getPassword()));
+    hospitalService.createNew(hospital);
+
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(Map.of("status", "OK"));
   }
 
   @PostMapping("/hospital/login")
