@@ -16,7 +16,6 @@ function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
 
   const { login } = useAuth();
-  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -35,12 +34,11 @@ function LoginForm() {
       await authService.login(formData.username, formData.password, userType);
       login(userType);
 
-      // Redirect based on user type
-      if (userType === 'bloodDonor') {
-        navigate('/bloodDonors');
-      } else {
-        navigate('/hospitals');
-      }
+      // Aquí podrías hacer la redirección
+      // Ejemplo si más adelante usas window.location:
+      // if (userType === 'bloodDonor') window.location.href = '/bloodDonors';
+      // else window.location.href = '/hospitals';
+
     } catch (err: any) {
       console.error(err);
       setError(err.response?.data?.error || 'Error al iniciar sesión. Verifique sus credenciales.');
@@ -55,7 +53,6 @@ function LoginForm() {
         className="flex flex-col w-full max-w-md bg-white rounded-2xl shadow-xl p-6 sm:p-8 gap-4 sm:gap-6"
         onSubmit={handleSubmit}
       >
-        {/* Título */}
         <h2 className="font-poppins font-bold text-h3 sm:text-h2 text-gray-800 text-center mb-4">
           Iniciar sesión
         </h2>
@@ -66,7 +63,6 @@ function LoginForm() {
           </div>
         )}
 
-        {/* User Type Selection */}
         <div className="flex justify-center gap-4 mb-2">
           <label className="inline-flex items-center cursor-pointer">
             <input
@@ -92,7 +88,6 @@ function LoginForm() {
           </label>
         </div>
 
-        {/* Username (Email) */}
         <FormField
           type="email"
           id="username"
@@ -107,7 +102,6 @@ function LoginForm() {
           autoComplete="email"
         />
 
-        {/* Password */}
         <FormField
           type="password"
           id="password"
@@ -125,7 +119,6 @@ function LoginForm() {
           autoComplete="current-password"
         />
 
-        {/* Botón enviar */}
         <div className="flex justify-center">
           <Button
             type="submit"
@@ -136,7 +129,6 @@ function LoginForm() {
           </Button>
         </div>
 
-        {/* Link registro */}
         <div className="text-center mt-2">
           <span className="text-sm sm:text-base text-gray-600">
             ¿No tiene una cuenta? Regístrate haciendo click{' '}
