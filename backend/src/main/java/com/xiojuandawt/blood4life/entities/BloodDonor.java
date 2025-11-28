@@ -33,9 +33,8 @@ public class BloodDonor {
   public BloodDonor() {
   }
 
-  // Constructor sin imagen
   public BloodDonor(String dni, String firstName, String lastName, String gender, BloodType bloodType,
-                    String email, String phoneNumber, Date dateOfBirth, String password) {
+                    String email, String phoneNumber, Date dateOfBirth, String password, Image image) {
     this.dni = dni;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -45,11 +44,11 @@ public class BloodDonor {
     this.phoneNumber = phoneNumber;
     this.dateOfBirth = dateOfBirth;
     this.password = password;
+    this.image = image;
   }
 
-  // Constructor con ID
   public BloodDonor(int id, String dni, String firstName, String lastName, String gender, BloodType bloodType,
-                    String email, String phoneNumber, Date dateOfBirth, String password) {
+                    String email, String phoneNumber, Date dateOfBirth, String password, Image image) {
     this.id = id;
     this.dni = dni;
     this.firstName = firstName;
@@ -60,9 +59,9 @@ public class BloodDonor {
     this.phoneNumber = phoneNumber;
     this.dateOfBirth = dateOfBirth;
     this.password = password;
+    this.image = image;
   }
 
-  // --- Getters y setters ---
 
   public Integer getId() {
     return id;
