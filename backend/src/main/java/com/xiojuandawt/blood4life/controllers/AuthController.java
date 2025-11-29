@@ -129,6 +129,10 @@ public class AuthController {
           .sameSite("Strict")
           .build();
 
+      Map<String, Object> response = new HashMap<>();
+      response.put("status", "OK");
+      response.put("message", "Login con éxito");
+
       return ResponseEntity.ok()
           .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
           .body(Map.of("status", "OK", "message", "Login successful"));
