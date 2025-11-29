@@ -8,8 +8,12 @@ that we are currently completing. The project consists of a full-stack applicati
 server infrastructure that defines its existence, logic, and storage, ensuring complete, robust, and proper
 functionality based on configurations we decided upon collectively.
 
-The guiding theme for developing this project is that it must be social. We thought of an implementation purpose that
-would improve and aid the management of blood donations for the hospitals.
+## What does Blood4life do?
+
+It's an app designed to connect blood donors with donation drives organized by hospitals and health centers. The
+platform allows donors to quickly and easily find out about drives available in their area and manage their donation history.
+Hospitals, in turn, can publish and promote their drives in real time, facilitating donor recruitment and ensuring blood 
+availability for those who need it.
 
 ## Technologies Used
 
@@ -17,19 +21,13 @@ would improve and aid the management of blood donations for the hospitals.
 * Migrations & seeders: [![FlyWay](https://img.shields.io/badge/-Flyway-CC0200?style=flat&logo=flyway&logoColor=white)](https://flywaydb.org/)
 * ORM: [![Hibernate](https://img.shields.io/badge/-Hibernate-59666C?style=flat&logo=hibernate&logoColor=white)](https://hibernate.org/)
 * Database: [![MySQL](https://img.shields.io/badge/-MySQL-4479A1?style=flat&logo=mysql&logoColor=white)](https://www.mysql.com/)
-* Local Database: [![Docker](https://img.shields.io/badge/-Docker-2496ED?style=flat&logo=docker&logoColor=white)](https://docs.docker.com/desktop/setup/install/windows-install/)
+* Containerization: [![Docker](https://img.shields.io/badge/-Docker-2496ED?style=flat&logo=docker&logoColor=white)](https://docs.docker.com/desktop/setup/install/windows-install/)
 * Frontend: [![ReactJS](https://img.shields.io/badge/-ReactJS-09D3AC?style=flat&logo=createreactapp&logoColor=white)](https://es.react.dev/)
 * API Endpoints: [![PostMan](https://img.shields.io/badge/-Postman-FF6C37?style=flat&logo=postman&logoColor=white)](https://www.postman.com/)
 * Database & Backend deploy: [![Railway](https://img.shields.io/badge/-Railway-0B0D0E?style=flat&logo=railway&logoColor=white)](https://railway.app/)
+* Frontend deploy: [![Firebase](https://img.shields.io/badge/-Firebase-FFCA28?style=flat&logo=firebase&logoColor=white)](https://firebase.google.com/?hl=es-419)
 * Interface design: [![Figma](https://img.shields.io/badge/-Figma-F24E1E?style=flat&logo=figma&logoColor=white)](https://www.figma.com/)
 * Versions control: [![Sourcetree](https://img.shields.io/badge/-Sourcetree-0052CC?style=flat&logo=sourcetree&logoColor=white)](https://www.sourcetreeapp.com/)
-
-## Other technologies used
-
-* [![IntelliJ](https://img.shields.io/badge/-IntelliJ_IDEA-000000?style=flat&logo=intellijidea&logoColor=white)](https://www.jetbrains.com/es-es/idea/)
-* [![Vite](https://img.shields.io/badge/-Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vite.dev/)
-* [![Node.js](https://img.shields.io/badge/-Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)](https://nodejs.org/en/download/)
-* [![Firebase](https://img.shields.io/badge/-Firebase-FFCA28?style=flat&logo=firebase&logoColor=white)](https://firebase.google.com/?hl=es-419)
 
 ## ERD
 
@@ -94,6 +92,7 @@ npm install
 ```bash
 npm run dev
 ``` 
+
 to visualizing the app in localhost
 
 #### Firebase section
@@ -117,7 +116,8 @@ firebase deploy
 Next there will be an explanation for the automatic
 deployment (automatic integration).
 
-You need to generate a secret key at console firebase page in project configuration, it results in a file .json format that need the ```firebase.json``` reference for github
+You need to generate a secret key at console firebase page in project configuration, it results in a file .json format
+that need the ```firebase.json``` reference for github
 
 ### GitHub Actions + Firebase Hosting Flow (for better explanation we did a diagram simulation)
 
@@ -159,10 +159,9 @@ You need to generate a secret key at console firebase page in project configurat
 
 ## Project Links
 
-* [![FrontEnd](https://img.shields.io/badge/-FrontEnd-181717?style=flat&logo=github&logoColor=white)](https://github.com/xiomi94/blood4life-frontend)
 * [![Figma](https://img.shields.io/badge/-Figma-F24E1E?style=flat&logo=figma&logoColor=white)](https://www.figma.com/design/b1wzQ5d4tamVixL3SZzZrg/Blood4Life?node-id=0-1&p=f&t=4vENweVa6vCEpXQd-0)
 * [![GitHub Project](https://img.shields.io/badge/-Github_Project-181717?style=flat&logo=github&logoColor=white)](https://github.com/users/xiomi94/projects/5/views/1)
-* [![PostMan](https://img.shields.io/badge/-APIs-FF6C37?style=flat&logo=postman&logoColor=white)](https://documenter.getpostman.com/view/45089686/2sB3WsPf8P)
+* [![PostMan](https://img.shields.io/badge/-Postman-FF6C37?style=flat&logo=postman&logoColor=white)](https://xiomara-7191213.postman.co/workspace/Xiomara's-Workspace~4d5fdf48-7ec3-4099-8a60-e4ffcf9e3fe5/request/45089686-7c413a94-6b6a-424f-ac64-6d65c2734ebf?action=share&creator=45089686&ctx=documentation)
 
 ## Authors
 
