@@ -7,7 +7,7 @@ export interface LoginResponse {
 }
 
 export const authService = {
-  login: async (email: string, password: string, type: 'bloodDonor' | 'hospital') => {
+  login: async (email: string, password: string, type: 'bloodDonor' | 'hospital' | 'admin') => {
     const credentials = btoa(`${email}:${password}`);
     const response = await axios.post<LoginResponse>(
       `${API_URL}/auth/${type}/login`,

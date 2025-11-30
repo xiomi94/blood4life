@@ -259,186 +259,177 @@ const BloodDonorRegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col w-full h-full items-center bg-gray-100 min-h-screen">
-      <div className="flex flex-col w-11/12 max-w-6xl">
-        <div className="flex flex-col gap-8 pt-10">
-          <div className="flex-1">
-            <form
-              onSubmit={handleRegister}
-              className="flex flex-col p-6 bg-gray-200 rounded-2xl drop-shadow"
-            >
-              <h2 className="text-xl font-semibold text-gray-800 mb-6">
-                Registro de Donante
-              </h2>
+    <div className="flex flex-col flex-grow items-center bg-gray-100 px-4 sm:px-6 md:px-8 lg:px-12 py-6">
+      <div className="w-full max-w-6xl flex flex-col gap-6 md:gap-8">
+        {/* Título */}
+        <div className="text-center">
+          <h2 className="font-poppins font-semibold text-h3 sm:text-h2 md:text-h1 text-gray-800 mb-2">
+            Registrar nuevo donante
+          </h2>
+          <p className="font-roboto text-caption sm:text-body-sm md:text-body text-gray-500 mb-4 md:mb-5">
+            Todos los datos son obligatorios
+          </p>
+        </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-
-                <FormField
-                  type="text"
-                  id="dni"
-                  name="dni"
-                  label="DNI"
-                  value={formData.dni}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                  error={errors.dni}
-                  placeholder="Ingrese el DNI *"
-                  containerClass="w-full"
-                />
-
-                <FormField
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  label="Nombre"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                  error={errors.firstName}
-                  placeholder="Ingrese el nombre *"
-                  containerClass="w-full"
-                />
-
-                <FormField
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  label="Apellidos"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                  error={errors.lastName}
-                  placeholder="Ingrese los apellidos *"
-                  containerClass="w-full"
-                />
-
-
-                <SelectField
-                  id="gender"
-                  name="gender"
-                  label="Género"
-                  value={formData.gender}
-                  onChange={handleSelectChange}
-                  required
-                  disabled={loading}
-                  error={errors.gender}
-                  options={genderOptions}
-                  containerClass="w-full"
-                />
-
-
-                <SelectField
-                  id="bloodType"
-                  name="bloodType"
-                  label="Tipo de sangre"
-                  value={formData.bloodType}
-                  onChange={handleSelectChange}
-                  required
-                  disabled={loading}
-                  error={errors.bloodType}
-                  options={bloodTypeOptions}
-                  containerClass="w-full"
-                />
-
-
-                <FormField
-                  type="email"
-                  id="email"
-                  name="email"
-                  label="Email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                  error={errors.email}
-                  placeholder="Ingrese el email *"
-                  containerClass="w-full"
-                />
-
-
-                <FormField
-                  type="tel"
-                  id="phoneNumber"
-                  name="phoneNumber"
-                  label="Teléfono"
-                  value={formData.phoneNumber}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                  error={errors.phoneNumber}
-                  placeholder="Ingrese el teléfono *"
-                  containerClass="w-full"
-                />
-
-
-                <FormField
-                  type="date"
-                  id="dateOfBirth"
-                  name="dateOfBirth"
-                  label="Fecha de Nacimiento"
-                  value={formData.dateOfBirth}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                  error={errors.dateOfBirth}
-                  containerClass="w-full"
-                />
-
-
-                <FormField
-                  type="password"
-                  id="password"
-                  name="password"
-                  label="Contraseña"
-                  value={formData.password || ''}
-                  onChange={handleInputChange}
-                  required
-                  disabled={loading}
-                  error={errors.password}
-                  placeholder="Ingrese la contraseña *"
-                  containerClass="w-full"
-                  showPasswordToggle={true}
-                  isPasswordVisible={showPassword}
-                  onTogglePassword={() => setShowPassword(!showPassword)}
-                />
-              </div>
-
-              <div className="flex gap-3 mt-6">
-                <Button
-                  type="submit"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                          strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Procesando...
-                    </>) : 'Registrarse'}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={resetForm}
-                  disabled={loading}
-                >
-                  Restablecer
-                </Button>
-              </div>
-            </form>
-          </div>
-          <div className="flex flex-row w-full justify-center">
+        <div className="flex flex-col lg:flex-row w-full gap-6 lg:gap-12 items-center">
+          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
             <ImageUpload
               onImageChange={(file: File | null) => {
                 setSelectedImage(file);
               }}
             />
           </div>
+
+          <form
+            onSubmit={handleRegister}
+            className="flex flex-col w-full max-w-4xl bg-white rounded-xl md:rounded-2xl shadow-sm p-4 sm:p-6 md:p-8"
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full">
+              <FormField
+                type="text"
+                id="dni"
+                name="dni"
+                label="DNI"
+                value={formData.dni}
+                onChange={handleInputChange}
+                required
+                disabled={loading}
+                error={errors.dni}
+                placeholder="Ingrese el DNI"
+              />
+
+              <FormField
+                type="text"
+                id="firstName"
+                name="firstName"
+                label="Nombre"
+                value={formData.firstName}
+                onChange={handleInputChange}
+                required
+                disabled={loading}
+                error={errors.firstName}
+                placeholder="Ingrese el nombre"
+              />
+
+              <FormField
+                type="text"
+                id="lastName"
+                name="lastName"
+                label="Apellidos"
+                value={formData.lastName}
+                onChange={handleInputChange}
+                required
+                disabled={loading}
+                error={errors.lastName}
+                placeholder="Ingrese los apellidos"
+              />
+
+              <SelectField
+                id="gender"
+                name="gender"
+                label="Género"
+                value={formData.gender}
+                onChange={handleSelectChange}
+                required
+                disabled={loading}
+                error={errors.gender}
+                options={genderOptions}
+              />
+
+              <SelectField
+                id="bloodType"
+                name="bloodType"
+                label="Tipo de sangre"
+                value={formData.bloodType}
+                onChange={handleSelectChange}
+                required
+                disabled={loading}
+                error={errors.bloodType}
+                options={bloodTypeOptions}
+              />
+
+              <FormField
+                type="email"
+                id="email"
+                name="email"
+                label="Email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                disabled={loading}
+                error={errors.email}
+                placeholder="Ingrese el email"
+              />
+
+              <FormField
+                type="tel"
+                id="phoneNumber"
+                name="phoneNumber"
+                label="Teléfono"
+                value={formData.phoneNumber}
+                onChange={handleInputChange}
+                required
+                disabled={loading}
+                error={errors.phoneNumber}
+                placeholder="Ingrese el teléfono"
+              />
+
+              <FormField
+                type="date"
+                id="dateOfBirth"
+                name="dateOfBirth"
+                label="Fecha de Nacimiento"
+                value={formData.dateOfBirth}
+                onChange={handleInputChange}
+                required
+                disabled={loading}
+                error={errors.dateOfBirth}
+              />
+
+              <FormField
+                type="password"
+                id="password"
+                name="password"
+                label="Contraseña"
+                value={formData.password || ''}
+                onChange={handleInputChange}
+                required
+                disabled={loading}
+                error={errors.password}
+                placeholder="Ingrese la contraseña"
+                showPasswordToggle={true}
+                isPasswordVisible={showPassword}
+                onTogglePassword={() => setShowPassword(!showPassword)}
+              />
+            </div>
+
+            <div className="flex flex-row justify-center sm:flex-row gap-3 mt-8">
+              <Button
+                type="submit"
+                disabled={loading}
+                className="px-6 py-3 text-body-sm w-full sm:flex-1 sm:max-w-48"
+              >
+                {loading ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                        strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Procesando...
+                  </>) : 'Registrarse'}
+              </Button>
+              <Button
+                type="button"
+                onClick={resetForm}
+                disabled={loading}
+                className="px-6 py-3 text-body-sm w-full sm:flex-1 sm:max-w-48"
+              >
+                Restablecer
+              </Button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

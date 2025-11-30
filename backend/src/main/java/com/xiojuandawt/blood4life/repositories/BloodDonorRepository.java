@@ -1,6 +1,7 @@
 package com.xiojuandawt.blood4life.repositories;
 
 import com.xiojuandawt.blood4life.entities.BloodDonor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +13,7 @@ public interface BloodDonorRepository extends CrudRepository<BloodDonor, Integer
 
   Optional<BloodDonor> findById(Integer id);
 
-  @Query("SELECT b.bloodType.bloodType, COUNT(b) FROM BloodDonor b GROUP BY b.bloodType.bloodType")
+  @Query("SELECT b.bloodType.type, COUNT(b) FROM BloodDonor b GROUP BY b.bloodType.type")
   java.util.List<Object[]> countDonorsByBloodType();
 
   @Query("SELECT b.gender, COUNT(b) FROM BloodDonor b GROUP BY b.gender")
