@@ -10,7 +10,7 @@ function LoginForm() {
     username: '',
     password: ''
   });
-  const [userType, setUserType] = useState<'bloodDonor' | 'hospital'>('bloodDonor');
+  const [userType, setUserType] = useState<'bloodDonor' | 'hospital' | 'admin'>('bloodDonor');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);

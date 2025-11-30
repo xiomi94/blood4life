@@ -2,8 +2,8 @@ import React, { createContext, useState, useContext, useEffect, type ReactNode }
 import axiosInstance from '../utils/axiosInstance';
 
 interface AuthContextType {
-  userType: 'bloodDonor' | 'hospital' | null;
-  login: (type: 'bloodDonor' | 'hospital') => void;
+  userType: 'bloodDonor' | 'hospital' | 'admin' | null;
+  login: (type: 'bloodDonor' | 'hospital' | 'admin') => void;
   logout: () => void;
   isAuthenticated: boolean;
   isLoading: boolean;
@@ -12,7 +12,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [userType, setUserType] = useState<'bloodDonor' | 'hospital' | null>(null);
+  const [userType, setUserType] = useState<'bloodDonor' | 'hospital' | 'admin' | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     checkAuth();
   }, []);
 
-  const login = (type: 'bloodDonor' | 'hospital') => {
+  const login = (type: 'bloodDonor' | 'hospital' | 'admin') => {
     setUserType(type);
     setIsAuthenticated(true);
   };
