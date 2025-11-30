@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import Button from '../../components/UI/Button/Button';
 import FormField from '../../components/FormField/FormField';
 import { useState } from 'react';
@@ -6,6 +6,7 @@ import { authService } from '../../services/authService';
 import { useAuth } from '../../context/AuthContext';
 
 function LoginForm() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -34,10 +35,11 @@ function LoginForm() {
       await authService.login(formData.username, formData.password, userType);
       login(userType);
 
-      // Aquí podrías hacer la redirección
-      // Ejemplo si más adelante usas window.location:
-      // if (userType === 'bloodDonor') window.location.href = '/bloodDonors';
-      // else window.location.href = '/hospitals';
+      if (userType === 'bloodDonor') {
+        navigate('/bloodDonors');
+      } else if (userType === 'hospital') {
+        navigate('/dashboardHospital');
+      }
 
     } catch (err: any) {
       console.error(err);

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
+import { authService } from '../../services/authService';
 import ImageUpload from "../../components/ImageUpload/ImageUpload.tsx";
 import Button from '../../components/UI/Button/Button';
 import FormField from '../../components/FormField/FormField';
@@ -31,6 +33,7 @@ interface FormErrors {
 }
 
 const HospitalRegisterPage: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<HospitalFormData>({
     cif: '',
     name: '',
@@ -163,17 +166,16 @@ const HospitalRegisterPage: React.FC = () => {
     try {
       const submitData = new FormData();
       Object.entries(formData).forEach(([key, val]) => submitData.append(key, val));
-      if (profileImage) submitData.append('profileImage', profileImage);
+      if (profileImage) submitData.append('image', profileImage);
 
-      console.log('Datos enviados:', Object.fromEntries(submitData));
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await authService.registerHospital(submitData);
+
       alert('Hospital registrado exitosamente');
-      setFormData({ cif: '', name: '', address: '', email: '', phoneNumber: '', password: '' });
-      setProfileImage(null);
-      setErrors({});
-    } catch (err) {
+      navigate('/login');
+    } catch (err: any) {
       console.error(err);
-      alert('Error al registrar hospital');
+      const errorMessage = err.response?.data?.error || 'Error al registrar hospital';
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
