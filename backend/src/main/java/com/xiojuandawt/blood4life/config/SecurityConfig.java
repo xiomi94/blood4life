@@ -43,13 +43,7 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
-        .csrf(csrf -> csrf
-            .ignoringRequestMatchers(
-                "/api/auth/bloodDonor/register",
-                "/api/auth/bloodDonor/login",
-                "/api/auth/hospital/register",
-                "/api/auth/hospital/login",
-                "/api/dashboard/**"))
+        .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/api/dashboard/**").permitAll()

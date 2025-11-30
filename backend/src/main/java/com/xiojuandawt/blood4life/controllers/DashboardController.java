@@ -21,12 +21,10 @@ public class DashboardController {
 
   @GetMapping
   public String getDashboard(Model model, @RequestParam(required = false) String filter) {
-    // Fetch stats
+
     List<Object[]> bloodTypeStats = bloodDonorRepository.countDonorsByBloodType();
     List<Object[]> genderStats = bloodDonorRepository.countDonorsByGender();
 
-    // Prepare data for Chart.js
-    // Blood Type Data
     List<String> bloodTypeLabels = bloodTypeStats.stream()
         .map(obj -> (String) obj[0])
         .collect(Collectors.toList());
@@ -34,7 +32,7 @@ public class DashboardController {
         .map(obj -> (Long) obj[1])
         .collect(Collectors.toList());
 
-    // Gender Data
+
     List<String> genderLabels = genderStats.stream()
         .map(obj -> (String) obj[0])
         .collect(Collectors.toList());

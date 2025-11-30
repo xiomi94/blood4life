@@ -1,9 +1,9 @@
 import ImageUpload from "../../components/ImageUpload/ImageUpload.tsx";
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, {useEffect, useState} from "react";
 import Button from '../../components/UI/Button/Button.tsx'
 import FormField from '../../components/FormField/FormField';
 import SelectField from '../../components/SelectField/SelectField';
+import {authService} from "../../services/authService.ts";
 
 interface BloodDonorFormData {
   dni: string,
@@ -14,7 +14,7 @@ interface BloodDonorFormData {
   email: string,
   phoneNumber: string,
   dateOfBirth: string,
-  password?: string
+  password: string
 }
 
 interface ValidationErrors {
@@ -49,22 +49,22 @@ const BloodDonorRegisterPage: React.FC = () => {
 
 
   const genderOptions = [
-    { value: '', label: 'Seleccione un género *' },
-    { value: 'masculino', label: 'Masculino' },
-    { value: 'femenino', label: 'Femenino' },
-    { value: 'prefiero-no-decir', label: 'Prefiero no decirlo' }
+    {value: '', label: 'Seleccione un género *'},
+    {value: 'masculino', label: 'Masculino'},
+    {value: 'femenino', label: 'Femenino'},
+    {value: 'prefiero-no-decir', label: 'Prefiero no decirlo'}
   ];
 
   const bloodTypeOptions = [
-    { value: '', label: 'Seleccione un tipo de sangre *' },
-    { value: 'A+', label: 'A+' },
-    { value: 'A-', label: 'A-' },
-    { value: 'B+', label: 'B+' },
-    { value: 'B-', label: 'B-' },
-    { value: 'AB+', label: 'AB+' },
-    { value: 'AB-', label: 'AB-' },
-    { value: '0+', label: '0+' },
-    { value: '0-', label: '0-' }
+    {value: '', label: 'Seleccione un tipo de sangre *'},
+    {value: 'A+', label: 'A+'},
+    {value: 'A-', label: 'A-'},
+    {value: 'B+', label: 'B+'},
+    {value: 'B-', label: 'B-'},
+    {value: 'AB+', label: 'AB+'},
+    {value: 'AB-', label: 'AB-'},
+    {value: 'O+', label: 'O+'},
+    {value: 'O-', label: 'O-'}
   ];
 
   useEffect(() => {
@@ -162,7 +162,7 @@ const BloodDonorRegisterPage: React.FC = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
 
     setFormData(prev => ({
       ...prev,
@@ -177,7 +177,7 @@ const BloodDonorRegisterPage: React.FC = () => {
   };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
 
     setFormData(prev => ({
       ...prev,
@@ -195,52 +195,61 @@ const BloodDonorRegisterPage: React.FC = () => {
     e.preventDefault();
 
     if (!validateForm()) {
-      alert('Por favor, corrige los errores en el formulario');
+      alert("Por favor, corrige los errores en el formulario");
       return;
     }
 
     setLoading(true);
+    const bloodTypeMap: Record<string, number> = {
+      "A+": 1, "A-": 2,
+      "B+": 3, "B-": 4,
+      "AB+": 5, "AB-": 6,
+      "O+": 7, "O-": 8
+    };
 
-    try {
-      const bloodTypeMap: { [key: string]: number } = {
-        'A+': 1, 'A-': 2, 'B+': 3, 'B-': 4,
-        'AB+': 5, 'AB-': 6, '0+': 7, '0-': 8
-      };
+    const submitData = new FormData();
+    submitData.append("dni", formData.dni);
+    submitData.append("firstName", formData.firstName);
+    submitData.append("lastName", formData.lastName);
+    submitData.append("gender", formData.gender);
 
-      const submitData = new FormData();
-      submitData.append('dni', formData.dni);
-      submitData.append('firstName', formData.firstName);
-      submitData.append('lastName', formData.lastName);
-      submitData.append('gender', formData.gender);
-      submitData.append('bloodTypeId', bloodTypeMap[formData.bloodType].toString());
-      submitData.append('email', formData.email);
-      submitData.append('phoneNumber', formData.phoneNumber);
-      submitData.append('dateOfBirth', formData.dateOfBirth);
-      if (formData.password) submitData.append('password', formData.password);
+    submitData.append(
+      "bloodTypeId",
+      bloodTypeMap[formData.bloodType].toString()
+    );
 
-      if (selectedImage) {
-        submitData.append('image', selectedImage);
-      }
+    submitData.append("email", formData.email);
 
-      const response = await axios.post('http://localhost:8080/api/auth/bloodDonor/register', submitData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      console.log('Respuesta del backend:', response.data);
-      alert('Donante registrado correctamente');
-      resetForm();
-      setSelectedImage(null);
-
-    } catch (err: unknown) {
-      const error = err as { response?: { data?: { error?: string } } };
-      console.error('Error registrando donante:', error);
-      alert(error.response?.data?.error || 'Error al registrar los datos del donante');
-    } finally {
-      setLoading(false);
+    if (formData.phoneNumber) {
+      submitData.append("phoneNumber", formData.phoneNumber);
     }
+
+    if (formData.dateOfBirth) {
+      submitData.append("dateOfBirth", formData.dateOfBirth.split("T")[0]);
+    }
+
+    submitData.append("password", formData.password);
+
+    if (selectedImage) {
+      submitData.append("image", selectedImage);
+    }
+
+    authService.registerBloodDonor(submitData)
+      .then((response) => {
+        console.log("Registro exitoso:", response.data);
+        alert("Donante registrado correctamente");
+        resetForm();
+        setSelectedImage(null);
+      })
+      .catch((err) => {
+        console.error("Error registrando donante:", err);
+        alert(err.response?.data?.error || "Error al registrar");
+      })
+      .finally(() => {
+        setLoading(false)
+      });
   };
+
 
   const resetForm = () => {
     setFormData({
@@ -413,9 +422,9 @@ const BloodDonorRegisterPage: React.FC = () => {
                   <>
                     <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                        strokeWidth="4"></circle>
+                              strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     Procesando...
                   </>) : 'Registrarse'}
