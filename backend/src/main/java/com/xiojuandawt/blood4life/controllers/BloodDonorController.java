@@ -39,7 +39,7 @@ public class BloodDonorController {
 
     );
     return ResponseEntity
-      .status(HttpStatus.OK).body(me);
+      .status(HttpStatus.OK).body(meDTO);
   }
 
   @GetMapping

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_URL } from '../config';
+import axiosInstance from "../utils/axiosInstance.ts";
 
 export interface LoginResponse {
   status: string;
@@ -25,4 +26,12 @@ export const authService = {
     const response = await axios.post(`${API_URL}/auth/hospital/register`, hospitalData);
     return response.data;
   },
+
+  registerBloodDonor: (submitData: FormData) => {
+    return axiosInstance.post(
+      `/auth/bloodDonor/register`,
+      submitData,
+      { withCredentials: false }
+    );
+  }
 };
