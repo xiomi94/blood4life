@@ -31,15 +31,15 @@ availability for those who need it.
 
 ## ERD
 
-<img src="./docs/ERD.png" alt="Diagrama entidad-relación" width="600">
+<img src="docs/images/ERD.png" alt="Diagrama entidad-relación" width="600">
 
 ## Use case diagram
 
-<img src="./docs/use-case-diagram.png" alt="Diagrama de casos de uso" width="600">
+<img src="docs/images/use-case-diagram.png" alt="Diagrama de casos de uso" width="600">
 
 ## Class diagram
 
-<img src="./docs/class-diagram.png" alt="Classes diagram" width="600">
+<img src="docs/images/class-diagram.png" alt="Classes diagram" width="600">
 
 # Backend
 
