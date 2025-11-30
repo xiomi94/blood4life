@@ -134,7 +134,7 @@ public class AuthController {
 
       return ResponseEntity.ok()
           .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-          .body(Map.of("status", "OK", "message", "Login successful"));
+          .body(response);
 
     } catch (IllegalArgumentException e) {
       return errorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
