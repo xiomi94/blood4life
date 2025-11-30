@@ -2,6 +2,8 @@ package com.xiojuandawt.blood4life.entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "blood_type")
 public class BloodType {
@@ -11,6 +13,9 @@ public class BloodType {
   private Integer id;
 
   private String type;
+
+  @ManyToMany(mappedBy = "bloodTypes")
+  private List<Campaign> campaigns;
 
   public BloodType() {
   }
