@@ -36,6 +36,13 @@ function Header() {
               </Button>
             </div>
           )}
+          {(location.pathname === '/dashboard') && (
+            <div className="flex items-center space-x-3 pr-4">
+              <Button to="/index">
+                Inicio
+              </Button>
+            </div>
+          )}
         </>
       )}
     </div>

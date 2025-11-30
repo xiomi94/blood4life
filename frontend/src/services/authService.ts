@@ -21,4 +21,8 @@ export const authService = {
     );
     return response.data;
   },
+  registerHospital: async (hospitalData: FormData) => {
+    const response = await axios.post(`${API_URL}/auth/hospital/register`, hospitalData);
+    return response.data;
+  },
 };
