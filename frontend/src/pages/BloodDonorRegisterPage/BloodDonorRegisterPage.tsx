@@ -1,22 +1,9 @@
 import ImageUpload from "../../components/ImageUpload/ImageUpload.tsx";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Button from '../../components/UI/Button/Button.tsx'
 import FormField from '../../components/FormField/FormField';
 import SelectField from '../../components/SelectField/SelectField';
-
-interface BloodDonor {
-  id?: number,
-  dni: string,
-  firstName: string,
-  lastName: string,
-  gender: string,
-  bloodType: string,
-  email: string,
-  phoneNumber: string,
-  dateOfBirth: string,
-  password?: string
-}
 
 interface BloodDonorFormData {
   dni: string,
@@ -57,59 +44,45 @@ const BloodDonorRegisterPage: React.FC = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const [currentBloodDonor, setCurrentBloodDonor] = useState<BloodDonor | null>(null);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
-  // Opciones para los select
+
   const genderOptions = [
-    {value: '', label: 'Seleccione un género *'},
-    {value: 'masculino', label: 'Masculino'},
-    {value: 'femenino', label: 'Femenino'},
-    {value: 'prefiero-no-decir', label: 'Prefiero no decirlo'}
+    { value: '', label: 'Seleccione un género *' },
+    { value: 'masculino', label: 'Masculino' },
+    { value: 'femenino', label: 'Femenino' },
+    { value: 'prefiero-no-decir', label: 'Prefiero no decirlo' }
   ];
 
   const bloodTypeOptions = [
-    {value: '', label: 'Seleccione un tipo de sangre *'},
-    {value: 'A+', label: 'A+'},
-    {value: 'A-', label: 'A-'},
-    {value: 'B+', label: 'B+'},
-    {value: 'B-', label: 'B-'},
-    {value: 'AB+', label: 'AB+'},
-    {value: 'AB-', label: 'AB-'},
-    {value: '0+', label: '0+'},
-    {value: '0-', label: '0-'}
+    { value: '', label: 'Seleccione un tipo de sangre *' },
+    { value: 'A+', label: 'A+' },
+    { value: 'A-', label: 'A-' },
+    { value: 'B+', label: 'B+' },
+    { value: 'B-', label: 'B-' },
+    { value: 'AB+', label: 'AB+' },
+    { value: 'AB-', label: 'AB-' },
+    { value: '0+', label: '0+' },
+    { value: '0-', label: '0-' }
   ];
 
   useEffect(() => {
-    const bloodDonorData: BloodDonor = {
-      id: 1,
-      dni: '54136071M',
-      firstName: 'Xiomara',
-      lastName: 'Jiménez Velázquez',
-      gender: 'Femenino',
-      bloodType: '0+',
-      email: 'xiomarajimenezvelazquez@alumno.ieselrincon.es',
-      phoneNumber: '658663494',
-      dateOfBirth: '',
-      password: ''
-    };
-    setCurrentBloodDonor(bloodDonorData);
 
     setFormData({
-      dni: bloodDonorData.dni,
-      firstName: bloodDonorData.firstName,
-      lastName: bloodDonorData.lastName,
-      gender: bloodDonorData.gender,
-      bloodType: bloodDonorData.bloodType,
-      email: bloodDonorData.email,
-      phoneNumber: bloodDonorData.phoneNumber,
-      dateOfBirth: bloodDonorData.dateOfBirth,
-      password: bloodDonorData.password || ''
+      dni: '',
+      firstName: '',
+      lastName: '',
+      gender: '',
+      bloodType: '',
+      email: '',
+      phoneNumber: '',
+      dateOfBirth: '',
+      password: ''
     });
   }, []);
 
-  // Función de validación
+
   const validateField = (name: string, value: string): string => {
     switch (name) {
       case 'dni':
@@ -188,9 +161,8 @@ const BloodDonorRegisterPage: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Función separada para inputs
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
 
     setFormData(prev => ({
       ...prev,
@@ -204,9 +176,8 @@ const BloodDonorRegisterPage: React.FC = () => {
     }));
   };
 
-  // Función separada para selects
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
 
     setFormData(prev => ({
       ...prev,
@@ -220,7 +191,7 @@ const BloodDonorRegisterPage: React.FC = () => {
     }));
   };
 
-  const handleUpdate = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -231,12 +202,17 @@ const BloodDonorRegisterPage: React.FC = () => {
     setLoading(true);
 
     try {
+      const bloodTypeMap: { [key: string]: number } = {
+        'A+': 1, 'A-': 2, 'B+': 3, 'B-': 4,
+        'AB+': 5, 'AB-': 6, '0+': 7, '0-': 8
+      };
+
       const submitData = new FormData();
       submitData.append('dni', formData.dni);
       submitData.append('firstName', formData.firstName);
       submitData.append('lastName', formData.lastName);
       submitData.append('gender', formData.gender);
-      submitData.append('bloodType', formData.bloodType);
+      submitData.append('bloodTypeId', bloodTypeMap[formData.bloodType].toString());
       submitData.append('email', formData.email);
       submitData.append('phoneNumber', formData.phoneNumber);
       submitData.append('dateOfBirth', formData.dateOfBirth);
@@ -246,7 +222,7 @@ const BloodDonorRegisterPage: React.FC = () => {
         submitData.append('image', selectedImage);
       }
 
-      const response = await axios.post('http://TU_BACKEND_URL/api/register', submitData, {
+      const response = await axios.post('http://localhost:8080/api/auth/bloodDonor/register', submitData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -258,46 +234,29 @@ const BloodDonorRegisterPage: React.FC = () => {
       setSelectedImage(null);
 
     } catch (err: unknown) {
-      const error = err as { response?: { data?: { message?: string } } };
+      const error = err as { response?: { data?: { error?: string } } };
       console.error('Error registrando donante:', error);
-      alert(error.response?.data?.message || 'Error al registrar los datos del donante');
+      alert(error.response?.data?.error || 'Error al registrar los datos del donante');
     } finally {
       setLoading(false);
     }
   };
 
   const resetForm = () => {
-    if (currentBloodDonor) {
-      setFormData({
-        dni: currentBloodDonor.dni,
-        firstName: currentBloodDonor.firstName,
-        lastName: currentBloodDonor.lastName,
-        gender: currentBloodDonor.gender,
-        bloodType: currentBloodDonor.bloodType,
-        email: currentBloodDonor.email,
-        phoneNumber: currentBloodDonor.phoneNumber,
-        dateOfBirth: currentBloodDonor.dateOfBirth,
-        password: ''
-      });
-    }
+    setFormData({
+      dni: '',
+      firstName: '',
+      lastName: '',
+      gender: '',
+      bloodType: '',
+      email: '',
+      phoneNumber: '',
+      dateOfBirth: '',
+      password: ''
+    });
     setShowPassword(false);
     setErrors({});
   };
-
-  if (!currentBloodDonor) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="inline-flex items-center">
-          <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          Cargando datos del donante...
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col w-full h-full items-center bg-gray-100 min-h-screen">
@@ -305,15 +264,15 @@ const BloodDonorRegisterPage: React.FC = () => {
         <div className="flex flex-col gap-8 pt-10">
           <div className="flex-1">
             <form
-              onSubmit={handleUpdate}
+              onSubmit={handleRegister}
               className="flex flex-col p-6 bg-gray-200 rounded-2xl drop-shadow"
             >
               <h2 className="text-xl font-semibold text-gray-800 mb-6">
-                Gestionar datos del donante
+                Registro de Donante
               </h2>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
-                {/* DNI */}
+
                 <FormField
                   type="text"
                   id="dni"
@@ -328,7 +287,6 @@ const BloodDonorRegisterPage: React.FC = () => {
                   containerClass="w-full"
                 />
 
-                {/* Nombre */}
                 <FormField
                   type="text"
                   id="firstName"
@@ -343,7 +301,6 @@ const BloodDonorRegisterPage: React.FC = () => {
                   containerClass="w-full"
                 />
 
-                {/* Apellidos */}
                 <FormField
                   type="text"
                   id="lastName"
@@ -358,7 +315,7 @@ const BloodDonorRegisterPage: React.FC = () => {
                   containerClass="w-full"
                 />
 
-                {/* Género */}
+
                 <SelectField
                   id="gender"
                   name="gender"
@@ -372,7 +329,7 @@ const BloodDonorRegisterPage: React.FC = () => {
                   containerClass="w-full"
                 />
 
-                {/* Tipo de Sangre */}
+
                 <SelectField
                   id="bloodType"
                   name="bloodType"
@@ -386,7 +343,7 @@ const BloodDonorRegisterPage: React.FC = () => {
                   containerClass="w-full"
                 />
 
-                {/* Email */}
+
                 <FormField
                   type="email"
                   id="email"
@@ -401,7 +358,7 @@ const BloodDonorRegisterPage: React.FC = () => {
                   containerClass="w-full"
                 />
 
-                {/* Teléfono */}
+
                 <FormField
                   type="tel"
                   id="phoneNumber"
@@ -416,7 +373,7 @@ const BloodDonorRegisterPage: React.FC = () => {
                   containerClass="w-full"
                 />
 
-                {/* Fecha de Nacimiento */}
+
                 <FormField
                   type="date"
                   id="dateOfBirth"
@@ -430,7 +387,7 @@ const BloodDonorRegisterPage: React.FC = () => {
                   containerClass="w-full"
                 />
 
-                {/* Contraseña */}
+
                 <FormField
                   type="password"
                   id="password"
@@ -458,12 +415,12 @@ const BloodDonorRegisterPage: React.FC = () => {
                     <>
                       <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                strokeWidth="4"></circle>
+                          strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
                       Procesando...
-                    </>) : 'Actualizar datos'}
+                    </>) : 'Registrarse'}
                 </Button>
                 <Button
                   type="button"

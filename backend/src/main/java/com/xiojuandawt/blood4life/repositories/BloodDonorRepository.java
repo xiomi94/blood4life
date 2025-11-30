@@ -9,6 +9,12 @@ import java.util.Optional;
 @Repository
 public interface BloodDonorRepository extends CrudRepository<BloodDonor, Integer> {
   Optional<BloodDonor> findByEmail(String email);
-  Optional<BloodDonor> findById(Integer id);
-}
 
+  Optional<BloodDonor> findById(Integer id);
+
+  @Query("SELECT b.bloodType.bloodType, COUNT(b) FROM BloodDonor b GROUP BY b.bloodType.bloodType")
+  java.util.List<Object[]> countDonorsByBloodType();
+
+  @Query("SELECT b.gender, COUNT(b) FROM BloodDonor b GROUP BY b.gender")
+  java.util.List<Object[]> countDonorsByGender();
+}

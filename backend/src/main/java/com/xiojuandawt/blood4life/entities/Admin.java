@@ -10,20 +10,20 @@ public class Admin {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  private String emaill;
+  private String email;
   private String password;
 
   public Admin() {
   }
 
-  public Admin(Integer id, String emaill, String password) {
+  public Admin(Integer id, String email, String password) {
     this.id = id;
-    this.emaill = emaill;
+    this.email = email;
     this.password = password;
   }
 
-  public Admin(String emaill, String password) {
-    this.emaill = emaill;
+  public Admin(String email, String password) {
+    this.email = email;
     this.password = password;
   }
 
@@ -35,12 +35,12 @@ public class Admin {
     this.id = id;
   }
 
-  public String getEmaill() {
-    return this.emaill;
+  public String getEmail() {
+    return this.email;
   }
 
-  public void setEmaill(String emaill) {
-    this.emaill = emaill;
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   public String getPassword() {
