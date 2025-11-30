@@ -29,17 +29,9 @@ availability for those who need it.
 * Interface design: [![Figma](https://img.shields.io/badge/-Figma-F24E1E?style=flat&logo=figma&logoColor=white)](https://www.figma.com/)
 * Versions control: [![Sourcetree](https://img.shields.io/badge/-Sourcetree-0052CC?style=flat&logo=sourcetree&logoColor=white)](https://www.sourcetreeapp.com/)
 
-## ERD
+## Diagrams and deployment documentation
 
-<img src="docs/images/ERD.png" alt="Diagrama entidad-relación" width="600">
-
-## Use case diagram
-
-<img src="docs/images/use-case-diagram.png" alt="Diagrama de casos de uso" width="600">
-
-## Class diagram
-
-<img src="docs/images/class-diagram.png" alt="Classes diagram" width="600">
+- [![Docs](https://img.shields.io/badge/-Docs-437291?style=flat&logoColor=white)](https://github.com/xiomi94/blood4life/tree/main/docs)
 
 # Backend
 
