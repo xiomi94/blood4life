@@ -17,7 +17,7 @@ import jakarta.persistence.Table;
 public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "appointment_status_id", nullable = false)
@@ -39,11 +39,11 @@ public class Appointment {
     private LocalDate dateAppointment;
 
     // getters y setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

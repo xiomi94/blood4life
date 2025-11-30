@@ -42,7 +42,6 @@ public class AuthController {
   @Autowired
   private ImageService imageService;
 
-  // ------------------ BLOOD DONOR ------------------
   @PostMapping("/bloodDonor/register")
   public ResponseEntity<?> registerBloodDonor(
       @RequestParam("dni") String dni,
@@ -142,7 +141,6 @@ public class AuthController {
     }
   }
 
-  // ------------------ HOSPITAL ------------------
   @PostMapping("/hospital/register")
   public ResponseEntity<?> registerHospital(
       @RequestParam("cif") String cif,
@@ -217,16 +215,19 @@ public class AuthController {
           .sameSite("Strict")
           .build();
 
+      Map<String, Object> response = new HashMap<>();
+      response.put("status", "OK");
+      response.put("message", "Login successful");
+
       return ResponseEntity.ok()
           .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-          .body(Map.of("status", "OK", "message", "Login successful"));
+          .body(response);
 
     } catch (IllegalArgumentException e) {
       return errorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
   }
 
-  // ------------------ UTIL ------------------
   private String[] extractCredentials(String authHeader) {
     if (authHeader == null || !authHeader.startsWith("Basic ")) {
       throw new IllegalArgumentException("Missing or invalid Authorization header");
