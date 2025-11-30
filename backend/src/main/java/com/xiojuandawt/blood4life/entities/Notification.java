@@ -15,7 +15,7 @@ import jakarta.persistence.Table;
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "received_id", nullable = false)
@@ -26,11 +26,11 @@ public class Notification {
     private LocalDate dateNotification;
 
     // getters y setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
