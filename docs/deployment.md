@@ -36,7 +36,7 @@ perform the deployment.
 
 And once all the relevant configurations have been made, we consider the deployment complete.
 
-![img_1.png](./docs/images/img_1.png)
+![img_1.png](/docs/images/img_1.png)
 
 In case you need a installation, here are the guide:
 
