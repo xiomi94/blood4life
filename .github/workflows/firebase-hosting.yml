@@ -8,23 +8,31 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          
+          check-latest: true
+
+      - name: Clean node modules and npm cache
+        working-directory: ./frontend
+        run: |
+          rm -rf node_modules package-lock.json
+          npm cache clean --force
+
       - name: Install dependencies
         working-directory: ./frontend
         run: npm install
-        
+
       - name: Build React App
         working-directory: ./frontend
         run: npm run build
-        
+
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
