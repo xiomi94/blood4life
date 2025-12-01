@@ -6,11 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/dashboard")
@@ -20,31 +18,33 @@ public class DashboardController {
   private BloodDonorRepository bloodDonorRepository;
 
   @GetMapping
-  public String getDashboard(Model model, @RequestParam(required = false) String filter) {
+  public String getDashboard(Model model) {
 
     List<Object[]> bloodTypeStats = bloodDonorRepository.countDonorsByBloodType();
     List<Object[]> genderStats = bloodDonorRepository.countDonorsByGender();
 
-    List<String> bloodTypeLabels = bloodTypeStats.stream()
-        .map(obj -> (String) obj[0])
-        .collect(Collectors.toList());
-    List<Long> bloodTypeCounts = bloodTypeStats.stream()
-        .map(obj -> (Long) obj[1])
-        .collect(Collectors.toList());
+    model.addAttribute("bloodTypeLabels", getLabels(bloodTypeStats));
+    model.addAttribute("bloodTypeCounts", getCounts(bloodTypeStats));
+    model.addAttribute("genderLabels", getLabels(genderStats));
+    model.addAttribute("genderCounts", getCounts(genderStats));
 
-
-    List<String> genderLabels = genderStats.stream()
-        .map(obj -> (String) obj[0])
-        .collect(Collectors.toList());
-    List<Long> genderCounts = genderStats.stream()
-        .map(obj -> (Long) obj[1])
-        .collect(Collectors.toList());
-
-    model.addAttribute("bloodTypeLabels", bloodTypeLabels);
-    model.addAttribute("bloodTypeCounts", bloodTypeCounts);
-    model.addAttribute("genderLabels", genderLabels);
-    model.addAttribute("genderCounts", genderCounts);
-
-    return "dashboard";
+    return "bloodDonorDashboard";
   }
+
+  private List<String> getLabels(List<Object[]> stats) {
+    List<String> labels = new ArrayList<>();
+    for (Object[] row : stats) {
+      labels.add((String) row[0]);
+    }
+    return labels;
+  }
+
+  private List<Long> getCounts(List<Object[]> stats) {
+    List<Long> counts = new ArrayList<>();
+    for (Object[] row : stats) {
+      counts.add((Long) row[1]);
+    }
+    return counts;
+  }
+
 }

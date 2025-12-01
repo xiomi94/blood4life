@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood4Life Dashboard</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#2563eb', // blue-600
+                        secondary: '#475569', // slate-600
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100 font-sans min-h-screen">
+
+    <!-- Layout Container -->
+    <div class="flex min-h-screen">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-100 border-r border-gray-200 flex flex-col">
+            <!-- Logo -->
+            <div class="p-6 flex items-center justify-center">
+                <img src="/frontend/src/assets/images/Logo.webp" alt="Blood4Life Logo" class="h-16 w-auto">
+            </div>
+
+            <!-- Register Button -->
+            <div class="px-4 mb-6">
+                <button
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Nueva donación
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 px-4">
+                <a href="#"
+                    class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-200 rounded-lg mb-1 transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    <span class="font-medium">Inicio</span>
+                </a>
+                <a href="#"
+                    class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-200 rounded-lg mb-1 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                    <span class="font-medium">Mis campañas</span>
+                </a>
+                <a href="#"
+                    class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-200 rounded-lg mb-1 transition-colors relative">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    <span class="font-medium">Noticias</span>
+                    <span
+                        class="absolute right-4 top-3 bg-blue-600 text-white text-xs font-bold px-1.5 py-0.5 rounded">NEW</span>
+                </a>
+            </nav>
+
+            <!-- Footer -->
+            <div class="p-4 text-xs text-gray-500 border-t border-gray-200">
+                <p class="mb-1">Blood4Life © 2025</p>
+                <p>Todos los derechos reservados.</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto">
+
+            <!-- Header -->
+            <header class="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between">
+                <h1 class="text-2xl font-semibold text-gray-800">Dashboard</h1>
+                <div class="flex items-center gap-4">
+                    <!-- Notifications -->
+                    <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                        </svg>
+                        <span class="absolute top-1 right-1 w-2 h-2 bg-blue-600 rounded-full"></span>
+                    </button>
+                    <!-- Bell -->
+                    <button class="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                    </button>
+                    <!-- User Avatar -->
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full"></div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="p-8">
+
+                <!-- Campañas disponibles -->
+                <section class="mb-8">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Campañas disponibles</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <!-- Campaign Card 1 -->
+                        <div
+                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                            <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Hospital Doctor Negrín</p>
+                            <p class="text-2xl font-bold text-gray-800">7 vacantes</p>
+                        </div>
+                        <!-- Campaign Card 2 -->
+                        <div
+                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                            <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Hospital Insular</p>
+                            <p class="text-2xl font-bold text-gray-800">12 vacantes</p>
+                        </div>
+                        <!-- Campaign Card 3 -->
+                        <div
+                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                            <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Hospital La Paloma</p>
+                            <p class="text-2xl font-bold text-gray-800">17 vacantes</p>
+                        </div>
+                        <!-- Campaign Card 4 -->
+                        <div
+                            class="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                            <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Hospital Perpetuo Socorro</p>
+                            <p class="text-2xl font-bold text-gray-800">17 vacantes</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Main Grid: Charts + Sidebar -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                    <!-- Left Column: Charts Section -->
+                    <div class="lg:col-span-2 space-y-6">
+
+                        <!-- Estadísticas (Charts) -->
+                        <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <div class="flex items-center justify-between mb-6">
+                                <h2 class="text-lg font-semibold text-gray-800">Estadísticas de donantes</h2>
+                                <select id="chartType" onchange="updateChartVisibility()"
+                                    class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="bloodType">Distribución por tipo de sangre</option>
+                                    <option value="gender">Distribución por género</option>
+                                </select>
+                            </div>
+
+                            <!-- Blood Type Chart -->
+                            <div class="relative h-[350px] w-full" id="bloodTypeChartContainer">
+                                <canvas id="bloodTypeChart"></canvas>
+                            </div>
+
+                            <!-- Gender Chart -->
+                            <div class="relative h-[350px] w-full hidden" id="genderChartContainer">
+                                <canvas id="genderChart"></canvas>
+                            </div>
+                        </section>
+
+                        <!-- Historial de donaciones -->
+                        <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-2">Historial de donaciones</h2>
+                            <p class="text-sm text-gray-500 mb-4">Lorem ipsum dolor sit amet, consectetur adipis.</p>
+
+                            <div class="space-y-3">
+                                <!-- Donation Item 1 -->
+                                <div
+                                    class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                                    <div class="flex items-center gap-4">
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">
+                                            <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                                            Finalizado
+                                        </span>
+                                        <div>
+                                            <p class="font-medium text-gray-800">Campaña de donación</p>
+                                            <p class="text-sm text-gray-500">Descripción campaña</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium text-gray-800">Hospital Negrín</p>
+                                        <p class="text-sm text-gray-500">Jan 17, 2022</p>
+                                    </div>
+                                    <button class="p-2 text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                            <path
+                                                d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <!-- Donation Item 2 -->
+                                <div
+                                    class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                                    <div class="flex items-center gap-4">
+                                        <span
+                                            class="inline-flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">
+                                            <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                                            Finalizado
+                                        </span>
+                                        <div>
+                                            <p class="font-medium text-gray-800">Campaña de donación</p>
+                                            <p class="text-sm text-gray-500">Descripción campaña</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-medium text-gray-800">Hospital Negrín</p>
+                                        <p class="text-sm text-gray-500">Jan 17, 2022</p>
+                                    </div>
+                                    <button class="p-2 text-gray-400 hover:text-gray-600">
+                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                            <path
+                                                d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+
+                    <!-- Right Column: Calendar + Stats -->
+                    <div class="space-y-6">
+
+                        <!-- Calendar -->
+                        <section class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                            <h2 class="text-lg font-semibold text-gray-800 mb-4">Calendario</h2>
+
+                            <!-- Calendar Grid -->
+                            <div class="mb-3">
+                                <div class="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-500 mb-2">
+                                    <div>Lu</div>
+                                    <div>Ma</div>
+                                    <div>Mi</div>
+                                    <div>Ju</div>
+                                    <div>Vi</div>
+                                    <div>Sa</div>
+                                    <div>Do</div>
+                                </div>
+                                <div class="grid grid-cols-7 gap-1 text-center text-sm">
+                                    <div class="p-2 text-gray-400">28</div>
+                                    <div class="p-2 text-gray-400">29</div>
+                                    <div class="p-2 text-gray-400">30</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">1</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">2</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">3</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">4</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">5</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">6</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">7</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">8</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">9</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">10</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">11</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">12</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">13</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">14</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">15</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">16</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">17</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">18</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">19</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">20</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">21</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">22</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">23</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">24</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">25</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">26</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">27</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">28</div>
+                                    <div class="p-2 bg-blue-600 text-white rounded font-medium cursor-pointer">29</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">30</div>
+                                    <div class="p-2 hover:bg-gray-100 rounded cursor-pointer">31</div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Stats Cards -->
+                        <section class="space-y-4">
+                            <!-- Total Donantes Hoy -->
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Total donantes hoy</p>
+                                <p class="text-4xl font-bold text-gray-800">84,382</p>
+                            </div>
+
+                            <!-- Total Donaciones -->
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                <p class="text-xs text-gray-500 uppercase tracking-wide mb-2">Total donaciones</p>
+                                <p class="text-4xl font-bold text-gray-800">120</p>
+                            </div>
+                        </section>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <script th:inline="javascript">
+
+        var bloodTypeLabels = /*[[${bloodTypeLabels}]]*/[];
+        var bloodTypeCounts = /*[[${bloodTypeCounts}]]*/[];
+        var genderLabels = /*[[${genderLabels}]]*/[];
+        var genderCounts = /*[[${genderCounts}]]*/[];
+
+        // Common Chart Options
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        font: {
+                            family: "'Roboto', sans-serif",
+                            size: 12
+                        },
+                        padding: 15
+                    }
+                }
+            }
+        };
+
+        // Blood Type Chart
+        var ctxBlood = document.getElementById('bloodTypeChart').getContext('2d');
+        var bloodTypeChart = new Chart(ctxBlood, {
+            type: 'bar',
+            data: {
+                labels: bloodTypeLabels,
+                datasets: [{
+                    label: 'Número de Donantes',
+                    data: bloodTypeCounts,
+                    backgroundColor: 'rgba(37, 99, 235, 0.7)',
+                    borderColor: 'rgba(37, 99, 235, 1)',
+                    borderWidth: 1,
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                ...commonOptions,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Roboto', sans-serif"
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Roboto', sans-serif"
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Gender Chart
+        var ctxGender = document.getElementById('genderChart').getContext('2d');
+        var genderChart = new Chart(ctxGender, {
+            type: 'doughnut',
+            data: {
+                labels: genderLabels,
+                datasets: [{
+                    label: 'Distribución por Género',
+                    data: genderCounts,
+                    backgroundColor: [
+                        'rgba(59, 130, 246, 0.7)',
+                        'rgba(236, 72, 153, 0.7)',
+                        'rgba(107, 114, 128, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(59, 130, 246, 1)',
+                        'rgba(236, 72, 153, 1)',
+                        'rgba(107, 114, 128, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: commonOptions
+        });
+
+        function updateChartVisibility() {
+            var selected = document.getElementById('chartType').value;
+            var bloodChart = document.getElementById('bloodTypeChartContainer');
+            var genderChart = document.getElementById('genderChartContainer');
+
+            if (selected === 'bloodType') {
+                bloodChart.classList.remove('hidden');
+                genderChart.classList.add('hidden');
+            } else {
+                bloodChart.classList.add('hidden');
+                genderChart.classList.remove('hidden');
+            }
+        }
+        /*]]>*/
+    </script>
+
+</body>
+
+</html>

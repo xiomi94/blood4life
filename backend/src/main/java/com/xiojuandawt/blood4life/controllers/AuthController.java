@@ -125,7 +125,7 @@ public class AuthController {
           .secure(false)
           .path("/")
           .maxAge(24 * 60 * 60)
-          .sameSite("Strict")
+          .sameSite("Lax")
           .build();
 
       Map<String, Object> response = new HashMap<>();
@@ -212,7 +212,7 @@ public class AuthController {
           .secure(false)
           .path("/")
           .maxAge(24 * 60 * 60)
-          .sameSite("Strict")
+          .sameSite("Lax")
           .build();
 
       Map<String, Object> response = new HashMap<>();

@@ -49,6 +49,8 @@ public class SecurityConfig {
             .requestMatchers("/api/dashboard/**").permitAll()
             .requestMatchers("/api/hospital/**").permitAll()
             .requestMatchers("/api/auth/bloodDonor/login").permitAll()
+            .requestMatchers("/dashboard").permitAll()
+            .requestMatchers("/images/**").permitAll()
             .anyRequest().authenticated())
         .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

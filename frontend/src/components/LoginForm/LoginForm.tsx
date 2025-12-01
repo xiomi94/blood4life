@@ -36,7 +36,7 @@ function LoginForm() {
       login(userType);
 
       if (userType === 'bloodDonor') {
-        navigate('/bloodDonors');
+        window.location.href = 'http://localhost:8080/dashboard';
       } else if (userType === 'hospital') {
         navigate('/dashboardHospital');
       }
