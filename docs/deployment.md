@@ -36,7 +36,7 @@ perform the deployment.
 
 And once all the relevant configurations have been made, we consider the deployment complete.
 
-![img_1.png](./docs/images/img_1.png)
+![img_1.png](/docs/images/img_1.png)
 
 In case you need a installation, here are the guide:
 
@@ -95,7 +95,7 @@ any custom Spring Boot properties.
 
 2. Create a service pointing to the GitHub repository where Spring Boot is located.
 
-![railway](./docs/images/railway.png)
+![railway](/docs/images/railway.png)
 
 3. We configure our environment variables:
 
@@ -125,4 +125,4 @@ any custom Spring Boot properties.
    technologies, and will fail because it won't know if it needs our ```application.properties``` or our ```package.json```. In the
    **Settings** section we can put the ```Root Directory``` to tell Railway which technology we want to deploy.
 
-![railway-environment-variables](./docs/images/railway-environment-variables.png)
+![railway-environment-variables](/docs/images/railway-environment-variables.png)
