@@ -1,14 +1,8 @@
 package com.xiojuandawt.blood4life.entities;
 
-import io.jsonwebtoken.Jwts;
 import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "blood_donor")
@@ -18,49 +12,62 @@ public class BloodDonor {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-//  @Column(name = "bloodtype_id")
-//  private int bloodTypeId;
-
   private String dni;
   private String firstName;
   private String lastName;
   private String gender;
+
+  @ManyToOne
+  @JoinColumn(name = "blood_type_id")
+  private BloodType bloodType;
+
   private String email;
   private String phoneNumber;
   private Date dateOfBirth;
   private String password;
 
+  @ManyToOne
+  @JoinColumn(name = "image_id", nullable = true)
+  private Image image;
+
   public BloodDonor() {
   }
 
-  public BloodDonor(String dni, String firstName, String lastName, String gender, String email, String phoneNumber, Date dateOfBirth, String password) {
+  public BloodDonor(String dni, String firstName, String lastName, String gender, BloodType bloodType,
+                    String email, String phoneNumber, Date dateOfBirth, String password, Image image) {
     this.dni = dni;
     this.firstName = firstName;
     this.lastName = lastName;
     this.gender = gender;
+    this.bloodType = bloodType;
     this.email = email;
     this.phoneNumber = phoneNumber;
     this.dateOfBirth = dateOfBirth;
     this.password = password;
+    this.image = image;
   }
 
-  public BloodDonor(int id, String dni, String firstName, String lastName, String gender, String email, String phoneNumber, Date dateOfBirth, String password) {
+  public BloodDonor(int id, String dni, String firstName, String lastName, String gender, BloodType bloodType,
+                    String email, String phoneNumber, Date dateOfBirth, String password, Image image) {
     this.id = id;
     this.dni = dni;
     this.firstName = firstName;
     this.lastName = lastName;
     this.gender = gender;
+    this.bloodType = bloodType;
     this.email = email;
     this.phoneNumber = phoneNumber;
     this.dateOfBirth = dateOfBirth;
     this.password = password;
+    this.image = image;
   }
 
-  public int getId() {
+
+  public Integer getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
@@ -96,6 +103,14 @@ public class BloodDonor {
     this.gender = gender;
   }
 
+  public BloodType getBloodType() {
+    return bloodType;
+  }
+
+  public void setBloodType(BloodType bloodType) {
+    this.bloodType = bloodType;
+  }
+
   public String getEmail() {
     return email;
   }
@@ -128,6 +143,14 @@ public class BloodDonor {
     this.password = password;
   }
 
+  public Image getImage() {
+    return image;
+  }
+
+  public void setImage(Image image) {
+    this.image = image;
+  }
+
   @Override
   public String toString() {
     return "BloodDonor{" +
@@ -136,10 +159,12 @@ public class BloodDonor {
       ", firstName='" + firstName + '\'' +
       ", lastName='" + lastName + '\'' +
       ", gender='" + gender + '\'' +
+      ", bloodType=" + bloodType +
       ", email='" + email + '\'' +
       ", phoneNumber='" + phoneNumber + '\'' +
       ", dateOfBirth=" + dateOfBirth +
       ", password='" + password + '\'' +
+      ", image=" + image +
       '}';
   }
 }

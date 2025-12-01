@@ -1,38 +1,18 @@
-import Logo from "../images/LogoShadow.webp"
-import {Link} from "react-router";
-import ImageUpload from "../components/ImageUpload/ImageUpload.tsx";
+import Logo from "../assets/images/LogoShadow.webp";
 
 function Index() {
   return (
-    <>
-      <ImageUpload />
-      <div className="flex flex-row justify-center aspect-auto">
-        <img className="m-5 w-sm h-sm" src={Logo} alt="Logo"/>
-      </div>
-      <div className="flex flex-row items-center justify-around ">
-        <li className="list-none">
-          <Link to="/bloodDonors">
-            <button
-              type="button"
-              className="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Donantes
-            </button>
-          </Link>
-        </li>
-        <li className="list-none">
-          <Link to="/hospitals">
-            <button
-              type="button"
-              className="cursor-pointer inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Hospitales
-            </button>
-          </Link>
-        </li>
-      </div>
-    </>
-  )
+    <div className="flex flex-col flex-grow items-center justify-center text-center px-4 sm:px-6 md:px-8">
+      <img
+        className="m-6 w-40 sm:w-56 md:w-72 lg:w-96 h-auto"
+        src={Logo}
+        alt="Logo"
+      />
+      <h1 className="text-h1 sm:text-h2 md:text-h1 lg:text-display text-gray-800">
+        Blood4Life
+      </h1>
+    </div>
+  );
 }
 
 export default Index;

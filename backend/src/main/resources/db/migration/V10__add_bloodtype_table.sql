@@ -1,0 +1,4 @@
+CREATE TABLE blood_type (
+  id INT AUTO_INCREMENT PRIMARY KEY ,
+  type VARCHAR(3)
+);

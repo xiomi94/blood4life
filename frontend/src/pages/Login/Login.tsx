@@ -1,18 +1,24 @@
-import Logo from "../../images/LogoShadow.webp";
-import LoginForm from "../../components/LoginForm/LoginForm.tsx";
-
+import Logo from "../../assets/images/LogoShadowMini.webp";
+import LoginForm from "../../components/LoginForm/LoginForm";
 
 function Login() {
   return (
-    <>
-      <div className="flex flex-row justify-center aspect-auto">
-        <img className="m-5 w-sm h-sm" src={Logo} alt="Logo"/>
+    <div className="flex flex-col flex-grow items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+      {/* Logo */}
+      <div className="flex justify-center mb-6">
+        <img
+          src={Logo}
+          alt="Logo"
+          className="w-28 sm:w-36 md:w-44 lg:w-52 h-auto"
+        />
       </div>
-      <div className="flex flex-col items-center w-screen h-auto gap-4">
-        <LoginForm/>
+
+      {/* Formulario */}
+      <div className="w-full max-w-md">
+        <LoginForm />
       </div>
-    </>
-  )
+    </div>
+  );
 }
 
 export default Login;

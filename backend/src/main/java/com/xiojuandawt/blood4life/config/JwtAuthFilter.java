@@ -8,6 +8,7 @@ import com.xiojuandawt.blood4life.services.JwtService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,85 +39,98 @@ public class JwtAuthFilter extends OncePerRequestFilter {
   // tell Spring Boot if the user is logged in
   @Override
   protected void doFilterInternal(
-    HttpServletRequest request,
-    HttpServletResponse response,
-    FilterChain chain) throws ServletException, IOException {
+      HttpServletRequest request,
+      HttpServletResponse response,
+      FilterChain chain) throws ServletException, IOException {
 
-    // We obtain the Authorization header
-    final String authHeader = request.getHeader("Authorization");
+    String token = null;
 
-    // We checked the format
-    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+    // Extract token from cookie
+    if (request.getCookies() != null) {
+      token = Arrays.stream(request.getCookies())
+          .filter(cookie -> "jwt".equals(cookie.getName()))
+          .map(Cookie::getValue)
+          .findFirst()
+          .orElse(null);
+    }
+
+    // If no token found, continue without authentication
+    if (token == null) {
       chain.doFilter(request, response);
       return;
     }
 
-    // Sacamos de la cabecera el token a partir de la letra 7 para quitar el prefijo 'Bearer'
-    final String token = authHeader.substring(7);
+    // With our service we obtain the data stored in the token
+    try {
+      // We tried to read the token
+      Claims userTokenPayload = jwtService.extractPayload(token);
+      final Integer userId = userTokenPayload.get("id", Integer.class);
+      final String userType = userTokenPayload.get("type", String.class);
 
-    // Con nuestro servicio obtenemos los datos guardados en el token
-    Claims userTokenPayload = jwtService.extractPayload(token);
-    final Integer userId = userTokenPayload.get("id", Integer.class);
-    final String userType = userTokenPayload.get("type", String.class);
+      // If the token is valid and there is no prior authentication
+      if (userId != null &&
+          SecurityContextHolder.getContext().getAuthentication() == null) {
 
-    // Comprobamos si los datos son correctos
-    if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-      switch (userType) {
-        case "bloodDonor":
-          this.authenticatedByBloodDonor(userId, token);
-          break;
-        case "hospital":
-          this.authenticatedByHospital(userId, token);
-          break;
+        switch (userType) {
+          case "bloodDonor":
+            this.authenticatedByBloodDonor(userId, token);
+            break;
+          case "hospital":
+            this.authenticatedByHospital(userId, token);
+            break;
+        }
       }
+
+    } catch (Exception e) {
+
+      // If the token is expired, corrupted, tampered with, or empty:
+      // DO NOT break anything → ignore the token and continue without authentication
+      SecurityContextHolder.clearContext();
     }
 
     chain.doFilter(request, response);
   }
 
   private void authenticatedByBloodDonor(Integer id, String token) {
-    // Buscamos si existe ese usuario en la base de datos
-    // HAY MUCHAS ALTERNATIVAS TIENEN DESVENTAJAS Y VENTAJAS
+    // We check if that user exists in the database
+    // There are many alternatives; they have both disadvantages and advantages.
     Optional<BloodDonor> bloodDonorOptional = bloodDonorService.findByIdWithRole(id);
     List<GrantedAuthority> roles = new ArrayList<>();
     roles.add(new SimpleGrantedAuthority("ROLE_BLOODDONOR"));
 
-    // Comprobamos si el token esta expirado
+    // We check if the token has expired
     if (!this.jwtService.isTokenExpired(token) && bloodDonorOptional.isPresent()) {
       BloodDonor bloodDonor = bloodDonorOptional.orElseThrow();
 
-      // Creamos la autenticación a partir de una clase de Spring Boot
+      // We created the authentication using a Spring Boot class
       UsernamePasswordAuthenticationToken autheticationObject = new UsernamePasswordAuthenticationToken(
-        bloodDonor, null, roles
-      );
+          bloodDonor, null, roles);
 
-      // Añadimos al contexto de la petición que el usuario esta logueado
-      // IMPORTANTE: ESTE PASO ES EL QUE LE DICE A SPRING BOOT QUE EL USUARIO ESTA LOGUEADO
-      // Este contexto se puede obtener desde el controlador.
+      // We add to the context of the request that the user is logged in
+      // IMPORTANT: THIS STEP TELLS SPRING BOOT THAT THE USER IS LOGGED IN
+      // This context can be obtained from the controller.
       SecurityContextHolder.getContext().setAuthentication(autheticationObject);
     }
   }
 
   private void authenticatedByHospital(Integer id, String token) {
-    // Buscamos si existe ese usuario en la base de datos
-    // HAY MUCHAS ALTERNATIVAS TIENEN DESVENTAJAS Y VENTAJAS
+    // We check if that user exists in the database
+    // There are many alternatives; they have both disadvantages and advantages.
     Optional<Hospital> hospitalOptional = this.hospitalService.findById(id);
     List<GrantedAuthority> roles = new ArrayList<>();
     roles.add(new SimpleGrantedAuthority("ROLE_HOSPITAL"));
 
-    // Comprobamos si el token esta expirado
+    // We check if the token has expired
     if (!this.jwtService.isTokenExpired(token) && hospitalOptional.isPresent()) {
       Hospital hospital = hospitalOptional.orElseThrow();
 
-      // Creamos la autenticación a partir de una clase de Spring Boot
+      // We created the authentication using a Spring Boot class
       UsernamePasswordAuthenticationToken autheticationObject = new UsernamePasswordAuthenticationToken(
-        hospital, null, roles
-      );
+          hospital, null, roles);
 
-      // Añadimos al contexto de la petición que el usuario esta logueado
-      // IMPORTANTE: ESTE PASO ES EL QUE LE DICE A SPRING BOOT QUE EL USUARIO ESTA LOGUEADO
-      // Este contexto se puede obtener desde el controlador.
+      // We add to the context of the request that the user is logged in
+      // IMPORTANT: THIS STEP TELLS SPRING BOOT THAT THE USER IS LOGGED IN
+      // This context can be obtained from the controller.
       SecurityContextHolder.getContext().setAuthentication(autheticationObject);
     }
   }

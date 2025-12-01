@@ -7,6 +7,7 @@ import com.xiojuandawt.blood4life.services.BloodDonorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,22 +21,33 @@ public class BloodDonorController {
   @Autowired
   private BloodDonorService bloodDonorService;
 
+  @GetMapping("/me")
+  public ResponseEntity<?> obtainMe(Authentication authentication) {
+    BloodDonor me = (BloodDonor) authentication.getPrincipal();
+    String imageName = me.getImage() != null ? me.getImage().getName() : null;
+    BloodDonorDTO meDTO = new BloodDonorDTO(
+      me.getId(),
+      me.getDni(),
+      me.getFirstName(),
+      me.getLastName(),
+      me.getGender(),
+      me.getBloodType(),
+      me.getEmail(),
+      me.getPhoneNumber(),
+      me.getDateOfBirth(),
+      imageName
+
+    );
+    return ResponseEntity
+      .status(HttpStatus.OK).body(meDTO);
+  }
+
   @GetMapping
   public ResponseEntity<List<BloodDonorDTO>> bloodDonorList() {
     List<BloodDonorDTO> bloodDonorList = this.bloodDonorService.findAll();
     return ResponseEntity
       .status(HttpStatus.OK)
       .body(bloodDonorList);
-  }
-
-  @PostMapping
-  public ResponseEntity<BloodDonorDTO> addNewBloodDonor(
-    @RequestBody BloodDonor newBloodDonor
-  ) {
-    BloodDonorDTO bloodDonorInDatabase = this.bloodDonorService.createNew(newBloodDonor);
-    return ResponseEntity
-      .status(HttpStatus.CREATED)
-      .body(bloodDonorInDatabase);
   }
 
   @PutMapping("/{id}")

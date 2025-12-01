@@ -12,11 +12,15 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.16",
     "axios": "^1.13.1",
+    "chart.js": "^4.5.1",
     "firebase": "^12.5.0",
+    "lucide-react": "^0.555.0",
     "react": "^19.1.1",
+    "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.1.1",
-    "react-router": "^7.9.5",
-    "tailwindcss": "^4.1.16"
+    "react-router": "^7.9.6",
+    "react-router-dom": "^7.9.6",
+    "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

@@ -1,33 +1,51 @@
 import './App.css'
-import {BrowserRouter, Route, Routes} from 'react-router';
-import BloodDonorCrudPage from "./pages/BloodDonorCrudPage/BloodDonorCrudPage.tsx";
-import HospitalCrudPage from "./pages/HospitalCrudPage/HospitalCrudPage.tsx";
+import { BrowserRouter, Route, Routes } from 'react-router';
+import BloodDonorCrudPage from "./pages/BloodDonorFullCrudPage/BloodDonorCrudPage.tsx";
+import BloodDonorRegisterPage from "./pages/BloodDonorRegisterPage/BloodDonorRegisterPage.tsx";
+import HospitalCrudPage from "./pages/HospitalFullCrudPage/HospitalCrudPage.tsx";
+import HospitalRegisterPage from "./pages/HospitalRegisterPage/HospitalRegisterPage.tsx";
 import Index from "./pages/Index.tsx";
 import Login from "./pages/Login/Login.tsx";
-import Header from "./components/Header/Header.tsx";
-import Footer from "./components/Footer/Footer.tsx";
+import Register from "./pages/Register/Register.tsx";
+import Header from "./components/UI/Header/Header.tsx";
+import Footer from "./components/UI/Footer/Footer.tsx";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import DashboardPage from "./pages/DashboardPage/DashboardPage.tsx";
+import DashboardHospitalPage from "./pages/DashboardHospitalPage/DashboardHospitalPage.tsx";
 
 function App() {
-
   return (
-    <>
-      <div className="bg-gray-100">
-        <main>
-          <Header/>
-          <BrowserRouter>
-            <Routes>
+    <AuthProvider>
+      <div className="bg-gray-100 min-h-screen flex flex-col">
+        <BrowserRouter>
+          <Header />
 
-              <Route path='/index' element={<Index/>}/>
-              <Route path='/login' element={<Login/>}/>
-              <Route path='/bloodDonors' element={<BloodDonorCrudPage/>}/>
-              <Route path='/hospitals' element={<HospitalCrudPage/>}/>
+          <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <Routes>
+              {/* Public Routes */}
+              <Route path="/index" element={<Index />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/registerbloodDonor" element={<BloodDonorRegisterPage />} />
+              <Route path="/registerHospital" element={<HospitalRegisterPage />} />
+              <Route path="/dashboard" element={<DashboardPage />} />
+              <Route path="/dashboardHospital" element={<DashboardHospitalPage />} />
+              <Route path="/" element={<Index />} />
+
+              {/* Protected Routes */}
+              <Route element={<ProtectedRoute />}>
+                <Route path="/bloodDonors" element={<BloodDonorCrudPage />} />
+                <Route path="/hospitals" element={<HospitalCrudPage />} />
+              </Route>
             </Routes>
-          </BrowserRouter>
-          <Footer/>
-        </main>
+          </main>
+
+          <Footer />
+        </BrowserRouter>
       </div>
-    </>
-  )
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;

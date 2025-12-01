@@ -43,15 +43,18 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
-      .csrf(csrf -> csrf.disable())
-      .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/api/auth/**").permitAll()
-        .requestMatchers("/api/hospital/**").permitAll()
-        .anyRequest().authenticated()
-      )
-      .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-      .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+        .csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/dashboard/**").permitAll()
+            .requestMatchers("/api/hospital/**").permitAll()
+            .requestMatchers("/api/auth/bloodDonor/login").permitAll()
+            .requestMatchers("/dashboard").permitAll()
+            .requestMatchers("/images/**").permitAll()
+            .anyRequest().authenticated())
+        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
     return http.build();
   }
