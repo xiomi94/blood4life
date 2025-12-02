@@ -211,11 +211,11 @@ const HospitalRegisterPage: React.FC = () => {
           <h2 className="font-poppins font-semibold text-h3 sm:text-h2 md:text-h1 text-gray-800 mb-2">
             Registrar nuevo hospital
           </h2>
-          <p className="font-roboto text-caption sm:text-body-sm md:text-body text-gray-500 mb-4 md:mb-5">
+          <p className="font-roboto text-caption sm:text-body-sm md:text-body text-gray-500">
             Todos los datos son obligatorios
           </p>
         </div>
-        <div className="flex flex-col lg:flex-row w-full gap-6 lg:gap-12 items-center">
+        <div className="flex flex-col w-full gap-6 lg:gap-12 items-center">
           <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
             <ImageUpload onImageChange={setProfileImage} />
           </div>
@@ -223,7 +223,7 @@ const HospitalRegisterPage: React.FC = () => {
             onSubmit={handleSubmit}
             className="flex flex-col w-full max-w-4xl bg-white rounded-xl md:rounded-2xl shadow-sm p-4 sm:p-6 md:p-8"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full">
+            <div className="grid grid-cols-1 gap-4 md:gap-6 w-full">
               <FormField type="text" id="cif" name="cif" label="CIF" value={formData.cif} onChange={handleInputChange} required disabled={loading} error={errors.cif} placeholder="Ingrese CIF" />
               <FormField type="text" id="name" name="name" label="Nombre" value={formData.name} onChange={handleInputChange} required disabled={loading} error={errors.name} placeholder="Ingrese nombre" />
               <FormField type="text" id="address" name="address" label="Dirección" value={formData.address} onChange={handleInputChange} required disabled={loading} error={errors.address} placeholder="Ingrese dirección" />
