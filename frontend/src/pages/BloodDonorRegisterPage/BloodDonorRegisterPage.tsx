@@ -1,9 +1,9 @@
 import ImageUpload from "../../components/ImageUpload/ImageUpload.tsx";
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Button from '../../components/UI/Button/Button.tsx'
 import FormField from '../../components/FormField/FormField';
 import SelectField from '../../components/SelectField/SelectField';
-import {authService} from "../../services/authService.ts";
+import { authService } from "../../services/authService.ts";
 
 interface BloodDonorFormData {
   dni: string,
@@ -49,22 +49,22 @@ const BloodDonorRegisterPage: React.FC = () => {
 
 
   const genderOptions = [
-    {value: '', label: 'Seleccione un género *'},
-    {value: 'masculino', label: 'Masculino'},
-    {value: 'femenino', label: 'Femenino'},
-    {value: 'prefiero-no-decir', label: 'Prefiero no decirlo'}
+    { value: '', label: 'Seleccione un género *' },
+    { value: 'masculino', label: 'Masculino' },
+    { value: 'femenino', label: 'Femenino' },
+    { value: 'prefiero-no-decir', label: 'Prefiero no decirlo' }
   ];
 
   const bloodTypeOptions = [
-    {value: '', label: 'Seleccione un tipo de sangre *'},
-    {value: 'A+', label: 'A+'},
-    {value: 'A-', label: 'A-'},
-    {value: 'B+', label: 'B+'},
-    {value: 'B-', label: 'B-'},
-    {value: 'AB+', label: 'AB+'},
-    {value: 'AB-', label: 'AB-'},
-    {value: 'O+', label: 'O+'},
-    {value: 'O-', label: 'O-'}
+    { value: '', label: 'Seleccione un tipo de sangre *' },
+    { value: 'A+', label: 'A+' },
+    { value: 'A-', label: 'A-' },
+    { value: 'B+', label: 'B+' },
+    { value: 'B-', label: 'B-' },
+    { value: 'AB+', label: 'AB+' },
+    { value: 'AB-', label: 'AB-' },
+    { value: 'O+', label: 'O+' },
+    { value: 'O-', label: 'O-' }
   ];
 
   useEffect(() => {
@@ -162,7 +162,7 @@ const BloodDonorRegisterPage: React.FC = () => {
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
 
     setFormData(prev => ({
       ...prev,
@@ -177,7 +177,7 @@ const BloodDonorRegisterPage: React.FC = () => {
   };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
 
     setFormData(prev => ({
       ...prev,
@@ -280,7 +280,7 @@ const BloodDonorRegisterPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row w-full gap-6 lg:gap-12 items-center">
+        <div className="flex flex-col w-full gap-6 lg:gap-12 items-center">
           <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
             <ImageUpload
               onImageChange={(file: File | null) => {
@@ -293,7 +293,7 @@ const BloodDonorRegisterPage: React.FC = () => {
             onSubmit={handleRegister}
             className="flex flex-col w-full max-w-4xl bg-white rounded-xl md:rounded-2xl shadow-sm p-4 sm:p-6 md:p-8"
           >
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 w-full">
+            <div className="grid grid-cols-1 gap-4 md:gap-6 w-full">
               <FormField
                 type="text"
                 id="dni"
@@ -422,9 +422,9 @@ const BloodDonorRegisterPage: React.FC = () => {
                   <>
                     <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                              strokeWidth="4"></circle>
+                        strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
                     Procesando...
                   </>) : 'Registrarse'}
