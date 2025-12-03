@@ -7,7 +7,7 @@ const UnifiedDashboard = () => {
 
     if (isLoading) {
         return (
-            <div className="flex items-center justify-center min-h-screen bg-gray-100">
+            <div className="flex items-center justify-center min-h-screen bg-gray-100 p-0">
                 <div className="text-xl font-semibold text-gray-600">Cargando...</div>
             </div>
         );

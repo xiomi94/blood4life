@@ -7,10 +7,10 @@ function Header() {
   const location = useLocation();
 
   return (
-    <div className="flex flex-row w-full items-center justify-end">
+    <div className="flex flex-row w-full items-center justify-end px-8 py-4">
       {(location.pathname === '/register' || location.pathname === '/registerbloodDonor' || location.pathname === '/registerhospital') ? (
         <>
-          <div className="flex flex-row w-full justify-between p-3 items-center">
+          <div className="flex flex-row w-full justify-between items-center">
             <Link to="/index">
               <img src={Logo} alt="Logo" className="h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
             </Link>
@@ -20,7 +20,7 @@ function Header() {
       ) : (
         <>
           {(location.pathname === '/index' || location.pathname === '/') && (
-            <div className="flex items-center space-x-3 pr-4">
+            <div className="flex items-center space-x-3">
               <Button to="/login">
                 Iniciar sesión
               </Button>
@@ -30,14 +30,14 @@ function Header() {
             </div>
           )}
           {(location.pathname === '/login' || location.pathname === '/registerbloodDonor' || location.pathname === '/registerhospital') && (
-            <div className="flex items-center space-x-3 pr-4">
+            <div className="flex items-center space-x-3">
               <Button to="/index">
                 Inicio
               </Button>
             </div>
           )}
           {(location.pathname === '/dashboard') && (
-            <div className="flex flex-row w-full justify-between items-center px-8 py-4 border-b border-gray-300">
+            <div className="flex flex-row w-full justify-between items-center border-b border-gray-300">
               <img src={Logo} alt="Logo" className="h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
               <div className="flex items-center gap-4">
                 {/* Notifications */}

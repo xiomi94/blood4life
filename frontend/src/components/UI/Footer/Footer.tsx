@@ -13,7 +13,7 @@ function Footer() {
       {isSpecialRoute ? (
         <footer className="p-4 md:flex md:items-center md:justify-between md:p-6 border-t border-gray-300">
           <p className="text-sm text-gray-500 sm:text-center text-gray-600">
-            © 2025. Todos los derechos reservados.
+            Blood4Life © 2025. Todos los derechos reservados.
           </p>
 
           <div className="flex flex-wrap items-center mt-3 sm:mt-0">
@@ -28,7 +28,7 @@ function Footer() {
       ) : (
         <footer className="p-4 rounded-lg md:flex md:items-center md:justify-between md:p-6">
           <p className="text-sm text-gray-500 sm:text-center text-gray-600">
-            © 2025. Todos los derechos reservados.
+            Blood4Life © 2025. Todos los derechos reservados.
           </p>
 
           <div className="flex flex-wrap items-center mt-3 sm:mt-0">
