@@ -7,7 +7,7 @@ function Header() {
   const location = useLocation();
 
   return (
-    <div className="flex flex-row h-20 w-full items-center justify-end">
+    <div className="flex flex-row w-full items-center justify-end">
       {(location.pathname === '/register' || location.pathname === '/registerbloodDonor' || location.pathname === '/registerhospital') ? (
         <>
           <div className="flex flex-row w-full justify-between p-3 items-center">
@@ -37,10 +37,8 @@ function Header() {
             </div>
           )}
           {(location.pathname === '/dashboard') && (
-            <div className="flex flex-row w-full justify-between items-center space-x-3 p-4">
-              <Link to="/index">
-                <img src={Logo} alt="Logo" className="h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
-              </Link>
+            <div className="flex flex-row w-full justify-between items-center px-8 py-4 border-b border-gray-300">
+              <img src={Logo} alt="Logo" className="h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
               <div className="flex items-center gap-4">
                 {/* Notifications */}
                 <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
