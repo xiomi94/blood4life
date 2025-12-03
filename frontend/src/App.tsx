@@ -11,8 +11,7 @@ import Header from "./components/UI/Header/Header.tsx";
 import Footer from "./components/UI/Footer/Footer.tsx";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
-import DashboardPage from "./pages/DashboardPage/DashboardPage.tsx";
-import DashboardHospitalPage from "./pages/DashboardHospitalPage/DashboardHospitalPage.tsx";
+import UnifiedDashboard from "./pages/UnifiedDashboard/UnifiedDashboard.tsx";
 
 function App() {
   return (
@@ -29,8 +28,7 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/registerbloodDonor" element={<BloodDonorRegisterPage />} />
               <Route path="/registerHospital" element={<HospitalRegisterPage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/dashboardHospital" element={<DashboardHospitalPage />} />
+              <Route path="/dashboard" element={<UnifiedDashboard />} />
               <Route path="/" element={<Index />} />
 
               {/* Protected Routes */}

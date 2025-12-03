@@ -35,11 +35,9 @@ function LoginForm() {
       await authService.login(formData.username, formData.password, userType);
       login(userType);
 
-      if (userType === 'bloodDonor') {
-        window.location.href = 'http://localhost:8080/dashboard';
-      } else if (userType === 'hospital') {
-        navigate('/dashboardHospital');
-      }
+      // Redirect to unified dashboard route
+      navigate('/dashboard');
+
 
     } catch (err: any) {
       console.error(err);
