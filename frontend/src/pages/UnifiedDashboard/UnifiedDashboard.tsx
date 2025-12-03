@@ -1,5 +1,5 @@
 import { useAuth } from '../../context/AuthContext';
-import DashboardPage from '../DashboardPage/DashboardPage';
+import DashboardPage from '../DashboardBloodDonorPage/DashboardBloodDonorPage';
 import DashboardHospitalPage from '../DashboardHospitalPage/DashboardHospitalPage';
 
 const UnifiedDashboard = () => {

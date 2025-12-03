@@ -26,7 +26,7 @@ ChartJS.register(
 
 type ChartType = 'bloodType' | 'gender';
 
-const DashboardPage = () => {
+const DashboardBloodDonorPage = () => {
     const [stats, setStats] = useState<DashboardStats | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -411,4 +411,4 @@ const DashboardPage = () => {
     );
 };
 
-export default DashboardPage;
+export default DashboardBloodDonorPage;
