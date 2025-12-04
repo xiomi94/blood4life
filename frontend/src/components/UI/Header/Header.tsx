@@ -7,7 +7,10 @@ function Header() {
   const location = useLocation();
 
   return (
-    <div className="flex flex-row w-full items-center justify-end px-8 py-4">
+    <div
+      className={`flex flex-row w-full items-center justify-end ${location.pathname === '/dashboard' ? '' : 'px-8 py-4'
+        }`}
+    >
       {(location.pathname === '/register' || location.pathname === '/registerbloodDonor' || location.pathname === '/registerhospital') ? (
         <>
           <div className="flex flex-row w-full justify-between items-center">
@@ -37,9 +40,9 @@ function Header() {
             </div>
           )}
           {(location.pathname === '/dashboard') && (
-            <div className="flex flex-row w-full justify-between items-center border-b border-gray-300">
-              <img src={Logo} alt="Logo" className="h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
-              <div className="flex items-center gap-4">
+            <div className="flex flex-row w-full justify-between items-center border-b border-gray-300 px-8 py-4">
+              <img src={Logo} alt="Logo" className="absolute h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
+              <div className="flex flex-row w-full items-center justify-end gap-4">
                 {/* Notifications */}
                 <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
