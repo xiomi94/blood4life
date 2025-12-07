@@ -13,7 +13,6 @@ import { Bar, Doughnut } from 'react-chartjs-2';
 import { dashboardService } from '../../services/dashboardService';
 import type { DashboardStats } from '../../services/dashboardService';
 
-
 // Register ChartJS components
 ChartJS.register(
     CategoryScale,
@@ -27,7 +26,7 @@ ChartJS.register(
 
 type ChartType = 'bloodType' | 'gender';
 
-const DashboardHospitalPage = () => {
+const DashboardBloodDonorPage = () => {
     const [stats, setStats] = useState<DashboardStats | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -157,7 +156,11 @@ const DashboardHospitalPage = () => {
     return (
         <div className="flex flex-row flex-grow w-full bg-gray-100">
             {/* Sidebar */}
-            <aside className="w-80 border-r border-gray-300 flex flex-col py-4">
+            <aside className="w-64 bg-gray-100 border-r border-gray-200 flex flex-col">
+                {/* Logo */}
+                <div className="p-6 flex items-center justify-center">
+                    <img src="/src/assets/images/Logo.webp" alt="Blood4Life Logo" className="h-16 w-auto" />
+                </div>
 
                 {/* Action Button */}
                 <div className="px-4 mb-6">
@@ -165,13 +168,13 @@ const DashboardHospitalPage = () => {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
                         </svg>
-                        Nueva campaña
+                        Nueva donación
                     </button>
                 </div>
 
                 {/* Navigation */}
                 <nav className="flex-1 px-4">
-                    <a href="/index" className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-200 rounded-lg mb-1 transition-colors">
+                    <a href="#" className="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-200 rounded-lg mb-1 transition-colors">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                         </svg>
@@ -191,53 +194,42 @@ const DashboardHospitalPage = () => {
                         <span className="absolute right-4 top-3 bg-blue-600 text-white text-xs font-bold px-1.5 py-0.5 rounded">NEW</span>
                     </a>
                 </nav>
+
+                {/* Footer */}
+                <div className="p-4 text-xs text-gray-500 border-t border-gray-200">
+                    <p className="mb-1">Blood4Life © 2025</p>
+                    <p>Todos los derechos reservados.</p>
+                </div>
             </aside>
 
             {/* Main Content */}
-            <main className="grid w-full">
+            <main className="flex flex-grow w-full">
+
+
                 {/* Content Area */}
                 <div className="p-8">
-                    {/* Citas programadas */}
+                    {/* Campañas disponibles */}
                     <section className="mb-8">
-                        <h2 className="text-xl font-semibold text-gray-800 mb-4">
-                            Citas programadas para hoy
-                        </h2>
-
-                        {/* Contenedor limitado en ancho */}
-                        <div className="w-full overflow-hidden">
-                            <div className="flex flex-row gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2">
-                                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow min-w-[180px] snap-start">
-                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">
-                                        Juan Pérez (O+)
-                                    </p>
-                                    <p className="text-2xl font-bold text-gray-800">09:00 AM</p>
-                                </div>
-
-                                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow min-w-[180px] snap-start">
-                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">
-                                        María García (A-)
-                                    </p>
-                                    <p className="text-2xl font-bold text-gray-800">10:30 AM</p>
-                                </div>
-
-                                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow min-w-[180px] snap-start">
-                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">
-                                        Carlos López (B+)
-                                    </p>
-                                    <p className="text-2xl font-bold text-gray-800">02:00 PM</p>
-                                </div>
-
-                                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow min-w-[180px] snap-start">
-                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">
-                                        Ana Martínez (AB+)
-                                    </p>
-                                    <p className="text-2xl font-bold text-gray-800">04:30 PM</p>
-                                </div>
+                        <h2 className="text-xl font-semibold text-gray-800 mb-4">Campañas disponibles</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                                <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Hospital Doctor Negrín</p>
+                                <p className="text-2xl font-bold text-gray-800">7 vacantes</p>
+                            </div>
+                            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                                <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Hospital Insular</p>
+                                <p className="text-2xl font-bold text-gray-800">12 vacantes</p>
+                            </div>
+                            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                                <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Hospital La Paloma</p>
+                                <p className="text-2xl font-bold text-gray-800">17 vacantes</p>
+                            </div>
+                            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-5 hover:shadow-md transition-shadow">
+                                <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Hospital Perpetuo Socorro</p>
+                                <p className="text-2xl font-bold text-gray-800">17 vacantes</p>
                             </div>
                         </div>
                     </section>
-
-
 
                     {/* Main Grid: Charts + Sidebar */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -273,8 +265,8 @@ const DashboardHospitalPage = () => {
 
                             {/* Historial de donaciones */}
                             <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                                <h2 className="text-lg font-semibold text-gray-800 mb-2">Donaciones recibidas</h2>
-                                <p className="text-sm text-gray-500 mb-4">Últimas donaciones de sangre recibidas en el hospital.</p>
+                                <h2 className="text-lg font-semibold text-gray-800 mb-2">Historial de donaciones</h2>
+                                <p className="text-sm text-gray-500 mb-4">Lorem ipsum dolor sit amet, consectetur adipis.</p>
 
                                 <div className="space-y-3">
                                     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
@@ -285,7 +277,7 @@ const DashboardHospitalPage = () => {
                                             </span>
                                             <div>
                                                 <p className="font-medium text-gray-800">Campaña de donación</p>
-                                                <p className="text-sm text-gray-500">Donación tipo O+</p>
+                                                <p className="text-sm text-gray-500">Descripción campaña</p>
                                             </div>
                                         </div>
                                         <div className="text-right">
@@ -307,7 +299,7 @@ const DashboardHospitalPage = () => {
                                             </span>
                                             <div>
                                                 <p className="font-medium text-gray-800">Campaña de donación</p>
-                                                <p className="text-sm text-gray-500">Donación tipo A-</p>
+                                                <p className="text-sm text-gray-500">Descripción campaña</p>
                                             </div>
                                         </div>
                                         <div className="text-right">
@@ -382,13 +374,13 @@ const DashboardHospitalPage = () => {
                             {/* Stats Cards */}
                             <section className="space-y-4">
                                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Citas hoy</p>
-                                    <p className="text-4xl font-bold text-gray-800">8</p>
+                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Total donantes hoy</p>
+                                    <p className="text-4xl font-bold text-gray-800">84,382</p>
                                 </div>
 
                                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Donaciones este mes</p>
-                                    <p className="text-4xl font-bold text-gray-800">247</p>
+                                    <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Total donaciones</p>
+                                    <p className="text-4xl font-bold text-gray-800">120</p>
                                 </div>
                             </section>
                         </div>
@@ -399,4 +391,4 @@ const DashboardHospitalPage = () => {
     );
 };
 
-export default DashboardHospitalPage;
+export default DashboardBloodDonorPage;
