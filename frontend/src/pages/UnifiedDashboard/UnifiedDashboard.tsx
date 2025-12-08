@@ -1,6 +1,7 @@
 import { useAuth } from '../../context/AuthContext';
 import DashboardPage from '../DashboardBloodDonorPage/DashboardBloodDonorPage';
 import DashboardHospitalPage from '../DashboardHospitalPage/DashboardHospitalPage';
+import AdminDashboard from '../AdminDashboard/AdminDashboard';
 
 const UnifiedDashboard = () => {
     const { userType, isLoading } = useAuth();
@@ -18,6 +19,8 @@ const UnifiedDashboard = () => {
         return <DashboardHospitalPage />;
     } else if (userType === 'bloodDonor') {
         return <DashboardPage />;
+    } else if (userType === 'admin') {
+        return <AdminDashboard />;
     }
 
     // If no user type (not logged in), redirect to login

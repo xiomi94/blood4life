@@ -44,6 +44,9 @@ public class AuthController {
   @Autowired
   private ImageService imageService;
 
+  @Autowired
+  private com.xiojuandawt.blood4life.services.AdminService adminService;
+
   @PostMapping("/bloodDonor/register")
   public ResponseEntity<?> registerBloodDonor(
       @RequestParam("dni") String dni,
@@ -209,6 +212,42 @@ public class AuthController {
 
       Hospital hospital = hospitalOpt.get();
       String token = jwtService.generateToken(hospital.getId(), "hospital");
+
+      ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
+          .httpOnly(true)
+          .secure(false)
+          .path("/")
+          .maxAge(24 * 60 * 60)
+          .sameSite("Lax")
+          .build();
+
+      Map<String, Object> response = new HashMap<>();
+      response.put("status", "OK");
+      response.put("message", "Login successful");
+
+      return ResponseEntity.ok()
+          .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+          .body(response);
+
+    } catch (IllegalArgumentException e) {
+      return errorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @PostMapping("/admin/login")
+  public ResponseEntity<?> loginAdmin(@RequestHeader("Authorization") String authHeader) {
+    try {
+      String[] credentials = extractCredentials(authHeader);
+      String email = credentials[0];
+      String password = credentials[1];
+
+      Optional<com.xiojuandawt.blood4life.entities.Admin> adminOpt = adminService.findByEmail(email);
+      if (adminOpt.isEmpty() || !passwordEncoder.matches(password, adminOpt.get().getPassword())) {
+        return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
+      }
+
+      com.xiojuandawt.blood4life.entities.Admin admin = adminOpt.get();
+      String token = jwtService.generateToken(admin.getId(), "admin");
 
       ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
           .httpOnly(true)

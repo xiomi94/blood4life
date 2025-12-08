@@ -34,6 +34,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
   private BloodDonorService bloodDonorService;
   @Autowired
   private HospitalService hospitalService;
+  @Autowired
+  private com.xiojuandawt.blood4life.services.AdminService adminService;
 
   // This method will be executed before reaching the controller to
   // tell Spring Boot if the user is logged in
@@ -77,6 +79,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             break;
           case "hospital":
             this.authenticatedByHospital(userId, token);
+            break;
+          case "admin":
+            this.authenticatedByAdmin(userId, token);
             break;
         }
       }
@@ -135,4 +140,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
   }
 
+  private void authenticatedByAdmin(Integer id, String token) {
+    Optional<com.xiojuandawt.blood4life.entities.Admin> adminOptional = this.adminService.findById(id);
+    List<GrantedAuthority> roles = new ArrayList<>();
+    roles.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+
+    if (!this.jwtService.isTokenExpired(token) && adminOptional.isPresent()) {
+      com.xiojuandawt.blood4life.entities.Admin admin = adminOptional.orElseThrow();
+
+      UsernamePasswordAuthenticationToken autheticationObject = new UsernamePasswordAuthenticationToken(
+          admin, null, roles);
+
+      SecurityContextHolder.getContext().setAuthentication(autheticationObject);
+    }
+  }
 }
