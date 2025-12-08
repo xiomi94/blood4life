@@ -91,6 +91,18 @@ function LoginForm() {
             />
             <span className="ml-2 text-gray-700">Hospital</span>
           </label>
+
+          <label className="inline-flex items-center cursor-pointer">
+            <input
+              type="radio"
+              className="form-radio text-blue-600"
+              name="userType"
+              value="admin"
+              checked={userType === 'admin'}
+              onChange={() => setUserType('admin')}
+            />
+            <span className="ml-2 text-gray-700">Admin</span>
+          </label>
         </div>
 
         <FormField
