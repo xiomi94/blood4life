@@ -1,9 +1,11 @@
 import ImageUpload from "../../components/ImageUpload/ImageUpload.tsx";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Button from '../../components/UI/Button/Button.tsx'
 import FormField from '../../components/FormField/FormField';
 import SelectField from '../../components/SelectField/SelectField';
 import { authService } from "../../services/authService.ts";
+import { useFormPersistence } from "../../hooks/useFormPersistence.ts";
+import Modal from '../../components/Modal/Modal';
 
 interface BloodDonorFormData {
   dni: string,
@@ -47,6 +49,34 @@ const BloodDonorRegisterPage: React.FC = () => {
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
+  // Modal state
+  const [modal, setModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: 'success' | 'error' | 'info';
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    type: 'info'
+  });
+
+  const showModal = (title: string, message: string, type: 'success' | 'error' | 'info') => {
+    setModal({ isOpen: true, title, message, type });
+  };
+
+  const closeModal = () => {
+    setModal(prev => ({ ...prev, isOpen: false }));
+  };
+
+  // Persist form data in localStorage
+  const { clearPersistedData } = useFormPersistence(
+    'bloodDonorRegistrationForm',
+    formData,
+    setFormData
+  );
+
 
   const genderOptions = [
     { value: '', label: 'Seleccione un género *' },
@@ -66,21 +96,6 @@ const BloodDonorRegisterPage: React.FC = () => {
     { value: 'O+', label: 'O+' },
     { value: 'O-', label: 'O-' }
   ];
-
-  useEffect(() => {
-
-    setFormData({
-      dni: '',
-      firstName: '',
-      lastName: '',
-      gender: '',
-      bloodType: '',
-      email: '',
-      phoneNumber: '',
-      dateOfBirth: '',
-      password: ''
-    });
-  }, []);
 
 
   const validateField = (name: string, value: string): string => {
@@ -147,7 +162,7 @@ const BloodDonorRegisterPage: React.FC = () => {
     }
   };
 
-  const validateForm = (): boolean => {
+  const validateForm = (): ValidationErrors => {
     const newErrors: ValidationErrors = {};
 
     Object.keys(formData).forEach(key => {
@@ -158,7 +173,7 @@ const BloodDonorRegisterPage: React.FC = () => {
     });
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return newErrors;
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -194,8 +209,14 @@ const BloodDonorRegisterPage: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) {
-      alert("Por favor, corrige los errores en el formulario");
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      const errorMessages = Object.values(formErrors).map(err => `• ${err}`).join('\n');
+      showModal(
+        'Formulario incompleto',
+        `Por favor, corrige los siguientes errores:\n\n${errorMessages}`,
+        'error'
+      );
       return;
     }
 
@@ -237,13 +258,22 @@ const BloodDonorRegisterPage: React.FC = () => {
     authService.registerBloodDonor(submitData)
       .then((response) => {
         console.log("Registro exitoso:", response.data);
-        alert("Donante registrado correctamente");
+        showModal(
+          '¡Registro exitoso!',
+          'El donante ha sido registrado correctamente. Ahora puedes iniciar sesión.',
+          'success'
+        );
+        clearPersistedData();
         resetForm();
         setSelectedImage(null);
       })
       .catch((err) => {
         console.error("Error registrando donante:", err);
-        alert(err.response?.data?.error || "Error al registrar");
+        showModal(
+          'Error en el registro',
+          err.response?.data?.error || 'Ocurrió un error al registrar el donante. Por favor, inténtalo de nuevo.',
+          'error'
+        );
       })
       .finally(() => {
         setLoading(false)
@@ -252,6 +282,7 @@ const BloodDonorRegisterPage: React.FC = () => {
 
 
   const resetForm = () => {
+    clearPersistedData();
     setFormData({
       dni: '',
       firstName: '',

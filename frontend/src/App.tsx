@@ -12,6 +12,7 @@ import Footer from "./components/UI/Footer/Footer.tsx";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import UnifiedDashboard from "./pages/UnifiedDashboard/UnifiedDashboard";
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 
 
 
@@ -38,6 +39,9 @@ function App() {
                 <Route path="/bloodDonors" element={<BloodDonorCrudPage />} />
                 <Route path="/hospitals" element={<HospitalCrudPage />} />
               </Route>
+
+              {/* 404 - Catch all unmatched routes */}
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </main>
 
