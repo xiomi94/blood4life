@@ -10,6 +10,10 @@ export interface DashboardStats {
         labels: string[];
         counts: number[];
     };
+    totalUsers: {
+        labels: string[];
+        counts: number[];
+    };
 }
 
 export const dashboardService = {

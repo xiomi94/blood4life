@@ -1,30 +1,31 @@
 import { Link, useNavigate } from 'react-router';
 import Button from '../../components/UI/Button/Button';
 import FormField from '../../components/FormField/FormField';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { authService } from '../../services/authService';
 import { useAuth } from '../../context/AuthContext';
 
 function LoginForm() {
   const navigate = useNavigate();
+  const { login } = useAuth();
+
   const [formData, setFormData] = useState({
     username: '',
     password: ''
   });
+
   const [userType, setUserType] = useState<'bloodDonor' | 'hospital' | 'admin'>('bloodDonor');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { login } = useAuth();
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
-  };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,11 +36,7 @@ function LoginForm() {
       await authService.login(formData.username, formData.password, userType);
       login(userType);
 
-      if (userType === 'bloodDonor') {
-        window.location.href = 'http://localhost:8080/dashboard';
-      } else if (userType === 'hospital') {
-        navigate('/dashboardHospital');
-      }
+      navigate('/dashboard');
 
     } catch (err: any) {
       console.error(err);
@@ -54,14 +51,19 @@ function LoginForm() {
       <form
         className="flex flex-col w-full max-w-md bg-white rounded-2xl shadow-xl p-6 sm:p-8 gap-4 sm:gap-6"
         onSubmit={handleSubmit}
+        aria-busy={isLoading}
       >
         <h2 className="font-poppins font-bold text-h3 sm:text-h2 text-gray-800 text-center mb-4">
           Iniciar sesión
         </h2>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-            <span className="block sm:inline">{error}</span>
+          <div
+            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
+            role="alert"
+            aria-live="assertive"
+          >
+            <span>{error}</span>
           </div>
         )}
 
@@ -77,6 +79,7 @@ function LoginForm() {
             />
             <span className="ml-2 text-gray-700">Donante</span>
           </label>
+
           <label className="inline-flex items-center cursor-pointer">
             <input
               type="radio"
@@ -87,6 +90,18 @@ function LoginForm() {
               onChange={() => setUserType('hospital')}
             />
             <span className="ml-2 text-gray-700">Hospital</span>
+          </label>
+
+          <label className="inline-flex items-center cursor-pointer">
+            <input
+              type="radio"
+              className="form-radio text-blue-600"
+              name="userType"
+              value="admin"
+              checked={userType === 'admin'}
+              onChange={() => setUserType('admin')}
+            />
+            <span className="ml-2 text-gray-700">Admin</span>
           </label>
         </div>
 
@@ -102,6 +117,7 @@ function LoginForm() {
           containerClass="mb-2"
           labelClass="text-sm sm:text-base"
           autoComplete="email"
+          aria-invalid={!!error}
         />
 
         <FormField

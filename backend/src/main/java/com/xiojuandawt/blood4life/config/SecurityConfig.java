@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class SecurityConfig {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration config = new CorsConfiguration();
     config.setAllowedOrigins(List.of(allowedOrigins));
-    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     config.setAllowedHeaders(List.of("*"));
     config.setAllowCredentials(true);
 
@@ -40,21 +42,67 @@ public class SecurityConfig {
     return source;
   }
 
+  // 1) SECURITY CHAIN FOR THE API (/api/**)
+  // // - Stateless
+  // // - JWT with your JwtFilter
+  // // - No CSRF
+
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  @Order(1)
+  public SecurityFilterChain apiSecurity(HttpSecurity http) throws Exception {
+
     http
+        .securityMatcher("/api/**")
+        .csrf(csrf -> csrf.disable())
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(
+                "/api/auth/**",
+                "/api/dashboard/**",
+                "/api/hospital/**",
+                "/api/auth/bloodDonor/login")
+            .permitAll()
+            .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+            .anyRequest().authenticated())
+        .sessionManagement(sess -> sess
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .exceptionHandling(ex -> ex
+            .authenticationEntryPoint((request, response, authException) -> {
+              response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            }))
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
+  }
+
+  // 2) SECURITY CHAIN FOR THE WEB (Thymeleaf)
+  // // - Stateful with sessions
+  // // - Form login
+  // // - No CSRF (at your request)
+
+  @Bean
+  @Order(2)
+  public SecurityFilterChain webSecurity(HttpSecurity http) throws Exception {
+
+    http
+        .securityMatcher("/**")
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/auth/**").permitAll()
-            .requestMatchers("/api/dashboard/**").permitAll()
-            .requestMatchers("/api/hospital/**").permitAll()
-            .requestMatchers("/api/auth/bloodDonor/login").permitAll()
-            .requestMatchers("/dashboard").permitAll()
-            .requestMatchers("/images/**").permitAll()
+            .requestMatchers(
+                "/login",
+                "/images/**",
+                "/dashboard" // si quieres protegerlo, sácalo de aquí
+            ).permitAll()
             .anyRequest().authenticated())
-        .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-        .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+        .formLogin(form -> form
+            .loginPage("/login")
+            .defaultSuccessUrl("/", true)
+            .permitAll())
+        .logout(logout -> logout
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/login?logout")
+            .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID"));
 
     return http.build();
   }

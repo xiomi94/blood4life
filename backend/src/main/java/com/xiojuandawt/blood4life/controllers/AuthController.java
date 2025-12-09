@@ -10,6 +10,7 @@ import com.xiojuandawt.blood4life.services.BloodDonorService;
 import com.xiojuandawt.blood4life.services.HospitalService;
 import com.xiojuandawt.blood4life.services.ImageService;
 import com.xiojuandawt.blood4life.services.JwtService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
+import java.util.Base64;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -41,6 +43,9 @@ public class AuthController {
 
   @Autowired
   private ImageService imageService;
+
+  @Autowired
+  private com.xiojuandawt.blood4life.services.AdminService adminService;
 
   @PostMapping("/bloodDonor/register")
   public ResponseEntity<?> registerBloodDonor(
@@ -194,6 +199,7 @@ public class AuthController {
 
   @PostMapping("/hospital/login")
   public ResponseEntity<?> loginHospital(@RequestHeader("Authorization") String authHeader) {
+    System.out.println("DEBUG: loginHospital reached with header: " + authHeader);
     try {
       String[] credentials = extractCredentials(authHeader);
       String email = credentials[0];
@@ -228,6 +234,42 @@ public class AuthController {
     }
   }
 
+  @PostMapping("/admin/login")
+  public ResponseEntity<?> loginAdmin(@RequestHeader("Authorization") String authHeader) {
+    try {
+      String[] credentials = extractCredentials(authHeader);
+      String email = credentials[0];
+      String password = credentials[1];
+
+      Optional<com.xiojuandawt.blood4life.entities.Admin> adminOpt = adminService.findByEmail(email);
+      if (adminOpt.isEmpty() || !passwordEncoder.matches(password, adminOpt.get().getPassword())) {
+        return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
+      }
+
+      com.xiojuandawt.blood4life.entities.Admin admin = adminOpt.get();
+      String token = jwtService.generateToken(admin.getId(), "admin");
+
+      ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
+          .httpOnly(true)
+          .secure(false)
+          .path("/")
+          .maxAge(24 * 60 * 60)
+          .sameSite("Lax")
+          .build();
+
+      Map<String, Object> response = new HashMap<>();
+      response.put("status", "OK");
+      response.put("message", "Login successful");
+
+      return ResponseEntity.ok()
+          .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+          .body(response);
+
+    } catch (IllegalArgumentException e) {
+      return errorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
+
   private String[] extractCredentials(String authHeader) {
     if (authHeader == null || !authHeader.startsWith("Basic ")) {
       throw new IllegalArgumentException("Missing or invalid Authorization header");
@@ -238,6 +280,25 @@ public class AuthController {
       throw new IllegalArgumentException("Invalid Basic Auth format. Expected 'email:password'");
     }
     return decodedString.split(":", 2);
+  }
+
+  @GetMapping("/logout")
+  public ResponseEntity<?> logout(HttpServletResponse response) {
+    // Delete JWT cookie
+    ResponseCookie jwtCookie = ResponseCookie.from("jwt", "")
+        .httpOnly(true)
+        .secure(false)
+        .path("/")
+        .maxAge(0) // Delete cookie by setting maxAge to 0
+        .sameSite("Lax")
+        .build();
+
+    // Redirect to frontend login page
+    response.setHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+    response.setHeader(HttpHeaders.LOCATION, "http://localhost:5173/login");
+    response.setStatus(HttpServletResponse.SC_FOUND); // 302 redirect
+
+    return null;
   }
 
   private ResponseEntity<Map<String, String>> errorResponse(String message, HttpStatus status) {
