@@ -4,6 +4,8 @@ import { authService } from '../../services/authService';
 import ImageUpload from "../../components/ImageUpload/ImageUpload.tsx";
 import Button from '../../components/UI/Button/Button';
 import FormField from '../../components/FormField/FormField';
+import { useFormPersistence } from '../../hooks/useFormPersistence';
+import Modal from '../../components/Modal/Modal';
 
 interface Hospital {
   id: number;
@@ -47,6 +49,34 @@ const HospitalRegisterPage: React.FC = () => {
   const [currentHospital, setCurrentHospital] = useState<Hospital | null>(null);
   const [errors, setErrors] = useState<FormErrors>({});
   const [profileImage, setProfileImage] = useState<File | null>(null);
+
+  // Modal state
+  const [modal, setModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    message: string;
+    type: 'success' | 'error' | 'info';
+  }>({
+    isOpen: false,
+    title: '',
+    message: '',
+    type: 'info'
+  });
+
+  const showModal = (title: string, message: string, type: 'success' | 'error' | 'info') => {
+    setModal({ isOpen: true, title, message, type });
+  };
+
+  const closeModal = () => {
+    setModal(prev => ({ ...prev, isOpen: false }));
+  };
+
+  // Persist form data in localStorage
+  const { clearPersistedData } = useFormPersistence(
+    'hospitalRegistrationForm',
+    formData,
+    setFormData
+  );
 
   useEffect(() => {
     const hospitalData: Hospital = { id: 0, cif: '', name: '', address: '', email: '', phoneNumber: '' };
@@ -139,14 +169,14 @@ const HospitalRegisterPage: React.FC = () => {
     }
   };
 
-  const validateForm = (): boolean => {
+  const validateForm = (): FormErrors => {
     const newErrors: FormErrors = {};
     Object.keys(formData).forEach(key => {
       const error = validateField(key, formData[key as keyof HospitalFormData]);
       if (error) newErrors[key as keyof FormErrors] = error;
     });
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return newErrors;
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,8 +188,14 @@ const HospitalRegisterPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) {
-      alert('Corrige los errores del formulario');
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      const errorMessages = Object.values(formErrors).map(err => `• ${err}`).join('\n');
+      showModal(
+        'Formulario incompleto',
+        `Por favor, corrige los siguientes errores:\n\n${errorMessages}`,
+        'error'
+      );
       return;
     }
     setLoading(true);
@@ -170,18 +206,28 @@ const HospitalRegisterPage: React.FC = () => {
 
       await authService.registerHospital(submitData);
 
-      alert('Hospital registrado exitosamente');
-      navigate('/login');
+      clearPersistedData();
+      showModal(
+        '¡Hospital registrado!',
+        'El hospital ha sido registrado exitosamente. Ahora puedes iniciar sesión.',
+        'success'
+      );
+      setTimeout(() => navigate('/login'), 2000);
     } catch (err: any) {
       console.error(err);
       const errorMessage = err.response?.data?.error || 'Error al registrar hospital';
-      alert(errorMessage);
+      showModal(
+        'Error en el registro',
+        errorMessage,
+        'error'
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const resetForm = () => {
+    clearPersistedData();
     setFormData({ cif: '', name: '', address: '', email: '', phoneNumber: '', password: '' });
     setProfileImage(null);
     setErrors({});
@@ -205,6 +251,13 @@ const HospitalRegisterPage: React.FC = () => {
 
   return (
     <div className="flex flex-col flex-grow items-center bg-gray-100 px-4 sm:px-6 md:px-8 lg:px-12 py-6">
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        title={modal.title}
+        message={modal.message}
+        type={modal.type}
+      />
       <div className="w-full max-w-6xl flex flex-col gap-6 md:gap-8">
         {/* Título */}
         <div className="text-center">
