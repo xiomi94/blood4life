@@ -472,6 +472,13 @@ const BloodDonorRegisterPage: React.FC = () => {
           </form>
         </div>
       </div>
+      <Modal
+        isOpen={modal.isOpen}
+        title={modal.title}
+        message={modal.message}
+        type={modal.type}
+        onClose={closeModal}
+      />
     </div>
   );
 }
