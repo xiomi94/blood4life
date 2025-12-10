@@ -4,6 +4,7 @@ import FormField from '../../components/FormField/FormField';
 import { useState, useCallback } from 'react';
 import { authService } from '../../services/authService';
 import { useAuth } from '../../context/AuthContext';
+import { useFormPersistence } from '../../hooks/useFormPersistence';
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -11,19 +12,46 @@ function LoginForm() {
 
   const [formData, setFormData] = useState({
     username: '',
-    password: ''
+    password: '',
+    userType: 'bloodDonor' as 'bloodDonor' | 'hospital' | 'admin'
   });
 
-  const [userType, setUserType] = useState<'bloodDonor' | 'hospital' | 'admin'>('bloodDonor');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Persist form data in localStorage (excluding password for security)
+  const { clearPersistedData } = useFormPersistence(
+    'loginForm',
+    formData,
+    setFormData,
+    ['password'] // Exclude password from persistence
+  );
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+
+    // Auto-detect admin based on email
+    if (name === 'username') {
+      if (value.endsWith('@admin.es')) {
+        setFormData(prev => ({ ...prev, username: value, userType: 'admin' }));
+      } else {
+        // If not admin email, ensure userType is not admin
+        if (formData.userType === 'admin') {
+          setFormData(prev => ({ ...prev, username: value, userType: 'bloodDonor' }));
+        }
+      }
+    }
+  }, [formData.userType]);
+
+  const handleUserTypeChange = useCallback((userType: 'bloodDonor' | 'hospital' | 'admin') => {
+    setFormData(prev => ({
+      ...prev,
+      userType
     }));
   }, []);
 
@@ -33,9 +61,10 @@ function LoginForm() {
     setIsLoading(true);
 
     try {
-      await authService.login(formData.username, formData.password, userType);
-      login(userType);
+      await authService.login(formData.username, formData.password, formData.userType);
+      login(formData.userType);
 
+      clearPersistedData();
       navigate('/dashboard');
 
     } catch (err: any) {
@@ -74,8 +103,9 @@ function LoginForm() {
               className="form-radio text-blue-600"
               name="userType"
               value="bloodDonor"
-              checked={userType === 'bloodDonor'}
-              onChange={() => setUserType('bloodDonor')}
+              checked={formData.userType === 'bloodDonor'}
+              onChange={() => handleUserTypeChange('bloodDonor')}
+              disabled={formData.username.endsWith('@admin.es')}
             />
             <span className="ml-2 text-gray-700">Donante</span>
           </label>
@@ -86,22 +116,11 @@ function LoginForm() {
               className="form-radio text-blue-600"
               name="userType"
               value="hospital"
-              checked={userType === 'hospital'}
-              onChange={() => setUserType('hospital')}
+              checked={formData.userType === 'hospital'}
+              onChange={() => handleUserTypeChange('hospital')}
+              disabled={formData.username.endsWith('@admin.es')}
             />
             <span className="ml-2 text-gray-700">Hospital</span>
-          </label>
-
-          <label className="inline-flex items-center cursor-pointer">
-            <input
-              type="radio"
-              className="form-radio text-blue-600"
-              name="userType"
-              value="admin"
-              checked={userType === 'admin'}
-              onChange={() => setUserType('admin')}
-            />
-            <span className="ml-2 text-gray-700">Admin</span>
           </label>
         </div>
 

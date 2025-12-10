@@ -23,6 +23,11 @@ export default defineConfig({
             console.log('================\n');
           });
         }
+      },
+      '/images': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false
       }
     }
   }

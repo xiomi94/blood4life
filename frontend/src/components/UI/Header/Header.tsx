@@ -1,10 +1,14 @@
 // components/Header/Header.tsx
 import { useLocation, Link } from 'react-router';
+import { useState } from 'react';
+import { useAuth } from '../../../context/AuthContext';
 import Logo from "../../../assets/images/LogoShadowMini.webp";
 import Button from "../Button/Button.tsx"
 
 function Header() {
   const location = useLocation();
+  const { logout, user } = useAuth();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   return (
     <div
@@ -56,8 +60,44 @@ function Header() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                   </svg>
                 </button>
-                {/* User Avatar */}
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full"></div>
+                {/* User Avatar with Dropdown */}
+                <div className="relative">
+                  <button
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className="w-10 h-10 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 overflow-hidden"
+                    aria-haspopup="true"
+                    aria-expanded={isDropdownOpen}
+                  >
+                    {user?.imageName ? (
+                      <img
+                        src={`/images/${user.imageName}`}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback if image fails to load
+                          (e.target as HTMLImageElement).style.display = 'none';
+                          (e.target as HTMLImageElement).parentElement!.classList.add('bg-gradient-to-br', 'from-blue-500', 'to-purple-600');
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600"></div>
+                    )}
+                  </button>
+
+                  {isDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 ring-1 ring-black ring-opacity-5">
+                      <button
+                        onClick={() => {
+                          logout();
+                          setIsDropdownOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Cerrar Sesión
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           )}
