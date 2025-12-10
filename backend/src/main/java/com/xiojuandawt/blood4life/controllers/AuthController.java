@@ -112,13 +112,20 @@ public class AuthController {
 
   @PostMapping("/bloodDonor/login")
   public ResponseEntity<?> loginBloodDonor(@RequestHeader("Authorization") String authHeader) {
+    System.out.println("AUTH DEBUG: loginBloodDonor called");
     try {
+
       String[] credentials = extractCredentials(authHeader);
       String email = credentials[0];
       String password = credentials[1];
 
       Optional<BloodDonor> donorOpt = bloodDonorService.findByEmail(email);
-      if (donorOpt.isEmpty() || !passwordEncoder.matches(password, donorOpt.get().getPassword())) {
+      if (donorOpt.isEmpty()) {
+        System.out.println("AUTH DEBUG: BloodDonor not found for email: " + email);
+        return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
+      }
+      if (!passwordEncoder.matches(password, donorOpt.get().getPassword())) {
+        System.out.println("AUTH DEBUG: Password mismatch for email: " + email);
         return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
       }
 
@@ -206,7 +213,12 @@ public class AuthController {
       String password = credentials[1];
 
       Optional<Hospital> hospitalOpt = hospitalService.findHospitalByEmail(email);
-      if (hospitalOpt.isEmpty() || !passwordEncoder.matches(password, hospitalOpt.get().getPassword())) {
+      if (hospitalOpt.isEmpty()) {
+        System.out.println("AUTH DEBUG: Hospital not found for email: " + email);
+        return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
+      }
+      if (!passwordEncoder.matches(password, hospitalOpt.get().getPassword())) {
+        System.out.println("AUTH DEBUG: Password mismatch for email: " + email);
         return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
       }
 
@@ -242,7 +254,12 @@ public class AuthController {
       String password = credentials[1];
 
       Optional<com.xiojuandawt.blood4life.entities.Admin> adminOpt = adminService.findByEmail(email);
-      if (adminOpt.isEmpty() || !passwordEncoder.matches(password, adminOpt.get().getPassword())) {
+      if (adminOpt.isEmpty()) {
+        System.out.println("AUTH DEBUG: Admin not found for email: " + email);
+        return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
+      }
+      if (!passwordEncoder.matches(password, adminOpt.get().getPassword())) {
+        System.out.println("AUTH DEBUG: Password mismatch for email: " + email);
         return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
       }
 

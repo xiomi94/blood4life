@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Configuration
+@org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 public class SecurityConfig {
 
   @Value("${cors.allowed-origins}")
@@ -70,6 +71,16 @@ public class SecurityConfig {
             .authenticationEntryPoint((request, response, authException) -> {
               response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
             }))
+        .addFilterBefore(new org.springframework.web.filter.OncePerRequestFilter() {
+          @Override
+          protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request,
+              jakarta.servlet.http.HttpServletResponse response, jakarta.servlet.FilterChain filterChain)
+              throws jakarta.servlet.ServletException, java.io.IOException {
+            System.out
+                .println("SECURITY DEBUG: Incoming Request: " + request.getMethod() + " | " + request.getRequestURI());
+            filterChain.doFilter(request, response);
+          }
+        }, UsernamePasswordAuthenticationFilter.class)
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
@@ -91,8 +102,10 @@ public class SecurityConfig {
             .requestMatchers(
                 "/login",
                 "/images/**",
-                "/dashboard" // si quieres protegerlo, sácalo de aquí
-            ).permitAll()
+                "/favicon.ico",
+                "/css/**",
+                "/js/**")
+            .permitAll()
             .anyRequest().authenticated())
         .formLogin(form -> form
             .loginPage("/login")
