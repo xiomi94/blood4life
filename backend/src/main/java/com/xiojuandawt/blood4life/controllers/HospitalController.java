@@ -22,6 +22,22 @@ public class HospitalController {
   private HospitalService hospitalService;
 
   // ----------------- GET ALL -----------------
+  @GetMapping("/me")
+  public ResponseEntity<HospitalDTO> obtainMe(org.springframework.security.core.Authentication authentication) {
+    Hospital me = (Hospital) authentication.getPrincipal();
+    String imageName = me.getImage() != null ? me.getImage().getName() : null;
+    HospitalDTO meDTO = new HospitalDTO();
+    meDTO.setId(me.getId());
+    meDTO.setCif(me.getCif());
+    meDTO.setName(me.getName());
+    meDTO.setAddress(me.getAddress());
+    meDTO.setEmail(me.getEmail());
+    meDTO.setPhoneNumber(me.getPhoneNumber());
+    meDTO.setImageName(imageName);
+
+    return ResponseEntity.ok(meDTO);
+  }
+
   @GetMapping
   public ResponseEntity<List<HospitalDTO>> getAllHospitals() {
     List<HospitalDTO> hospitalDTOList = hospitalService.findAll();

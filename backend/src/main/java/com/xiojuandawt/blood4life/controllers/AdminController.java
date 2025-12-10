@@ -23,6 +23,19 @@ public class AdminController {
   @Autowired
   private HospitalService hospitalService;
 
+  @GetMapping("/me")
+  public ResponseEntity<com.xiojuandawt.blood4life.dto.AdminDTO> obtainMe(
+      org.springframework.security.core.Authentication authentication) {
+    com.xiojuandawt.blood4life.entities.Admin me = (com.xiojuandawt.blood4life.entities.Admin) authentication
+        .getPrincipal();
+
+    com.xiojuandawt.blood4life.dto.AdminDTO meDTO = new com.xiojuandawt.blood4life.dto.AdminDTO();
+    meDTO.setId(me.getId());
+    meDTO.setEmail(me.getEmail());
+    // Add other fields if AdminDTO has them
+
+    return ResponseEntity.ok(meDTO);
+  }
 
   @GetMapping("/blood-donors")
   public ResponseEntity<List<BloodDonorDTO>> getAllBloodDonors() {
@@ -50,7 +63,6 @@ public class AdminController {
       return ResponseEntity.notFound().build();
     }
   }
-
 
   @GetMapping("/hospitals")
   public ResponseEntity<List<HospitalDTO>> getAllHospitals() {
