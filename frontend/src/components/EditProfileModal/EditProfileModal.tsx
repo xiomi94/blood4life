@@ -21,6 +21,19 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
     });
     const [showPasswordFields, setShowPasswordFields] = useState(false);
 
+    // Lock body scroll when modal is open
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
+
     useEffect(() => {
         if (user && userType) {
             // Pre-fill form with current user data
@@ -195,7 +208,7 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center">
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-black bg-opacity-50"
+                className="absolute inset-0 bg-black/30 backdrop-blur-sm"
                 onClick={onClose}
             ></div>
 
@@ -258,6 +271,7 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     required
                                 />
+                                <p className="mt-1 text-xs text-gray-500">Formato: 12345678X</p>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
@@ -287,10 +301,11 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                                     type="email"
                                     name="email"
                                     value={formData.email || ''}
-                                    onChange={handleInputChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    required
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700"
+                                    disabled
+                                    readOnly
                                 />
+                                <p className="mt-1 text-xs text-gray-500">El email no se puede modificar</p>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
@@ -301,6 +316,7 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                                     onChange={handleInputChange}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 />
+                                <p className="mt-1 text-xs text-gray-500">Formato: +34 123 456 789 (opcional)</p>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Género</label>
@@ -333,6 +349,7 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     required
                                 />
+                                <p className="mt-1 text-xs text-gray-500">Formato: A12345678</p>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
@@ -355,6 +372,7 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     required
                                 />
+                                <p className="mt-1 text-xs text-gray-500">Dirección completa del hospital</p>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
@@ -362,10 +380,11 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                                     type="email"
                                     name="email"
                                     value={formData.email || ''}
-                                    onChange={handleInputChange}
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    required
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700"
+                                    disabled
+                                    readOnly
                                 />
+                                <p className="mt-1 text-xs text-gray-500">El email no se puede modificar</p>
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
@@ -377,6 +396,7 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                     required
                                 />
+                                <p className="mt-1 text-xs text-gray-500">Formato: +34 123 456 789</p>
                             </div>
                         </div>
                     )}
@@ -388,49 +408,58 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                             onClick={() => setShowPasswordFields(!showPasswordFields)}
                             className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2"
                         >
-                            {showPasswordFields ? '▼' : '▶'} Cambiar contraseña
+                            <svg
+                                className={`w-4 h-4 transition-transform ${showPasswordFields ? 'rotate-90' : ''}`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                            Cambiar contraseña
                         </button>
 
-                        {showPasswordFields && (
-                            <div className="grid grid-cols-1 gap-4 mt-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña Actual</label>
-                                    <input
-                                        type="password"
-                                        name="currentPassword"
-                                        value={passwordData.currentPassword}
-                                        onChange={handlePasswordChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Ingresa tu contraseña actual"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Nueva Contraseña</label>
-                                    <input
-                                        type="password"
-                                        name="newPassword"
-                                        value={passwordData.newPassword}
-                                        onChange={handlePasswordChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Mínimo 8 caracteres"
-                                    />
-                                    <p className="mt-1 text-xs text-gray-500">
-                                        Debe contener: mayúscula, minúscula, número (8-32 caracteres)
-                                    </p>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Confirmar Nueva Contraseña</label>
-                                    <input
-                                        type="password"
-                                        name="confirmPassword"
-                                        value={passwordData.confirmPassword}
-                                        onChange={handlePasswordChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Repite la nueva contraseña"
-                                    />
-                                </div>
+                        <div
+                            className={`grid grid-cols-1 gap-4 mt-4 overflow-hidden transition-all duration-500 ease-in-out ${showPasswordFields ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                                }`}
+                        >
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña Actual</label>
+                                <input
+                                    type="password"
+                                    name="currentPassword"
+                                    value={passwordData.currentPassword}
+                                    onChange={handlePasswordChange}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Ingresa tu contraseña actual"
+                                />
                             </div>
-                        )}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Nueva Contraseña</label>
+                                <input
+                                    type="password"
+                                    name="newPassword"
+                                    value={passwordData.newPassword}
+                                    onChange={handlePasswordChange}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Mínimo 8 caracteres"
+                                />
+                                <p className="mt-1 text-xs text-gray-500">
+                                    Debe contener: mayúscula, minúscula, número (8-32 caracteres)
+                                </p>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Confirmar Nueva Contraseña</label>
+                                <input
+                                    type="password"
+                                    name="confirmPassword"
+                                    value={passwordData.confirmPassword}
+                                    onChange={handlePasswordChange}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Repite la nueva contraseña"
+                                />
+                            </div>
+                        </div>
                     </div>
 
                     {/* Message */}
