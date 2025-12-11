@@ -16,4 +16,8 @@ public interface CampaignService {
     List<CampaignDTO> findAll();
 
     CampaignDTO parseEntityToDTO(Campaign campaign);
+
+    CampaignDTO updateCampaign(Integer id, Campaign campaign, List<String> bloodTypeStrings);
+
+    void deleteCampaign(Integer id);
 }

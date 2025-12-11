@@ -13,6 +13,7 @@ import { Bar, Doughnut } from 'react-chartjs-2';
 import { dashboardService } from '../../services/dashboardService';
 import type { DashboardStats } from '../../services/dashboardService';
 import CreateCampaignModal from '../../components/CreateCampaignModal/CreateCampaignModal';
+import EditCampaignModal from '../../components/EditCampaignModal/EditCampaignModal';
 import { useAuth } from '../../context/AuthContext';
 import { campaignService, type Campaign } from '../../services/campaignService';
 
@@ -35,12 +36,19 @@ const DashboardHospitalPage = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedChart, setSelectedChart] = useState<ChartType>('bloodType');
+  const [selectedChart, setSelectedChart] = useState<ChartType>('campaigns');
   const [showCreateCampaignModal, setShowCreateCampaignModal] = useState(false);
   const [hospitalCampaigns, setHospitalCampaigns] = useState<Campaign[]>([]);
   // Calendar State
   const [currentDate, setCurrentDate] = useState(new Date());
   const [allCampaigns, setAllCampaigns] = useState<Campaign[]>([]);
+  // Delete confirmation state
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [campaignToDelete, setCampaignToDelete] = useState<Campaign | null>(null);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  // Edit campaign state
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [campaignToEdit, setCampaignToEdit] = useState<Campaign | null>(null);
 
   useEffect(() => {
     campaignService.getAllCampaigns()
@@ -56,6 +64,44 @@ const DashboardHospitalPage = () => {
 
   const changeMonth = (increment: number) => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + increment, 1));
+  };
+
+  const refreshCampaigns = () => {
+    campaignService.getAllCampaigns()
+      .then(setAllCampaigns)
+      .catch(err => console.error('Error refreshing campaigns:', err));
+
+    if (user?.id) {
+      campaignService.getCampaignsByHospital(user.id)
+        .then(setHospitalCampaigns)
+        .catch(err => console.error('Error refreshing hospital campaigns:', err));
+    }
+  };
+
+  const handleDeleteClick = (campaign: Campaign) => {
+    setCampaignToDelete(campaign);
+    setShowDeleteModal(true);
+    setDeleteConfirmText('');
+  };
+
+  const handleEditClick = (campaign: Campaign) => {
+    setCampaignToEdit(campaign);
+    setShowEditModal(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!campaignToDelete || deleteConfirmText !== campaignToDelete.name) return;
+
+    try {
+      await campaignService.deleteCampaign(campaignToDelete.id);
+      setShowDeleteModal(false);
+      setCampaignToDelete(null);
+      setDeleteConfirmText('');
+      refreshCampaigns();
+    } catch (err) {
+      console.error('Error deleting campaign:', err);
+      alert('Error al eliminar la campaña');
+    }
   };
 
   const renderCalendarDays = () => {
@@ -351,17 +397,16 @@ const DashboardHospitalPage = () => {
             <div className="lg:col-span-2 space-y-6">
               {/* Estadísticas */}
               <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-lg font-semibold text-gray-800">Estadísticas de donantes</h2>
+                <div className="flex items-center justify-start mb-6">
                   <select
                     id="chartType"
                     value={selectedChart}
                     onChange={(e) => setSelectedChart(e.target.value as ChartType)}
-                    className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="appearance-none pr-8 pl-0 py-1 bg-transparent text-xl font-bold text-gray-800 border-none focus:ring-0 focus:outline-none cursor-pointer hover:text-blue-600 transition-colors bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22%234b5563%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:24px_24px] bg-[right_-4px_center] bg-no-repeat"
                   >
-                    <option value="bloodType">Distribución por tipo de sangre</option>
-                    <option value="gender">Distribución por género</option>
-                    <option value="campaigns">Campañas</option>
+                    <option value="campaigns" className="text-lg font-semibold text-gray-700">Campañas</option>
+                    <option value="bloodType" className="text-lg font-semibold text-gray-700">Distribución por tipo de sangre</option>
+                    <option value="gender" className="text-lg font-semibold text-gray-700">Distribución por género</option>
                   </select>
                 </div>
 
@@ -387,13 +432,37 @@ const DashboardHospitalPage = () => {
                       hospitalCampaigns.map(campaign => (
                         <div key={campaign.id} className="p-4 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
                           <div className="flex justify-between items-start mb-2">
-                            <h3 className="font-bold text-gray-800">{campaign.name}</h3>
-                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
-                              Meta: {campaign.requiredDonorQuantity} donantes
-                            </span>
+                            <div className="flex flex-row items-center gap-3">
+                              <h3 className="text-xl font-bold text-gray-800">{campaign.name}</h3>
+                              <span className="text-sm bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium whitespace-nowrap">
+                                Meta: {campaign.currentDonorCount || 0} / {campaign.requiredDonorQuantity} donantes
+                              </span>
+                            </div>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleEditClick(campaign)}
+                                className="text-blue-600 hover:text-blue-800 p-1 rounded hover:bg-blue-50 transition-colors"
+                                title="Editar campaña"
+                              >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                              </button>
+                              <button
+                                onClick={() => handleDeleteClick(campaign)}
+                                className="text-red-600 hover:text-red-800 p-1 rounded hover:bg-red-50 transition-colors"
+                                title="Eliminar campaña"
+                              >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                              </button>
+                            </div>
                           </div>
-                          <p className="text-sm text-gray-600 mb-3 line-clamp-2">{campaign.description}</p>
-                          <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">
+                          <div className="flex items-center gap-2 mb-2">
+                          </div>
+                          <p className="text-base text-gray-600 mb-3 line-clamp-2">{campaign.description}</p>
+                          <div className="grid grid-cols-2 gap-2 text-sm text-gray-500">
                             <div>
                               <span className="font-semibold block mb-1">Fechas:</span>
                               {new Date(campaign.startDate).toLocaleDateString('es-ES')} - {new Date(campaign.endDate).toLocaleDateString('es-ES')}
@@ -402,7 +471,7 @@ const DashboardHospitalPage = () => {
                               <span className="font-semibold block mb-1">Tipos de sangre:</span>
                               <div className="flex flex-wrap gap-1">
                                 {campaign.requiredBloodType.split(',').map((type, idx) => (
-                                  <span key={idx} className="bg-red-100 text-red-700 px-1.5 py-0.5 rounded text-[10px] font-bold">
+                                  <span key={idx} className="bg-red-100 text-red-700 px-2 py-0.5 rounded text-xs font-bold">
                                     {type.replace(/[\[\]\s"]/g, '')}
                                   </span>
                                 ))}
@@ -415,104 +484,55 @@ const DashboardHospitalPage = () => {
                   </div>
                 )}
               </section>
-
-              {/* Historial de donaciones */}
-              <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-semibold text-gray-800 mb-2">Donaciones recibidas</h2>
-                <p className="text-sm text-gray-500 mb-4">Últimas donaciones de sangre recibidas en el hospital.</p>
-
-                <div className="space-y-3">
-                  <div
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <span
-                        className="inline-flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">
-                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                        Finalizado
-                      </span>
-                      <div>
-                        <p className="font-medium text-gray-800">Campaña de donación</p>
-                        <p className="text-sm text-gray-500">Donación tipo O+</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium text-gray-800">Hospital Negrín</p>
-                      <p className="text-sm text-gray-500">Jan 17, 2022</p>
-                    </div>
-                    <button className="p-2 text-gray-400 hover:text-gray-600">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                          d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-                      </svg>
-                    </button>
-                  </div>
-
-                  <div
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <span
-                        className="inline-flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">
-                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                        Finalizado
-                      </span>
-                      <div>
-                        <p className="font-medium text-gray-800">Campaña de donación</p>
-                        <p className="text-sm text-gray-500">Donación tipo A-</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium text-gray-800">Hospital Negrín</p>
-                      <p className="text-sm text-gray-500">Jan 17, 2022</p>
-                    </div>
-                    <button className="p-2 text-gray-400 hover:text-gray-600">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                          d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </section>
             </div>
 
-            {/* Right Column: Calendar + Stats */}
+            {/* Right Column: Calendar */}
             <div className="space-y-6">
-              {/* Calendar */}
-              <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-semibold text-gray-800 mb-4">Calendario</h2>
-
-                <div className="mb-3">
-                  <div className="flex justify-between items-center mb-4 px-2">
-                    <button onClick={() => changeMonth(-1)} className="p-1 hover:bg-gray-100 rounded text-gray-600">
-                      &lt;
+              {/* Calendar Widget */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="font-semibold text-gray-800">Calendario</h3>
+                  <div className="flex gap-2">
+                    <button onClick={() => changeMonth(-1)} className="p-1 hover:bg-gray-100 rounded">
+                      <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                      </svg>
                     </button>
-                    <h3 className="font-semibold text-gray-800">
+                    <span className="font-medium text-gray-700">
                       {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-                    </h3>
-                    <button onClick={() => changeMonth(1)} className="p-1 hover:bg-gray-100 rounded text-gray-600">
-                      &gt;
+                    </span>
+                    <button onClick={() => changeMonth(1)} className="p-1 hover:bg-gray-100 rounded">
+                      <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                      </svg>
                     </button>
-                  </div>
-
-                  <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-500 mb-2">
-                    <div>Lu</div>
-                    <div>Ma</div>
-                    <div>Mi</div>
-                    <div>Ju</div>
-                    <div>Vi</div>
-                    <div>Sa</div>
-                    <div>Do</div>
-                  </div>
-                  <div className="grid grid-cols-7 gap-1 text-center text-sm">
-                    {renderCalendarDays()}
-                  </div>
-                  <div className="mt-4 flex gap-4 text-xs justify-center text-gray-500">
-                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-green-500 rounded"></div> Activa</div>
-                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-blue-500 rounded"></div> Futura</div>
-                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-red-200 rounded"></div> Finalizada</div>
                   </div>
                 </div>
-              </section>
+                <div className="grid grid-cols-7 gap-1 text-center mb-2">
+                  {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map(day => (
+                    <div key={day} className="text-xs font-medium text-gray-500 py-1">
+                      {day}
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-7 gap-1">
+                  {renderCalendarDays()}
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2 text-xs text-gray-500 justify-center">
+                  <div className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                    <span>Activa hoy</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                    <span>Futura</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-red-200"></span>
+                    <span>Pasada</span>
+                  </div>
+                </div>
+              </div>
 
               {/* Stats Cards */}
               <section className="space-y-4">
@@ -531,15 +551,71 @@ const DashboardHospitalPage = () => {
         </div>
       </main>
 
-      {/* Campaign Modal */}
+      {/* Modals */}
       <CreateCampaignModal
         isOpen={showCreateCampaignModal}
         onClose={() => setShowCreateCampaignModal(false)}
         onSuccess={() => {
-          // Optionally refresh data or show success message
-          console.log('Campaign created successfully');
+          setShowCreateCampaignModal(false);
+          refreshCampaigns();
         }}
       />
+
+      <EditCampaignModal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        campaign={campaignToEdit}
+        onSuccess={() => {
+          setShowEditModal(false);
+          refreshCampaigns();
+        }}
+      />
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && campaignToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 transform transition-all scale-100 opacity-100">
+            <h3 className="text-xl font-bold text-gray-900 mb-4">Eliminar Campaña</h3>
+            <p className="text-gray-600 mb-4">
+              ¿Estás seguro que deseas eliminar la campaña <span className="font-bold text-gray-800">"{campaignToDelete.name}"</span>?
+              Esta acción no se puede deshacer.
+            </p>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Escribe el nombre de la campaña para confirmar:
+              </label>
+              <input
+                type="text"
+                value={deleteConfirmText}
+                onChange={(e) => setDeleteConfirmText(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"
+                placeholder={campaignToDelete.name}
+              />
+            </div>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setCampaignToDelete(null);
+                  setDeleteConfirmText('');
+                }}
+                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                disabled={deleteConfirmText !== campaignToDelete.name}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

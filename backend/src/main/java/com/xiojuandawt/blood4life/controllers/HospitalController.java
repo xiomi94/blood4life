@@ -214,6 +214,34 @@ public class HospitalController {
     }
   }
 
+  @DeleteMapping("/delete-account")
+  public ResponseEntity<Map<String, String>> deleteAccount(
+      org.springframework.security.core.Authentication authentication) {
+    try {
+      Hospital hospital = (Hospital) authentication.getPrincipal();
+
+      // Simple DELETE - MySQL trigger will:
+      // 1. Set deleted_at in hospital_log BEFORE delete
+      // 2. Keep all historical data in _log table
+      // 3. Remove from hospital (email becomes available for reuse)
+      hospitalService.delete(hospital.getId());
+
+      Map<String, String> response = new HashMap<>();
+      response.put("status", "OK");
+      response.put("message", "Cuenta eliminada exitosamente");
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(response);
+
+    } catch (Exception e) {
+      Map<String, String> errorResponse = new HashMap<>();
+      errorResponse.put("error", "Error al eliminar la cuenta: " + e.getMessage());
+      return ResponseEntity
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(errorResponse);
+    }
+  }
+
   // ----------------- DELETE -----------------
   @DeleteMapping("/{id}")
   public ResponseEntity<Map<String, String>> deleteHospital(@PathVariable("id") Integer id) {

@@ -13,6 +13,17 @@ public class CampaignDTO {
     private String location;
     private Integer requiredDonorQuantity;
     private String requiredBloodType;
+    private Integer currentDonorCount;
+
+    // ...
+
+    public Integer getCurrentDonorCount() {
+        return currentDonorCount;
+    }
+
+    public void setCurrentDonorCount(Integer currentDonorCount) {
+        this.currentDonorCount = currentDonorCount;
+    }
 
     public CampaignDTO() {
     }
