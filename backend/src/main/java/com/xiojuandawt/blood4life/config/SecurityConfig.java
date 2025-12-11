@@ -59,9 +59,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(
                 "/api/auth/**",
-                "/api/dashboard/**",
-                "/api/hospital/**",
-                "/api/auth/bloodDonor/login")
+                "/api/dashboard/**")
             .permitAll()
             .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
             .anyRequest().authenticated())
@@ -96,7 +94,7 @@ public class SecurityConfig {
   public SecurityFilterChain webSecurity(HttpSecurity http) throws Exception {
 
     http
-        .securityMatcher("/**")
+        .securityMatcher(request -> !request.getRequestURI().startsWith("/api"))
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(
@@ -107,6 +105,10 @@ public class SecurityConfig {
                 "/js/**")
             .permitAll()
             .anyRequest().authenticated())
+        .exceptionHandling(ex -> ex
+            .authenticationEntryPoint((request, response, authException) -> {
+              response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            }))
         .formLogin(form -> form
             .loginPage("/login")
             .defaultSuccessUrl("/", true)

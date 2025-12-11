@@ -300,22 +300,22 @@ public class AuthController {
   }
 
   @GetMapping("/logout")
-  public ResponseEntity<?> logout(HttpServletResponse response) {
-    // Delete JWT cookie
+  public ResponseEntity<?> logout() {
     ResponseCookie jwtCookie = ResponseCookie.from("jwt", "")
         .httpOnly(true)
         .secure(false)
         .path("/")
-        .maxAge(0) // Delete cookie by setting maxAge to 0
+        .maxAge(0)
         .sameSite("Lax")
         .build();
 
-    // Redirect to frontend login page
-    response.setHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
-    response.setHeader(HttpHeaders.LOCATION, "http://localhost:5173/login");
-    response.setStatus(HttpServletResponse.SC_FOUND); // 302 redirect
+    Map<String, String> response = new HashMap<>();
+    response.put("status", "OK");
+    response.put("message", "Logged out successfully");
 
-    return null;
+    return ResponseEntity.ok()
+        .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+        .body(response);
   }
 
   private ResponseEntity<Map<String, String>> errorResponse(String message, HttpStatus status) {

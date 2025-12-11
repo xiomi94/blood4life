@@ -200,15 +200,7 @@ const DashboardHospitalPage = () => {
           </a>
         </nav>
 
-        {/* Logout Button */}
-        <div className="px-4 mb-4">
-          <a href="/api/auth/logout" className="flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-red-200">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-            <span className="font-medium">Log Out</span>
-          </a>
-        </div>
+
       </aside>
 
       {/* Main Content */}

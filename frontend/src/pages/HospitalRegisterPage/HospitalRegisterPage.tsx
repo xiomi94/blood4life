@@ -282,7 +282,12 @@ const HospitalRegisterPage: React.FC = () => {
               <FormField type="text" id="address" name="address" label="Dirección" value={formData.address} onChange={handleInputChange} required disabled={loading} error={errors.address} placeholder="Ingrese dirección" />
               <FormField type="email" id="email" name="email" label="Email" value={formData.email} onChange={handleInputChange} required disabled={loading} error={errors.email} placeholder="Ingrese email" />
               <FormField type="tel" id="phoneNumber" name="phoneNumber" label="Teléfono" value={formData.phoneNumber} onChange={handleInputChange} required disabled={loading} error={errors.phoneNumber} placeholder="Ingrese teléfono" />
-              <FormField type="password" id="password" name="password" label="Contraseña" value={formData.password} onChange={handleInputChange} required disabled={loading} error={errors.password} placeholder="Ingrese contraseña" showPasswordToggle={true} isPasswordVisible={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} />
+              <div>
+                <FormField type="password" id="password" name="password" label="Contraseña" value={formData.password} onChange={handleInputChange} required disabled={loading} error={errors.password} placeholder="Ingrese contraseña" showPasswordToggle={true} isPasswordVisible={showPassword} onTogglePassword={() => setShowPassword(!showPassword)} />
+                <p className="mt-1 text-xs text-gray-500">
+                  Debe contener: mayúscula, minúscula, número (8-32 caracteres)
+                </p>
+              </div>
             </div>
             <div className="flex flex-row justify-center sm:flex-row gap-3 mt-8">
               <Button

@@ -8,6 +8,16 @@ interface UserProfile {
   name?: string; // Hospital
   email: string;
   imageName?: string;
+  bloodType?: {
+    id: number;
+    name: string;
+  };
+  dni?: string;
+  gender?: string;
+  phoneNumber?: string;
+  dateOfBirth?: string;
+  cif?: string;
+  address?: string;
 }
 
 interface AuthContextType {
@@ -78,13 +88,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .catch(err => console.error("Failed to fetch user details on login", err));
   };
 
-  const logout = () => {
-    // TODO: Call backend logout endpoint to clear cookie
-    setUserType(null);
-    setUser(null);
-    setIsAuthenticated(false);
-    // Force reload to clear any in-memory state if needed
-    window.location.href = '/login';
+  const logout = async () => {
+    try {
+      await axiosInstance.get('/auth/logout');
+    } catch (error) {
+      console.error("Logout failed on server:", error);
+    } finally {
+      setUserType(null);
+      setUser(null);
+      setIsAuthenticated(false);
+      // Force reload to clear any in-memory state and redirect to login
+      window.location.href = '/login';
+    }
   };
 
   return (

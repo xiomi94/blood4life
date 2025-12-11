@@ -426,21 +426,26 @@ const BloodDonorRegisterPage: React.FC = () => {
                 error={errors.dateOfBirth}
               />
 
-              <FormField
-                type="password"
-                id="password"
-                name="password"
-                label="Contraseña"
-                value={formData.password || ''}
-                onChange={handleInputChange}
-                required
-                disabled={loading}
-                error={errors.password}
-                placeholder="Ingrese la contraseña"
-                showPasswordToggle={true}
-                isPasswordVisible={showPassword}
-                onTogglePassword={() => setShowPassword(!showPassword)}
-              />
+              <div>
+                <FormField
+                  type="password"
+                  id="password"
+                  name="password"
+                  label="Contraseña"
+                  value={formData.password || ''}
+                  onChange={handleInputChange}
+                  required
+                  disabled={loading}
+                  error={errors.password}
+                  placeholder="Ingrese la contraseña"
+                  showPasswordToggle={true}
+                  isPasswordVisible={showPassword}
+                  onTogglePassword={() => setShowPassword(!showPassword)}
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                  Debe contener: mayúscula, minúscula, número (8-32 caracteres)
+                </p>
+              </div>
             </div>
 
             <div className="flex flex-row justify-center sm:flex-row gap-3 mt-8">

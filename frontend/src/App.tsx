@@ -23,7 +23,7 @@ function App() {
         <BrowserRouter>
           <Header />
 
-          <main className="flex-grow w-full">
+          <main className="flex-grow w-full flex flex-col">
             <Routes>
               {/* Public Routes */}
               <Route path="/index" element={<Index />} />
