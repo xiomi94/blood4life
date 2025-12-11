@@ -2,6 +2,7 @@ package com.xiojuandawt.blood4life.controllers;
 
 import com.xiojuandawt.blood4life.dto.BloodDonorDTO;
 import com.xiojuandawt.blood4life.entities.BloodDonor;
+import com.xiojuandawt.blood4life.entities.BloodType;
 import com.xiojuandawt.blood4life.exception.ResourceNotFoundException;
 import com.xiojuandawt.blood4life.services.BloodDonorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,64 +22,206 @@ public class BloodDonorController {
   @Autowired
   private BloodDonorService bloodDonorService;
 
+  @Autowired
+  private com.xiojuandawt.blood4life.services.ImageService imageService;
+
+  @Autowired
+  private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
   @GetMapping("/me")
   public ResponseEntity<?> obtainMe(Authentication authentication) {
     BloodDonor me = (BloodDonor) authentication.getPrincipal();
     String imageName = me.getImage() != null ? me.getImage().getName() : null;
     BloodDonorDTO meDTO = new BloodDonorDTO(
-      me.getId(),
-      me.getDni(),
-      me.getFirstName(),
-      me.getLastName(),
-      me.getGender(),
-      me.getBloodType(),
-      me.getEmail(),
-      me.getPhoneNumber(),
-      me.getDateOfBirth(),
-      imageName
+        me.getId(),
+        me.getDni(),
+        me.getFirstName(),
+        me.getLastName(),
+        me.getGender(),
+        me.getBloodType(),
+        me.getEmail(),
+        me.getPhoneNumber(),
+        me.getDateOfBirth(),
+        imageName
 
     );
     return ResponseEntity
-      .status(HttpStatus.OK).body(meDTO);
+        .status(HttpStatus.OK).body(meDTO);
   }
 
   @GetMapping
   public ResponseEntity<List<BloodDonorDTO>> bloodDonorList() {
     List<BloodDonorDTO> bloodDonorList = this.bloodDonorService.findAll();
     return ResponseEntity
-      .status(HttpStatus.OK)
-      .body(bloodDonorList);
+        .status(HttpStatus.OK)
+        .body(bloodDonorList);
   }
 
   @PutMapping("/{id}")
   public ResponseEntity<?> updateBloodDonor(
-    @RequestBody BloodDonor updatedBloodDonor,
-    @PathVariable Integer id
-  ) {
+      @PathVariable Integer id,
+      @RequestParam("dni") String dni,
+      @RequestParam("firstName") String firstName,
+      @RequestParam("lastName") String lastName,
+      @RequestParam("gender") String gender,
+      @RequestParam("bloodTypeId") Integer bloodTypeId,
+      @RequestParam("email") String email,
+      @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
+      @RequestParam(value = "dateOfBirth", required = false) @org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd") java.util.Date dateOfBirth,
+      @RequestParam(value = "image", required = false) org.springframework.web.multipart.MultipartFile imageFile) {
     try {
-      BloodDonorDTO bloodDonorInDatabase = this.bloodDonorService.update(updatedBloodDonor, id);
+      BloodDonor bloodDonorInDatabase = this.bloodDonorService.findByIdWithRole(id)
+          .orElseThrow(() -> new ResourceNotFoundException());
+
+      // Preserve existing data
+      BloodType bloodType = bloodDonorService.findBloodTypeById(bloodTypeId)
+          .orElseThrow(() -> new IllegalArgumentException("Invalid blood type ID"));
+
+      // Update fields
+      bloodDonorInDatabase.setDni(dni);
+      bloodDonorInDatabase.setFirstName(firstName);
+      bloodDonorInDatabase.setLastName(lastName);
+      bloodDonorInDatabase.setGender(gender);
+      bloodDonorInDatabase.setBloodType(bloodType);
+      bloodDonorInDatabase.setEmail(email);
+      bloodDonorInDatabase.setPhoneNumber(phoneNumber);
+      bloodDonorInDatabase.setDateOfBirth(dateOfBirth);
+
+      // Handle image update if provided
+      if (imageFile != null && !imageFile.isEmpty()) {
+        String extension = java.util.Optional.ofNullable(imageFile.getOriginalFilename())
+            .map(f -> f.contains(".") ? f.substring(f.lastIndexOf(".")) : "")
+            .orElse("");
+        String imageFileName = java.util.UUID.randomUUID().toString() + extension;
+        com.xiojuandawt.blood4life.entities.Image imageEntity = imageService.saveImage(imageFile, imageFileName);
+        bloodDonorInDatabase.setImage(imageEntity);
+      }
+
+      // Save updated donor
+      BloodDonorDTO updatedDTO = this.bloodDonorService.update(bloodDonorInDatabase, id);
+
       return ResponseEntity
-        .status(HttpStatus.OK)
-        .body(bloodDonorInDatabase);
+          .status(HttpStatus.OK)
+          .body(updatedDTO);
     } catch (ResourceNotFoundException e) {
       Map<String, String> body = new HashMap<>();
-      body.put("error", "El donante con id " + updatedBloodDonor.getId() + " no existe");
+      body.put("error", "El donante con id " + id + " no existe");
       return ResponseEntity
-        .status(HttpStatus.NOT_FOUND)
-        .body(body);
+          .status(HttpStatus.NOT_FOUND)
+          .body(body);
+    } catch (Exception e) {
+      Map<String, String> body = new HashMap<>();
+      body.put("error", "Error al actualizar: " + e.getMessage());
+      return ResponseEntity
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(body);
+    }
+  }
+
+  @PostMapping("/change-password")
+  public ResponseEntity<?> changePassword(
+      @RequestParam("currentPassword") String currentPassword,
+      @RequestParam("newPassword") String newPassword,
+      org.springframework.security.core.Authentication authentication) {
+    try {
+      BloodDonor donor = (BloodDonor) authentication.getPrincipal();
+
+      // Verify current password
+      if (!passwordEncoder.matches(currentPassword, donor.getPassword())) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña actual es incorrecta");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+
+      // Validate new password
+      if (newPassword == null || newPassword.trim().isEmpty()) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña es obligatoria");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+      if (newPassword.length() < 8) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña debe tener al menos 8 caracteres");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+      if (newPassword.length() > 32) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña no puede exceder 32 caracteres");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+      if (!newPassword.matches(".*[a-z].*")) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña debe contener al menos una minúscula");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+      if (!newPassword.matches(".*[A-Z].*")) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña debe contener al menos una mayúscula");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+      if (!newPassword.matches(".*\\d.*")) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña debe contener al menos un número");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+      if (newPassword.contains(" ")) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña no puede contener espacios");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+      if (newPassword.matches(".*(.)\\1{3,}.*")) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "Demasiados caracteres repetidos");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+
+      // Update password
+      BloodDonor donorInDb = bloodDonorService.findByIdWithRole(donor.getId())
+          .orElseThrow(() -> new ResourceNotFoundException());
+      donorInDb.setPassword(passwordEncoder.encode(newPassword));
+      bloodDonorService.update(donorInDb, donor.getId());
+
+      Map<String, String> body = new HashMap<>();
+      body.put("message", "Contraseña actualizada correctamente");
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(body);
+    } catch (Exception e) {
+      Map<String, String> body = new HashMap<>();
+      body.put("error", "Error al cambiar la contraseña: " + e.getMessage());
+      return ResponseEntity
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(body);
     }
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Map<String, String>> deleteById(
-    @PathVariable Integer id
-  ) {
+      @PathVariable Integer id) {
     this.bloodDonorService.delete(id);
     Map<String, String> body = new HashMap<>();
     body.put("status", "OK");
     return ResponseEntity
-      .status(HttpStatus.OK)
-      .body(body);
+        .status(HttpStatus.OK)
+        .body(body);
   }
 
 }

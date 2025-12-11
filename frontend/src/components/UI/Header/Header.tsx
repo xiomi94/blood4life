@@ -1,14 +1,34 @@
 // components/Header/Header.tsx
 import { useLocation, Link } from 'react-router';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import Logo from "../../../assets/images/LogoShadowMini.webp";
-import Button from "../Button/Button.tsx"
+import Button from "../Button/Button.tsx";
+import EditProfileModal from "../../EditProfileModal/EditProfileModal.tsx"
 
 function Header() {
   const location = useLocation();
   const { logout, user, isAuthenticated } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   return (
     <div
@@ -35,7 +55,7 @@ function Header() {
               </svg>
             </button>
             {/* User Avatar with Dropdown */}
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 className="w-10 h-10 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 overflow-hidden"
@@ -60,20 +80,35 @@ function Header() {
 
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 ring-1 ring-black ring-opacity-5">
-                  <Link
-                    to="/index"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setIsDropdownOpen(false)}
-                  >
-                    Inicio
-                  </Link>
-                  <Link
-                    to="/dashboard"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setIsDropdownOpen(false)}
-                  >
-                    Dashboard
-                  </Link>
+                  {location.pathname === '/index' || location.pathname === '/' ? (
+                    <>
+                      <Link
+                        to="/index" // TODO: Change to /campaigns when available
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        Campañas
+                      </Link>
+                      <Link
+                        to="/dashboard"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        Mi perfil
+                      </Link>
+                    </>
+                  ) : (
+                    // Default for Dashboard and other authenticated pages
+                    <button
+                      onClick={() => {
+                        setIsDropdownOpen(false);
+                        setIsEditModalOpen(true);
+                      }}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Editar mi perfil
+                    </button>
+                  )}
                   <div className="border-t border-gray-100 my-1"></div>
                   <button
                     onClick={() => {
@@ -122,6 +157,12 @@ function Header() {
           )}
         </>
       )}
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+      />
     </div>
   );
 }

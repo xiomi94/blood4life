@@ -8,6 +8,16 @@ interface UserProfile {
   name?: string; // Hospital
   email: string;
   imageName?: string;
+  bloodType?: {
+    id: number;
+    name: string;
+  };
+  dni?: string;
+  gender?: string;
+  phoneNumber?: string;
+  dateOfBirth?: string;
+  cif?: string;
+  address?: string;
 }
 
 interface AuthContextType {
