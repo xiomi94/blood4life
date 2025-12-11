@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axiosInstance from '../utils/axiosInstance';
 import { API_URL } from '../config';
 
 export interface DashboardStats {
@@ -14,11 +14,15 @@ export interface DashboardStats {
         labels: string[];
         counts: number[];
     };
+    campaigns: {
+        labels: string[];
+        counts: number[];
+    };
 }
 
 export const dashboardService = {
     async getStats(): Promise<DashboardStats> {
-        const response = await axios.get(`${API_URL}/dashboard/stats`);
+        const response = await axiosInstance.get(`${API_URL}/dashboard/stats`);
         return response.data;
     }
 };

@@ -29,9 +29,25 @@ public class HospitalController {
 
   // ----------------- GET ALL -----------------
   @GetMapping("/me")
-  public ResponseEntity<HospitalDTO> obtainMe(org.springframework.security.core.Authentication authentication) {
+  public ResponseEntity<?> obtainMe(org.springframework.security.core.Authentication authentication) {
+    // Check if authentication is null (unauthenticated request)
+    if (authentication == null || authentication.getPrincipal() == null) {
+      java.util.Map<String, String> error = new java.util.HashMap<>();
+      error.put("error", "Unauthorized - No authentication found");
+      return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).body(error);
+    }
+
     Hospital me = (Hospital) authentication.getPrincipal();
     String imageName = me.getImage() != null ? me.getImage().getName() : null;
+
+    // DEBUG: Log what we're returning
+    System.out.println("===== DEBUG /me endpoint =====");
+    System.out.println("Hospital ID: " + me.getId());
+    System.out.println("Hospital Name: " + me.getName());
+    System.out.println("Has Image: " + (me.getImage() != null));
+    System.out.println("Image Name: " + imageName);
+    System.out.println("==============================");
+
     HospitalDTO meDTO = new HospitalDTO();
     meDTO.setId(me.getId());
     meDTO.setCif(me.getCif());
@@ -90,6 +106,7 @@ public class HospitalController {
 
       HospitalDTO hospitalDTO = hospitalService.update(hospitalInDatabase);
       return ResponseEntity.ok(hospitalDTO);
+
     } catch (ResourceNotFoundException e) {
       Map<String, String> body = new HashMap<>();
       body.put("error", e.getMessage());

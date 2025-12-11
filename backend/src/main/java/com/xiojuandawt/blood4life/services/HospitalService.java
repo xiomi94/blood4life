@@ -21,4 +21,6 @@ public interface HospitalService {
   Optional<Hospital> findById(Integer id);
 
   Optional<Hospital> findHospitalByEmail(String email);
+
+  ImageService getImageService();
 }

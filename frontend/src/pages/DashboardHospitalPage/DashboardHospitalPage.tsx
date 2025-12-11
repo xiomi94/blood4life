@@ -12,6 +12,9 @@ import {
 import { Bar, Doughnut } from 'react-chartjs-2';
 import { dashboardService } from '../../services/dashboardService';
 import type { DashboardStats } from '../../services/dashboardService';
+import CreateCampaignModal from '../../components/CreateCampaignModal/CreateCampaignModal';
+import { useAuth } from '../../context/AuthContext';
+import { campaignService, type Campaign } from '../../services/campaignService';
 
 
 // Register ChartJS components
@@ -25,13 +28,102 @@ ChartJS.register(
   Legend
 );
 
-type ChartType = 'bloodType' | 'gender';
+type ChartType = 'bloodType' | 'gender' | 'campaigns';
 
 const DashboardHospitalPage = () => {
+  const { user } = useAuth();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedChart, setSelectedChart] = useState<ChartType>('bloodType');
+  const [showCreateCampaignModal, setShowCreateCampaignModal] = useState(false);
+  const [hospitalCampaigns, setHospitalCampaigns] = useState<Campaign[]>([]);
+  // Calendar State
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [allCampaigns, setAllCampaigns] = useState<Campaign[]>([]);
+
+  useEffect(() => {
+    campaignService.getAllCampaigns()
+      .then(setAllCampaigns)
+      .catch(err => console.error('Error fetching all campaigns:', err));
+  }, []);
+
+  const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
+  const getFirstDayOfMonth = (year: number, month: number) => {
+    const day = new Date(year, month, 1).getDay();
+    return day === 0 ? 6 : day - 1; // Adjust for Monday start (0=Sun -> 6, 1=Mon -> 0)
+  };
+
+  const changeMonth = (increment: number) => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + increment, 1));
+  };
+
+  const renderCalendarDays = () => {
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const daysInMonth = getDaysInMonth(year, month);
+    const startDay = getFirstDayOfMonth(year, month);
+    const days = [];
+
+    // Empty cells for previous month
+    for (let i = 0; i < startDay; i++) {
+      days.push(<div key={`empty-${i}`} className="p-2"></div>);
+    }
+
+    // Days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+      // Determine status based on campaigns
+      let statusClass = "hover:bg-gray-100 cursor-pointer";
+      let hasCampaign = false;
+
+      // Check for campaigns on this day
+      const campaignsOnDay = allCampaigns.filter(c =>
+        dateStr >= c.startDate && dateStr <= c.endDate
+      );
+
+      if (campaignsOnDay.length > 0) {
+        hasCampaign = true;
+        const nowStr = new Date().toISOString().split('T')[0];
+
+        // Priority: Active > Future > Finished
+        if (campaignsOnDay.some(c => dateStr >= c.startDate && dateStr <= c.endDate && nowStr >= c.startDate && nowStr <= c.endDate)) {
+          // Active today (roughly) - Use Green
+          statusClass = "bg-green-500 text-white font-medium hover:bg-green-600";
+        } else if (campaignsOnDay.some(c => c.startDate > nowStr)) {
+          // Future - Use Blue
+          statusClass = "bg-blue-500 text-white font-medium hover:bg-blue-600";
+        } else {
+          // Past - Use Red/Gray
+          statusClass = "bg-red-200 text-red-800 font-medium hover:bg-red-300";
+        }
+      }
+
+      // Check if it's "today"
+      const isToday = new Date().toDateString() === new Date(year, month, day).toDateString();
+      if (isToday && !hasCampaign) {
+        statusClass = "bg-blue-100 text-blue-800 font-bold border border-blue-300";
+      }
+
+      days.push(
+        <div key={day} className={`p-2 rounded flex items-center justify-center text-sm transition-colors ${statusClass}`} title={campaignsOnDay.map(c => c.name).join(', ')}>
+          {day}
+        </div>
+      );
+    }
+    return days;
+  };
+
+  const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+  useEffect(() => {
+    if (selectedChart === 'campaigns' && user?.id) {
+      campaignService.getCampaignsByHospital(user.id)
+        .then(data => setHospitalCampaigns(data))
+        .catch(err => console.error('Error loading campaigns:', err));
+    }
+  }, [selectedChart, user]);
 
   useEffect(() => {
     fetchStats();
@@ -162,6 +254,7 @@ const DashboardHospitalPage = () => {
         {/* Action Button */}
         <div className="px-4 mb-6">
           <button
+            onClick={() => setShowCreateCampaignModal(true)}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -268,6 +361,7 @@ const DashboardHospitalPage = () => {
                   >
                     <option value="bloodType">Distribución por tipo de sangre</option>
                     <option value="gender">Distribución por género</option>
+                    <option value="campaigns">Campañas</option>
                   </select>
                 </div>
 
@@ -280,6 +374,44 @@ const DashboardHospitalPage = () => {
                 {selectedChart === 'gender' && (
                   <div className="relative h-[350px] w-full">
                     <Doughnut data={genderChartData} options={genderOptions} />
+                  </div>
+                )}
+
+                {selectedChart === 'campaigns' && (
+                  <div className="relative h-[350px] w-full overflow-y-auto pr-2 space-y-3">
+                    {hospitalCampaigns.length === 0 ? (
+                      <div className="flex h-full items-center justify-center text-gray-500">
+                        No hay campañas activas
+                      </div>
+                    ) : (
+                      hospitalCampaigns.map(campaign => (
+                        <div key={campaign.id} className="p-4 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                          <div className="flex justify-between items-start mb-2">
+                            <h3 className="font-bold text-gray-800">{campaign.name}</h3>
+                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">
+                              Meta: {campaign.requiredDonorQuantity} donantes
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-3 line-clamp-2">{campaign.description}</p>
+                          <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">
+                            <div>
+                              <span className="font-semibold block mb-1">Fechas:</span>
+                              {new Date(campaign.startDate).toLocaleDateString('es-ES')} - {new Date(campaign.endDate).toLocaleDateString('es-ES')}
+                            </div>
+                            <div>
+                              <span className="font-semibold block mb-1">Tipos de sangre:</span>
+                              <div className="flex flex-wrap gap-1">
+                                {campaign.requiredBloodType.split(',').map((type, idx) => (
+                                  <span key={idx} className="bg-red-100 text-red-700 px-1.5 py-0.5 rounded text-[10px] font-bold">
+                                    {type.replace(/[\[\]\s"]/g, '')}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))
+                    )}
                   </div>
                 )}
               </section>
@@ -350,6 +482,18 @@ const DashboardHospitalPage = () => {
                 <h2 className="text-lg font-semibold text-gray-800 mb-4">Calendario</h2>
 
                 <div className="mb-3">
+                  <div className="flex justify-between items-center mb-4 px-2">
+                    <button onClick={() => changeMonth(-1)} className="p-1 hover:bg-gray-100 rounded text-gray-600">
+                      &lt;
+                    </button>
+                    <h3 className="font-semibold text-gray-800">
+                      {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+                    </h3>
+                    <button onClick={() => changeMonth(1)} className="p-1 hover:bg-gray-100 rounded text-gray-600">
+                      &gt;
+                    </button>
+                  </div>
+
                   <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-500 mb-2">
                     <div>Lu</div>
                     <div>Ma</div>
@@ -360,40 +504,12 @@ const DashboardHospitalPage = () => {
                     <div>Do</div>
                   </div>
                   <div className="grid grid-cols-7 gap-1 text-center text-sm">
-                    <div className="p-2 text-gray-400">28</div>
-                    <div className="p-2 text-gray-400">29</div>
-                    <div className="p-2 text-gray-400">30</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">1</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">2</div>
-                    <div className="p-2 bg-blue-600 text-white rounded font-medium cursor-pointer">3</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">4</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">5</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">6</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">7</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">8</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">9</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">10</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">11</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">12</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">13</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">14</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">15</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">16</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">17</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">18</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">19</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">20</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">21</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">22</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">23</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">24</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">25</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">26</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">27</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">28</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">29</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">30</div>
-                    <div className="p-2 hover:bg-gray-100 rounded cursor-pointer">31</div>
+                    {renderCalendarDays()}
+                  </div>
+                  <div className="mt-4 flex gap-4 text-xs justify-center text-gray-500">
+                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-green-500 rounded"></div> Activa</div>
+                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-blue-500 rounded"></div> Futura</div>
+                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-red-200 rounded"></div> Finalizada</div>
                   </div>
                 </div>
               </section>
@@ -414,6 +530,16 @@ const DashboardHospitalPage = () => {
           </div>
         </div>
       </main>
+
+      {/* Campaign Modal */}
+      <CreateCampaignModal
+        isOpen={showCreateCampaignModal}
+        onClose={() => setShowCreateCampaignModal(false)}
+        onSuccess={() => {
+          // Optionally refresh data or show success message
+          console.log('Campaign created successfully');
+        }}
+      />
     </div>
   );
 };
