@@ -213,6 +213,30 @@ public class BloodDonorController {
     }
   }
 
+  @DeleteMapping("/delete-account")
+  public ResponseEntity<Map<String, String>> deleteAccount(Authentication authentication) {
+    try {
+      BloodDonor bloodDonor = (BloodDonor) authentication.getPrincipal();
+
+      // Simple DELETE - MySQL trigger handles logging
+      bloodDonorService.delete(bloodDonor.getId());
+
+      Map<String, String> response = new HashMap<>();
+      response.put("status", "OK");
+      response.put("message", "Cuenta eliminada exitosamente");
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(response);
+
+    } catch (Exception e) {
+      Map<String, String> errorResponse = new HashMap<>();
+      errorResponse.put("error", "Error al eliminar la cuenta: " + e.getMessage());
+      return ResponseEntity
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(errorResponse);
+    }
+  }
+
   @DeleteMapping("/{id}")
   public ResponseEntity<Map<String, String>> deleteById(
       @PathVariable Integer id) {

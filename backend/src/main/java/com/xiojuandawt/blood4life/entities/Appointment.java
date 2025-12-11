@@ -23,12 +23,19 @@ public class Appointment {
     @JoinColumn(name = "appointment_status_id", nullable = false)
     private AppointmentStatus appointmentStatus;
 
-    /*
-     * @ManyToOne
-     * 
-     * @JoinColumn(name = "campaign_id", nullable = false)
-     * private Campaign campaign;
-     */
+    @ManyToOne
+    @JoinColumn(name = "campaign_id", nullable = false)
+    private Campaign campaign;
+
+    // ...
+
+    public Campaign getCampaign() {
+        return campaign;
+    }
+
+    public void setCampaign(Campaign campaign) {
+        this.campaign = campaign;
+    }
 
     @ManyToOne
     @JoinColumn(name = "blood_donor_id", nullable = false)
@@ -54,16 +61,6 @@ public class Appointment {
     public void setAppointmentStatus(AppointmentStatus appointmentStatus) {
         this.appointmentStatus = appointmentStatus;
     }
-
-    /*
-     * public Campaign getCampaign() {
-     * return campaign;
-     * }
-     * 
-     * public void setCampaign(Campaign campaign) {
-     * this.campaign = campaign;
-     * }
-     */
 
     public BloodDonor getBloodDonor() {
         return bloodDonor;

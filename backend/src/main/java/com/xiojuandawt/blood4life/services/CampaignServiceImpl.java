@@ -20,6 +20,9 @@ public class CampaignServiceImpl implements CampaignService {
     private CampaignRepository campaignRepository;
 
     @Autowired
+    private com.xiojuandawt.blood4life.repositories.AppointmentRepository appointmentRepository;
+
+    @Autowired
     private BloodTypeRepository bloodTypeRepository;
 
     @Override
@@ -69,7 +72,7 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public CampaignDTO parseEntityToDTO(Campaign campaign) {
-        return new CampaignDTO(
+        CampaignDTO dto = new CampaignDTO(
                 campaign.getId(),
                 campaign.getHospital().getId(),
                 campaign.getHospital().getName(),
@@ -80,9 +83,64 @@ public class CampaignServiceImpl implements CampaignService {
                 campaign.getLocation(),
                 campaign.getRequiredDonorQuantity(),
                 campaign.getRequiredBloodType());
+
+        if (campaign.getId() != null) {
+            Long count = appointmentRepository.countByCampaignId(campaign.getId());
+            dto.setCurrentDonorCount(count.intValue());
+        } else {
+            dto.setCurrentDonorCount(0);
+        }
+
+        return dto;
     }
 
     public void setBloodTypes(Campaign campaign, List<BloodType> bloodTypes) {
         campaign.setBloodTypes(bloodTypes);
+    }
+
+    @Override
+    public CampaignDTO updateCampaign(Integer id, Campaign updatedCampaign, List<String> bloodTypeStrings) {
+        // Find existing campaign
+        Campaign existingCampaign = campaignRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Campaign not found with id: " + id));
+
+        // Update fields
+        existingCampaign.setName(updatedCampaign.getName());
+        existingCampaign.setDescription(updatedCampaign.getDescription());
+        existingCampaign.setStartDate(updatedCampaign.getStartDate());
+        existingCampaign.setEndDate(updatedCampaign.getEndDate());
+        existingCampaign.setLocation(updatedCampaign.getLocation());
+        existingCampaign.setRequiredDonorQuantity(updatedCampaign.getRequiredDonorQuantity());
+
+        // Update blood types
+        existingCampaign.setRequiredBloodType(String.join(",", bloodTypeStrings));
+
+        List<BloodType> bloodTypes = new ArrayList<>();
+        List<BloodType> allBloodTypes = bloodTypeRepository.findAll();
+
+        for (String bloodTypeStr : bloodTypeStrings) {
+            allBloodTypes.stream()
+                    .filter(bt -> bt.getType().equalsIgnoreCase(bloodTypeStr.trim()))
+                    .findFirst()
+                    .ifPresent(bloodTypes::add);
+        }
+
+        existingCampaign.setBloodTypes(bloodTypes);
+
+        // Save updated campaign
+        Campaign savedCampaign = campaignRepository.save(existingCampaign);
+
+        return parseEntityToDTO(savedCampaign);
+    }
+
+    @Override
+    public void deleteCampaign(Integer id) {
+        // Verify campaign exists
+        if (!campaignRepository.existsById(id)) {
+            throw new RuntimeException("Campaign not found with id: " + id);
+        }
+
+        // Delete campaign
+        campaignRepository.deleteById(id);
     }
 }

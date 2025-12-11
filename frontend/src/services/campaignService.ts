@@ -21,6 +21,7 @@ export interface Campaign {
     location: string;
     requiredDonorQuantity: number;
     requiredBloodType: string;
+    currentDonorCount?: number;
 }
 
 export const campaignService = {
@@ -55,5 +56,27 @@ export const campaignService = {
     getCampaignById: async (id: number): Promise<Campaign> => {
         const response = await axiosInstance.get(`/campaign/${id}`);
         return response.data;
+    },
+
+    updateCampaign: async (id: number, data: CampaignFormData): Promise<Campaign> => {
+        const formData = new FormData();
+        formData.append('name', data.name);
+        formData.append('description', data.description);
+        formData.append('startDate', data.startDate);
+        formData.append('endDate', data.endDate);
+        formData.append('location', data.location);
+        formData.append('requiredDonorQuantity', data.requiredDonorQuantity.toString());
+
+        // Append each blood type
+        data.requiredBloodTypes.forEach(bloodType => {
+            formData.append('requiredBloodTypes', bloodType);
+        });
+
+        const response = await axiosInstance.put(`/campaign/${id}`, formData);
+        return response.data;
+    },
+
+    deleteCampaign: async (id: number): Promise<void> => {
+        await axiosInstance.delete(`/campaign/${id}`);
     }
 };
