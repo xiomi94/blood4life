@@ -11,6 +11,7 @@ function Header() {
   const { logout, user, isAuthenticated } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown when clicking outside
@@ -112,8 +113,8 @@ function Header() {
                   <div className="border-t border-gray-100 my-1"></div>
                   <button
                     onClick={() => {
-                      logout();
                       setIsDropdownOpen(false);
+                      setShowLogoutConfirm(true);
                     }}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
@@ -163,6 +164,33 @@ function Header() {
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
       />
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
+            <h3 className="text-xl font-semibold text-gray-800 mb-3">Cerrar Sesión</h3>
+            <p className="text-gray-600 mb-6">¿Estás seguro de que deseas cerrar sesión?</p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowLogoutConfirm(false)}
+                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => {
+                  setShowLogoutConfirm(false);
+                  logout();
+                }}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+              >
+                Cerrar Sesión
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
