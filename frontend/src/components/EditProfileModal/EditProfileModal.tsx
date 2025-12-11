@@ -8,7 +8,7 @@ interface EditProfileModalProps {
 }
 
 const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
-    const { user, userType, refreshUser } = useAuth();
+    const { user, userType } = useAuth();
     const [formData, setFormData] = useState<any>({});
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -31,7 +31,7 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
 
             // Set image preview if user has image
             if (user.imageName) {
-                setImagePreview(`http://localhost:8080/images/${user.imageName}`);
+                setImagePreview(`/images/${user.imageName}`);
             }
         }
     }, [user, userType]);
@@ -63,9 +63,49 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
         setLoading(true);
         setMessage(null);
 
-
         try {
-            // Validate password if changing
+            const formDataToSend = new FormData();
+
+            if (userType === 'bloodDonor') {
+                // For blood donor, append all fields
+                formDataToSend.append('dni', formData.dni || '');
+                formDataToSend.append('firstName', formData.firstName || '');
+                formDataToSend.append('lastName', formData.lastName || '');
+                formDataToSend.append('gender', formData.gender || '');
+                formDataToSend.append('bloodTypeId', formData.bloodType?.id?.toString() || '');
+                formDataToSend.append('email', formData.email || '');
+                formDataToSend.append('phoneNumber', formData.phoneNumber || '');
+                if (formData.dateOfBirth) {
+                    formDataToSend.append('dateOfBirth', formData.dateOfBirth);
+                }
+            } else if (userType === 'hospital') {
+                // For hospital, append all fields
+                formDataToSend.append('id', user?.id?.toString() || '');
+                formDataToSend.append('cif', formData.cif || '');
+                formDataToSend.append('name', formData.name || '');
+                formDataToSend.append('address', formData.address || '');
+                formDataToSend.append('email', formData.email || '');
+                formDataToSend.append('phoneNumber', formData.phoneNumber || '');
+            }
+
+            // Append image if selected
+            if (imageFile) {
+                formDataToSend.append('image', imageFile);
+            }
+
+            const endpoint = userType === 'bloodDonor'
+                ? `/bloodDonor/${user?.id}`
+                : `/hospital`;
+
+            await axiosInstance.put(endpoint, formDataToSend, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            setMessage({ type: 'success', text: 'Perfil actualizado correctamente' });
+
+            // Change password if provided
             if (showPasswordFields && passwordData.currentPassword && passwordData.newPassword) {
                 // Validate password confirmation
                 if (passwordData.newPassword !== passwordData.confirmPassword) {
@@ -105,62 +145,38 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                     setLoading(false);
                     return;
                 }
-                if (/(.)\\1{3,}/.test(passwordData.newPassword)) {
+                if (/(.)\1{3,}/.test(passwordData.newPassword)) {
                     setMessage({ type: 'error', text: 'Demasiados caracteres repetidos' });
+                    setLoading(false);
+                    return;
+                }
+
+                try {
+                    const passwordFormData = new FormData();
+                    passwordFormData.append('currentPassword', passwordData.currentPassword);
+                    passwordFormData.append('newPassword', passwordData.newPassword);
+
+                    const passwordEndpoint = userType === 'bloodDonor'
+                        ? `/bloodDonor/change-password`
+                        : `/hospital/change-password`;
+
+                    await axiosInstance.post(passwordEndpoint, passwordFormData);
+                    setMessage({ type: 'success', text: 'Perfil y contraseña actualizados correctamente' });
+                } catch (passwordError: any) {
+                    console.error('Password change error:', passwordError);
+                    setMessage({
+                        type: 'error',
+                        text: passwordError.response?.data?.error || 'Error al cambiar la contraseña'
+                    });
                     setLoading(false);
                     return;
                 }
             }
 
-            const formDataToSend = new FormData();
-
-            if (userType === 'bloodDonor') {
-                // For blood donor, append all fields
-                formDataToSend.append('dni', formData.dni || '');
-                formDataToSend.append('firstName', formData.firstName || '');
-                formDataToSend.append('lastName', formData.lastName || '');
-                formDataToSend.append('gender', formData.gender || '');
-                formDataToSend.append('bloodTypeId', formData.bloodType?.id?.toString() || '');
-                formDataToSend.append('email', formData.email || '');
-                formDataToSend.append('phoneNumber', formData.phoneNumber || '');
-                if (formData.dateOfBirth) {
-                    formDataToSend.append('dateOfBirth', formData.dateOfBirth);
-                }
-            } else if (userType === 'hospital') {
-                // For hospital, append all fields
-                formDataToSend.append('name', formData.name || '');
-                formDataToSend.append('address', formData.address || '');
-                formDataToSend.append('email', formData.email || '');
-                formDataToSend.append('phoneNumber', formData.phoneNumber || '');
-
-                // Add password fields if changing password
-                if (showPasswordFields && passwordData.currentPassword && passwordData.newPassword) {
-                    formDataToSend.append('currentPassword', passwordData.currentPassword);
-                    formDataToSend.append('newPassword', passwordData.newPassword);
-                }
-            }
-
-            // Append image if selected
-            if (imageFile) {
-                formDataToSend.append('image', imageFile);
-            }
-
-            const endpoint = userType === 'bloodDonor'
-                ? `/bloodDonor/${user?.id}`
-                : `/hospital`;
-
-
-
-            await axiosInstance.put(endpoint, formDataToSend);
-
-
-
-            setMessage({ type: 'success', text: 'Perfil actualizado correctamente' });
-
             // Refresh user data without full page reload
-            await refreshUser();
             setTimeout(() => {
                 onClose();
+                window.location.reload();
             }, 1500);
         } catch (error: any) {
             console.error('Update error:', error);
@@ -179,7 +195,7 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center">
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity"
+                className="absolute inset-0 bg-black bg-opacity-50"
                 onClick={onClose}
             ></div>
 

@@ -23,6 +23,16 @@ interface UserProfile {
   email: string;
   phoneNumber?: string;
   imageName?: string;
+  bloodType?: {
+    id: number;
+    name: string;
+  };
+  dni?: string;
+  gender?: string;
+  phoneNumber?: string;
+  dateOfBirth?: string;
+  cif?: string;
+  address?: string;
 }
 
 interface AuthContextType {
@@ -115,25 +125,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .catch(err => console.error("Failed to fetch user details on login", err));
   };
 
-  const refreshUser = async () => {
-    if (!userType) return;
-
+  const logout = async () => {
     try {
-      const endpoint = userType === 'bloodDonor' ? '/bloodDonor/me' : userType === 'hospital' ? '/hospital/me' : '/admin/me';
-      const res = await axiosInstance.get(endpoint);
-      setUser(res.data);
+      await axiosInstance.get('/auth/logout');
     } catch (error) {
-      console.error('Failed to refresh user data:', error);
+      console.error("Logout failed on server:", error);
+    } finally {
+      setUserType(null);
+      setUser(null);
+      setIsAuthenticated(false);
+      // Force reload to clear any in-memory state and redirect to login
+      window.location.href = '/login';
     }
-  };
-
-  const logout = () => {
-    // TODO: Call backend logout endpoint to clear cookie
-    setUserType(null);
-    setUser(null);
-    setIsAuthenticated(false);
-    // Force reload to clear any in-memory state if needed
-    window.location.href = '/login';
   };
 
   return (

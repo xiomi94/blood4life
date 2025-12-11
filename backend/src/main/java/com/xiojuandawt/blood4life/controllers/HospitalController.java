@@ -21,6 +21,12 @@ public class HospitalController {
   @Autowired
   private HospitalService hospitalService;
 
+  @Autowired
+  private com.xiojuandawt.blood4life.services.ImageService imageService;
+
+  @Autowired
+  private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
   // ----------------- GET ALL -----------------
   @GetMapping("/me")
   public ResponseEntity<?> obtainMe(org.springframework.security.core.Authentication authentication) {
@@ -68,91 +74,143 @@ public class HospitalController {
   }
 
   // ----------------- UPDATE -----------------
-  @PutMapping(consumes = "multipart/form-data")
+  @PutMapping
   public ResponseEntity<?> updateHospital(
+      @RequestParam("id") Integer id,
+      @RequestParam("cif") String cif,
       @RequestParam("name") String name,
+      @RequestParam("address") String address,
       @RequestParam("email") String email,
       @RequestParam("phoneNumber") String phoneNumber,
-      @RequestParam("address") String address,
-      @RequestParam(value = "image", required = false) org.springframework.web.multipart.MultipartFile imageFile,
-      @RequestParam(value = "currentPassword", required = false) String currentPassword,
-      @RequestParam(value = "newPassword", required = false) String newPassword,
-      org.springframework.security.core.Authentication authentication) {
-
+      @RequestParam(value = "image", required = false) org.springframework.web.multipart.MultipartFile imageFile) {
     try {
-      // Get authenticated hospital
-      if (authentication == null || authentication.getPrincipal() == null) {
-        Map<String, String> error = new HashMap<>();
-        error.put("error", "Unauthorized - No authentication found");
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
-      }
+      Hospital hospitalInDatabase = hospitalService.findById(id)
+          .orElseThrow(() -> new ResourceNotFoundException("Hospital not found with id " + id));
 
-      Hospital hospital = (Hospital) authentication.getPrincipal();
+      // Update fields
+      hospitalInDatabase.setCif(cif);
+      hospitalInDatabase.setName(name);
+      hospitalInDatabase.setAddress(address);
+      hospitalInDatabase.setEmail(email);
+      hospitalInDatabase.setPhoneNumber(phoneNumber);
 
-      // Update basic fields
-      hospital.setName(name);
-      hospital.setEmail(email);
-      hospital.setPhoneNumber(phoneNumber);
-      hospital.setAddress(address);
-
-      // Handle image upload if provided
+      // Handle image update if provided
       if (imageFile != null && !imageFile.isEmpty()) {
-        try {
-          // Get file extension
-          String originalFilename = imageFile.getOriginalFilename();
-          String extension = originalFilename != null && originalFilename.contains(".")
-              ? originalFilename.substring(originalFilename.lastIndexOf("."))
-              : ".png";
-
-          // Generate unique filename
-          String fileName = java.util.UUID.randomUUID().toString() + extension;
-
-          // Save image using ImageService
-          com.xiojuandawt.blood4life.entities.Image imageEntity = hospitalService.getImageService().saveImage(imageFile,
-              fileName);
-          hospital.setImage(imageEntity);
-
-        } catch (java.io.IOException e) {
-          Map<String, String> body = new HashMap<>();
-          body.put("error", "Error al guardar la imagen: " + e.getMessage());
-          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
-        }
+        String extension = java.util.Optional.ofNullable(imageFile.getOriginalFilename())
+            .map(f -> f.contains(".") ? f.substring(f.lastIndexOf(".")) : "")
+            .orElse("");
+        String imageFileName = java.util.UUID.randomUUID().toString() + extension;
+        com.xiojuandawt.blood4life.entities.Image imageEntity = imageService.saveImage(imageFile, imageFileName);
+        hospitalInDatabase.setImage(imageEntity);
       }
 
-      // Handle password change if requested
-      if (newPassword != null && !newPassword.isEmpty()) {
-        if (currentPassword == null || currentPassword.isEmpty()) {
-          Map<String, String> body = new HashMap<>();
-          body.put("error", "Debe proporcionar la contraseña actual para cambiarla");
-          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-        }
-
-        // Verify current password
-        if (!new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder()
-            .matches(currentPassword, hospital.getPassword())) {
-          Map<String, String> body = new HashMap<>();
-          body.put("error", "La contraseña actual es incorrecta");
-          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-        }
-
-        // Encode and set new password
-        hospital.setPassword(
-            new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder()
-                .encode(newPassword));
-      }
-
-      HospitalDTO hospitalDTO = hospitalService.update(hospital);
-
+      HospitalDTO hospitalDTO = hospitalService.update(hospitalInDatabase);
       return ResponseEntity.ok(hospitalDTO);
 
     } catch (ResourceNotFoundException e) {
       Map<String, String> body = new HashMap<>();
-      body.put("error", "No se ha encontrado el hospital");
+      body.put("error", e.getMessage());
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     } catch (Exception e) {
       Map<String, String> body = new HashMap<>();
-      body.put("error", "Error al actualizar el hospital: " + e.getMessage());
+      body.put("error", "Error al actualizar: " + e.getMessage());
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+    }
+  }
+
+  // ----------------- CHANGE PASSWORD -----------------
+  @PostMapping("/change-password")
+  public ResponseEntity<?> changePassword(
+      @RequestParam("currentPassword") String currentPassword,
+      @RequestParam("newPassword") String newPassword,
+      org.springframework.security.core.Authentication authentication) {
+    try {
+      Hospital hospital = (Hospital) authentication.getPrincipal();
+
+      // Verify current password
+      if (!passwordEncoder.matches(currentPassword, hospital.getPassword())) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña actual es incorrecta");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+
+      // Validate new password
+      if (newPassword == null || newPassword.trim().isEmpty()) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña es obligatoria");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+      if (newPassword.length() < 8) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña debe tener al menos 8 caracteres");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+      if (newPassword.length() > 32) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña no puede exceder 32 caracteres");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+      if (!newPassword.matches(".*[a-z].*")) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña debe contener al menos una minúscula");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+      if (!newPassword.matches(".*[A-Z].*")) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña debe contener al menos una mayúscula");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+      if (!newPassword.matches(".*\\d.*")) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña debe contener al menos un número");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+      if (newPassword.contains(" ")) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La contraseña no puede contener espacios");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+      if (newPassword.matches(".*(.)\\1{3,}.*")) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "Demasiados caracteres repetidos");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
+
+      // Update password
+      Hospital hospitalInDb = hospitalService.findById(hospital.getId())
+          .orElseThrow(() -> new ResourceNotFoundException("Hospital not found"));
+      hospitalInDb.setPassword(passwordEncoder.encode(newPassword));
+      hospitalService.update(hospitalInDb);
+
+      Map<String, String> body = new HashMap<>();
+      body.put("message", "Contraseña actualizada correctamente");
+      return ResponseEntity
+          .status(HttpStatus.OK)
+          .body(body);
+    } catch (Exception e) {
+      Map<String, String> body = new HashMap<>();
+      body.put("error", "Error al cambiar la contraseña: " + e.getMessage());
+      return ResponseEntity
+          .status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(body);
     }
   }
 
