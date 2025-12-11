@@ -1,11 +1,9 @@
 package com.xiojuandawt.blood4life.entities;
 
-
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.List;
-
 
 @Entity
 @Table(name = "campaign")
@@ -41,17 +39,14 @@ public class Campaign {
   private String requiredBloodType;
 
   @ManyToMany
-  @JoinTable(
-    name = "blood_type_campaign",
-    joinColumns = @JoinColumn(name = "campaign_id"),
-    inverseJoinColumns = @JoinColumn(name = "blood_type_id")
-  )
+  @JoinTable(name = "blood_type_campaign", joinColumns = @JoinColumn(name = "campaign"), inverseJoinColumns = @JoinColumn(name = "blood_type"))
   private List<BloodType> bloodTypes;
 
   public Campaign() {
   }
 
-  public Campaign(Hospital hospital, String name, String description, LocalDate startDate, LocalDate endDate, String location, Integer requiredDonorQuantity, String requiredBloodType) {
+  public Campaign(Hospital hospital, String name, String description, LocalDate startDate, LocalDate endDate,
+      String location, Integer requiredDonorQuantity, String requiredBloodType) {
     this.hospital = hospital;
     this.name = name;
     this.description = description;
@@ -62,7 +57,8 @@ public class Campaign {
     this.requiredBloodType = requiredBloodType;
   }
 
-  public Campaign(Integer id, Hospital hospital, String name, String description, LocalDate startDate, LocalDate endDate, String location, Integer requiredDonorQuantity, String requiredBloodType) {
+  public Campaign(Integer id, Hospital hospital, String name, String description, LocalDate startDate,
+      LocalDate endDate, String location, Integer requiredDonorQuantity, String requiredBloodType) {
     this.id = id;
     this.hospital = hospital;
     this.name = name;
@@ -144,5 +140,13 @@ public class Campaign {
 
   public void setRequiredBloodType(String requiredBloodType) {
     this.requiredBloodType = requiredBloodType;
+  }
+
+  public List<BloodType> getBloodTypes() {
+    return bloodTypes;
+  }
+
+  public void setBloodTypes(List<BloodType> bloodTypes) {
+    this.bloodTypes = bloodTypes;
   }
 }

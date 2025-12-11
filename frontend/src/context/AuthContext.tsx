@@ -1,12 +1,27 @@
 import React, { createContext, useState, useContext, useEffect, type ReactNode } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 
+interface BloodType {
+  id: number;
+  type: string;
+}
+
 interface UserProfile {
   id: number;
-  firstName?: string; // Donor
-  lastName?: string; // Donor
-  name?: string; // Hospital
+  // Blood Donor fields
+  firstName?: string;
+  lastName?: string;
+  dni?: string;
+  gender?: string;
+  dateOfBirth?: string;
+  bloodType?: BloodType;
+  // Hospital fields
+  name?: string;
+  cif?: string;
+  address?: string;
+  // Common fields
   email: string;
+  phoneNumber?: string;
   imageName?: string;
 }
 
@@ -15,6 +30,7 @@ interface AuthContextType {
   user: UserProfile | null;
   login: (type: 'bloodDonor' | 'hospital' | 'admin') => void;
   logout: () => void;
+  refreshUser: () => Promise<void>;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
@@ -31,36 +47,57 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // 1. Try BloodDonor
+        // Try BloodDonor first
         const res = await axiosInstance.get('/bloodDonor/me');
         setUserType('bloodDonor');
         setUser(res.data);
         setIsAuthenticated(true);
-      } catch (e) {
-        try {
-          // 2. Try Hospital
-          const res = await axiosInstance.get('/hospital/me');
-          setUserType('hospital');
-          setUser(res.data);
-          setIsAuthenticated(true);
-        } catch (e2) {
-          try {
-            // 3. Try Admin
-            const res = await axiosInstance.get('/admin/me');
-            setUserType('admin');
-            setUser(res.data);
-            setIsAuthenticated(true);
-          } catch (e3) {
-            // No valid session found
-            setIsAuthenticated(false);
-            setUserType(null);
-            setUser(null);
-          }
-        }
-      } finally {
         setIsLoading(false);
+        return; // Exit early on success
+      } catch (donorError: any) {
+        // Only log if it's NOT an authentication error (401/403)
+        if (donorError.response?.status !== 401 && donorError.response?.status !== 403) {
+          console.error('Unexpected error checking blood donor auth:', donorError);
+        }
       }
+
+      try {
+        // Try Hospital
+        const res = await axiosInstance.get('/hospital/me');
+        setUserType('hospital');
+        setUser(res.data);
+        setIsAuthenticated(true);
+        setIsLoading(false);
+        return; // Exit early on success
+      } catch (hospitalError: any) {
+        // Only log if it's NOT an authentication error (401/403)
+        if (hospitalError.response?.status !== 401 && hospitalError.response?.status !== 403) {
+          console.error('Unexpected error checking hospital auth:', hospitalError);
+        }
+      }
+
+      try {
+        // Try Admin
+        const res = await axiosInstance.get('/admin/me');
+        setUserType('admin');
+        setUser(res.data);
+        setIsAuthenticated(true);
+        setIsLoading(false);
+        return; // Exit early on success
+      } catch (adminError: any) {
+        // Only log if it's NOT an authentication error (401/403)
+        if (adminError.response?.status !== 401 && adminError.response?.status !== 403) {
+          console.error('Unexpected error checking admin auth:', adminError);
+        }
+      }
+
+      // If all checks failed, user is not authenticated
+      setIsAuthenticated(false);
+      setUserType(null);
+      setUser(null);
+      setIsLoading(false);
     };
+
     checkAuth();
   }, []);
 
@@ -78,6 +115,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .catch(err => console.error("Failed to fetch user details on login", err));
   };
 
+  const refreshUser = async () => {
+    if (!userType) return;
+
+    try {
+      const endpoint = userType === 'bloodDonor' ? '/bloodDonor/me' : userType === 'hospital' ? '/hospital/me' : '/admin/me';
+      const res = await axiosInstance.get(endpoint);
+      setUser(res.data);
+    } catch (error) {
+      console.error('Failed to refresh user data:', error);
+    }
+  };
+
   const logout = () => {
     // TODO: Call backend logout endpoint to clear cookie
     setUserType(null);
@@ -88,7 +137,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ userType, user, login, logout, isAuthenticated, isLoading }}>
+    <AuthContext.Provider value={{ userType, user, login, logout, refreshUser, isAuthenticated, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

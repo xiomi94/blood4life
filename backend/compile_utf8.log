@@ -1,0 +1,23 @@
+﻿[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.xiojuandawt:blood4life >---------------------
+[INFO] Building blood4life 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.4.1:clean (default-clean) @ blood4life ---
+[INFO] Deleting E:\blood4life\backend\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ blood4life ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 24 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ blood4life ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 45 source files with javac [debug parameters release 17] to target\classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.671 s
+[INFO] Finished at: 2025-12-11T14:05:47Z
+[INFO] ------------------------------------------------------------------------

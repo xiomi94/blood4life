@@ -47,6 +47,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     String token = null;
 
+    // DEBUG: Log all cookies
+    System.out.println("===== JWT FILTER DEBUG =====");
+    System.out.println("Request URI: " + request.getRequestURI());
+    if (request.getCookies() != null) {
+      System.out.println("Cookies found: " + request.getCookies().length);
+      for (Cookie cookie : request.getCookies()) {
+        System.out.println("  Cookie: " + cookie.getName() + " = "
+            + cookie.getValue().substring(0, Math.min(20, cookie.getValue().length())) + "...");
+      }
+    } else {
+      System.out.println("NO COOKIES FOUND!");
+    }
+
     // Extract token from cookie
     if (request.getCookies() != null) {
       token = Arrays.stream(request.getCookies())
@@ -58,9 +71,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     // If no token found, continue without authentication
     if (token == null) {
+      System.out.println("No JWT token found, continuing without auth");
+      System.out.println("============================");
       chain.doFilter(request, response);
       return;
     }
+
+    System.out.println("JWT token found!");
 
     // With our service we obtain the data stored in the token
     try {
@@ -68,6 +85,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       Claims userTokenPayload = jwtService.extractPayload(token);
       final Integer userId = userTokenPayload.get("id", Integer.class);
       final String userType = userTokenPayload.get("type", String.class);
+
+      System.out.println("Token valid - User ID: " + userId + ", Type: " + userType);
 
       // If the token is valid and there is no prior authentication
       if (userId != null &&
@@ -79,6 +98,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             break;
           case "hospital":
             this.authenticatedByHospital(userId, token);
+            System.out.println("Hospital authentication set in SecurityContext");
             break;
           case "admin":
             this.authenticatedByAdmin(userId, token);
@@ -90,8 +110,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
       // If the token is expired, corrupted, tampered with, or empty:
       // DO NOT break anything → ignore the token and continue without authentication
+      System.out.println("Token validation failed: " + e.getMessage());
       SecurityContextHolder.clearContext();
     }
+
+    System.out.println("============================");
 
     chain.doFilter(request, response);
   }

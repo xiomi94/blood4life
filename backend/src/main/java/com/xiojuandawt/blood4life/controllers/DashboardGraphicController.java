@@ -23,10 +23,14 @@ public class DashboardGraphicController {
   private BloodDonorRepository bloodDonorRepository;
 
   @Autowired
+  private com.xiojuandawt.blood4life.repositories.CampaignRepository campaignRepository;
+
+  @Autowired
   private HospitalRepository hospitalRepository;
 
   @GetMapping("/stats")
-  public ResponseEntity<Map<String, Object>> getDashboardStats() {
+  public ResponseEntity<Map<String, Object>> getDashboardStats(
+      org.springframework.security.core.Authentication authentication) {
     // Fetch stats
     List<Object[]> bloodTypeStats = bloodDonorRepository.countDonorsByBloodType();
     List<Object[]> genderStats = bloodDonorRepository.countDonorsByGender();
@@ -71,6 +75,23 @@ public class DashboardGraphicController {
     totalUsersData.put("counts", List.of(totalDonors, totalHospitals));
 
     response.put("totalUsers", totalUsersData);
+
+    // Campaigns Data
+    long totalCampaigns = campaignRepository.count();
+    long myCampaigns = 0;
+
+    if (authentication != null
+        && authentication.getPrincipal() instanceof com.xiojuandawt.blood4life.entities.Hospital) {
+      com.xiojuandawt.blood4life.entities.Hospital hospital = (com.xiojuandawt.blood4life.entities.Hospital) authentication
+          .getPrincipal();
+      myCampaigns = campaignRepository.countByHospital(hospital);
+    }
+
+    Map<String, Object> campaignsData = new HashMap<>();
+    campaignsData.put("labels", List.of("Total Campañas", "Mis Campañas"));
+    campaignsData.put("counts", List.of(totalCampaigns, myCampaigns));
+
+    response.put("campaigns", campaignsData);
 
     return ResponseEntity.ok(response);
   }

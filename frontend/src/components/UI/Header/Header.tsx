@@ -3,12 +3,14 @@ import { useLocation, Link } from 'react-router';
 import { useState } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import Logo from "../../../assets/images/LogoShadowMini.webp";
-import Button from "../Button/Button.tsx"
+import Button from "../Button/Button.tsx";
+import EditProfileModal from '../../EditProfileModal/EditProfileModal';
 
 function Header() {
   const location = useLocation();
   const { logout, user } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showEditProfile, setShowEditProfile] = useState(false);
 
   return (
     <div
@@ -70,7 +72,7 @@ function Header() {
                   >
                     {user?.imageName ? (
                       <img
-                        src={`/images/${user.imageName}`}
+                        src={`http://localhost:8080/images/${user.imageName}`}
                         alt="Profile"
                         className="w-full h-full object-cover"
                         onError={(e) => {
@@ -88,6 +90,15 @@ function Header() {
                     <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 ring-1 ring-black ring-opacity-5">
                       <button
                         onClick={() => {
+                          setShowEditProfile(true);
+                          setIsDropdownOpen(false);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Editar Perfil
+                      </button>
+                      <button
+                        onClick={() => {
                           logout();
                           setIsDropdownOpen(false);
                         }}
@@ -103,6 +114,12 @@ function Header() {
           )}
         </>
       )}
+
+      {/* Edit Profile Modal */}
+      <EditProfileModal
+        isOpen={showEditProfile}
+        onClose={() => setShowEditProfile(false)}
+      />
     </div>
   );
 }

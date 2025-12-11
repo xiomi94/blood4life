@@ -18,6 +18,13 @@ public class HospitalServiceImpl implements HospitalService {
   @Autowired
   private HospitalRepository hospitalRepository;
 
+  @Autowired
+  private ImageService imageService;
+
+  public ImageService getImageService() {
+    return imageService;
+  }
+
   @Override
   public List<HospitalDTO> findAll() {
     List<Hospital> hospitalList = (List<Hospital>) hospitalRepository.findAll();
