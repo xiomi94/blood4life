@@ -49,8 +49,6 @@ const DashboardHospitalPage = () => {
   // Edit campaign state
   const [showEditModal, setShowEditModal] = useState(false);
   const [campaignToEdit, setCampaignToEdit] = useState<Campaign | null>(null);
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
 
   useEffect(() => {
     campaignService.getAllCampaigns()
@@ -66,19 +64,6 @@ const DashboardHospitalPage = () => {
 
   const changeMonth = (increment: number) => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + increment, 1));
-  };
-
-  const handleDayClick = (dateStr: string, campaignsOnDay: Campaign[]) => {
-    if (campaignsOnDay.length > 0) {
-      setSelectedDate(dateStr);
-      setFilteredCampaigns(campaignsOnDay);
-      setSelectedChart('campaigns');
-    }
-  };
-
-  const clearSelectedDate = () => {
-    setSelectedDate(null);
-    setFilteredCampaigns([]);
   };
 
   const refreshCampaigns = () => {
@@ -134,66 +119,42 @@ const DashboardHospitalPage = () => {
     // Days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-      const nowStr = new Date().toISOString().split('T')[0];
 
-      // Find campaigns on this day
+      // Determine status based on campaigns
+      let statusClass = "hover:bg-gray-100 cursor-pointer";
+      let hasCampaign = false;
+
+      // Check for campaigns on this day
       const campaignsOnDay = allCampaigns.filter(c =>
         dateStr >= c.startDate && dateStr <= c.endDate
       );
 
-      let statusClass = "hover:bg-gray-100 cursor-pointer";
-      let backgroundStyle: React.CSSProperties = {};
-
       if (campaignsOnDay.length > 0) {
+        hasCampaign = true;
+        const nowStr = new Date().toISOString().split('T')[0];
 
-
-        // Categorize campaigns
-        const isPast = campaignsOnDay.every(c => c.endDate < nowStr);
-        const isFuture = campaignsOnDay.every(c => c.startDate > nowStr);
-        const isActive = campaignsOnDay.some(c => c.startDate <= nowStr && c.endDate >= nowStr);
-
-
-        // Determine color based on campaign status
-        // Single campaign
-        if (isActive) {
-          // Active - green
-          statusClass = "bg-green-500 text-white font-medium hover:bg-green-600 cursor-pointer relative";
-        } else if (isFuture) {
-          // Future - light blue
-          statusClass = "bg-blue-400 text-white font-medium hover:bg-blue-500 cursor-pointer relative";
-        } else if (isPast) {
-          // Past - red
-          statusClass = "bg-red-500 text-white font-medium hover:bg-red-600 cursor-pointer relative";
+        // Priority: Active > Future > Finished
+        if (campaignsOnDay.some(c => dateStr >= c.startDate && dateStr <= c.endDate && nowStr >= c.startDate && nowStr <= c.endDate)) {
+          // Active today (roughly) - Use Green
+          statusClass = "bg-green-500 text-white font-medium hover:bg-green-600";
+        } else if (campaignsOnDay.some(c => c.startDate > nowStr)) {
+          // Future - Use Blue
+          statusClass = "bg-blue-500 text-white font-medium hover:bg-blue-600";
+        } else {
+          // Past - Use Red/Gray
+          statusClass = "bg-red-200 text-red-800 font-medium hover:bg-red-300";
         }
-
       }
 
       // Check if it's "today"
       const isToday = new Date().toDateString() === new Date(year, month, day).toDateString();
-      if (isToday && campaignsOnDay.length === 0) {
+      if (isToday && !hasCampaign) {
         statusClass = "bg-blue-100 text-blue-800 font-bold border border-blue-300";
       }
 
       days.push(
-        <div
-          key={day}
-          className={`p-2 rounded flex items-center justify-center text-sm transition-colors relative ${statusClass} ${campaignsOnDay.length > 0 ? 'cursor-pointer' : ''}`}
-          style={backgroundStyle}
-          title={campaignsOnDay.map(c => c.name).join(', ')}
-          onClick={() => handleDayClick(dateStr, campaignsOnDay)}
-        >
+        <div key={day} className={`p-2 rounded flex items-center justify-center text-sm transition-colors ${statusClass}`} title={campaignsOnDay.map(c => c.name).join(', ')}>
           {day}
-
-          {campaignsOnDay.length >= 2 && (
-            <span className="absolute bottom-0.5 right-0.5 text-[9px] font-bold text-black bg-white/80 rounded-full w-3.5 h-3.5 flex items-center justify-center">
-              {campaignsOnDay.length}
-            </span>
-          )}
-
-
-
-
-
         </div>
       );
     }
@@ -436,29 +397,17 @@ const DashboardHospitalPage = () => {
             <div className="lg:col-span-2 space-y-6">
               {/* Estadísticas */}
               <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between mb-6">
-                  {selectedDate ? (
-                    <div className="flex items-center gap-3">
-                      <h2 className="text-xl font-bold text-gray-800">Campañas seleccionadas</h2>
-                      <button
-                        onClick={clearSelectedDate}
-                        className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors"
-                      >
-                        Limpiar filtro
-                      </button>
-                    </div>
-                  ) : (
-                    <select
-                      id="chartType"
-                      value={selectedChart}
-                      onChange={(e) => setSelectedChart(e.target.value as ChartType)}
-                      className="appearance-none pr-8 pl-0 py-1 bg-transparent text-xl font-bold text-gray-800 border-none focus:ring-0 focus:outline-none cursor-pointer hover:text-blue-600 transition-colors bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22%234b5563%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:24px_24px] bg-[right_-4px_center] bg-no-repeat"
-                    >
-                      <option value="campaigns" className="text-lg font-semibold text-gray-700">Campañas</option>
-                      <option value="bloodType" className="text-lg font-semibold text-gray-700">Distribución por tipo de sangre</option>
-                      <option value="gender" className="text-lg font-semibold text-gray-700">Distribución por género</option>
-                    </select>
-                  )}
+                <div className="flex items-center justify-start mb-6">
+                  <select
+                    id="chartType"
+                    value={selectedChart}
+                    onChange={(e) => setSelectedChart(e.target.value as ChartType)}
+                    className="appearance-none pr-8 pl-0 py-1 bg-transparent text-xl font-bold text-gray-800 border-none focus:ring-0 focus:outline-none cursor-pointer hover:text-blue-600 transition-colors bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22%234b5563%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:24px_24px] bg-[right_-4px_center] bg-no-repeat"
+                  >
+                    <option value="campaigns" className="text-lg font-semibold text-gray-700">Campañas</option>
+                    <option value="bloodType" className="text-lg font-semibold text-gray-700">Distribución por tipo de sangre</option>
+                    <option value="gender" className="text-lg font-semibold text-gray-700">Distribución por género</option>
+                  </select>
                 </div>
 
                 {selectedChart === 'bloodType' && (
@@ -475,18 +424,18 @@ const DashboardHospitalPage = () => {
 
                 {selectedChart === 'campaigns' && (
                   <div className="relative h-[350px] w-full overflow-y-auto pr-2 space-y-3">
-                    {(selectedDate ? filteredCampaigns : hospitalCampaigns).length === 0 ? (
+                    {hospitalCampaigns.length === 0 ? (
                       <div className="flex h-full items-center justify-center text-gray-500">
-                        {selectedDate ? 'No hay campañas en esta fecha' : 'No hay campañas activas'}
+                        No hay campañas activas
                       </div>
                     ) : (
-                      (selectedDate ? filteredCampaigns : hospitalCampaigns).map(campaign => (
+                      hospitalCampaigns.map(campaign => (
                         <div key={campaign.id} className="p-4 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
                           <div className="flex justify-between items-start mb-2">
                             <div className="flex flex-row items-center gap-3">
                               <h3 className="text-xl font-bold text-gray-800">{campaign.name}</h3>
                               <span className="text-sm bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium whitespace-nowrap">
-                                Meta: {campaign.currentDonorCount || 0}/{campaign.requiredDonorQuantity} donantes
+                                Meta: {campaign.currentDonorCount || 0} / {campaign.requiredDonorQuantity} donantes
                               </span>
                             </div>
                             <div className="flex gap-2">
@@ -509,6 +458,8 @@ const DashboardHospitalPage = () => {
                                 </svg>
                               </button>
                             </div>
+                          </div>
+                          <div className="flex items-center gap-2 mb-2">
                           </div>
                           <p className="text-base text-gray-600 mb-3 line-clamp-2">{campaign.description}</p>
                           <div className="grid grid-cols-2 gap-2 text-sm text-gray-500">
@@ -533,105 +484,55 @@ const DashboardHospitalPage = () => {
                   </div>
                 )}
               </section>
-
-              {/* Historial de donaciones */}
-              <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-semibold text-gray-800 mb-2">Donaciones recibidas</h2>
-                <p className="text-sm text-gray-500 mb-4">Últimas donaciones de sangre recibidas en el hospital.</p>
-
-                <div className="space-y-3">
-                  <div
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <span
-                        className="inline-flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">
-                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                        Finalizado
-                      </span>
-                      <div>
-                        <p className="font-medium text-gray-800">Campaña de donación</p>
-                        <p className="text-sm text-gray-500">Donación tipo O+</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium text-gray-800">Hospital Negrín</p>
-                      <p className="text-sm text-gray-500">Jan 17, 2022</p>
-                    </div>
-                    <button className="p-2 text-gray-400 hover:text-gray-600">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                          d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-                      </svg>
-                    </button>
-                  </div>
-
-                  <div
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <span
-                        className="inline-flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">
-                        <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                        Finalizado
-                      </span>
-                      <div>
-                        <p className="font-medium text-gray-800">Campaña de donación</p>
-                        <p className="text-sm text-gray-500">Donación tipo A-</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium text-gray-800">Hospital Negrín</p>
-                      <p className="text-sm text-gray-500">Jan 17, 2022</p>
-                    </div>
-                    <button className="p-2 text-gray-400 hover:text-gray-600">
-                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                          d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </section>
             </div>
 
-            {/* Right Column: Calendar + Stats */}
+            {/* Right Column: Calendar */}
             <div className="space-y-6">
-              {/* Calendar */}
-              <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h2 className="text-lg font-semibold text-gray-800 mb-4">Calendario</h2>
-
-                <div className="mb-3">
-                  <div className="flex justify-between items-center mb-4 px-2">
-                    <button onClick={() => changeMonth(-1)} className="p-1 hover:bg-gray-100 rounded text-gray-600">
-                      &lt;
+              {/* Calendar Widget */}
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="font-semibold text-gray-800">Calendario</h3>
+                  <div className="flex gap-2">
+                    <button onClick={() => changeMonth(-1)} className="p-1 hover:bg-gray-100 rounded">
+                      <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                      </svg>
                     </button>
-                    <h3 className="font-semibold text-gray-800">
+                    <span className="font-medium text-gray-700">
                       {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-                    </h3>
-                    <button onClick={() => changeMonth(1)} className="p-1 hover:bg-gray-100 rounded text-gray-600">
-                      &gt;
+                    </span>
+                    <button onClick={() => changeMonth(1)} className="p-1 hover:bg-gray-100 rounded">
+                      <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                      </svg>
                     </button>
-                  </div>
-
-                  <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-500 mb-2">
-                    <div>Lu</div>
-                    <div>Ma</div>
-                    <div>Mi</div>
-                    <div>Ju</div>
-                    <div>Vi</div>
-                    <div>Sa</div>
-                    <div>Do</div>
-                  </div>
-                  <div className="grid grid-cols-7 gap-1 text-center text-sm">
-                    {renderCalendarDays()}
-                  </div>
-                  <div className="mt-4 flex flex-wrap gap-2 text-xs justify-center text-gray-500">
-                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-green-500 rounded"></div> Activa</div>
-                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-blue-400 rounded"></div> Futura</div>
-                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-red-500 rounded"></div> Pasada</div>
-                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-orange-600 rounded"></div> Solapadas</div>
                   </div>
                 </div>
-              </section>
+                <div className="grid grid-cols-7 gap-1 text-center mb-2">
+                  {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map(day => (
+                    <div key={day} className="text-xs font-medium text-gray-500 py-1">
+                      {day}
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-7 gap-1">
+                  {renderCalendarDays()}
+                </div>
+                <div className="mt-4 flex flex-wrap gap-2 text-xs text-gray-500 justify-center">
+                  <div className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                    <span>Activa hoy</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                    <span>Futura</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-red-200"></span>
+                    <span>Pasada</span>
+                  </div>
+                </div>
+              </div>
 
               {/* Stats Cards */}
               <section className="space-y-4">
