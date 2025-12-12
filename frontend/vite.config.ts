@@ -14,6 +14,8 @@ export default defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true,
         secure: false,
+        cookieDomainRewrite: 'localhost',
+        cookiePathRewrite: '/',
         configure: (proxy, _options) => {
           proxy.on('proxyReq', (_proxyReq, req: IncomingMessage, _res: ServerResponse) => {
             console.log('\n=== Proxying ===');

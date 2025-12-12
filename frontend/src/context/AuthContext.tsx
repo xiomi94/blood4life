@@ -1,13 +1,28 @@
 import React, { createContext, useState, useContext, useEffect, type ReactNode } from 'react';
 import axiosInstance from '../utils/axiosInstance';
 
+
+
 interface UserProfile {
   id: number;
-  firstName?: string; // Donor
-  lastName?: string; // Donor
-  name?: string; // Hospital
+  // Blood Donor fields
+  firstName?: string;
+  lastName?: string;
+  // Hospital fields
+  name?: string;
+  // Common fields
   email: string;
   imageName?: string;
+  bloodType?: {
+    id: number;
+    type: string;
+  };
+  dni?: string;
+  gender?: string;
+  phoneNumber?: string;
+  dateOfBirth?: string;
+  cif?: string;
+  address?: string;
 }
 
 interface AuthContextType {
@@ -15,6 +30,7 @@ interface AuthContextType {
   user: UserProfile | null;
   login: (type: 'bloodDonor' | 'hospital' | 'admin') => void;
   logout: () => void;
+  refreshUser: () => Promise<void>;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
@@ -27,41 +43,56 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Check if user is already logged in on mount
-  useEffect(() => {
-    const checkAuth = async () => {
+  const refreshUser = async () => {
+    // Get the last known user type from localStorage
+    const savedUserType = localStorage.getItem('userType') as 'bloodDonor' | 'hospital' | 'admin' | null;
+
+    // If there's no saved user type, skip verification (user is not logged in)
+    if (!savedUserType) {
+      setIsAuthenticated(false);
+      setUserType(null);
+      setUser(null);
+      return;
+    }
+
+    // Define the order to check based on saved type
+    const checkOrder: Array<'bloodDonor' | 'hospital' | 'admin'> = savedUserType
+      ? [savedUserType, ...(['bloodDonor', 'hospital', 'admin'].filter(t => t !== savedUserType) as Array<'bloodDonor' | 'hospital' | 'admin'>)]
+      : ['bloodDonor', 'hospital', 'admin'];
+
+    for (const type of checkOrder) {
       try {
-        // 1. Try BloodDonor
-        const res = await axiosInstance.get('/bloodDonor/me');
-        setUserType('bloodDonor');
+        const endpoint = type === 'bloodDonor' ? '/bloodDonor/me' : type === 'hospital' ? '/hospital/me' : '/admin/me';
+        const res = await axiosInstance.get(endpoint);
+
+        setUserType(type);
         setUser(res.data);
         setIsAuthenticated(true);
-      } catch (e) {
-        try {
-          // 2. Try Hospital
-          const res = await axiosInstance.get('/hospital/me');
-          setUserType('hospital');
-          setUser(res.data);
-          setIsAuthenticated(true);
-        } catch (e2) {
-          try {
-            // 3. Try Admin
-            const res = await axiosInstance.get('/admin/me');
-            setUserType('admin');
-            setUser(res.data);
-            setIsAuthenticated(true);
-          } catch (e3) {
-            // No valid session found
-            setIsAuthenticated(false);
-            setUserType(null);
-            setUser(null);
-          }
+        localStorage.setItem('userType', type); // Save for next time
+        return; // Success, stop checking
+      } catch (error: any) {
+        // Only log unexpected errors (not 401/403 which are expected)
+        if (error.response?.status !== 401 && error.response?.status !== 403) {
+          console.error(`Unexpected error checking ${type} auth:`, error);
         }
-      } finally {
-        setIsLoading(false);
+        // Continue to next type
       }
+    }
+
+    // If all checks failed, clear everything
+    setIsAuthenticated(false);
+    setUserType(null);
+    setUser(null);
+    localStorage.removeItem('userType');
+  };
+
+  // Check if user is already logged in on mount
+  useEffect(() => {
+    const initAuth = async () => {
+      await refreshUser();
+      setIsLoading(false);
     };
-    checkAuth();
+    initAuth();
   }, []);
 
   const login = (type: 'bloodDonor' | 'hospital' | 'admin') => {
@@ -71,6 +102,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // We optimistically set authenticated, but we should fetch the user details immediately
     setUserType(type);
     setIsAuthenticated(true);
+    localStorage.setItem('userType', type); // Save user type
 
     // Fetch user details
     axiosInstance.get(endpoint)
@@ -78,17 +110,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       .catch(err => console.error("Failed to fetch user details on login", err));
   };
 
-  const logout = () => {
-    // TODO: Call backend logout endpoint to clear cookie
-    setUserType(null);
-    setUser(null);
-    setIsAuthenticated(false);
-    // Force reload to clear any in-memory state if needed
-    window.location.href = '/login';
+  const logout = async () => {
+    try {
+      await axiosInstance.get('/auth/logout');
+    } catch (error) {
+      console.error("Logout failed on server:", error);
+    } finally {
+      setUserType(null);
+      setUser(null);
+      setIsAuthenticated(false);
+      localStorage.removeItem('userType'); // Clear saved type
+      // Force reload to clear any in-memory state and redirect to login
+      window.location.href = '/login';
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ userType, user, login, logout, isAuthenticated, isLoading }}>
+    <AuthContext.Provider value={{ userType, user, login, logout, refreshUser, isAuthenticated, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

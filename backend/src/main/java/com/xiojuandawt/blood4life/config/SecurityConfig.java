@@ -60,27 +60,22 @@ public class SecurityConfig {
             .requestMatchers(
                 "/api/auth/**",
                 "/api/dashboard/**",
-                "/api/hospital/**",
-                "/api/auth/bloodDonor/login")
-            .permitAll()
+                "/api/campaign")
+            .permitAll() // Allow public GET all campaigns
             .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+            .requestMatchers("/api/hospital/register", "/api/bloodDonor/register").permitAll()
+            .requestMatchers("/api/campaign/**").authenticated()
+            .requestMatchers("/api/bloodDonor/**").authenticated()
+            .requestMatchers("/api/hospital/**").authenticated()
             .anyRequest().authenticated())
         .sessionManagement(sess -> sess
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)) // Changed from STATELESS
         .exceptionHandling(ex -> ex
             .authenticationEntryPoint((request, response, authException) -> {
-              response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+              response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+              response.setContentType("application/json");
+              response.getWriter().write("{\"error\":\"Unauthorized\"}");
             }))
-        .addFilterBefore(new org.springframework.web.filter.OncePerRequestFilter() {
-          @Override
-          protected void doFilterInternal(jakarta.servlet.http.HttpServletRequest request,
-              jakarta.servlet.http.HttpServletResponse response, jakarta.servlet.FilterChain filterChain)
-              throws jakarta.servlet.ServletException, java.io.IOException {
-            System.out
-                .println("SECURITY DEBUG: Incoming Request: " + request.getMethod() + " | " + request.getRequestURI());
-            filterChain.doFilter(request, response);
-          }
-        }, UsernamePasswordAuthenticationFilter.class)
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
@@ -96,7 +91,7 @@ public class SecurityConfig {
   public SecurityFilterChain webSecurity(HttpSecurity http) throws Exception {
 
     http
-        .securityMatcher("/**")
+        .securityMatcher(request -> !request.getRequestURI().startsWith("/api"))
         .csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(
@@ -104,9 +99,16 @@ public class SecurityConfig {
                 "/images/**",
                 "/favicon.ico",
                 "/css/**",
-                "/js/**")
+                "/js/**",
+                "/error",
+                "/registerhospital",
+                "/registerblooddonor")
             .permitAll()
             .anyRequest().authenticated())
+        .exceptionHandling(ex -> ex
+            .authenticationEntryPoint((request, response, authException) -> {
+              response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            }))
         .formLogin(form -> form
             .loginPage("/login")
             .defaultSuccessUrl("/", true)
