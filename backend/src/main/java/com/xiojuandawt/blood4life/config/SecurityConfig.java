@@ -59,8 +59,9 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers(
                 "/api/auth/**",
-                "/api/dashboard/**")
-            .permitAll()
+                "/api/dashboard/**",
+                "/api/campaign")
+            .permitAll() // Allow public GET all campaigns
             .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
             .requestMatchers("/api/hospital/register", "/api/bloodDonor/register").permitAll()
             .requestMatchers("/api/campaign/**").authenticated()
@@ -68,7 +69,7 @@ public class SecurityConfig {
             .requestMatchers("/api/hospital/**").authenticated()
             .anyRequest().authenticated())
         .sessionManagement(sess -> sess
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)) // Changed from STATELESS
         .exceptionHandling(ex -> ex
             .authenticationEntryPoint((request, response, authException) -> {
               response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

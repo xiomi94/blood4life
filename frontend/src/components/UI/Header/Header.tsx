@@ -81,7 +81,28 @@ function Header() {
 
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 ring-1 ring-black ring-opacity-5">
-                  {location.pathname === '/index' || location.pathname === '/' ? (
+                  {location.pathname.startsWith('/dashboard') ? (
+                    // Dashboard - show "Inicio" link and "Editar mi perfil" button
+                    <>
+                      <Link
+                        to="/index"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        Inicio
+                      </Link>
+                      <button
+                        onClick={() => {
+                          setIsDropdownOpen(false);
+                          setIsEditModalOpen(true);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Editar mi perfil
+                      </button>
+                    </>
+                  ) : (
+                    // Index, Login, and other pages - show "Mi perfil" link
                     <>
                       <Link
                         to="/index" // TODO: Change to /campaigns when available
@@ -98,17 +119,6 @@ function Header() {
                         Mi perfil
                       </Link>
                     </>
-                  ) : (
-                    // Default for Dashboard and other authenticated pages
-                    <button
-                      onClick={() => {
-                        setIsDropdownOpen(false);
-                        setIsEditModalOpen(true);
-                      }}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Editar mi perfil
-                    </button>
                   )}
                   <div className="border-t border-gray-100 my-1"></div>
                   <button

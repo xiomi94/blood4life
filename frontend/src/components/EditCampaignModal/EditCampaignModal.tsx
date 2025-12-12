@@ -28,15 +28,27 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
     // Pre-populate form when campaign changes
     useEffect(() => {
         if (campaign && isOpen) {
+            // Clean and parse blood types - remove brackets, quotes, and extra whitespace
+            const bloodTypesString = campaign.requiredBloodType || '';
+            const cleanedBloodTypes = bloodTypesString
+                .replace(/[\[\]"]/g, '') // Remove brackets and quotes
+                .split(',')
+                .map(bt => bt.trim())
+                .filter(bt => bt.length > 0); // Remove empty strings
+
             setFormData({
-                name: campaign.name,
-                description: campaign.description,
-                startDate: campaign.startDate,
-                endDate: campaign.endDate,
-                location: campaign.location,
-                requiredDonorQuantity: campaign.requiredDonorQuantity,
-                requiredBloodTypes: campaign.requiredBloodType.split(',').map(bt => bt.trim())
+                name: campaign.name || '',
+                description: campaign.description || '',
+                startDate: campaign.startDate || '',
+                endDate: campaign.endDate || '',
+                location: campaign.location || '',
+                requiredDonorQuantity: campaign.requiredDonorQuantity || 1,
+                requiredBloodTypes: cleanedBloodTypes
             });
+
+            // Clear any previous errors
+            setErrors({});
+            setMessage(null);
         }
     }, [campaign, isOpen]);
 
@@ -115,7 +127,13 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!campaign || !validateForm()) {
+        if (!campaign) {
+            setMessage({ type: 'error', text: 'No se pudo identificar la campaña a editar' });
+            return;
+        }
+
+        if (!validateForm()) {
+            setMessage({ type: 'error', text: 'Por favor, corrige los errores en el formulario' });
             return;
         }
 
@@ -134,13 +152,67 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
             // Close modal after a short delay
             setTimeout(() => {
                 onClose();
+                setErrors({});
+                setMessage(null);
             }, 1500);
         } catch (error: any) {
             console.error('Error updating campaign:', error);
-            setMessage({
-                type: 'error',
-                text: error.response?.data?.error || 'Error al actualizar la campaña'
-            });
+
+            // Check if it's a 401 error (session expired)
+            const isSessionExpired = error.response?.status === 401;
+
+            // Function to translate technical errors to user-friendly messages
+            const getUserFriendlyError = (error: any): string => {
+                // Check for network errors
+                if (!error.response) {
+                    return '❌ No se pudo conectar con el servidor. Verifica tu conexión a internet.';
+                }
+
+                const status = error.response.status;
+                const data = error.response.data;
+
+                // Map HTTP status codes to friendly messages
+                switch (status) {
+                    case 400:
+                        return '❌ Los datos ingresados no son válidos. Por favor, revisa la información.';
+                    case 401:
+                        return '❌ Tu sesión ha expirado. Redirigiendo al inicio de sesión...';
+                    case 403:
+                        return '❌ No tienes permisos para editar esta campaña.';
+                    case 404:
+                        return '❌ La campaña que intentas editar ya no existe.';
+                    case 409:
+                        return '❌ Ya existe una campaña con ese nombre en las mismas fechas.';
+                    case 422:
+                        return '❌ Los datos del formulario son incorrectos. Verifica las fechas y cantidades.';
+                    case 500:
+                        return '❌ Ocurrió un error en el servidor. Intenta nuevamente en unos momentos.';
+                    case 503:
+                        return '❌ El servidor está temporalmente fuera de servicio. Intenta más tarde.';
+                    default:
+                        // Try to extract message from response
+                        if (typeof data === 'string' && !data.includes('status code')) {
+                            return `❌ ${data}`;
+                        }
+                        if (data?.message && !data.message.includes('status code')) {
+                            return `❌ ${data.message}`;
+                        }
+                        if (data?.error && !data.error.includes('status code')) {
+                            return `❌ ${data.error}`;
+                        }
+                        return '❌ No se pudo actualizar la campaña. Intenta nuevamente.';
+                }
+            };
+
+            const friendlyMessage = getUserFriendlyError(error);
+            setMessage({ type: 'error', text: friendlyMessage });
+
+            // If session expired, redirect to login after showing message
+            if (isSessionExpired) {
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 2000);
+            }
         } finally {
             setLoading(false);
         }
