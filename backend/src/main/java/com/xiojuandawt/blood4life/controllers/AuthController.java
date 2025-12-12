@@ -319,6 +319,57 @@ public class AuthController {
         .body(response);
   }
 
+  @GetMapping("/hospital/me")
+  public ResponseEntity<?> getCurrentHospital(
+      @org.springframework.security.core.annotation.AuthenticationPrincipal Hospital hospital) {
+    if (hospital == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+    HospitalDTO dto = new HospitalDTO(
+        hospital.getId(),
+        hospital.getCif(),
+        hospital.getName(),
+        hospital.getAddress(),
+        hospital.getEmail(),
+        hospital.getPhoneNumber(),
+        hospital.getImage() != null ? hospital.getImage().getName() : null);
+    return ResponseEntity.ok(dto);
+  }
+
+  @GetMapping("/bloodDonor/me")
+  public ResponseEntity<?> getCurrentBloodDonor(
+      @org.springframework.security.core.annotation.AuthenticationPrincipal BloodDonor bloodDonor) {
+    if (bloodDonor == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+    BloodDonorDTO dto = new BloodDonorDTO();
+    dto.setId(bloodDonor.getId());
+    dto.setDni(bloodDonor.getDni());
+    dto.setFirstName(bloodDonor.getFirstName());
+    dto.setLastName(bloodDonor.getLastName());
+    dto.setGender(bloodDonor.getGender());
+    dto.setBloodType(bloodDonor.getBloodType());
+    dto.setEmail(bloodDonor.getEmail());
+    dto.setPhoneNumber(bloodDonor.getPhoneNumber());
+    dto.setDateOfBirth(bloodDonor.getDateOfBirth());
+    dto.setImageName(bloodDonor.getImage() != null ? bloodDonor.getImage().getName() : null);
+
+    return ResponseEntity.ok(dto);
+  }
+
+  @GetMapping("/admin/me")
+  public ResponseEntity<?> getCurrentAdmin(
+      @org.springframework.security.core.annotation.AuthenticationPrincipal com.xiojuandawt.blood4life.entities.Admin admin) {
+    if (admin == null) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+    Map<String, Object> response = new HashMap<>();
+    response.put("id", admin.getId());
+    response.put("email", admin.getEmail());
+    response.put("role", "ADMIN");
+    return ResponseEntity.ok(response);
+  }
+
   private ResponseEntity<Map<String, String>> errorResponse(String message, HttpStatus status) {
     return ResponseEntity.status(status).body(Map.of("error", message));
   }

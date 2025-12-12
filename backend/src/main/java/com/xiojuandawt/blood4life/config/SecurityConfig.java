@@ -99,7 +99,10 @@ public class SecurityConfig {
                 "/images/**",
                 "/favicon.ico",
                 "/css/**",
-                "/js/**")
+                "/js/**",
+                "/error",
+                "/registerhospital",
+                "/registerblooddonor")
             .permitAll()
             .anyRequest().authenticated())
         .exceptionHandling(ex -> ex
