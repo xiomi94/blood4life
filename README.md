@@ -153,7 +153,7 @@ that need the ```firebase.json``` reference for github
 
 * [![Figma](https://img.shields.io/badge/-Figma-F24E1E?style=flat&logo=figma&logoColor=white)](https://www.figma.com/design/b1wzQ5d4tamVixL3SZzZrg/Blood4Life?node-id=0-1&p=f&t=4vENweVa6vCEpXQd-0)
 * [![GitHub Project](https://img.shields.io/badge/-Github_Project-181717?style=flat&logo=github&logoColor=white)](https://github.com/users/xiomi94/projects/5/views/1)
-* [![PostMan](https://img.shields.io/badge/-Postman-FF6C37?style=flat&logo=postman&logoColor=white)](https://xiomara-7191213.postman.co/workspace/Xiomara's-Workspace~4d5fdf48-7ec3-4099-8a60-e4ffcf9e3fe5/request/45089686-7c413a94-6b6a-424f-ac64-6d65c2734ebf?action=share&creator=45089686&ctx=documentation)
+* [![PostMan](https://img.shields.io/badge/-Postman-FF6C37?style=flat&logo=postman&logoColor=white)](https://www.postman.com/xiomara-7191213/workspace/blood4life)
 
 ## Authors
 

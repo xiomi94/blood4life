@@ -143,6 +143,7 @@ public class AuthController {
       Map<String, Object> response = new HashMap<>();
       response.put("status", "OK");
       response.put("message", "Login con éxito");
+      response.put("token", token);
 
       return ResponseEntity.ok()
           .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
