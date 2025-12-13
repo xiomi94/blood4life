@@ -30,6 +30,21 @@ public class BloodDonorController {
 
   @GetMapping("/me")
   public ResponseEntity<?> obtainMe(Authentication authentication) {
+    // Check if authentication is null (unauthenticated request)
+    if (authentication == null || authentication.getPrincipal() == null) {
+      Map<String, String> error = new HashMap<>();
+      error.put("error", "No tienes una sesión iniciada");
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    // Check if the authenticated user is actually a BloodDonor
+    if (!(authentication.getPrincipal() instanceof BloodDonor)) {
+      Map<String, String> error = new HashMap<>();
+      error.put("error",
+          "No puedes identificarte como donante porque tu sesión actual es de un tipo de usuario diferente. Por favor, cierra sesión primero.");
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
+
     BloodDonor me = (BloodDonor) authentication.getPrincipal();
     String imageName = me.getImage() != null ? me.getImage().getName() : null;
     BloodDonorDTO meDTO = new BloodDonorDTO(
