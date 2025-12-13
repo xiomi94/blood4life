@@ -24,7 +24,7 @@ function NotFoundPage() {
     }, [navigate]);
 
     return (
-        <div className="flex flex-col lg:flex-row flex-grow w-full items-center justify-center gap-6 sm:gap-10 md:gap-20 lg:gap-40 px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-12 bg-gray-100">
+        <main className="flex flex-col lg:flex-row flex-grow w-full items-center justify-center gap-6 sm:gap-10 md:gap-20 lg:gap-40 px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-12 bg-gray-100">
             {/* Logo - Hidden on mobile, visible on lg+ */}
             <div className="hidden lg:flex items-center justify-center flex-shrink-0">
                 <img
@@ -39,10 +39,17 @@ function NotFoundPage() {
                 <div className="text-center">
                     {/* Error Message */}
                     <div className="mb-6 sm:mb-8 md:mb-10">
-                        <h2 className="text-h3 sm:text-h2 md:text-h1 text-gray-800 mb-3 sm:mb-4">
+                        <h2
+                            className="text-h3 sm:text-h2 md:text-h1 text-gray-800 mb-3 sm:mb-4"
+                            role="alert"
+                        >
                             Vaya... parece que algo salió mal
                         </h2>
-                        <p className="text-body-sm sm:text-body md:text-body-lg text-gray-500 max-w-lg mx-auto">
+                        <p
+                            className="text-body-sm sm:text-body md:text-body-lg text-gray-500 max-w-lg mx-auto"
+                            aria-live="polite"
+                            aria-atomic="true"
+                        >
                             No te preocupes, será redirigido a la página principal en{' '}
                             <span className="font-semibold text-blue-600">{countdown}</span> segundos.
                         </p>
@@ -71,7 +78,7 @@ function NotFoundPage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     );
 }
 

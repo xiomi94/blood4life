@@ -11,7 +11,7 @@ function Footer() {
     <div className="w-full mx-auto">
 
       {isSpecialRoute ? (
-        <footer className="p-4 md:flex md:items-center md:justify-between md:p-6 border-t border-gray-300">
+        <footer role="contentinfo" className="p-4 md:flex md:items-center md:justify-between md:p-6 border-t border-gray-300">
           <p className="text-sm text-gray-500 sm:text-center text-gray-600">
             Blood4Life © 2025. Todos los derechos reservados.
           </p>
@@ -26,7 +26,7 @@ function Footer() {
           </div>
         </footer>
       ) : (
-        <footer className="p-4 rounded-lg md:flex md:items-center md:justify-between md:p-6">
+        <footer role="contentinfo" className="p-4 rounded-lg md:flex md:items-center md:justify-between md:p-6">
           <p className="text-sm text-gray-500 sm:text-center text-gray-600">
             Blood4Life © 2025. Todos los derechos reservados.
           </p>

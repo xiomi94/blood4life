@@ -9,11 +9,12 @@ import Login from "./pages/Login/Login.tsx";
 import Register from "./pages/Register/Register.tsx";
 import Header from "./components/UI/Header/Header.tsx";
 import Footer from "./components/UI/Footer/Footer.tsx";
+import SkipLink from "./components/UI/SkipLink/SkipLink.tsx";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import UnifiedDashboard from "./pages/UnifiedDashboard/UnifiedDashboard";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
-
+import { Toaster } from 'sonner';
 
 
 function App() {
@@ -21,9 +22,10 @@ function App() {
     <AuthProvider>
       <div className="bg-gray-100 min-h-screen flex flex-col">
         <BrowserRouter>
+          <SkipLink />
           <Header />
 
-          <main className="flex-grow w-full flex flex-col">
+          <main id="main-content" className="flex-grow w-full flex flex-col">
             <Routes>
               {/* Public Routes */}
               <Route path="/index" element={<Index />} />
@@ -46,6 +48,17 @@ function App() {
           </main>
 
           <Footer />
+          <Toaster
+            position="top-right"
+            richColors
+            closeButton
+            duration={4000}
+            toastOptions={{
+              style: {
+                fontFamily: 'Roboto, sans-serif',
+              },
+            }}
+          />
         </BrowserRouter>
       </div>
     </AuthProvider>

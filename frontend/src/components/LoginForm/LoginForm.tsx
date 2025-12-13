@@ -91,38 +91,42 @@ function LoginForm() {
             className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
             role="alert"
             aria-live="assertive"
+            aria-atomic="true"
           >
             <span>{error}</span>
           </div>
         )}
 
-        <div className="flex justify-center gap-4 mb-2">
-          <label className="inline-flex items-center cursor-pointer">
-            <input
-              type="radio"
-              className="form-radio text-blue-600"
-              name="userType"
-              value="bloodDonor"
-              checked={formData.userType === 'bloodDonor'}
-              onChange={() => handleUserTypeChange('bloodDonor')}
-              disabled={formData.username.endsWith('@admin.es')}
-            />
-            <span className="ml-2 text-gray-700">Donante</span>
-          </label>
+        <fieldset className="mb-2">
+          <legend className="sr-only">Tipo de usuario</legend>
+          <div className="flex justify-center gap-4">
+            <label className="inline-flex items-center cursor-pointer">
+              <input
+                type="radio"
+                className="form-radio text-blue-600"
+                name="userType"
+                value="bloodDonor"
+                checked={formData.userType === 'bloodDonor'}
+                onChange={() => handleUserTypeChange('bloodDonor')}
+                disabled={formData.username.endsWith('@admin.es')}
+              />
+              <span className="ml-2 text-gray-700">Donante</span>
+            </label>
 
-          <label className="inline-flex items-center cursor-pointer">
-            <input
-              type="radio"
-              className="form-radio text-blue-600"
-              name="userType"
-              value="hospital"
-              checked={formData.userType === 'hospital'}
-              onChange={() => handleUserTypeChange('hospital')}
-              disabled={formData.username.endsWith('@admin.es')}
-            />
-            <span className="ml-2 text-gray-700">Hospital</span>
-          </label>
-        </div>
+            <label className="inline-flex items-center cursor-pointer">
+              <input
+                type="radio"
+                className="form-radio text-blue-600"
+                name="userType"
+                value="hospital"
+                checked={formData.userType === 'hospital'}
+                onChange={() => handleUserTypeChange('hospital')}
+                disabled={formData.username.endsWith('@admin.es')}
+              />
+              <span className="ml-2 text-gray-700">Hospital</span>
+            </label>
+          </div>
+        </fieldset>
 
         <FormField
           type="email"

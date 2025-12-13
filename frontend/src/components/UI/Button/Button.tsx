@@ -10,6 +10,8 @@ interface Props {
   disabled?: boolean;
   className?: string;
   onClick?: () => void;
+  'aria-label'?: string;
+  'aria-busy'?: boolean;
 }
 
 const Button: React.FC<Props> = ({
@@ -22,6 +24,8 @@ const Button: React.FC<Props> = ({
   disabled = false,
   className = "",
   onClick,
+  'aria-label': ariaLabel,
+  'aria-busy': ariaBusy,
 }) => {
   const navigate = useNavigate();
 
@@ -62,6 +66,9 @@ const Button: React.FC<Props> = ({
       type={type}
       onClick={handleClick}
       disabled={disabled}
+      aria-label={ariaLabel}
+      aria-disabled={disabled}
+      aria-busy={ariaBusy}
       className={`
         ${baseStyles}
         ${colorVariants[variant]}

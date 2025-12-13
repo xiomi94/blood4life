@@ -15,7 +15,7 @@ const Register: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex flex-col flex-grow items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+    <main className="flex flex-col flex-grow items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
       {/* Título */}
       <div className="text-center mb-8 sm:mb-12">
         <h1 className="font-poppins font-bold text-h3 sm:text-h2 md:text-h1 text-gray-800 mb-4">
@@ -36,6 +36,7 @@ const Register: React.FC = () => {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -50,7 +51,7 @@ const Register: React.FC = () => {
           </h2>
           <Button to="/registerbloodDonor" className="flex items-center justify-center">
             Registrarme como Donante
-            <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </Button>
@@ -64,6 +65,7 @@ const Register: React.FC = () => {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
+              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
@@ -78,7 +80,7 @@ const Register: React.FC = () => {
           </h2>
           <Button to="/registerhospital" className="flex items-center justify-center">
             Registrarme como Hospital
-            <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
           </Button>
@@ -98,7 +100,7 @@ const Register: React.FC = () => {
           </Link>
         </span>
       </div>
-    </div>
+    </main>
   );
 };
 

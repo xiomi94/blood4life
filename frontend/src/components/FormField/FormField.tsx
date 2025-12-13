@@ -17,6 +17,7 @@ interface FormFieldProps {
   isPasswordVisible?: boolean;
   onTogglePassword?: () => void;
   autoComplete?: string;
+  'aria-invalid'?: boolean;
 }
 
 const FormField: React.FC<FormFieldProps> = ({
@@ -35,8 +36,10 @@ const FormField: React.FC<FormFieldProps> = ({
   isPasswordVisible = false,
   onTogglePassword,
   autoComplete,
+  'aria-invalid': ariaInvalid,
 }) => {
   const inputType = showPasswordToggle ? (isPasswordVisible ? 'text' : 'password') : type;
+  const errorId = `${id}-error`;
 
   return (
     <div className={`w-full ${containerClass}`}>
@@ -53,6 +56,9 @@ const FormField: React.FC<FormFieldProps> = ({
           onChange={onChange}
           required={required}
           disabled={disabled}
+          aria-required={required}
+          aria-invalid={ariaInvalid || !!error}
+          aria-describedby={error ? errorId : undefined}
           className={`w-full font-roboto text-body-sm md:text-body px-3 py-2 md:px-4 md:py-2.5 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 bg-white ${error ? 'border-red-500' : 'border-gray-300'
             } ${showPasswordToggle ? 'pr-10' : ''}`}
           placeholder={placeholder}
@@ -64,6 +70,7 @@ const FormField: React.FC<FormFieldProps> = ({
             <button
               type="button"
               onClick={onTogglePassword}
+              aria-label={isPasswordVisible ? "Ocultar contraseña" : "Mostrar contraseña"}
               className="text-gray-400 hover:text-gray-600 focus:outline-none"
             >
               {isPasswordVisible ? (
@@ -84,7 +91,15 @@ const FormField: React.FC<FormFieldProps> = ({
         )}
       </div>
 
-      {error && <p className="font-roboto text-red-500 text-caption mt-1">{error}</p>}
+      {error && (
+        <p
+          id={errorId}
+          className="font-roboto text-red-500 text-caption mt-1"
+          role="alert"
+        >
+          {error}
+        </p>
+      )}
     </div>
   );
 };
