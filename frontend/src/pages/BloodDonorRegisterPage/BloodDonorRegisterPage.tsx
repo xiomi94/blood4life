@@ -299,7 +299,7 @@ const BloodDonorRegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col flex-grow items-center bg-gray-100 px-4 sm:px-6 md:px-8 lg:px-12 py-6">
+    <main className="flex flex-col flex-grow items-center bg-gray-100 px-4 sm:px-6 md:px-8 lg:px-12 py-6">
       <div className="w-full max-w-6xl flex flex-col gap-6 md:gap-8">
         {/* Título */}
         <div className="text-center">
@@ -349,6 +349,7 @@ const BloodDonorRegisterPage: React.FC = () => {
                 disabled={loading}
                 error={errors.firstName}
                 placeholder="Ingrese el nombre"
+                autoComplete="given-name"
               />
 
               <FormField
@@ -362,6 +363,7 @@ const BloodDonorRegisterPage: React.FC = () => {
                 disabled={loading}
                 error={errors.lastName}
                 placeholder="Ingrese los apellidos"
+                autoComplete="family-name"
               />
 
               <SelectField
@@ -399,6 +401,7 @@ const BloodDonorRegisterPage: React.FC = () => {
                 disabled={loading}
                 error={errors.email}
                 placeholder="Ingrese el email"
+                autoComplete="email"
               />
 
               <FormField
@@ -412,6 +415,7 @@ const BloodDonorRegisterPage: React.FC = () => {
                 disabled={loading}
                 error={errors.phoneNumber}
                 placeholder="Ingrese el teléfono"
+                autoComplete="tel"
               />
 
               <FormField
@@ -424,6 +428,7 @@ const BloodDonorRegisterPage: React.FC = () => {
                 required
                 disabled={loading}
                 error={errors.dateOfBirth}
+                autoComplete="bday"
               />
 
               <div>
@@ -441,6 +446,7 @@ const BloodDonorRegisterPage: React.FC = () => {
                   showPasswordToggle={true}
                   isPasswordVisible={showPassword}
                   onTogglePassword={() => setShowPassword(!showPassword)}
+                  autoComplete="new-password"
                 />
                 <p className="mt-1 text-xs text-gray-500">
                   Debe contener: mayúscula, minúscula, número (8-32 caracteres)
@@ -453,16 +459,17 @@ const BloodDonorRegisterPage: React.FC = () => {
                 type="submit"
                 disabled={loading}
                 className="px-6 py-3 text-body-sm w-full sm:flex-1 sm:max-w-48"
+                aria-busy={loading}
               >
                 {loading ? (
                   <>
-                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                    <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                         strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor"
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Procesando...
+                    <span>Procesando...</span>
                   </>) : 'Registrarse'}
               </Button>
               <Button
@@ -484,7 +491,7 @@ const BloodDonorRegisterPage: React.FC = () => {
         type={modal.type}
         onClose={closeModal}
       />
-    </div>
+    </main>
   );
 }
 

@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import Button from '../UI/Button/Button';
+import { useFocusTrap } from '../../hooks/useFocusTrap';
 
 interface ModalProps {
     isOpen: boolean;
@@ -10,6 +11,8 @@ interface ModalProps {
 }
 
 function Modal({ isOpen, onClose, title, message, type = 'info' }: ModalProps) {
+    const modalRef = useFocusTrap(isOpen);
+
     // Close modal on ESC key
     useEffect(() => {
         const handleEsc = (e: KeyboardEvent) => {
@@ -59,7 +62,13 @@ function Modal({ isOpen, onClose, title, message, type = 'info' }: ModalProps) {
     };
 
     return (
-        <div className="relative z-50 text-left" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div
+            className="relative z-50 text-left"
+            role="alertdialog"
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
+            aria-modal="true"
+        >
             {/* Background backdrop */}
             <div
                 className="fixed inset-0 bg-gray-500/75 transition-opacity"
@@ -70,7 +79,10 @@ function Modal({ isOpen, onClose, title, message, type = 'info' }: ModalProps) {
             {/* Modal panel centering container */}
             <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
                 <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                    <div className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+                    <div
+                        ref={modalRef as React.RefObject<HTMLDivElement>}
+                        className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6"
+                    >
                         <div>
                             {getIcon()}
                             <div className="mt-3 text-center sm:mt-5">
@@ -78,7 +90,7 @@ function Modal({ isOpen, onClose, title, message, type = 'info' }: ModalProps) {
                                     {title}
                                 </h3>
                                 <div className="mt-2">
-                                    <p className="text-body-sm text-gray-500 whitespace-pre-line">
+                                    <p className="text-body-sm text-gray-500 whitespace-pre-line" id="modal-description">
                                         {message}
                                     </p>
                                 </div>
