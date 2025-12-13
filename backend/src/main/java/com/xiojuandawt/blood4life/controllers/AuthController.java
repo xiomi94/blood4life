@@ -300,7 +300,7 @@ public class AuthController {
     return decodedString.split(":", 2);
   }
 
-  @GetMapping("/logout")
+  @PostMapping("/logout")
   public ResponseEntity<?> logout() {
     ResponseCookie jwtCookie = ResponseCookie.from("jwt", "")
         .httpOnly(true)
@@ -312,7 +312,7 @@ public class AuthController {
 
     Map<String, String> response = new HashMap<>();
     response.put("status", "OK");
-    response.put("message", "Logged out successfully");
+    response.put("message", "Sesión cerrada exitosamente");
 
     return ResponseEntity.ok()
         .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
@@ -323,7 +323,10 @@ public class AuthController {
   public ResponseEntity<?> getCurrentHospital(
       @org.springframework.security.core.annotation.AuthenticationPrincipal Hospital hospital) {
     if (hospital == null) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+      Map<String, String> error = new HashMap<>();
+      error.put("error",
+          "No tienes una sesión iniciada como hospital. Por favor, inicia sesión o cierra la sesión actual si estás usando una cuenta diferente.");
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
     HospitalDTO dto = new HospitalDTO(
         hospital.getId(),
@@ -340,7 +343,10 @@ public class AuthController {
   public ResponseEntity<?> getCurrentBloodDonor(
       @org.springframework.security.core.annotation.AuthenticationPrincipal BloodDonor bloodDonor) {
     if (bloodDonor == null) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+      Map<String, String> error = new HashMap<>();
+      error.put("error",
+          "No tienes una sesión iniciada como donante. Por favor, inicia sesión o cierra la sesión actual si estás usando una cuenta diferente.");
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
     BloodDonorDTO dto = new BloodDonorDTO();
     dto.setId(bloodDonor.getId());
@@ -361,7 +367,10 @@ public class AuthController {
   public ResponseEntity<?> getCurrentAdmin(
       @org.springframework.security.core.annotation.AuthenticationPrincipal com.xiojuandawt.blood4life.entities.Admin admin) {
     if (admin == null) {
-      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+      Map<String, String> error = new HashMap<>();
+      error.put("error",
+          "No tienes una sesión iniciada como administrador. Por favor, inicia sesión o cierra la sesión actual si estás usando una cuenta diferente.");
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
     Map<String, Object> response = new HashMap<>();
     response.put("id", admin.getId());

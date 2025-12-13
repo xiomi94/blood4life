@@ -64,6 +64,8 @@ public class SecurityConfig {
             .permitAll() // Allow public GET all campaigns
             .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
             .requestMatchers("/api/hospital/register", "/api/bloodDonor/register").permitAll()
+            .requestMatchers("/api/hospital/me", "/api/bloodDonor/me").permitAll() // Allow /me to handle own auth (MUST
+                                                                                   // be before generic rules)
             .requestMatchers("/api/campaign/**").authenticated()
             .requestMatchers("/api/bloodDonor/**").authenticated()
             .requestMatchers("/api/hospital/**").authenticated()
