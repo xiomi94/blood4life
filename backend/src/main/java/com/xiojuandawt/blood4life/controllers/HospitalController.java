@@ -33,8 +33,16 @@ public class HospitalController {
     // Check if authentication is null (unauthenticated request)
     if (authentication == null || authentication.getPrincipal() == null) {
       java.util.Map<String, String> error = new java.util.HashMap<>();
-      error.put("error", "Unauthorized - No authentication found");
+      error.put("error", "No tienes una sesión iniciada");
       return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    // Check if the authenticated user is actually a Hospital
+    if (!(authentication.getPrincipal() instanceof Hospital)) {
+      java.util.Map<String, String> error = new java.util.HashMap<>();
+      error.put("error",
+          "No puedes identificarte como hospital porque tu sesión actual es de un tipo de usuario diferente. Por favor, cierra sesión primero.");
+      return ResponseEntity.status(org.springframework.http.HttpStatus.FORBIDDEN).body(error);
     }
 
     Hospital me = (Hospital) authentication.getPrincipal();
