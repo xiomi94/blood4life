@@ -23,7 +23,6 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
                     const stepNumber = index + 1;
                     const isCompleted = stepNumber < currentStep;
                     const isCurrent = stepNumber === currentStep;
-                    const isUpcoming = stepNumber > currentStep;
 
                     return (
                         <li
@@ -34,10 +33,10 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
                             <div className="flex flex-col items-center">
                                 <div
                                     className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors ${isCompleted
-                                            ? 'bg-blue-600 border-blue-600 text-white'
-                                            : isCurrent
-                                                ? 'border-blue-600 text-blue-600 bg-white'
-                                                : 'border-gray-300 text-gray-400 bg-white'
+                                        ? 'bg-blue-600 border-blue-600 text-white'
+                                        : isCurrent
+                                            ? 'border-blue-600 text-blue-600 bg-white'
+                                            : 'border-gray-300 text-gray-400 bg-white'
                                         }`}
                                     aria-current={isCurrent ? 'step' : undefined}
                                 >

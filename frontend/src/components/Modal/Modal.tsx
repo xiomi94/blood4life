@@ -8,9 +8,10 @@ interface ModalProps {
     title: string;
     message: string;
     type?: 'success' | 'error' | 'info';
+    children?: React.ReactNode;
 }
 
-function Modal({ isOpen, onClose, title, message, type = 'info' }: ModalProps) {
+function Modal({ isOpen, onClose, title, message, type = 'info', children }: ModalProps) {
     const modalRef = useFocusTrap(isOpen);
 
     // Close modal on ESC key
@@ -97,12 +98,14 @@ function Modal({ isOpen, onClose, title, message, type = 'info' }: ModalProps) {
                             </div>
                         </div>
                         <div className="mt-5 sm:mt-6">
-                            <Button
-                                onClick={onClose}
-                                className="w-full justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm"
-                            >
-                                Entendido
-                            </Button>
+                            {children || (
+                                <Button
+                                    onClick={onClose}
+                                    className="w-full justify-center rounded-md px-3 py-2 text-sm font-semibold shadow-sm"
+                                >
+                                    Entendido
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </div>
