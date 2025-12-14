@@ -49,7 +49,7 @@ export const campaignService = {
     },
 
     getAllCampaigns: async (): Promise<Campaign[]> => {
-        const response = await axiosInstance.get('/campaign');
+        const response = await axiosInstance.get('/hospital/campaign/all');
         return response.data;
     },
 

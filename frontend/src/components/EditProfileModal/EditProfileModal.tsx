@@ -8,7 +8,7 @@ interface EditProfileModalProps {
 }
 
 const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
-    const { user, userType } = useAuth();
+    const { user, userType, refreshUser } = useAuth();
     const [formData, setFormData] = useState<any>({});
     const [imageFile, setImageFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -124,7 +124,7 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                 formDataToSend.append('firstName', formData.firstName || '');
                 formDataToSend.append('lastName', formData.lastName || '');
                 formDataToSend.append('gender', formData.gender || '');
-                formDataToSend.append('bloodTypeId', formData.bloodType?.id?.toString() || '');
+                formDataToSend.append('bloodTypeId', formData.bloodTypeId?.toString() || formData.bloodType?.id?.toString() || '');
                 formDataToSend.append('email', formData.email || '');
                 formDataToSend.append('phoneNumber', formData.phoneNumber || '');
                 if (formData.dateOfBirth) {
@@ -225,11 +225,20 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                 }
             }
 
-            // Refresh user data without full page reload
-            setTimeout(() => {
-                onClose();
-                window.location.reload();
-            }, 1500);
+            // Refresh user data from auth context
+            setMessage({ type: 'success', text: 'Perfil actualizado correctamente. Actualizando...' });
+
+            // Wait a moment to show success message, then refresh
+            setTimeout(async () => {
+                try {
+                    await refreshUser();
+                    onClose();
+                } catch (refreshError) {
+                    console.error('Error refreshing user data:', refreshError);
+                    // Fallback to reload if refresh fails
+                    window.location.reload();
+                }
+            }, 1000);
         } catch (error: any) {
             console.error('Update error:', error);
             setMessage({
@@ -371,6 +380,26 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                                         <option value="Femenino">Femenino</option>
                                         <option value="No binario">No binario</option>
                                         <option value="Prefiero no decirlo">Prefiero no decirlo</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Sangre</label>
+                                    <select
+                                        name="bloodTypeId"
+                                        value={formData.bloodTypeId || ''}
+                                        onChange={handleInputChange}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        required
+                                    >
+                                        <option value="">Seleccionar tipo de sangre</option>
+                                        <option value="1">A+</option>
+                                        <option value="2">A-</option>
+                                        <option value="3">B+</option>
+                                        <option value="4">B-</option>
+                                        <option value="5">AB+</option>
+                                        <option value="6">AB-</option>
+                                        <option value="7">O+</option>
+                                        <option value="8">O-</option>
                                     </select>
                                 </div>
                             </div>
