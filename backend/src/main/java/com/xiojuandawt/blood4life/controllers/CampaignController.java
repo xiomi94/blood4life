@@ -16,257 +16,257 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/campaign")
+@RequestMapping("/api/hospital/campaign")
 public class CampaignController {
 
-    @Autowired
-    private CampaignService campaignService;
+  @Autowired
+  private CampaignService campaignService;
 
-    @PostMapping
-    public ResponseEntity<?> createCampaign(
-            @RequestParam("name") String name,
-            @RequestParam("description") String description,
-            @RequestParam("startDate") String startDate,
-            @RequestParam("endDate") String endDate,
-            @RequestParam("location") String location,
-            @RequestParam("requiredDonorQuantity") Integer requiredDonorQuantity,
-            @RequestParam("requiredBloodTypes") List<String> requiredBloodTypes,
-            Authentication authentication) {
+  @GetMapping("/all")
+  public ResponseEntity<List<CampaignDTO>> getAllCampaigns() {
+    List<CampaignDTO> campaigns = campaignService.findAll();
+    return ResponseEntity.ok(campaigns);
+  }
 
-        try {
-            // Get authenticated hospital
-            Hospital hospital = (Hospital) authentication.getPrincipal();
+  @PostMapping("/create")
+  public ResponseEntity<?> createCampaign(
+    @RequestParam("name") String name,
+    @RequestParam("description") String description,
+    @RequestParam("startDate") String startDate,
+    @RequestParam("endDate") String endDate,
+    @RequestParam("location") String location,
+    @RequestParam("requiredDonorQuantity") Integer requiredDonorQuantity,
+    @RequestParam("requiredBloodTypes") List<String> requiredBloodTypes,
+    Authentication authentication) {
 
-            // Parse dates
-            LocalDate start = LocalDate.parse(startDate);
-            LocalDate end = LocalDate.parse(endDate);
+    try {
+      // Get authenticated hospital
+      Hospital hospital = (Hospital) authentication.getPrincipal();
 
-            // Validate dates
-            if (end.isBefore(start)) {
-                Map<String, String> body = new HashMap<>();
-                body.put("error", "La fecha de fin debe ser posterior o igual a la fecha de inicio");
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body(body);
-            }
+      // Parse dates
+      LocalDate start = LocalDate.parse(startDate);
+      LocalDate end = LocalDate.parse(endDate);
 
-            // Validate donor quantity
-            if (requiredDonorQuantity == null || requiredDonorQuantity <= 0) {
-                Map<String, String> body = new HashMap<>();
-                body.put("error", "La cantidad de donantes debe ser mayor a 0");
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body(body);
-            }
+      // Validate dates
+      if (end.isBefore(start)) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La fecha de fin debe ser posterior o igual a la fecha de inicio");
+        return ResponseEntity
+          .status(HttpStatus.BAD_REQUEST)
+          .body(body);
+      }
 
-            // Validate blood types
-            if (requiredBloodTypes == null || requiredBloodTypes.isEmpty()) {
-                Map<String, String> body = new HashMap<>();
-                body.put("error", "Debe seleccionar al menos un tipo de sangre");
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body(body);
-            }
+      // Validate donor quantity
+      if (requiredDonorQuantity == null || requiredDonorQuantity <= 0) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La cantidad de donantes debe ser mayor a 0");
+        return ResponseEntity
+          .status(HttpStatus.BAD_REQUEST)
+          .body(body);
+      }
 
-            // Create campaign
-            Campaign campaign = new Campaign();
-            campaign.setHospital(hospital);
-            campaign.setName(name);
-            campaign.setDescription(description);
-            campaign.setStartDate(start);
-            campaign.setEndDate(end);
-            campaign.setLocation(location);
-            campaign.setRequiredDonorQuantity(requiredDonorQuantity);
+      // Validate blood types
+      if (requiredBloodTypes == null || requiredBloodTypes.isEmpty()) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "Debe seleccionar al menos un tipo de sangre");
+        return ResponseEntity
+          .status(HttpStatus.BAD_REQUEST)
+          .body(body);
+      }
 
-            // Save campaign with blood types
-            CampaignDTO createdCampaign = campaignService.createCampaign(campaign, requiredBloodTypes);
+      // Create campaign
+      Campaign campaign = new Campaign();
+      campaign.setHospital(hospital);
+      campaign.setName(name);
+      campaign.setDescription(description);
+      campaign.setStartDate(start);
+      campaign.setEndDate(end);
+      campaign.setLocation(location);
+      campaign.setRequiredDonorQuantity(requiredDonorQuantity);
 
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(createdCampaign);
+      // Save campaign with blood types
+      CampaignDTO createdCampaign = campaignService.createCampaign(campaign, requiredBloodTypes);
 
-        } catch (org.springframework.dao.DataIntegrityViolationException e) {
-            Map<String, String> body = new HashMap<>();
-            body.put("error", "Error de base de datos: Verifica que todos los datos sean válidos");
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(body);
-        } catch (java.time.format.DateTimeParseException e) {
-            Map<String, String> body = new HashMap<>();
-            body.put("error", "Formato de fecha inválido. Use el formato AAAA-MM-DD");
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(body);
-        } catch (ClassCastException e) {
-            Map<String, String> body = new HashMap<>();
-            body.put("error", "Usuario no autorizado. Solo hospitales pueden crear campañas");
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(body);
-        } catch (Exception e) {
-            // Log the actual error for debugging
-            System.err.println("Error creating campaign: " + e.getClass().getName() + ": " + e.getMessage());
-            e.printStackTrace();
+      return ResponseEntity
+        .status(HttpStatus.CREATED)
+        .body(createdCampaign);
 
-            Map<String, String> body = new HashMap<>();
-            body.put("error", "No se pudo crear la campaña. Por favor, verifica todos los campos e intenta de nuevo");
-            body.put("details", e.getMessage());
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(body);
-        }
+    } catch (org.springframework.dao.DataIntegrityViolationException e) {
+      Map<String, String> body = new HashMap<>();
+      body.put("error", "Error de base de datos: Verifica que todos los datos sean válidos");
+      return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(body);
+    } catch (java.time.format.DateTimeParseException e) {
+      Map<String, String> body = new HashMap<>();
+      body.put("error", "Formato de fecha inválido. Use el formato AAAA-MM-DD");
+      return ResponseEntity
+        .status(HttpStatus.BAD_REQUEST)
+        .body(body);
+    } catch (ClassCastException e) {
+      Map<String, String> body = new HashMap<>();
+      body.put("error", "Usuario no autorizado. Solo hospitales pueden crear campañas");
+      return ResponseEntity
+        .status(HttpStatus.FORBIDDEN)
+        .body(body);
+    } catch (Exception e) {
+      // Log the actual error for debugging
+      System.err.println("Error creating campaign: " + e.getClass().getName() + ": " + e.getMessage());
+      e.printStackTrace();
+
+      Map<String, String> body = new HashMap<>();
+      body.put("error", "No se pudo crear la campaña. Por favor, verifica todos los campos e intenta de nuevo");
+      body.put("details", e.getMessage());
+      return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(body);
     }
+  }
 
-    @GetMapping
-    public ResponseEntity<List<CampaignDTO>> getAllCampaigns() {
-        List<CampaignDTO> campaigns = campaignService.findAll();
-        return ResponseEntity.ok(campaigns);
+  @GetMapping("/{hospitalId}")
+  public ResponseEntity<List<CampaignDTO>> getCampaignsByHospital(@PathVariable Integer hospitalId) {
+    List<CampaignDTO> campaigns = campaignService.findByHospitalId(hospitalId);
+    return ResponseEntity.ok(campaigns);
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getCampaignById(@PathVariable Integer id) {
+    return campaignService.findById(id)
+      .map(campaign -> ResponseEntity.ok(campaignService.parseEntityToDTO(campaign)))
+      .orElse(ResponseEntity.notFound().build());
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<?> updateCampaign(
+    @PathVariable Integer id,
+    @RequestParam("name") String name,
+    @RequestParam("description") String description,
+    @RequestParam("startDate") String startDate,
+    @RequestParam("endDate") String endDate,
+    @RequestParam("location") String location,
+    @RequestParam("requiredDonorQuantity") Integer requiredDonorQuantity,
+    @RequestParam("requiredBloodTypes") List<String> requiredBloodTypes,
+    Authentication authentication) {
+
+    try {
+      // Get authenticated hospital
+      Hospital hospital = (Hospital) authentication.getPrincipal();
+
+      // Find existing campaign
+      Campaign existingCampaign = campaignService.findById(id)
+        .orElseThrow(() -> new RuntimeException("Campaign not found"));
+
+      // Verify ownership
+      if (existingCampaign.getHospital().getId() != hospital.getId()) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "No tienes permisos para editar esta campaña");
+        return ResponseEntity
+          .status(HttpStatus.FORBIDDEN)
+          .body(body);
+      }
+
+      // Parse dates
+      LocalDate start = LocalDate.parse(startDate);
+      LocalDate end = LocalDate.parse(endDate);
+
+      // Validate dates
+      if (end.isBefore(start)) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La fecha de fin debe ser posterior o igual a la fecha de inicio");
+        return ResponseEntity
+          .status(HttpStatus.BAD_REQUEST)
+          .body(body);
+      }
+
+      // Validate donor quantity
+      if (requiredDonorQuantity == null || requiredDonorQuantity <= 0) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La cantidad de donantes debe ser mayor a 0");
+        return ResponseEntity
+          .status(HttpStatus.BAD_REQUEST)
+          .body(body);
+      }
+
+      // Validate blood types
+      if (requiredBloodTypes == null || requiredBloodTypes.isEmpty()) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "Debe seleccionar al menos un tipo de sangre");
+        return ResponseEntity
+          .status(HttpStatus.BAD_REQUEST)
+          .body(body);
+      }
+
+      // Update campaign
+      Campaign updatedCampaign = new Campaign();
+      updatedCampaign.setName(name);
+      updatedCampaign.setDescription(description);
+      updatedCampaign.setStartDate(start);
+      updatedCampaign.setEndDate(end);
+      updatedCampaign.setLocation(location);
+      updatedCampaign.setRequiredDonorQuantity(requiredDonorQuantity);
+
+      // Update campaign with blood types
+      CampaignDTO updated = campaignService.updateCampaign(id, updatedCampaign, requiredBloodTypes);
+
+      return ResponseEntity.ok(updated);
+
+    } catch (ClassCastException e) {
+      Map<String, String> body = new HashMap<>();
+      body.put("error", "Usuario no autorizado");
+      return ResponseEntity
+        .status(HttpStatus.FORBIDDEN)
+        .body(body);
+    } catch (Exception e) {
+      Map<String, String> body = new HashMap<>();
+      body.put("error", "Error al actualizar la campaña: " + e.getMessage());
+      return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(body);
     }
+  }
 
-    @GetMapping("/hospital/{hospitalId}")
-    public ResponseEntity<List<CampaignDTO>> getCampaignsByHospital(@PathVariable Integer hospitalId) {
-        List<CampaignDTO> campaigns = campaignService.findByHospitalId(hospitalId);
-        return ResponseEntity.ok(campaigns);
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> deleteCampaign(
+    @PathVariable Integer id,
+    Authentication authentication) {
+
+    try {
+      // Get authenticated hospital
+      Hospital hospital = (Hospital) authentication.getPrincipal();
+
+      // Find existing campaign
+      Campaign existingCampaign = campaignService.findById(id)
+        .orElseThrow(() -> new RuntimeException("Campaign not found"));
+
+      // Verify ownership
+      if (existingCampaign.getHospital().getId() != hospital.getId()) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "No tienes permisos para eliminar esta campaña");
+        return ResponseEntity
+          .status(HttpStatus.FORBIDDEN)
+          .body(body);
+      }
+
+      // Delete campaign
+      campaignService.deleteCampaign(id);
+
+      Map<String, String> body = new HashMap<>();
+      body.put("status", "OK");
+      body.put("message", "Campaña eliminada exitosamente");
+      return ResponseEntity.ok(body);
+
+    } catch (ClassCastException e) {
+      Map<String, String> body = new HashMap<>();
+      body.put("error", "Usuario no autorizado");
+      return ResponseEntity
+        .status(HttpStatus.FORBIDDEN)
+        .body(body);
+    } catch (Exception e) {
+      Map<String, String> body = new HashMap<>();
+      body.put("error", "Error al eliminar la campaña: " + e.getMessage());
+      return ResponseEntity
+        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(body);
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getCampaignById(@PathVariable Integer id) {
-        return campaignService.findById(id)
-                .map(campaign -> ResponseEntity.ok(campaignService.parseEntityToDTO(campaign)))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateCampaign(
-            @PathVariable Integer id,
-            @RequestParam("name") String name,
-            @RequestParam("description") String description,
-            @RequestParam("startDate") String startDate,
-            @RequestParam("endDate") String endDate,
-            @RequestParam("location") String location,
-            @RequestParam("requiredDonorQuantity") Integer requiredDonorQuantity,
-            @RequestParam("requiredBloodTypes") List<String> requiredBloodTypes,
-            Authentication authentication) {
-
-        try {
-            // Get authenticated hospital
-            Hospital hospital = (Hospital) authentication.getPrincipal();
-
-            // Find existing campaign
-            Campaign existingCampaign = campaignService.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Campaign not found"));
-
-            // Verify ownership
-            if (existingCampaign.getHospital().getId() != hospital.getId()) {
-                Map<String, String> body = new HashMap<>();
-                body.put("error", "No tienes permisos para editar esta campaña");
-                return ResponseEntity
-                        .status(HttpStatus.FORBIDDEN)
-                        .body(body);
-            }
-
-            // Parse dates
-            LocalDate start = LocalDate.parse(startDate);
-            LocalDate end = LocalDate.parse(endDate);
-
-            // Validate dates
-            if (end.isBefore(start)) {
-                Map<String, String> body = new HashMap<>();
-                body.put("error", "La fecha de fin debe ser posterior o igual a la fecha de inicio");
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body(body);
-            }
-
-            // Validate donor quantity
-            if (requiredDonorQuantity == null || requiredDonorQuantity <= 0) {
-                Map<String, String> body = new HashMap<>();
-                body.put("error", "La cantidad de donantes debe ser mayor a 0");
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body(body);
-            }
-
-            // Validate blood types
-            if (requiredBloodTypes == null || requiredBloodTypes.isEmpty()) {
-                Map<String, String> body = new HashMap<>();
-                body.put("error", "Debe seleccionar al menos un tipo de sangre");
-                return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
-                        .body(body);
-            }
-
-            // Update campaign
-            Campaign updatedCampaign = new Campaign();
-            updatedCampaign.setName(name);
-            updatedCampaign.setDescription(description);
-            updatedCampaign.setStartDate(start);
-            updatedCampaign.setEndDate(end);
-            updatedCampaign.setLocation(location);
-            updatedCampaign.setRequiredDonorQuantity(requiredDonorQuantity);
-
-            // Update campaign with blood types
-            CampaignDTO updated = campaignService.updateCampaign(id, updatedCampaign, requiredBloodTypes);
-
-            return ResponseEntity.ok(updated);
-
-        } catch (ClassCastException e) {
-            Map<String, String> body = new HashMap<>();
-            body.put("error", "Usuario no autorizado");
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(body);
-        } catch (Exception e) {
-            Map<String, String> body = new HashMap<>();
-            body.put("error", "Error al actualizar la campaña: " + e.getMessage());
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(body);
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCampaign(
-            @PathVariable Integer id,
-            Authentication authentication) {
-
-        try {
-            // Get authenticated hospital
-            Hospital hospital = (Hospital) authentication.getPrincipal();
-
-            // Find existing campaign
-            Campaign existingCampaign = campaignService.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Campaign not found"));
-
-            // Verify ownership
-            if (existingCampaign.getHospital().getId() != hospital.getId()) {
-                Map<String, String> body = new HashMap<>();
-                body.put("error", "No tienes permisos para eliminar esta campaña");
-                return ResponseEntity
-                        .status(HttpStatus.FORBIDDEN)
-                        .body(body);
-            }
-
-            // Delete campaign
-            campaignService.deleteCampaign(id);
-
-            Map<String, String> body = new HashMap<>();
-            body.put("status", "OK");
-            body.put("message", "Campaña eliminada exitosamente");
-            return ResponseEntity.ok(body);
-
-        } catch (ClassCastException e) {
-            Map<String, String> body = new HashMap<>();
-            body.put("error", "Usuario no autorizado");
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(body);
-        } catch (Exception e) {
-            Map<String, String> body = new HashMap<>();
-            body.put("error", "Error al eliminar la campaña: " + e.getMessage());
-            return ResponseEntity
-                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(body);
-        }
-    }
+  }
 }

@@ -21,8 +21,21 @@ public class AppointmentStatus {
     @OneToMany(mappedBy = "appointmentStatus")
     private List<Appointment> appointments;
 
-    // getters y setters
-    public Integer getId() {
+  public AppointmentStatus() {
+  }
+
+  public AppointmentStatus(String statusName, List<Appointment> appointments) {
+    this.statusName = statusName;
+    this.appointments = appointments;
+  }
+
+  public AppointmentStatus(Integer id, String statusName, List<Appointment> appointments) {
+    this.id = id;
+    this.statusName = statusName;
+    this.appointments = appointments;
+  }
+
+  public Integer getId() {
         return id;
     }
 

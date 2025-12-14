@@ -10,8 +10,6 @@ import com.xiojuandawt.blood4life.services.BloodDonorService;
 import com.xiojuandawt.blood4life.services.HospitalService;
 import com.xiojuandawt.blood4life.services.ImageService;
 import com.xiojuandawt.blood4life.services.JwtService;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -112,7 +110,6 @@ public class AuthController {
 
   @PostMapping("/bloodDonor/login")
   public ResponseEntity<?> loginBloodDonor(@RequestHeader("Authorization") String authHeader) {
-    System.out.println("AUTH DEBUG: loginBloodDonor called");
     try {
 
       String[] credentials = extractCredentials(authHeader);
@@ -121,11 +118,9 @@ public class AuthController {
 
       Optional<BloodDonor> donorOpt = bloodDonorService.findByEmail(email);
       if (donorOpt.isEmpty()) {
-        System.out.println("AUTH DEBUG: BloodDonor not found for email: " + email);
         return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
       }
       if (!passwordEncoder.matches(password, donorOpt.get().getPassword())) {
-        System.out.println("AUTH DEBUG: Password mismatch for email: " + email);
         return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
       }
 
