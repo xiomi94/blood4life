@@ -13,6 +13,7 @@ public class Hospital {
   private String cif;
   private String name;
   private String address;
+  private String postalCode;
   private String email;
   private String phoneNumber;
   private String password;
@@ -24,23 +25,27 @@ public class Hospital {
   public Hospital() {
   }
 
-  public Hospital(int id, String cif, String name, String address, String email, String phoneNumber, String password,
+  public Hospital(int id, String cif, String name, String address, String postalCode, String email, String phoneNumber,
+      String password,
       Image image) {
     this.id = id;
     this.cif = cif;
     this.name = name;
     this.address = address;
+    this.postalCode = postalCode;
     this.email = email;
     this.phoneNumber = phoneNumber;
     this.password = password;
     this.image = image;
   }
 
-  public Hospital(String cif, String name, String address, String email, String phoneNumber, String password,
+  public Hospital(String cif, String name, String address, String postalCode, String email, String phoneNumber,
+      String password,
       Image image) {
     this.cif = cif;
     this.name = name;
     this.address = address;
+    this.postalCode = postalCode;
     this.email = email;
     this.phoneNumber = phoneNumber;
     this.password = password;
@@ -69,6 +74,14 @@ public class Hospital {
 
   public void setAddress(String address) {
     this.address = address;
+  }
+
+  public String getPostalCode() {
+    return postalCode;
+  }
+
+  public void setPostalCode(String postalCode) {
+    this.postalCode = postalCode;
   }
 
   public String getName() {
@@ -118,6 +131,7 @@ public class Hospital {
         ", cif='" + cif + '\'' +
         ", name='" + name + '\'' +
         ", address='" + address + '\'' +
+        ", postalCode='" + postalCode + '\'' +
         ", email='" + email + '\'' +
         ", phoneNumber='" + phoneNumber + '\'' +
         ", password='" + password + '\'' +
