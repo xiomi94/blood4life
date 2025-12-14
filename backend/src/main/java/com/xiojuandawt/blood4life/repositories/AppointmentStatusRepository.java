@@ -4,5 +4,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.xiojuandawt.blood4life.entities.AppointmentStatus;
 
-public interface AppointmentStatusRepository extends JpaRepository<AppointmentStatus, Long> {
+public interface AppointmentStatusRepository extends JpaRepository<AppointmentStatus, Integer> {
 }

@@ -12,15 +12,13 @@ public class Image {
   @Column(name = "file_name")
   private String name;
 
-  // Constructor vacío (obligatorio para JPA)
   public Image() {}
 
-  // Constructor con parámetros
   public Image(String name) {
     this.name = name;
   }
 
-  // Getters y Setters
+
   public Integer getId() {
     return id;
   }
