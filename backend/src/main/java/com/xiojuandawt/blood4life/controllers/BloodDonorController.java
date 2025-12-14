@@ -45,7 +45,11 @@ public class BloodDonorController {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
-    BloodDonor me = (BloodDonor) authentication.getPrincipal();
+    // Get the ID from authentication but fetch FRESH data from database
+    BloodDonor authUser = (BloodDonor) authentication.getPrincipal();
+    BloodDonor me = bloodDonorService.findByIdWithRole(authUser.getId())
+        .orElseThrow(() -> new ResourceNotFoundException());
+
     String imageName = me.getImage() != null ? me.getImage().getName() : null;
     BloodDonorDTO meDTO = new BloodDonorDTO(
         me.getId(),

@@ -76,16 +76,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       }
     }
 
-    // If no token found, continue without authentication
-    if (token == null) {
-      System.out.println("No JWT token found, continuing without auth");
-      System.out.println("============================");
-      chain.doFilter(request, response);
-      return;
-    }
-
-    System.out.println("JWT token found!");
-
     // With our service we obtain the data stored in the token
     try {
       // We tried to read the token
@@ -105,7 +95,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             break;
           case "hospital":
             this.authenticatedByHospital(userId, token);
-            System.out.println("Hospital authentication set in SecurityContext");
             break;
           case "admin":
             this.authenticatedByAdmin(userId, token);
@@ -120,8 +109,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       System.out.println("Token validation failed: " + e.getMessage());
       SecurityContextHolder.clearContext();
     }
-
-    System.out.println("============================");
 
     chain.doFilter(request, response);
   }

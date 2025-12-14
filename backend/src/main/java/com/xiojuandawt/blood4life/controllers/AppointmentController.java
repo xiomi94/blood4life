@@ -49,8 +49,7 @@ public class AppointmentController {
 
   @GetMapping("/{id}")
   public ResponseEntity<AppointmentDTO> getAppointmentById(
-    @PathVariable Integer id
-  ) {
+      @PathVariable Integer id) {
 
     Optional<Appointment> optionalAppointment = appointmentRepository.findById(id);
 
@@ -63,7 +62,7 @@ public class AppointmentController {
     AppointmentDTO dto = new AppointmentDTO();
 
     dto.setId(appointment.getId());
-    dto.setAppointmentStatus(appointment.getAppointmentStatus()); // ✔ correcto
+    dto.setAppointmentStatus(appointment.getAppointmentStatus()); // âœ” correcto
     dto.setCampaignId(appointment.getCampaign().getId());
     dto.setBloodDonorId(appointment.getBloodDonor().getId());
     dto.setHospitalComment(appointment.getHospitalComment());
@@ -74,31 +73,27 @@ public class AppointmentController {
 
   @PostMapping("/create")
   public ResponseEntity<AppointmentDTO> createAppointment(
-    @RequestBody AppointmentDTO dto
-  ) {
+      @RequestBody AppointmentDTO dto) {
     Appointment appointment = new Appointment();
 
     appointment.setAppointmentStatus(
-      appointmentStatusRepository.findById(dto.getAppointmentStatus().getId())
-        .orElseThrow(() -> new RuntimeException("Estado no encontrado"))
-    );
+        appointmentStatusRepository.findById(dto.getAppointmentStatus().getId())
+            .orElseThrow(() -> new RuntimeException("Estado no encontrado")));
 
     appointment.setCampaign(
-      campaignRepository.findById(dto.getCampaignId())
-        .orElseThrow(() -> new RuntimeException("Campaña no encontrada"))
-    );
+        campaignRepository.findById(dto.getCampaignId())
+            .orElseThrow(() -> new RuntimeException("CampaÃ±a no encontrada")));
 
     appointment.setBloodDonor(
-      bloodDonorRepository.findById(dto.getBloodDonorId())
-        .orElseThrow(() -> new RuntimeException("Donante no encontrado"))
-    );
+        bloodDonorRepository.findById(dto.getBloodDonorId())
+            .orElseThrow(() -> new RuntimeException("Donante no encontrado")));
 
     appointment.setHospitalComment(dto.getHospitalComment());
     appointment.setDateAppointment(dto.getDateAppointment());
 
     Appointment saved = appointmentRepository.save(appointment);
 
-    // --- Convert entity → DTO ---
+    // --- Convert entity â†’ DTO ---
     AppointmentDTO result = new AppointmentDTO();
     result.setId(saved.getId());
     result.setAppointmentStatus(saved.getAppointmentStatus());
@@ -112,9 +107,8 @@ public class AppointmentController {
 
   @PutMapping("/update/{id}")
   public ResponseEntity<AppointmentDTO> updateAppointment(
-    @PathVariable Integer id,
-    @RequestBody AppointmentDTO dto
-  ) {
+      @PathVariable Integer id,
+      @RequestBody AppointmentDTO dto) {
 
     Optional<Appointment> optional = appointmentRepository.findById(id);
 
@@ -126,26 +120,23 @@ public class AppointmentController {
 
     // Update fields
     appointment.setAppointmentStatus(
-      appointmentStatusRepository.findById(dto.getAppointmentStatus().getId())
-        .orElseThrow(() -> new RuntimeException("Estado no encontrado"))
-    );
+        appointmentStatusRepository.findById(dto.getAppointmentStatus().getId())
+            .orElseThrow(() -> new RuntimeException("Estado no encontrado")));
 
     appointment.setCampaign(
-      campaignRepository.findById(dto.getCampaignId())
-        .orElseThrow(() -> new RuntimeException("Campaña no encontrada"))
-    );
+        campaignRepository.findById(dto.getCampaignId())
+            .orElseThrow(() -> new RuntimeException("CampaÃ±a no encontrada")));
 
     appointment.setBloodDonor(
-      bloodDonorRepository.findById(dto.getBloodDonorId())
-        .orElseThrow(() -> new RuntimeException("Donante no encontrado"))
-    );
+        bloodDonorRepository.findById(dto.getBloodDonorId())
+            .orElseThrow(() -> new RuntimeException("Donante no encontrado")));
 
     appointment.setHospitalComment(dto.getHospitalComment());
     appointment.setDateAppointment(dto.getDateAppointment());
 
     Appointment updated = appointmentRepository.save(appointment);
 
-    // Convert entity → DTO
+    // Convert entity â†’ DTO
     AppointmentDTO result = new AppointmentDTO();
     result.setId(updated.getId());
     result.setAppointmentStatus(updated.getAppointmentStatus());
@@ -159,8 +150,7 @@ public class AppointmentController {
 
   @DeleteMapping("delete/{id}")
   public ResponseEntity<Void> deleteAppointment(
-    @PathVariable Integer id
-  ) {
+      @PathVariable Integer id) {
 
     if (!appointmentRepository.existsById(id)) {
       return ResponseEntity.notFound().build();
@@ -169,6 +159,28 @@ public class AppointmentController {
     appointmentRepository.deleteById(id);
 
     return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/donor/{donorId}")
+  public List<AppointmentDTO> getAppointmentsByDonor(
+      @PathVariable Integer donorId) {
+    List<Appointment> appointments = appointmentRepository
+        .findByBloodDonorIdOrderByDateAppointmentDesc(donorId);
+    List<AppointmentDTO> dtoList = new ArrayList<>();
+
+    for (Appointment appointment : appointments) {
+      AppointmentDTO dto = new AppointmentDTO();
+      dto.setId(appointment.getId());
+      dto.setAppointmentStatus(appointment.getAppointmentStatus());
+      dto.setCampaignId(appointment.getCampaign().getId());
+      dto.setBloodDonorId(appointment.getBloodDonor().getId());
+      dto.setHospitalComment(appointment.getHospitalComment());
+      dto.setDateAppointment(appointment.getDateAppointment());
+
+      dtoList.add(dto);
+    }
+
+    return dtoList;
   }
 
 }
