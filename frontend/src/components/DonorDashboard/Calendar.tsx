@@ -104,9 +104,9 @@ export const Calendar = ({ currentDate, allCampaigns, onMonthChange, onDayClick 
           {days}
         </div>
         <div className="mt-4 flex flex-wrap gap-2 text-xs justify-center text-gray-500">
-          <div className="flex items-center gap-1"><div className="w-3 h-3 bg-green-500 rounded"></div> Activa</div>
-          <div className="flex items-center gap-1"><div className="w-3 h-3 bg-blue-400 rounded"></div> Futura</div>
-          <div className="flex items-center gap-1"><div className="w-3 h-3 bg-red-500 rounded"></div> Pasada</div>
+          <div className="flex items-center gap-1"><div className="w-3 h-3 bg-red-500 rounded"></div> Realizadas</div>
+          <div className="flex items-center gap-1"><div className="w-3 h-3 bg-green-500 rounded"></div> Activas</div>
+          <div className="flex items-center gap-1"><div className="w-3 h-3 bg-blue-400 rounded"></div> Futuras</div>
         </div>
       </div>
     </section>

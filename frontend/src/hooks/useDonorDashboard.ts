@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useWebSocket } from './useWebSocket';
 import { campaignService, type Campaign } from '../services/campaignService';
 import { appointmentService, type Appointment } from '../services/appointmentService';
 import { dashboardService, type DashboardStats } from '../services/dashboardService';
 
 export const useDonorDashboard = () => {
   const { user } = useAuth();
+  const { subscribe } = useWebSocket();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -22,6 +24,23 @@ export const useDonorDashboard = () => {
       fetchMyAppointments();
     }
   }, [user]);
+
+  // WebSocket subscription for real-time campaign updates
+  useEffect(() => {
+    const unsubscribe = subscribe('/topic/campaigns', (message) => {
+      console.log('📨 Donor Dashboard - Received WebSocket message:', message);
+      if (message.type === 'CAMPAIGN_CREATED' ||
+        message.type === 'CAMPAIGN_UPDATED' ||
+        message.type === 'CAMPAIGN_DELETED') {
+        console.log('🔄 Refreshing campaigns in donor dashboard');
+        fetchAllCampaigns();
+      }
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [subscribe]);
 
   const fetchStats = async () => {
     try {
