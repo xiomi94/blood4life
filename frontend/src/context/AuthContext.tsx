@@ -23,6 +23,7 @@ interface UserProfile {
   dateOfBirth?: string;
   cif?: string;
   address?: string;
+  postalCode?: string;
 }
 
 interface AuthContextType {
@@ -55,10 +56,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return;
     }
 
-    // Define the order to check based on saved type
-    const checkOrder: Array<'bloodDonor' | 'hospital' | 'admin'> = savedUserType
-      ? [savedUserType, ...(['bloodDonor', 'hospital', 'admin'].filter(t => t !== savedUserType) as Array<'bloodDonor' | 'hospital' | 'admin'>)]
-      : ['bloodDonor', 'hospital', 'admin'];
+    // Only check the saved user type first, then fallback to others if it fails
+    const checkOrder: Array<'bloodDonor' | 'hospital' | 'admin'> = [
+      savedUserType,
+      ...(['bloodDonor', 'hospital', 'admin'].filter(t => t !== savedUserType) as Array<'bloodDonor' | 'hospital' | 'admin'>)
+    ];
 
     for (const type of checkOrder) {
       try {

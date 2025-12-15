@@ -39,12 +39,12 @@ export const campaignService = {
             formData.append('requiredBloodTypes', bloodType);
         });
 
-        const response = await axiosInstance.post('/campaign', formData);
+        const response = await axiosInstance.post('/hospital/campaign/create', formData);
         return response.data;
     },
 
     getCampaignsByHospital: async (hospitalId: number): Promise<Campaign[]> => {
-        const response = await axiosInstance.get(`/campaign/hospital/${hospitalId}`);
+        const response = await axiosInstance.get(`/hospital/campaign/hospital/${hospitalId}`);
         return response.data;
     },
 
@@ -54,7 +54,7 @@ export const campaignService = {
     },
 
     getCampaignById: async (id: number): Promise<Campaign> => {
-        const response = await axiosInstance.get(`/campaign/${id}`);
+        const response = await axiosInstance.get(`/hospital/campaign/${id}`);
         return response.data;
     },
 
@@ -72,11 +72,11 @@ export const campaignService = {
             formData.append('requiredBloodTypes', bloodType);
         });
 
-        const response = await axiosInstance.put(`/campaign/${id}`, formData);
+        const response = await axiosInstance.put(`/hospital/campaign/${id}`, formData);
         return response.data;
     },
 
     deleteCampaign: async (id: number): Promise<void> => {
-        await axiosInstance.delete(`/campaign/${id}`);
+        await axiosInstance.delete(`/hospital/campaign/${id}`);
     }
 };

@@ -12,6 +12,7 @@ interface Hospital {
   cif: string;
   name: string;
   address: string;
+  postalCode: string;
   email: string;
   phoneNumber: string;
 }
@@ -20,6 +21,7 @@ interface HospitalFormData {
   cif: string;
   name: string;
   address: string;
+  postalCode: string;
   email: string;
   phoneNumber: string;
   password: string;
@@ -29,6 +31,7 @@ interface FormErrors {
   cif?: string;
   name?: string;
   address?: string;
+  postalCode?: string;
   email?: string;
   phoneNumber?: string;
   password?: string;
@@ -40,6 +43,7 @@ const HospitalRegisterPage: React.FC = () => {
     cif: '',
     name: '',
     address: '',
+    postalCode: '',
     email: '',
     phoneNumber: '',
     password: ''
@@ -79,7 +83,7 @@ const HospitalRegisterPage: React.FC = () => {
   );
 
   useEffect(() => {
-    const hospitalData: Hospital = { id: 0, cif: '', name: '', address: '', email: '', phoneNumber: '' };
+    const hospitalData: Hospital = { id: 0, cif: '', name: '', address: '', postalCode: '', email: '', phoneNumber: '' };
     setCurrentHospital(hospitalData);
   }, []);
 
@@ -132,6 +136,14 @@ const HospitalRegisterPage: React.FC = () => {
         if (lettersOnly.length < 3) return 'La dirección debe contener al menos 3 letras';
         isValidFormat = commonPatterns.some(pattern => pattern.test(value.trim()));
         if (!isValidFormat) return 'Formato de dirección no reconocido. Ejemplos: "Calle Mayor 123", "Av. Constitución 45"';
+        return '';
+
+      case 'postalCode':
+        if (!value.trim()) return 'El código postal es obligatorio';
+        if (digitsOnly.length !== 5) return 'El código postal debe tener exactamente 5 dígitos';
+        const provinceCode = parseInt(digitsOnly.substring(0, 2));
+        if (provinceCode < 1 || provinceCode > 52) return 'Código postal no válido (debe estar entre 01000 y 52999)';
+        if (/^(\d)\1{4}$/.test(digitsOnly)) return 'Código postal no válido';
         return '';
 
       case 'email':
@@ -228,7 +240,7 @@ const HospitalRegisterPage: React.FC = () => {
 
   const resetForm = () => {
     clearPersistedData();
-    setFormData({ cif: '', name: '', address: '', email: '', phoneNumber: '', password: '' });
+    setFormData({ cif: '', name: '', address: '', postalCode: '', email: '', phoneNumber: '', password: '' });
     setProfileImage(null);
     setErrors({});
     setShowPassword(false);
@@ -314,6 +326,19 @@ const HospitalRegisterPage: React.FC = () => {
                 error={errors.address}
                 placeholder="Ingrese dirección"
                 autoComplete="street-address"
+              />
+              <FormField
+                type="text"
+                id="postalCode"
+                name="postalCode"
+                label="Código Postal"
+                value={formData.postalCode}
+                onChange={handleInputChange}
+                required
+                disabled={loading}
+                error={errors.postalCode}
+                placeholder="Ingrese código postal"
+                autoComplete="postal-code"
               />
               <FormField
                 type="email"
