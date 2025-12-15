@@ -7,10 +7,12 @@ import com.xiojuandawt.blood4life.services.CampaignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,9 @@ public class CampaignController {
 
   @Autowired
   private CampaignService campaignService;
+
+  @Autowired
+  private SimpMessagingTemplate messagingTemplate;
 
   @GetMapping("/all")
   public ResponseEntity<List<CampaignDTO>> getAllCampaigns() {
@@ -86,6 +91,13 @@ public class CampaignController {
 
       // Save campaign with blood types
       CampaignDTO createdCampaign = campaignService.createCampaign(campaign, requiredBloodTypes);
+
+      // Send WebSocket notification
+      Map<String, Object> wsMessage = Map.of(
+          "type", "CAMPAIGN_CREATED",
+          "campaignId", createdCampaign.getId(),
+          "timestamp", ZonedDateTime.now().toString());
+      messagingTemplate.convertAndSend("/topic/campaigns", wsMessage);
 
       return ResponseEntity
           .status(HttpStatus.CREATED)
@@ -208,6 +220,13 @@ public class CampaignController {
       // Update campaign with blood types
       CampaignDTO updated = campaignService.updateCampaign(id, updatedCampaign, requiredBloodTypes);
 
+      // Send WebSocket notification
+      Map<String, Object> wsMessage = Map.of(
+          "type", "CAMPAIGN_UPDATED",
+          "campaignId", updated.getId(),
+          "timestamp", ZonedDateTime.now().toString());
+      messagingTemplate.convertAndSend("/topic/campaigns", wsMessage);
+
       return ResponseEntity.ok(updated);
 
     } catch (ClassCastException e) {
@@ -249,6 +268,13 @@ public class CampaignController {
 
       // Delete campaign
       campaignService.deleteCampaign(id);
+
+      // Send WebSocket notification
+      Map<String, Object> wsMessage = Map.of(
+          "type", "CAMPAIGN_DELETED",
+          "campaignId", id,
+          "timestamp", ZonedDateTime.now().toString());
+      messagingTemplate.convertAndSend("/topic/campaigns", wsMessage);
 
       Map<String, String> body = new HashMap<>();
       body.put("status", "OK");
