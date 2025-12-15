@@ -189,6 +189,7 @@ public class AuthController {
       responseDTO.setCif(hospital.getCif());
       responseDTO.setName(hospital.getName());
       responseDTO.setAddress(hospital.getAddress());
+      responseDTO.setPostalCode(hospital.getPostalCode());
       responseDTO.setEmail(hospital.getEmail());
       responseDTO.setPhoneNumber(hospital.getPhoneNumber());
       responseDTO.setImageName(imageEntity != null ? imageEntity.getName() : null);
@@ -328,6 +329,7 @@ public class AuthController {
         hospital.getCif(),
         hospital.getName(),
         hospital.getAddress(),
+        hospital.getPostalCode(),
         hospital.getEmail(),
         hospital.getPhoneNumber(),
         hospital.getImage() != null ? hospital.getImage().getName() : null);

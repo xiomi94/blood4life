@@ -6,6 +6,7 @@ public class HospitalDTO {
   private String cif;
   private String name;
   private String address;
+  private String postalCode;
   private String email;
   private String phoneNumber;
   private String imageName; // nuevo campo para la imagen
@@ -13,21 +14,25 @@ public class HospitalDTO {
   public HospitalDTO() {
   }
 
-  public HospitalDTO(int id, String cif, String name, String address, String email, String phoneNumber,
+  public HospitalDTO(int id, String cif, String name, String address, String postalCode, String email,
+      String phoneNumber,
       String imageName) {
     this.id = id;
     this.cif = cif;
     this.name = name;
     this.address = address;
+    this.postalCode = postalCode;
     this.email = email;
     this.phoneNumber = phoneNumber;
     this.imageName = imageName;
   }
 
-  public HospitalDTO(String cif, String name, String address, String email, String phoneNumber, String imageName) {
+  public HospitalDTO(String cif, String name, String address, String postalCode, String email, String phoneNumber,
+      String imageName) {
     this.cif = cif;
     this.name = name;
     this.address = address;
+    this.postalCode = postalCode;
     this.email = email;
     this.phoneNumber = phoneNumber;
     this.imageName = imageName;
@@ -57,6 +62,14 @@ public class HospitalDTO {
 
   public void setAddress(String address) {
     this.address = address;
+  }
+
+  public String getPostalCode() {
+    return postalCode;
+  }
+
+  public void setPostalCode(String postalCode) {
+    this.postalCode = postalCode;
   }
 
   public String getName() {

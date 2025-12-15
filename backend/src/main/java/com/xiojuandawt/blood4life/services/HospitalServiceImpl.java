@@ -77,6 +77,7 @@ public class HospitalServiceImpl implements HospitalService {
     dto.setCif(hospital.getCif());
     dto.setName(hospital.getName());
     dto.setAddress(hospital.getAddress());
+    dto.setPostalCode(hospital.getPostalCode());
     dto.setEmail(hospital.getEmail());
     dto.setPhoneNumber(hospital.getPhoneNumber());
     if (hospital.getImage() != null) {

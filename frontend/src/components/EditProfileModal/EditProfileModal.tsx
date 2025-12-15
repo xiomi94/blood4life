@@ -1,6 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import axiosInstance from '../../utils/axiosInstance';
+import { validateDNI, validateCIF, validateName, validateAddress, validatePhoneNumber, validatePostalCode, getFieldLabel } from './validationUtils';
+import { useImageUpload } from './useImageUpload';
+import { usePasswordChange } from './usePasswordChange';
+import { useDeleteAccount } from './useDeleteAccount';
+import { ProfileImageUpload } from './ProfileImageUpload';
+import { DonorFields } from './DonorFields';
+import { HospitalFields } from './HospitalFields';
+import { PasswordChangeSection } from './PasswordChangeSection';
+import { DangerZone } from './DangerZone';
+import { DeleteAccountModal } from './DeleteAccountModal';
 
 interface EditProfileModalProps {
     isOpen: boolean;
@@ -10,104 +20,87 @@ interface EditProfileModalProps {
 const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
     const { user, userType, refreshUser } = useAuth();
     const [formData, setFormData] = useState<any>({});
-    const [imageFile, setImageFile] = useState<File | null>(null);
-    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [errors, setErrors] = useState<any>({});
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-    const [passwordData, setPasswordData] = useState({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: ''
-    });
-    const [showPasswordFields, setShowPasswordFields] = useState(false);
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const [deleteConfirmText, setDeleteConfirmText] = useState('');
+
+    // Custom hooks
+    const imageUpload = useImageUpload(user);
+    const passwordChange = usePasswordChange(userType);
+    const deleteAccount = useDeleteAccount(userType);
 
     // Lock body scroll when modal is open
     useEffect(() => {
         if (isOpen) {
+            // Save current scroll position
+            const scrollY = window.scrollY;
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = '100%';
             document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
 
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
+            return () => {
+                // Restore scroll position
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.width = '';
+                document.body.style.overflow = '';
+                window.scrollTo(0, scrollY);
+            };
+        }
     }, [isOpen]);
 
+    // Clear message when modal opens
+    useEffect(() => {
+        if (isOpen) {
+            setMessage(null);
+        }
+    }, [isOpen]);
+
+    // Pre-fill form with current user data
     useEffect(() => {
         if (user && userType) {
-            // Pre-fill form with current user data
             setFormData({
                 ...user,
                 bloodTypeId: user.bloodType?.id || '',
             });
-
-            // Set image preview if user has image
-            if (user.imageName) {
-                setImagePreview(`/images/${user.imageName}`);
-            }
         }
     }, [user, userType]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-    };
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setImageFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result as string);
-            };
-            reader.readAsDataURL(file);
+        // Clear error when user starts typing again
+        if (errors[name]) {
+            setErrors({ ...errors, [name]: '' });
         }
     };
 
-    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setPasswordData({ ...passwordData, [name]: value });
-    };
+    const validateForm = (): boolean => {
+        const newErrors: any = {};
 
-    const handleDeleteAccount = async () => {
-        // Verify confirmation text
-        if (deleteConfirmText !== 'ELIMINAR') {
-            setMessage({ type: 'error', text: 'Debes escribir "ELIMINAR" para confirmar' });
-            return;
+        if (userType === 'bloodDonor') {
+            newErrors.dni = validateDNI(formData.dni || '');
+            newErrors.firstName = validateName(formData.firstName || '', getFieldLabel('firstName'));
+            newErrors.lastName = validateName(formData.lastName || '', getFieldLabel('lastName'));
+            newErrors.phoneNumber = validatePhoneNumber(formData.phoneNumber || '');
+        } else if (userType === 'hospital') {
+            newErrors.cif = validateCIF(formData.cif || '');
+            newErrors.name = validateName(formData.name || '', getFieldLabel('name'));
+            newErrors.address = validateAddress(formData.address || '');
+            newErrors.postalCode = validatePostalCode(formData.postalCode || '');
+            newErrors.phoneNumber = validatePhoneNumber(formData.phoneNumber || '');
         }
 
-        setLoading(true);
-        setMessage(null);
+        const hasErrors = Object.values(newErrors).some(error => error !== '');
 
-        try {
-            const endpoint = userType === 'bloodDonor'
-                ? `/bloodDonor/delete-account`
-                : `/hospital/delete-account`;
-
-            await axiosInstance.delete(endpoint);
-
-            // Successful deletion
-            setMessage({ type: 'success', text: 'Cuenta eliminada exitosamente. Redirigiendo...' });
-
-            // Wait a moment, then logout and redirect
-            setTimeout(() => {
-                window.location.href = '/login';
-            }, 2000);
-        } catch (error: any) {
-            console.error('Delete account error:', error);
-            setMessage({
-                type: 'error',
-                text: error.response?.data?.error || 'Error al eliminar la cuenta'
-            });
-        } finally {
-            setLoading(false);
-            setShowDeleteConfirm(false);
-            setDeleteConfirmText('');
+        if (hasErrors) {
+            setErrors(newErrors);
+            setMessage({ type: 'error', text: 'Por favor, corrige los errores en el formulario' });
         }
+
+        return !hasErrors;
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -115,11 +108,26 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
         setLoading(true);
         setMessage(null);
 
+        // Validate form
+        if (!validateForm()) {
+            setLoading(false);
+            return;
+        }
+
+        // Validate passwords if password change is requested
+        if (passwordChange.showPasswordFields && passwordChange.passwordData.currentPassword && passwordChange.passwordData.newPassword) {
+            if (!passwordChange.validatePasswords()) {
+                setLoading(false);
+                setMessage({ type: 'error', text: 'Por favor, corrige los errores en la contraseña' });
+                return;
+            }
+        }
+
         try {
+            // Build form data for profile update
             const formDataToSend = new FormData();
 
             if (userType === 'bloodDonor') {
-                // For blood donor, append all fields
                 formDataToSend.append('dni', formData.dni || '');
                 formDataToSend.append('firstName', formData.firstName || '');
                 formDataToSend.append('lastName', formData.lastName || '');
@@ -131,23 +139,22 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                     formDataToSend.append('dateOfBirth', formData.dateOfBirth);
                 }
             } else if (userType === 'hospital') {
-                // For hospital, append all fields
-                formDataToSend.append('id', user?.id?.toString() || '');
                 formDataToSend.append('cif', formData.cif || '');
                 formDataToSend.append('name', formData.name || '');
                 formDataToSend.append('address', formData.address || '');
+                formDataToSend.append('postalCode', formData.postalCode || '');
                 formDataToSend.append('email', formData.email || '');
                 formDataToSend.append('phoneNumber', formData.phoneNumber || '');
             }
 
             // Append image if selected
-            if (imageFile) {
-                formDataToSend.append('image', imageFile);
+            if (imageUpload.imageFile) {
+                formDataToSend.append('image', imageUpload.imageFile);
             }
 
             const endpoint = userType === 'bloodDonor'
                 ? `/bloodDonor/${user?.id}`
-                : `/hospital`;
+                : `/hospital?id=${user?.id}`;
 
             await axiosInstance.put(endpoint, formDataToSend, {
                 headers: {
@@ -158,61 +165,9 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
             setMessage({ type: 'success', text: 'Perfil actualizado correctamente' });
 
             // Change password if provided
-            if (showPasswordFields && passwordData.currentPassword && passwordData.newPassword) {
-                // Validate password confirmation
-                if (passwordData.newPassword !== passwordData.confirmPassword) {
-                    setMessage({ type: 'error', text: 'Las contraseñas nuevas no coinciden' });
-                    setLoading(false);
-                    return;
-                }
-
-                // Validate password requirements
-                if (passwordData.newPassword.length < 8) {
-                    setMessage({ type: 'error', text: 'La contraseña debe tener al menos 8 caracteres' });
-                    setLoading(false);
-                    return;
-                }
-                if (passwordData.newPassword.length > 32) {
-                    setMessage({ type: 'error', text: 'La contraseña no puede exceder 32 caracteres' });
-                    setLoading(false);
-                    return;
-                }
-                if (!/(?=.*[a-z])/.test(passwordData.newPassword)) {
-                    setMessage({ type: 'error', text: 'La contraseña debe contener al menos una minúscula' });
-                    setLoading(false);
-                    return;
-                }
-                if (!/(?=.*[A-Z])/.test(passwordData.newPassword)) {
-                    setMessage({ type: 'error', text: 'La contraseña debe contener al menos una mayúscula' });
-                    setLoading(false);
-                    return;
-                }
-                if (!/(?=.*\d)/.test(passwordData.newPassword)) {
-                    setMessage({ type: 'error', text: 'La contraseña debe contener al menos un número' });
-                    setLoading(false);
-                    return;
-                }
-                if (/\s/.test(passwordData.newPassword)) {
-                    setMessage({ type: 'error', text: 'La contraseña no puede contener espacios' });
-                    setLoading(false);
-                    return;
-                }
-                if (/(.)\1{3,}/.test(passwordData.newPassword)) {
-                    setMessage({ type: 'error', text: 'Demasiados caracteres repetidos' });
-                    setLoading(false);
-                    return;
-                }
-
+            if (passwordChange.showPasswordFields && passwordChange.passwordData.currentPassword && passwordChange.passwordData.newPassword) {
                 try {
-                    const passwordFormData = new FormData();
-                    passwordFormData.append('currentPassword', passwordData.currentPassword);
-                    passwordFormData.append('newPassword', passwordData.newPassword);
-
-                    const passwordEndpoint = userType === 'bloodDonor'
-                        ? `/bloodDonor/change-password`
-                        : `/hospital/change-password`;
-
-                    await axiosInstance.post(passwordEndpoint, passwordFormData);
+                    await passwordChange.changePassword();
                     setMessage({ type: 'success', text: 'Perfil y contraseña actualizados correctamente' });
                 } catch (passwordError: any) {
                     console.error('Password change error:', passwordError);
@@ -225,17 +180,15 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                 }
             }
 
-            // Refresh user data from auth context
+            // Refresh user data
             setMessage({ type: 'success', text: 'Perfil actualizado correctamente. Actualizando...' });
 
-            // Wait a moment to show success message, then refresh
             setTimeout(async () => {
                 try {
                     await refreshUser();
                     onClose();
                 } catch (refreshError) {
                     console.error('Error refreshing user data:', refreshError);
-                    // Fallback to reload if refresh fails
                     window.location.reload();
                 }
             }, 1000);
@@ -250,7 +203,21 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
         }
     };
 
+    const handleDeleteConfirm = async () => {
+        setLoading(true);
+        await deleteAccount.handleDeleteAccount(
+            () => setMessage({ type: 'success', text: 'Cuenta eliminada exitosamente. Redirigiendo...' }),
+            (errorMessage) => setMessage({ type: 'error', text: errorMessage })
+        );
+        setLoading(false);
+    };
+
     if (!isOpen) return null;
+
+    // Get user initial for profile image
+    const userInitial = userType === 'bloodDonor'
+        ? formData.firstName?.charAt(0) || ''
+        : formData.name?.charAt(0) || '';
 
     return (
         <>
@@ -278,281 +245,37 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="p-6">
-                        {/* Image Upload */}
-                        <div className="mb-6">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Foto de Perfil
-                            </label>
-                            <div className="flex items-center gap-4">
-                                <div className="w-24 h-24 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                                    {imagePreview ? (
-                                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                                    ) : (
-                                        <span className="text-white text-2xl font-bold">
-                                            {userType === 'bloodDonor'
-                                                ? formData.firstName?.charAt(0)
-                                                : formData.name?.charAt(0)}
-                                        </span>
-                                    )}
-                                </div>
-                                <label className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">
-                                    Cambiar foto
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleImageChange}
-                                        className="hidden"
-                                    />
-                                </label>
-                            </div>
-                        </div>
+                        {/* Profile Image Upload */}
+                        <ProfileImageUpload
+                            imagePreview={imageUpload.imagePreview}
+                            userType={userType}
+                            userInitial={userInitial}
+                            onImageChange={imageUpload.handleImageChange}
+                        />
 
-                        {/* Donor Fields */}
-                        {userType === 'bloodDonor' && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">DNI</label>
-                                    <input
-                                        type="text"
-                                        name="dni"
-                                        value={formData.dni || ''}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        required
-                                    />
-                                    <p className="mt-1 text-xs text-gray-500">Formato: 12345678X</p>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
-                                    <input
-                                        type="text"
-                                        name="firstName"
-                                        value={formData.firstName || ''}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Apellidos</label>
-                                    <input
-                                        type="text"
-                                        name="lastName"
-                                        value={formData.lastName || ''}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={formData.email || ''}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700"
-                                        disabled
-                                        readOnly
-                                    />
-                                    <p className="mt-1 text-xs text-gray-500">El email no se puede modificar</p>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
-                                    <input
-                                        type="tel"
-                                        name="phoneNumber"
-                                        value={formData.phoneNumber || ''}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    />
-                                    <p className="mt-1 text-xs text-gray-500">Formato: +34 123 456 789 (opcional)</p>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Género</label>
-                                    <select
-                                        name="gender"
-                                        value={formData.gender || ''}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    >
-                                        <option value="">Seleccionar género</option>
-                                        <option value="Masculino">Masculino</option>
-                                        <option value="Femenino">Femenino</option>
-                                        <option value="No binario">No binario</option>
-                                        <option value="Prefiero no decirlo">Prefiero no decirlo</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Sangre</label>
-                                    <select
-                                        name="bloodTypeId"
-                                        value={formData.bloodTypeId || ''}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        required
-                                    >
-                                        <option value="">Seleccionar tipo de sangre</option>
-                                        <option value="1">A+</option>
-                                        <option value="2">A-</option>
-                                        <option value="3">B+</option>
-                                        <option value="4">B-</option>
-                                        <option value="5">AB+</option>
-                                        <option value="6">AB-</option>
-                                        <option value="7">O+</option>
-                                        <option value="8">O-</option>
-                                    </select>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Hospital Fields */}
-                        {userType === 'hospital' && (
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">CIF</label>
-                                    <input
-                                        type="text"
-                                        name="cif"
-                                        value={formData.cif || ''}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        required
-                                    />
-                                    <p className="mt-1 text-xs text-gray-500">Formato: A12345678</p>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        value={formData.name || ''}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        required
-                                    />
-                                </div>
-                                <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Dirección</label>
-                                    <input
-                                        type="text"
-                                        name="address"
-                                        value={formData.address || ''}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        required
-                                    />
-                                    <p className="mt-1 text-xs text-gray-500">Dirección completa del hospital</p>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={formData.email || ''}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-700"
-                                        disabled
-                                        readOnly
-                                    />
-                                    <p className="mt-1 text-xs text-gray-500">El email no se puede modificar</p>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
-                                    <input
-                                        type="tel"
-                                        name="phoneNumber"
-                                        value={formData.phoneNumber || ''}
-                                        onChange={handleInputChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        required
-                                    />
-                                    <p className="mt-1 text-xs text-gray-500">Formato: +34 123 456 789</p>
-                                </div>
-                            </div>
+                        {/* Conditional: Donor or Hospital Fields */}
+                        {userType === 'bloodDonor' ? (
+                            <DonorFields
+                                formData={formData}
+                                errors={errors}
+                                onInputChange={handleInputChange}
+                            />
+                        ) : (
+                            <HospitalFields
+                                formData={formData}
+                                errors={errors}
+                                onInputChange={handleInputChange}
+                            />
                         )}
 
                         {/* Password Change Section */}
-                        <div className="mt-6 border-t border-gray-200 pt-6">
-                            <button
-                                type="button"
-                                onClick={() => setShowPasswordFields(!showPasswordFields)}
-                                className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2"
-                            >
-                                <svg
-                                    className={`w-4 h-4 transition-transform ${showPasswordFields ? 'rotate-90' : ''}`}
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                                Cambiar contraseña
-                            </button>
-
-                            <div
-                                className={`grid grid-cols-1 gap-4 mt-4 overflow-hidden transition-all duration-500 ease-in-out ${showPasswordFields ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                                    }`}
-                            >
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña Actual</label>
-                                    <input
-                                        type="password"
-                                        name="currentPassword"
-                                        value={passwordData.currentPassword}
-                                        onChange={handlePasswordChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Ingresa tu contraseña actual"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Nueva Contraseña</label>
-                                    <input
-                                        type="password"
-                                        name="newPassword"
-                                        value={passwordData.newPassword}
-                                        onChange={handlePasswordChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Mínimo 8 caracteres"
-                                    />
-                                    <p className="mt-1 text-xs text-gray-500">
-                                        Debe contener: mayúscula, minúscula, número (8-32 caracteres)
-                                    </p>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Confirmar Nueva Contraseña</label>
-                                    <input
-                                        type="password"
-                                        name="confirmPassword"
-                                        value={passwordData.confirmPassword}
-                                        onChange={handlePasswordChange}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Repite la nueva contraseña"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Danger Zone - Delete Account */}
-                        <div className="mt-6 border-t border-red-200 pt-6">
-                            <h3 className="text-sm font-semibold text-red-600 mb-2">Zona de Peligro</h3>
-                            <p className="text-xs text-gray-600 mb-3">
-                                Una vez que borres tu cuenta, no hay vuelta atrás. Por favor, asegúrate.
-                            </p>
-                            <button
-                                type="button"
-                                onClick={() => setShowDeleteConfirm(true)}
-                                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm font-medium"
-                            >
-                                Borrar Cuenta
-                            </button>
-                        </div>
-
-                        {/* Message */}
-                        {message && (
-                            <div className={`mt-4 p-3 rounded-lg ${message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                }`}>
-                                {message.text}
-                            </div>
-                        )}
+                        <PasswordChangeSection
+                            showPasswordFields={passwordChange.showPasswordFields}
+                            passwordData={passwordChange.passwordData}
+                            passwordErrors={passwordChange.passwordErrors}
+                            onToggle={() => passwordChange.setShowPasswordFields(!passwordChange.showPasswordFields)}
+                            onPasswordChange={passwordChange.handlePasswordChange}
+                        />
 
                         {/* Buttons */}
                         <div className="mt-6 flex justify-end gap-3">
@@ -571,52 +294,43 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                                 {loading ? 'Guardando...' : 'Guardar cambios'}
                             </button>
                         </div>
+
+                        {/* Danger Zone */}
+                        <DangerZone onDeleteClick={deleteAccount.showModal} />
                     </form>
                 </div>
             </div>
 
-            {/* Delete Confirmation Modal */}
-            {
-                showDeleteConfirm && (
-                    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-                        <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
-                            <h3 className="text-xl font-semibold text-red-600 mb-3">¿Estás absolutamente seguro?</h3>
-                            <p className="text-gray-700 mb-4">
-                                Esta acción <strong>no se puede deshacer</strong>. Tu cuenta será eliminada permanentemente,
-                                aunque tus donaciones y citas pasadas se mantendrán en el historial del sistema.
-                            </p>
-                            <p className="text-sm text-gray-600 mb-4">
-                                Por favor escribe <strong className="text-red-600">ELIMINAR</strong> para confirmar:
-                            </p>
-                            <input
-                                type="text"
-                                value={deleteConfirmText}
-                                onChange={(e) => setDeleteConfirmText(e.target.value)}
-                                placeholder="Escribe ELIMINAR aquí"
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 mb-4"
-                            />
-                            <div className="flex justify-end gap-3">
-                                <button
-                                    onClick={() => {
-                                        setShowDeleteConfirm(false);
-                                        setDeleteConfirmText('');
-                                    }}
-                                    className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
-                                    disabled={loading}
-                                >
-                                    Cancelar
-                                </button>
-                                <button
-                                    onClick={handleDeleteAccount}
-                                    disabled={loading || deleteConfirmText !== 'ELIMINAR'}
-                                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    {loading ? 'Eliminando...' : 'Borrar Cuenta'}
-                                </button>
-                            </div>
+            {/* Toast Message - Positioned at bottom of screen, above everything */}
+            {message && (
+                <div className="fixed bottom-32 left-1/2 -translate-x-1/2 z-[60] max-w-md w-full mx-4">
+                    <div className={`p-4 rounded-lg shadow-lg ${message.type === 'success' ? 'bg-green-100 text-green-800 border-2 border-green-300' : 'bg-red-100 text-red-800 border-2 border-red-300'
+                        }`}>
+                        <div className="flex items-center gap-2">
+                            {message.type === 'success' ? (
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                </svg>
+                            ) : (
+                                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                                </svg>
+                            )}
+                            <span className="font-medium">{message.text}</span>
                         </div>
                     </div>
-                )}
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            <DeleteAccountModal
+                isOpen={deleteAccount.showDeleteConfirm}
+                deleteConfirmText={deleteAccount.deleteConfirmText}
+                loading={loading}
+                onConfirmTextChange={deleteAccount.setDeleteConfirmText}
+                onCancel={deleteAccount.hideModal}
+                onConfirm={handleDeleteConfirm}
+            />
         </>
     );
 };
