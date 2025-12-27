@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import axiosInstance from '../../utils/axiosInstance';
+import { useAuth } from '../../../context/AuthContext';
+import axiosInstance from '../../../utils/axiosInstance';
 import { validateDNI, validateCIF, validateName, validateAddress, validatePhoneNumber, validatePostalCode, getFieldLabel } from './validationUtils';
 import { useImageUpload } from './useImageUpload';
 import { usePasswordChange } from './usePasswordChange';
@@ -9,8 +9,8 @@ import { ProfileImageUpload } from './ProfileImageUpload';
 import { DonorFields } from './DonorFields';
 import { HospitalFields } from './HospitalFields';
 import { PasswordChangeSection } from './PasswordChangeSection';
-import { DangerZone } from './DangerZone';
 import { DeleteAccountModal } from './DeleteAccountModal';
+import { DangerZone } from './DangerZone';
 
 interface EditProfileModalProps {
     isOpen: boolean;
@@ -213,6 +213,11 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
     };
 
     if (!isOpen) return null;
+
+    // Only allow bloodDonor and hospital users to edit profile
+    if (userType !== 'bloodDonor' && userType !== 'hospital') {
+        return null;
+    }
 
     // Get user initial for profile image
     const userInitial = userType === 'bloodDonor'

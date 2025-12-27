@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axiosInstance from '../../utils/axiosInstance';
+import axiosInstance from '../../../utils/axiosInstance';
 import { validateCurrentPassword, validateNewPassword, validateConfirmPassword, type PasswordData } from './validationUtils';
 
 interface UsePasswordChangeReturn {
@@ -18,7 +18,7 @@ interface UsePasswordChangeReturn {
  * - Manages password change API call
  * - 100% shared between donor and hospital (only endpoint differs)
  */
-export const usePasswordChange = (userType: 'bloodDonor' | 'hospital' | null): UsePasswordChangeReturn => {
+export const usePasswordChange = (userType: 'bloodDonor' | 'hospital' | 'admin' | null): UsePasswordChangeReturn => {
     const [passwordData, setPasswordData] = useState<PasswordData>({
         currentPassword: '',
         newPassword: '',

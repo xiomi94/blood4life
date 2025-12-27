@@ -12,8 +12,8 @@ import {
 import { Bar, Doughnut } from 'react-chartjs-2';
 import { dashboardService } from '../../services/dashboardService';
 import type { DashboardStats } from '../../services/dashboardService';
-import CreateCampaignModal from '../../components/CreateCampaignModal/CreateCampaignModal';
-import EditCampaignModal from '../../components/EditCampaignModal/EditCampaignModal';
+import CreateCampaignModal from '../../components/Modals/CreateCampaignModal/CreateCampaignModal';
+import EditCampaignModal from '../../components/Modals/EditCampaignModal/EditCampaignModal';
 import { useAuth } from '../../context/AuthContext';
 import { campaignService, type Campaign } from '../../services/campaignService';
 

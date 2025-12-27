@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { campaignService, type CampaignFormData, type Campaign } from '../../services/campaignService';
+import { campaignService, type CampaignFormData } from '../../../services/campaignService';
 
-interface EditCampaignModalProps {
+interface CreateCampaignModalProps {
     isOpen: boolean;
-    campaign: Campaign | null;
     onClose: () => void;
     onSuccess?: () => void;
 }
 
 const BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
-const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign, onClose, onSuccess }) => {
+const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClose, onSuccess }) => {
     const [formData, setFormData] = useState<CampaignFormData>({
         name: '',
         description: '',
@@ -24,33 +23,6 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
-
-    // Pre-populate form when campaign changes
-    useEffect(() => {
-        if (campaign && isOpen) {
-            // Clean and parse blood types - remove brackets, quotes, and extra whitespace
-            const bloodTypesString = campaign.requiredBloodType || '';
-            const cleanedBloodTypes = bloodTypesString
-                .replace(/[\[\]"]/g, '') // Remove brackets and quotes
-                .split(',')
-                .map(bt => bt.trim())
-                .filter(bt => bt.length > 0); // Remove empty strings
-
-            setFormData({
-                name: campaign.name || '',
-                description: campaign.description || '',
-                startDate: campaign.startDate || '',
-                endDate: campaign.endDate || '',
-                location: campaign.location || '',
-                requiredDonorQuantity: campaign.requiredDonorQuantity || 1,
-                requiredBloodTypes: cleanedBloodTypes
-            });
-
-            // Clear any previous errors
-            setErrors({});
-            setMessage(null);
-        }
-    }, [campaign, isOpen]);
 
     // Lock body scroll when modal is open
     useEffect(() => {
@@ -68,13 +40,16 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
 
+        // Special handling for number fields to prevent decimal/thousand separators
         if (name === 'requiredDonorQuantity') {
+            // Remove any non-digit characters and parse as integer
             const numValue = parseInt(value.replace(/\D/g, ''), 10) || 0;
             setFormData(prev => ({ ...prev, [name]: numValue }));
         } else {
             setFormData(prev => ({ ...prev, [name]: value }));
         }
 
+        // Clear error for this field
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
         }
@@ -90,6 +65,7 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
                     : [...prev.requiredBloodTypes, bloodType]
             };
         });
+        // Clear blood type error
         if (errors.requiredBloodTypes) {
             setErrors(prev => ({ ...prev, requiredBloodTypes: '' }));
         }
@@ -127,13 +103,7 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!campaign) {
-            setMessage({ type: 'error', text: 'No se pudo identificar la campaña a editar' });
-            return;
-        }
-
         if (!validateForm()) {
-            setMessage({ type: 'error', text: 'Por favor, corrige los errores en el formulario' });
             return;
         }
 
@@ -141,8 +111,19 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
         setMessage(null);
 
         try {
-            await campaignService.updateCampaign(campaign.id, formData);
-            setMessage({ type: 'success', text: 'Campaña actualizada exitosamente' });
+            await campaignService.createCampaign(formData);
+            setMessage({ type: 'success', text: 'Campaña creada exitosamente' });
+
+            // Reset form
+            setFormData({
+                name: '',
+                description: '',
+                startDate: '',
+                endDate: '',
+                location: '',
+                requiredDonorQuantity: 1,
+                requiredBloodTypes: []
+            });
 
             // Call success callback
             if (onSuccess) {
@@ -152,73 +133,19 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
             // Close modal after a short delay
             setTimeout(() => {
                 onClose();
-                setErrors({});
-                setMessage(null);
             }, 1500);
         } catch (error: any) {
-            console.error('Error updating campaign:', error);
-
-            // Check if it's a 401 error (session expired)
-            const isSessionExpired = error.response?.status === 401;
-
-            // Function to translate technical errors to user-friendly messages
-            const getUserFriendlyError = (error: any): string => {
-                // Check for network errors
-                if (!error.response) {
-                    return '❌ No se pudo conectar con el servidor. Verifica tu conexión a internet.';
-                }
-
-                const status = error.response.status;
-                const data = error.response.data;
-
-                // Map HTTP status codes to friendly messages
-                switch (status) {
-                    case 400:
-                        return '❌ Los datos ingresados no son válidos. Por favor, revisa la información.';
-                    case 401:
-                        return '❌ Tu sesión ha expirado. Redirigiendo al inicio de sesión...';
-                    case 403:
-                        return '❌ No tienes permisos para editar esta campaña.';
-                    case 404:
-                        return '❌ La campaña que intentas editar ya no existe.';
-                    case 409:
-                        return '❌ Ya existe una campaña con ese nombre en las mismas fechas.';
-                    case 422:
-                        return '❌ Los datos del formulario son incorrectos. Verifica las fechas y cantidades.';
-                    case 500:
-                        return '❌ Ocurrió un error en el servidor. Intenta nuevamente en unos momentos.';
-                    case 503:
-                        return '❌ El servidor está temporalmente fuera de servicio. Intenta más tarde.';
-                    default:
-                        // Try to extract message from response
-                        if (typeof data === 'string' && !data.includes('status code')) {
-                            return `❌ ${data}`;
-                        }
-                        if (data?.message && !data.message.includes('status code')) {
-                            return `❌ ${data.message}`;
-                        }
-                        if (data?.error && !data.error.includes('status code')) {
-                            return `❌ ${data.error}`;
-                        }
-                        return '❌ No se pudo actualizar la campaña. Intenta nuevamente.';
-                }
-            };
-
-            const friendlyMessage = getUserFriendlyError(error);
-            setMessage({ type: 'error', text: friendlyMessage });
-
-            // If session expired, redirect to login after showing message
-            if (isSessionExpired) {
-                setTimeout(() => {
-                    window.location.href = '/login';
-                }, 2000);
-            }
+            console.error('Error creating campaign:', error);
+            setMessage({
+                type: 'error',
+                text: error.response?.data?.error || 'Error al crear la campaña'
+            });
         } finally {
             setLoading(false);
         }
     };
 
-    if (!isOpen || !campaign) return null;
+    if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity">
@@ -232,7 +159,7 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
             <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-10">
                 {/* Header */}
                 <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-                    <h2 className="text-2xl font-semibold text-gray-800">Editar Campaña</h2>
+                    <h2 className="text-2xl font-semibold text-gray-800">Nueva Campaña</h2>
                     <button
                         onClick={onClose}
                         className="text-gray-400 hover:text-gray-600 transition-colors"
@@ -395,7 +322,7 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
                             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={loading}
                         >
-                            {loading ? 'Guardando...' : 'Guardar Cambios'}
+                            {loading ? 'Creando...' : 'Crear Campaña'}
                         </button>
                     </div>
                 </form>
@@ -404,4 +331,4 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
     );
 };
 
-export default EditCampaignModal;
+export default CreateCampaignModal;

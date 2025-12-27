@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../../context/AuthContext';
 import Logo from "../../../assets/images/LogoShadowMini.webp";
 import Button from "../Button/Button.tsx";
-import EditProfileModal from "../../EditProfileModal/EditProfileModal.tsx"
+import EditProfileModal from "../../Modals/EditProfileModal/EditProfileModal.tsx"
 
 function Header() {
   const location = useLocation();
@@ -33,8 +33,9 @@ function Header() {
 
   return (
     <div
-      className={`flex flex-row w-full items-center justify-end ${isAuthenticated ? 'border-b border-gray-300 px-8 py-4' : 'px-8 py-4'
+      className={`flex flex-row w-full items-center justify-end ${isAuthenticated ? 'border-b border-gray-300 dark:border-gray-700 px-8 py-4' : 'px-8 py-4'
         }`}
+      style={{ transition: 'border-color 0.3s ease-in-out' }}
     >
       {isAuthenticated ? (
         <div className="flex flex-row w-full justify-between items-center">
@@ -44,7 +45,7 @@ function Header() {
           <div className="flex flex-row w-full items-center justify-end gap-4">
             {/* Notifications */}
             <button
-              className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              className="relative p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               aria-label="Ver notificaciones"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -54,7 +55,7 @@ function Header() {
             </button>
             {/* Bell */}
             <button
-              className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+              className="relative p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
               aria-label="Ver alertas"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -87,13 +88,13 @@ function Header() {
               </button>
 
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 ring-1 ring-black ring-opacity-5">
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 ring-1 ring-black ring-opacity-5">
                   {location.pathname.startsWith('/dashboard') ? (
                     // Dashboard - show "Inicio" link and "Editar mi perfil" button
                     <>
                       <Link
                         to="/index"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                         onClick={() => setIsDropdownOpen(false)}
                       >
                         Inicio
@@ -103,7 +104,7 @@ function Header() {
                           setIsDropdownOpen(false);
                           setIsEditModalOpen(true);
                         }}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         Editar mi perfil
                       </button>
@@ -127,7 +128,7 @@ function Header() {
                       </Link>
                     </>
                   )}
-                  <div className="border-t border-gray-100 my-1"></div>
+                  <div className="border-t border-gray-100 dark:border-gray-700 my-1"></div>
                   <button
                     onClick={() => {
                       setIsDropdownOpen(false);
@@ -185,9 +186,9 @@ function Header() {
       {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
-            <h3 className="text-xl font-semibold text-gray-800 mb-3">Cerrar Sesión</h3>
-            <p className="text-gray-600 mb-6">¿Estás seguro de que deseas cerrar sesión?</p>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
+            <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3">Cerrar Sesión</h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">¿Estás seguro de que deseas cerrar sesión?</p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowLogoutConfirm(false)}

@@ -1,4 +1,4 @@
-import type { BloodDonor } from "../../models/BloodDonor";
+import type { BloodDonor } from "../../../models/BloodDonor";
 import { useEffect, useState } from "react";
 import React from "react";
 

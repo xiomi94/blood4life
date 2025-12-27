@@ -5,6 +5,8 @@
     --font-poppins: "Poppins", sans-serif;
 }
 
+@variant dark (&:is(.dark, .dark *));
+
 @layer components {
     .text-display {
         font-size: 3.5rem;
@@ -120,6 +122,7 @@ textarea:focus-visible {
 
 /* Respect user motion preferences - WCAG 2.3.3 */
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {
