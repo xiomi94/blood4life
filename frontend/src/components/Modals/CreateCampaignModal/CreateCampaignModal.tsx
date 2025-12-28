@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { campaignService, type CampaignFormData } from '../../../services/campaignService';
+import DatePicker from '../../UI/DatePicker/DatePicker';
 
 interface CreateCampaignModalProps {
     isOpen: boolean;
@@ -27,14 +28,24 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
     // Lock body scroll when modal is open
     useEffect(() => {
         if (isOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = 'unset';
-        }
+            // Save current scroll position
+            const scrollY = window.scrollY;
 
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
+            // Lock scroll
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = '100%';
+            document.body.style.overflow = 'hidden';
+
+            return () => {
+                // Restore scroll
+                document.body.style.position = '';
+                document.body.style.top = '';
+                document.body.style.width = '';
+                document.body.style.overflow = '';
+                window.scrollTo(0, scrollY);
+            };
+        }
     }, [isOpen]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -156,13 +167,13 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
             ></div>
 
             {/* Modal */}
-            <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-10">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-10">
                 {/* Header */}
-                <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-                    <h2 className="text-2xl font-semibold text-gray-800">Nueva Campaña</h2>
+                <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center">
+                    <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">Nueva Campaña</h2>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-gray-600 transition-colors"
+                        className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                         type="button"
                     >
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -184,7 +195,7 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
                     <div className="space-y-4">
                         {/* Name */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Nombre de la campaña *
                             </label>
                             <input
@@ -192,7 +203,7 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
                                 name="name"
                                 value={formData.name}
                                 onChange={handleInputChange}
-                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.name ? 'border-red-500' : 'border-gray-300'
+                                className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.name ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                                     }`}
                                 placeholder="Ej: Campaña de donación de sangre 2025"
                             />
@@ -201,7 +212,7 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
 
                         {/* Description */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Descripción *
                             </label>
                             <textarea
@@ -209,7 +220,7 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
                                 value={formData.description}
                                 onChange={handleInputChange}
                                 rows={3}
-                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.description ? 'border-red-500' : 'border-gray-300'
+                                className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.description ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                                     }`}
                                 placeholder="Describe el objetivo de la campaña..."
                             />
@@ -219,31 +230,31 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
                         {/* Dates */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Fecha de inicio *
                                 </label>
-                                <input
-                                    type="date"
+                                <DatePicker
                                     name="startDate"
                                     value={formData.startDate}
-                                    onChange={handleInputChange}
-                                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.startDate ? 'border-red-500' : 'border-gray-300'
-                                        }`}
+                                    onChange={(e) => {
+                                        handleInputChange(e as unknown as React.ChangeEvent<HTMLInputElement>);
+                                    }}
+                                    error={errors.startDate}
                                 />
                                 {errors.startDate && <p className="text-red-500 text-sm mt-1">{errors.startDate}</p>}
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                     Fecha de fin *
                                 </label>
-                                <input
-                                    type="date"
+                                <DatePicker
                                     name="endDate"
                                     value={formData.endDate}
-                                    onChange={handleInputChange}
-                                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.endDate ? 'border-red-500' : 'border-gray-300'
-                                        }`}
+                                    onChange={(e) => {
+                                        handleInputChange(e as unknown as React.ChangeEvent<HTMLInputElement>);
+                                    }}
+                                    error={errors.endDate}
                                 />
                                 {errors.endDate && <p className="text-red-500 text-sm mt-1">{errors.endDate}</p>}
                             </div>
@@ -251,7 +262,7 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
 
                         {/* Location */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Ubicación *
                             </label>
                             <input
@@ -259,7 +270,7 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
                                 name="location"
                                 value={formData.location}
                                 onChange={handleInputChange}
-                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.location ? 'border-red-500' : 'border-gray-300'
+                                className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.location ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                                     }`}
                                 placeholder="Ej: Hospital Regional, Sala A"
                             />
@@ -268,7 +279,7 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
 
                         {/* Required Donor Quantity */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Cantidad de donantes necesarios *
                             </label>
                             <input
@@ -277,7 +288,7 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
                                 value={formData.requiredDonorQuantity}
                                 onChange={handleInputChange}
                                 min="1"
-                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.requiredDonorQuantity ? 'border-red-500' : 'border-gray-300'
+                                className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.requiredDonorQuantity ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                                     }`}
                             />
                             {errors.requiredDonorQuantity && <p className="text-red-500 text-sm mt-1">{errors.requiredDonorQuantity}</p>}
@@ -285,7 +296,7 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
 
                         {/* Blood Types */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Tipos de sangre requeridos *
                             </label>
                             <div className="grid grid-cols-4 gap-2">
@@ -296,7 +307,7 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
                                         onClick={() => handleBloodTypeToggle(bloodType)}
                                         className={`px-4 py-2 rounded-lg border-2 font-medium transition-colors ${formData.requiredBloodTypes.includes(bloodType)
                                             ? 'bg-blue-600 text-white border-blue-600'
-                                            : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400'
+                                            : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500'
                                             }`}
                                     >
                                         {bloodType}
@@ -308,11 +319,11 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
                     </div>
 
                     {/* Actions */}
-                    <div className="flex justify-end gap-3 mt-6 pt-6 border-t border-gray-200">
+                    <div className="flex justify-end gap-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                            className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                             disabled={loading}
                         >
                             Cancelar

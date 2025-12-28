@@ -22,11 +22,11 @@ export const PasswordChangeSection: React.FC<PasswordChangeSectionProps> = ({
     onPasswordChange
 }) => {
     return (
-        <div className="mt-6 border-t border-gray-200 pt-6">
+        <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-6">
             <button
                 type="button"
                 onClick={onToggle}
-                className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-2"
+                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center gap-2"
             >
                 <svg
                     className={`w-4 h-4 transition-transform ${showPasswordFields ? 'rotate-90' : ''}`}
@@ -44,13 +44,13 @@ export const PasswordChangeSection: React.FC<PasswordChangeSectionProps> = ({
                     }`}
             >
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña Actual</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contraseña Actual</label>
                     <input
                         type="password"
                         name="currentPassword"
                         value={passwordData.currentPassword}
                         onChange={onPasswordChange}
-                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${passwordErrors.currentPassword ? 'border-red-500' : 'border-gray-300'
+                        className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${passwordErrors.currentPassword ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                             }`}
                         placeholder="Ingresa tu contraseña actual"
                     />
@@ -59,32 +59,32 @@ export const PasswordChangeSection: React.FC<PasswordChangeSectionProps> = ({
                     )}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Nueva Contraseña</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nueva Contraseña</label>
                     <input
                         type="password"
                         name="newPassword"
                         value={passwordData.newPassword}
                         onChange={onPasswordChange}
-                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${passwordErrors.newPassword ? 'border-red-500' : 'border-gray-300'
+                        className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${passwordErrors.newPassword ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                             }`}
                         placeholder="Mínimo 8 caracteres"
                     />
                     {passwordErrors.newPassword ? (
                         <p className="mt-1 text-xs text-red-500">{passwordErrors.newPassword}</p>
                     ) : (
-                        <p className="mt-1 text-xs text-gray-500">
+                        <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                             Debe contener: mayúscula, minúscula, número (8-32 caracteres)
                         </p>
                     )}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Confirmar Nueva Contraseña</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirmar Nueva Contraseña</label>
                     <input
                         type="password"
                         name="confirmPassword"
                         value={passwordData.confirmPassword}
                         onChange={onPasswordChange}
-                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${passwordErrors.confirmPassword ? 'border-red-500' : 'border-gray-300'
+                        className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${passwordErrors.confirmPassword ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
                             }`}
                         placeholder="Repite la nueva contraseña"
                     />

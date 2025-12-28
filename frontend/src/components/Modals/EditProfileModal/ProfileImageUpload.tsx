@@ -18,7 +18,7 @@ export const ProfileImageUpload: React.FC<ProfileImageUploadProps> = ({
 }) => {
     return (
         <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2">
                 Foto de Perfil
             </label>
             <div className="flex items-center gap-4">

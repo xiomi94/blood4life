@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import { format, getDaysInMonth, startOfMonth, subMonths, addMonths, getYear, setYear, setMonth, isSameDay, isToday, parseISO } from 'date-fns';
 
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
@@ -177,9 +178,36 @@ const DatePicker: React.FC<DatePickerProps> = ({
                     <CalendarIcon className="w-5 h-5 text-gray-400 dark:text-gray-300 ml-2 flex-shrink-0" />
                 </button>
 
-                {/* Calendar Dropdown */}
-                {isOpen && (
-                    <div className="absolute z-50 mt-2 sm:mt-0 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 w-[320px] left-1/2 -translate-x-1/2 sm:left-full sm:-top-24 sm:ml-2 sm:translate-x-0 animate-in fade-in zoom-in-95 duration-200">
+                {/* Calendar Dropdown - Rendered via Portal */}
+                {isOpen && containerRef.current && ReactDOM.createPortal(
+                    <div
+                        className="fixed p-4 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 w-[320px] animate-in fade-in zoom-in-95 duration-200"
+                        style={{
+                            zIndex: 9999,
+                            top: (() => {
+                                const rect = containerRef.current?.getBoundingClientRect();
+                                if (!rect) return '50%';
+                                const spaceBelow = window.innerHeight - rect.bottom;
+                                const spaceAbove = rect.top;
+                                const calendarHeight = 400; // approximate
+
+                                // If more space below, position below
+                                if (spaceBelow >= calendarHeight || spaceBelow > spaceAbove) {
+                                    return `${rect.bottom + window.scrollY + 8}px`;
+                                } else {
+                                    // Position above
+                                    return `${rect.top + window.scrollY - calendarHeight - 8}px`;
+                                }
+                            })(),
+                            left: (() => {
+                                const rect = containerRef.current?.getBoundingClientRect();
+                                if (!rect) return '50%';
+                                const left = rect.left + window.scrollX;
+                                const maxLeft = window.innerWidth - 320 - 16; // 320 = calendar width, 16 = padding
+                                return `${Math.min(left, maxLeft)}px`;
+                            })()
+                        }}
+                    >
                         {/* Header: Month/Year Nav */}
                         <div className="flex items-center justify-between mb-4">
                             <button
@@ -250,7 +278,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
                                 Seleccionar Hoy
                             </button>
                         </div>
-                    </div>
+                    </div>,
+                    document.body
                 )}
             </div>
 

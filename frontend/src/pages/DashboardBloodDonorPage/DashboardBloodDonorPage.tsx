@@ -46,16 +46,16 @@ const DashboardBloodDonorPage = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="text-xl font-semibold text-gray-600">Cargando estadísticas...</div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div className="text-xl font-semibold text-gray-600 dark:text-gray-400">Cargando estadísticas...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="text-xl font-semibold text-red-600">{error}</div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div className="text-xl font-semibold text-red-600 dark:text-red-400">{error}</div>
       </div>
     );
   }
@@ -70,7 +70,7 @@ const DashboardBloodDonorPage = () => {
   const daysUntilNext = getDaysUntilNextDonation();
 
   return (
-    <div className="flex flex-row flex-grow w-full bg-gray-100">
+    <div className="flex flex-row flex-grow w-full bg-gray-100 dark:bg-gray-900">
       <DonorSidebar />
 
       {/* Main Content */}

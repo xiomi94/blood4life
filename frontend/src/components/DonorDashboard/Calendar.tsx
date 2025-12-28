@@ -36,7 +36,7 @@ export const Calendar = ({ currentDate, allCampaigns, onMonthChange, onDayClick 
       dateStr >= c.startDate && dateStr <= c.endDate
     );
 
-    let statusClass = "hover:bg-gray-100 cursor-pointer";
+    let statusClass = "hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer dark:text-gray-300";
 
     if (campaignsOnDay.length > 0) {
       const isPast = campaignsOnDay.every(c => c.endDate < nowStr);
@@ -54,7 +54,7 @@ export const Calendar = ({ currentDate, allCampaigns, onMonthChange, onDayClick 
 
     const isToday = new Date().toDateString() === new Date(year, month, day).toDateString();
     if (isToday && campaignsOnDay.length === 0) {
-      statusClass = "bg-blue-100 text-blue-800 font-bold border border-blue-300";
+      statusClass = "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 font-bold border border-blue-300 dark:border-blue-700";
     }
 
     days.push(
@@ -75,23 +75,23 @@ export const Calendar = ({ currentDate, allCampaigns, onMonthChange, onDayClick 
   }
 
   return (
-    <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-      <h2 className="text-lg font-semibold text-gray-800 mb-4">Calendario</h2>
+    <section className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+      <h2 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Calendario</h2>
 
       <div className="mb-3">
         <div className="flex justify-between items-center mb-4 px-2">
-          <button onClick={() => onMonthChange(-1)} className="p-1 hover:bg-gray-100 rounded text-gray-600">
+          <button onClick={() => onMonthChange(-1)} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-gray-600 dark:text-gray-400">
             &lt;
           </button>
-          <h3 className="font-semibold text-gray-800">
+          <h3 className="font-semibold text-gray-800 dark:text-white">
             {monthNames[month]} {year}
           </h3>
-          <button onClick={() => onMonthChange(1)} className="p-1 hover:bg-gray-100 rounded text-gray-600">
+          <button onClick={() => onMonthChange(1)} className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-gray-600 dark:text-gray-400">
             &gt;
           </button>
         </div>
 
-        <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-500 mb-2">
+        <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
           <div>Lu</div>
           <div>Ma</div>
           <div>Mi</div>
@@ -103,7 +103,7 @@ export const Calendar = ({ currentDate, allCampaigns, onMonthChange, onDayClick 
         <div className="grid grid-cols-7 gap-1 text-center text-sm">
           {days}
         </div>
-        <div className="mt-4 flex flex-wrap gap-2 text-xs justify-center text-gray-500">
+        <div className="mt-4 flex flex-wrap gap-2 text-xs justify-center text-gray-500 dark:text-gray-400">
           <div className="flex items-center gap-1"><div className="w-3 h-3 bg-green-500 rounded"></div> Activa</div>
           <div className="flex items-center gap-1"><div className="w-3 h-3 bg-blue-400 rounded"></div> Futura</div>
           <div className="flex items-center gap-1"><div className="w-3 h-3 bg-red-500 rounded"></div> Pasada</div>

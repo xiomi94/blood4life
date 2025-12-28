@@ -10,11 +10,11 @@ interface DangerZoneProps {
  */
 export const DangerZone: React.FC<DangerZoneProps> = ({ onDeleteClick }) => {
     return (
-        <div className="mt-6 border-t border-red-200 pt-6">
-            <h3 className="text-sm font-semibold text-red-600 mb-2">
+        <div className="mt-6 border-t border-red-200 dark:border-red-900 pt-6">
+            <h3 className="text-sm font-semibold text-red-600 dark:text-red-400 mb-2">
                 Zona de Peligro
             </h3>
-            <p className="text-xs text-gray-600 mb-3">
+            <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">
                 Una vez que borres tu cuenta, no hay vuelta atrás. Por favor, asegúrate.
             </p>
             <button

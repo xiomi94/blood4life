@@ -7,6 +7,89 @@
 
 @variant dark (&:is(.dark, .dark *));
 
+/* Custom styles for number input spinners in dark mode */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    /* Default opacity, can be overridden by dark mode */
+    opacity: 1;
+}
+
+.dark input[type="number"]::-webkit-inner-spin-button,
+.dark input[type="number"]::-webkit-outer-spin-button {
+    filter: invert(1) brightness(0.7);
+    cursor: pointer;
+}
+
+/* Firefox number input spinner */
+.dark input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.dark input[type="number"]:hover,
+.dark input[type="number"]:focus {
+    -moz-appearance: number-input;
+    appearance: auto;
+}
+
+/* Custom scrollbar styles for dark mode */
+/* Custom scrollbar styles - Global */
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Light mode scrollbar thumb */
+*::-webkit-scrollbar-thumb {
+    background-color: rgba(107, 114, 128, 0.8);
+    /* gray-500 for high visibility */
+    border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(75, 85, 99, 0.8);
+    /* gray-600 hover */
+}
+
+/* Dark mode scrollbar thumb override */
+.dark *::-webkit-scrollbar-thumb {
+    background-color: rgba(75, 85, 99, 0.6);
+    /* gray-600 */
+}
+
+.dark *::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(107, 114, 128, 0.8);
+    /* gray-500 */
+}
+
+/* Firefox scrollbar */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(209, 213, 219, 0.8) transparent;
+}
+
+.dark * {
+    scrollbar-color: rgba(75, 85, 99, 0.6) transparent;
+}
+
+/* Calendar view transition animation */
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
 @layer components {
     .text-display {
         font-size: 3.5rem;
