@@ -12,9 +12,10 @@ import {
 import { Bar, Doughnut } from 'react-chartjs-2';
 import { dashboardService } from '../../services/dashboardService';
 import type { DashboardStats } from '../../services/dashboardService';
-import CreateCampaignModal from '../../components/CreateCampaignModal/CreateCampaignModal';
-import EditCampaignModal from '../../components/EditCampaignModal/EditCampaignModal';
+import CreateCampaignModal from '../../components/Modals/CreateCampaignModal/CreateCampaignModal';
+import EditCampaignModal from '../../components/Modals/EditCampaignModal/EditCampaignModal';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { campaignService, type Campaign } from '../../services/campaignService';
 import { appointmentService, type AppointmentWithDonor } from '../../services/appointmentService';
 import { useWebSocket } from '../../hooks/useWebSocket';
@@ -195,7 +196,7 @@ const DashboardHospitalPage = () => {
         dateStr >= c.startDate && dateStr <= c.endDate
       );
 
-      let statusClass = "hover:bg-gray-100 cursor-pointer";
+      let statusClass = "hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-gray-900 dark:text-white";
       let backgroundStyle: React.CSSProperties = {};
 
       if (campaignsOnDay.length > 0) {
@@ -239,7 +240,7 @@ const DashboardHospitalPage = () => {
           {day}
 
           {campaignsOnDay.length >= 2 && (
-            <span className="absolute bottom-0.5 right-0.5 text-[9px] font-bold text-black bg-white/80 rounded-full w-3.5 h-3.5 flex items-center justify-center">
+            <span className="absolute bottom-0.5 right-0.5 text-[9px] font-bold text-black dark:text-gray-900 bg-white/80 dark:bg-gray-100/90 rounded-full w-3.5 h-3.5 flex items-center justify-center">
               {campaignsOnDay.length}
             </span>
           )}
@@ -284,16 +285,16 @@ const DashboardHospitalPage = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="text-xl font-semibold text-gray-600">Cargando estadísticas...</div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div className="text-xl font-semibold text-gray-600 dark:text-gray-400">Cargando estadísticas...</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="text-xl font-semibold text-red-600">{error}</div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+        <div className="text-xl font-semibold text-red-600 dark:text-red-400">{error}</div>
       </div>
     );
   }

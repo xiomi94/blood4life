@@ -8,7 +8,7 @@ function Index() {
         src={Logo}
         alt="Blood4Life - Logo de la plataforma de donación de sangre"
       />
-      <h1 className="text-h1 sm:text-h2 md:text-h1 lg:text-display text-gray-800">
+      <h1 className="text-h1 sm:text-h2 md:text-h1 lg:text-display text-gray-800 dark:text-white" style={{ transition: 'color 0.3s ease-in-out' }}>
         Blood4Life
       </h1>
     </main>

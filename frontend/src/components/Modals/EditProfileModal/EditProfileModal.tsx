@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
-import axiosInstance from '../../utils/axiosInstance';
+import { useAuth } from '../../../context/AuthContext';
+import axiosInstance from '../../../utils/axiosInstance';
 import { validateDNI, validateCIF, validateName, validateAddress, validatePhoneNumber, validatePostalCode, getFieldLabel } from './validationUtils';
 import { useImageUpload } from './useImageUpload';
 import { usePasswordChange } from './usePasswordChange';
@@ -9,8 +9,8 @@ import { ProfileImageUpload } from './ProfileImageUpload';
 import { DonorFields } from './DonorFields';
 import { HospitalFields } from './HospitalFields';
 import { PasswordChangeSection } from './PasswordChangeSection';
-import { DangerZone } from './DangerZone';
 import { DeleteAccountModal } from './DeleteAccountModal';
+import { DangerZone } from './DangerZone';
 
 interface EditProfileModalProps {
     isOpen: boolean;
@@ -214,6 +214,11 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
 
     if (!isOpen) return null;
 
+    // Only allow bloodDonor and hospital users to edit profile
+    if (userType !== 'bloodDonor' && userType !== 'hospital') {
+        return null;
+    }
+
     // Get user initial for profile image
     const userInitial = userType === 'bloodDonor'
         ? formData.firstName?.charAt(0) || ''
@@ -229,13 +234,13 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                 ></div>
 
                 {/* Modal */}
-                <div className="relative bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+                <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
                     {/* Header */}
-                    <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
-                        <h2 className="text-2xl font-bold text-gray-800">Editar Perfil</h2>
+                    <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center">
+                        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Editar Perfil</h2>
                         <button
                             onClick={onClose}
-                            className="text-gray-400 hover:text-gray-600 transition-colors"
+                            className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
                         >
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -282,7 +287,7 @@ const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
                             <button
                                 type="button"
                                 onClick={onClose}
-                                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                                className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                             >
                                 Cancelar
                             </button>

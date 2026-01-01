@@ -1,10 +1,10 @@
 import { Link, useNavigate } from 'react-router';
-import Button from '../../components/UI/Button/Button';
-import FormField from '../../components/FormField/FormField';
+import Button from '../../UI/Button/Button';
+import FormField from '../FormField/FormField';
 import { useState, useCallback } from 'react';
-import { authService } from '../../services/authService';
-import { useAuth } from '../../context/AuthContext';
-import { useFormPersistence } from '../../hooks/useFormPersistence';
+import { authService } from '../../../services/authService';
+import { useAuth } from '../../../context/AuthContext';
+import { useFormPersistence } from '../../../hooks/useFormPersistence';
 
 function LoginForm() {
   const navigate = useNavigate();
@@ -78,11 +78,12 @@ function LoginForm() {
   return (
     <div className="flex justify-center items-center w-full px-4 sm:px-6 md:px-0">
       <form
-        className="flex flex-col w-full max-w-md bg-white rounded-2xl shadow-xl p-6 sm:p-8 gap-4 sm:gap-6"
+        className="flex flex-col w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 gap-4 sm:gap-6"
+        style={{ transition: 'background-color 0.3s ease-in-out' }}
         onSubmit={handleSubmit}
         aria-busy={isLoading}
       >
-        <h2 className="font-poppins font-bold text-h3 sm:text-h2 text-gray-800 text-center mb-4">
+        <h2 className="font-poppins font-bold text-h3 sm:text-h2 text-gray-800 dark:text-white text-center mb-4">
           Iniciar sesión
         </h2>
 
@@ -110,7 +111,7 @@ function LoginForm() {
                 onChange={() => handleUserTypeChange('bloodDonor')}
                 disabled={formData.username.endsWith('@admin.es')}
               />
-              <span className="ml-2 text-gray-700">Donante</span>
+              <span className="ml-2 text-gray-700 dark:text-gray-200">Donante</span>
             </label>
 
             <label className="inline-flex items-center cursor-pointer">
@@ -123,7 +124,7 @@ function LoginForm() {
                 onChange={() => handleUserTypeChange('hospital')}
                 disabled={formData.username.endsWith('@admin.es')}
               />
-              <span className="ml-2 text-gray-700">Hospital</span>
+              <span className="ml-2 text-gray-700 dark:text-gray-200">Hospital</span>
             </label>
           </div>
         </fieldset>
@@ -171,11 +172,11 @@ function LoginForm() {
         </div>
 
         <div className="text-center mt-2">
-          <span className="text-sm sm:text-base text-gray-600">
+          <span className="text-sm sm:text-base text-gray-600 dark:text-gray-200">
             ¿No tiene una cuenta? Regístrate haciendo click{' '}
             <Link
               to="/register"
-              className="text-blue-600 hover:text-blue-800 underline"
+              className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
             >
               aquí
             </Link>

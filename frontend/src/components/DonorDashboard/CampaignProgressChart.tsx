@@ -63,7 +63,7 @@ export const CampaignProgressChart = ({
             <h2 className="text-xl font-bold text-gray-800">Campañas seleccionadas</h2>
             <button
               onClick={onClearFilter}
-              className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors"
+              className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
             >
               Limpiar filtro
             </button>

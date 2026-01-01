@@ -43,7 +43,7 @@ const FormField: React.FC<FormFieldProps> = ({
 
   return (
     <div className={`w-full ${containerClass}`}>
-      <label htmlFor={id} className={`block font-poppins font-medium text-body-sm md:text-body text-black mb-1`}>
+      <label htmlFor={id} className={`block font-poppins font-medium text-body-sm md:text-body text-black dark:text-gray-200 mb-1`}>
         {label}
       </label>
 
@@ -59,10 +59,11 @@ const FormField: React.FC<FormFieldProps> = ({
           aria-required={required}
           aria-invalid={ariaInvalid || !!error}
           aria-describedby={error ? errorId : undefined}
-          className={`w-full font-roboto text-body-sm md:text-body px-3 py-2 md:px-4 md:py-2.5 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 bg-white ${error ? 'border-red-500' : 'border-gray-300'
+          className={`w-full font-roboto text-body-sm md:text-body px-3 py-2 md:px-4 md:py-2.5 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 dark:disabled:bg-gray-700 bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600 ${error ? 'border-red-500' : 'border-gray-300'
             } ${showPasswordToggle ? 'pr-10' : ''}`}
           placeholder={placeholder}
           autoComplete={autoComplete}
+          style={{ transition: 'background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out' }}
         />
 
         {showPasswordToggle && (
@@ -71,7 +72,7 @@ const FormField: React.FC<FormFieldProps> = ({
               type="button"
               onClick={onTogglePassword}
               aria-label={isPasswordVisible ? "Ocultar contraseña" : "Mostrar contraseña"}
-              className="text-gray-400 hover:text-gray-600 focus:outline-none"
+              className="text-gray-400 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-200 focus:outline-none"
             >
               {isPasswordVisible ? (
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

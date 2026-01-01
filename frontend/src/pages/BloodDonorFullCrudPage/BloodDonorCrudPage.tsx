@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { bloodDonorService } from "../../services/bloodDonorService.ts";
 import type { BloodDonor } from "../../models/BloodDonor.ts";
 import BloodDonorTableItem from "../../components/BloodDonorTableIItem/BloodDonorTableItem.tsx";
-import BloodDonorForm from "../../components/BloodDonorForm/BloodDonorForm.tsx";
+import BloodDonorForm from "../../components/Forms/BloodDonorForm/BloodDonorForm.tsx";
 
 function BloodDonorCrudPage() {
 

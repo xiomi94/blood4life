@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axiosInstance from '../../utils/axiosInstance';
+import axiosInstance from '../../../utils/axiosInstance';
 
 interface UseDeleteAccountReturn {
     showDeleteConfirm: boolean;
@@ -17,7 +17,7 @@ interface UseDeleteAccountReturn {
  * - Executes delete account API call
  * - Shared between donor and hospital (only endpoint differs)
  */
-export const useDeleteAccount = (userType: 'bloodDonor' | 'hospital' | null): UseDeleteAccountReturn => {
+export const useDeleteAccount = (userType: 'bloodDonor' | 'hospital' | 'admin' | null): UseDeleteAccountReturn => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [deleteConfirmText, setDeleteConfirmText] = useState('');
 

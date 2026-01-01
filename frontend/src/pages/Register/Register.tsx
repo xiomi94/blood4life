@@ -15,13 +15,13 @@ const Register: React.FC = () => {
   }, []);
 
   return (
-    <main className="flex flex-col flex-grow items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+    <main className="flex flex-col flex-grow items-center justify-center px-4 sm:px-6 lg:px-8">
       {/* Título */}
       <div className="text-center mb-8 sm:mb-12">
-        <h1 className="font-poppins font-bold text-h3 sm:text-h2 md:text-h1 text-gray-800 mb-4">
+        <h1 className="font-poppins font-bold text-h3 sm:text-h2 md:text-h1 text-gray-800 dark:text-white mb-4" style={{ transition: "color 0.3s ease-in-out" }}>
           Bienvenido a Blood4Life
         </h1>
-        <p className="font-roboto text-body-sm sm:text-body-lg md:text-body text-gray-600 max-w-2xl mx-auto">
+        <p className="font-roboto text-body-sm sm:text-body-lg md:text-body text-gray-600 dark:text-gray-200 max-w-2xl mx-auto" style={{ transition: "color 0.3s ease-in-out" }}>
           Selecciona tu perfil para continuar con el registro en nuestra plataforma
         </p>
       </div>
@@ -29,7 +29,7 @@ const Register: React.FC = () => {
       {/* Tarjetas */}
       <div className={`flex ${isMobile ? 'flex-col items-center' : 'flex-row items-start'} gap-4 sm:gap-6 md:gap-8 mb-8 w-full max-w-6xl justify-center`}>
         {/* Donante */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 w-full sm:w-5/12 lg:w-1/3 flex flex-col items-center">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 w-full sm:w-5/12 lg:w-1/3 flex flex-col items-center">
           <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-6">
             <svg
               className="w-10 h-10 text-blue-600"
@@ -46,7 +46,7 @@ const Register: React.FC = () => {
               />
             </svg>
           </div>
-          <h2 className="font-poppins font-bold text-body-lg sm:text-h3 text-gray-800 mb-4 sm:mb-8">
+          <h2 className="font-poppins font-bold text-body-lg sm:text-h3 text-gray-800 dark:text-white mb-4 sm:mb-8">
             Soy Donante
           </h2>
           <Button to="/registerbloodDonor" className="flex items-center justify-center">
@@ -58,7 +58,7 @@ const Register: React.FC = () => {
         </div>
 
         {/* Hospital */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 w-full sm:w-5/12 lg:w-1/3 flex flex-col items-center">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 w-full sm:w-5/12 lg:w-1/3 flex flex-col items-center">
           <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-6">
             <svg
               className="w-10 h-10 text-blue-600"
@@ -75,7 +75,7 @@ const Register: React.FC = () => {
               />
             </svg>
           </div>
-          <h2 className="font-poppins font-bold text-body-lg sm:text-h3 text-gray-800 mb-4 sm:mb-8">
+          <h2 className="font-poppins font-bold text-body-lg sm:text-h3 text-gray-800 dark:text-white mb-4 sm:mb-8">
             Soy Hospital / Centro
           </h2>
           <Button to="/registerhospital" className="flex items-center justify-center">
@@ -90,11 +90,11 @@ const Register: React.FC = () => {
 
       {/* Link a login */}
       <div className="text-center mt-4">
-        <span className="font-roboto text-caption sm:text-body-sm text-gray-600">
+        <span className="font-roboto text-caption sm:text-body-sm text-gray-600 dark:text-gray-200">
           ¿Ya tiene una cuenta? Click{' '}
           <Link
             to="/login"
-            className="text-blue-600 hover:text-blue-800 underline"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
           >
             aquí
           </Link>

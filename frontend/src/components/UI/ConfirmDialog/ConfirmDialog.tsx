@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from '../../Modal/Modal';
+import Modal from '../../Modals/Modal/Modal';
 import Button from '../Button/Button';
 
 interface ConfirmDialogProps {
