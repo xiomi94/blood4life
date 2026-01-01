@@ -13,6 +13,7 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
+    "@stomp/stompjs": "^7.2.1",
     "@tailwindcss/vite": "^4.1.16",
     "axios": "^1.13.1",
     "chart.js": "^4.5.1",
@@ -25,6 +26,7 @@
     "react-dom": "^19.1.1",
     "react-router": "^7.9.6",
     "react-router-dom": "^7.9.6",
+    "sockjs-client": "^1.6.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.17"
@@ -36,6 +38,7 @@
     "@types/node": "^24.6.0",
     "@types/react": "^19.1.16",
     "@types/react-dom": "^19.1.9",
+    "@types/sockjs-client": "^1.5.4",
     "@vitejs/plugin-react": "^5.0.4",
     "eslint": "^9.36.0",
     "eslint-plugin-react-hooks": "^5.2.0",

@@ -1,4 +1,5 @@
-import { Bar } from 'react-chartjs-2';
+import { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import type { Campaign } from '../../services/campaignService';
 
 interface CampaignProgressChartProps {
@@ -14,113 +15,195 @@ export const CampaignProgressChart = ({
   filteredCampaigns,
   onClearFilter
 }: CampaignProgressChartProps) => {
-  const campaignsChartData = {
-    labels: campaigns.map(c => c.name),
-    datasets: [
-      {
-        label: 'Meta de Donantes',
-        data: campaigns.map(c => c.requiredDonorQuantity),
-        backgroundColor: 'rgba(59, 130, 246, 0.7)',
-        borderColor: 'rgba(59, 130, 246, 1)',
-        borderWidth: 1,
-        borderRadius: 6,
-      },
-      {
-        label: 'Donantes Inscritos',
-        data: campaigns.map(c => c.currentDonorCount || 0),
-        backgroundColor: 'rgba(34, 197, 94, 0.7)',
-        borderColor: 'rgba(34, 197, 94, 1)',
-        borderWidth: 1,
-        borderRadius: 6,
-      },
-    ],
+  const { user } = useAuth();
+  const [showOnlyCompatible, setShowOnlyCompatible] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Filter campaigns by exact blood type match and search query
+  const getFilteredCampaigns = () => {
+    let filtered = campaigns;
+
+    // Apply date filter if selected
+    if (selectedDate) {
+      filtered = filteredCampaigns;
+    } else if (showOnlyCompatible) {
+      // Apply blood type compatibility filter
+      filtered = campaigns.filter(campaign => {
+        const donorBloodType = user?.bloodType?.type;
+        if (!donorBloodType) return false;
+
+        const requiredTypes = campaign.requiredBloodType
+          .split(',')
+          .map(t => t.trim().replace(/[\[\]\"]/g, ''));
+
+        return requiredTypes.includes('Universal') || requiredTypes.includes(donorBloodType);
+      });
+    }
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(campaign =>
+        campaign.name.toLowerCase().includes(query) ||
+        campaign.hospitalName.toLowerCase().includes(query)
+      );
+    }
+
+    return filtered;
   };
 
-  const campaignsOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'bottom' as const,
-        labels: {
-          font: {
-            family: "'Roboto', sans-serif",
-            size: 12,
-          },
-          padding: 15,
-        },
-      },
-      title: {
-        display: true,
-        text: 'Progreso de Donantes por Campaña',
-        font: {
-          size: 14,
-          family: "'Roboto', sans-serif",
-        },
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        grid: {
-          color: 'rgba(0, 0, 0, 0.05)',
-        },
-        title: {
-          display: true,
-          text: 'Número de Donantes',
-        },
-      },
-      x: {
-        grid: {
-          display: false,
-        },
-      },
-    },
-  };
+  const displayedCampaigns = getFilteredCampaigns();
 
   return (
-    <section className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-      <div className="flex items-center justify-between mb-6">
+    <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-3">
+      {/* Title and Search bar in same row */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
         {selectedDate ? (
-          <div className="flex items-center gap-3">
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white">Campañas seleccionadas</h2>
+          <>
+            <h2 className="text-xl font-bold text-gray-800">Campañas seleccionadas</h2>
             <button
               onClick={onClearFilter}
               className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
             >
               Limpiar filtro
             </button>
-          </div>
+          </>
         ) : (
-          <h2 className="text-xl font-bold text-gray-800 dark:text-white">Progreso de Campañas</h2>
+          <>
+            <h2 className="text-xl font-bold text-gray-800">Progreso de Campañas</h2>
+            {/* Search bar */}
+            <div className="relative w-full sm:w-64">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar por título o ubicación..."
+                className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+              />
+              <svg
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+          </>
         )}
       </div>
 
+      {/* Toggle filter */}
       {!selectedDate && (
-        <div className="relative h-[350px] w-full">
-          <Bar data={campaignsChartData} options={campaignsOptions} />
+        <div className="flex items-center gap-2 mb-4">
+          <span className="text-sm font-medium text-gray-600">Visualizando:</span>
+          <button
+            onClick={() => setShowOnlyCompatible(!showOnlyCompatible)}
+            className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${showOnlyCompatible
+              ? 'bg-blue-600 text-white hover:bg-blue-700'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+          >
+            {showOnlyCompatible ? 'Compatibles conmigo' : 'Todas las campañas'}
+          </button>
         </div>
       )}
 
-      {selectedDate && (
-        <div className="relative h-[350px] w-full overflow-y-auto pr-2 space-y-3">
-          {filteredCampaigns.length === 0 ? (
-            <div className="flex h-full items-center justify-center text-gray-500 dark:text-gray-400">
-              No hay campañas en esta fecha
+      <div className="relative h-[400px] w-full">
+        <div className="h-full overflow-y-auto pr-2 pt-2 pb-2 space-y-3 custom-scrollbar"
+          style={{
+            scrollbarWidth: 'thin',
+            scrollbarColor: '#cbd5e1 transparent'
+          }}
+        >
+          {displayedCampaigns.length === 0 ? (
+            <div className="flex h-full items-center justify-center text-gray-500">
+              {showOnlyCompatible
+                ? 'No hay campañas compatibles con tu tipo de sangre'
+                : 'No hay campañas disponibles'}
             </div>
           ) : (
-            filteredCampaigns.map(campaign => (
-              <div key={campaign.id} className="p-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg">
-                <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">{campaign.name}</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{campaign.description}</p>
-                <div className="text-xs text-gray-500 dark:text-gray-400">
-                  {new Date(campaign.startDate).toLocaleDateString('es-ES')} - {new Date(campaign.endDate).toLocaleDateString('es-ES')}
-                </div>
-              </div>
-            ))
+            displayedCampaigns
+              .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
+              .map(campaign => {
+                const progress = campaign.currentDonorCount && campaign.requiredDonorQuantity
+                  ? (campaign.currentDonorCount / campaign.requiredDonorQuantity) * 100
+                  : 0;
+
+                return (
+                  <div key={campaign.id} className="p-4 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex flex-col gap-1 flex-1">
+                        <h3 className="text-lg font-bold text-gray-800">{campaign.name}</h3>
+                        <p className="text-sm text-gray-600 line-clamp-2">{campaign.description}</p>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Progreso</span>
+                        <span className="font-semibold text-gray-800">
+                          {campaign.currentDonorCount || 0} / {campaign.requiredDonorQuantity} donantes
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2.5">
+                        <div
+                          className="bg-blue-600 h-2.5 rounded-full transition-all"
+                          style={{ width: `${Math.min(progress, 100)}%` }}
+                        ></div>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 flex flex-wrap gap-2 text-sm items-center">
+                      <span className="text-gray-600 flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        {campaign.location}
+                      </span>
+                      <span className="text-gray-600 flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        {new Date(campaign.startDate).toLocaleDateString('es-ES')} - {new Date(campaign.endDate).toLocaleDateString('es-ES')}
+                      </span>
+                      <div className="flex flex-wrap gap-1 ml-auto">
+                        {campaign.requiredBloodType.split(',').map((type, idx) => (
+                          <span key={idx} className="bg-red-100 text-red-700 px-2 py-0.5 rounded text-xs font-bold">
+                            {type.replace(/[\[\]\s"]/g, '')}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
           )}
         </div>
-      )}
+        {/* Gradient fade effects */}
+        {displayedCampaigns.length > 0 && (
+          <>
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-b from-white via-white/90 to-transparent pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-t from-white via-white/90 to-transparent pointer-events-none"></div>
+          </>
+        )}
+      </div>
     </section>
   );
 };
