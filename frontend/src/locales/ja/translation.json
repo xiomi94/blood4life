@@ -1,0 +1,236 @@
+{
+    "common": {
+        "loading": "読み込み中...",
+        "error": "エラー",
+        "success": "成功",
+        "save": "保存",
+        "cancel": "キャンセル",
+        "close": "閉じる",
+        "delete": "削除",
+        "edit": "編集",
+        "confirm": "確認",
+        "yes": "はい",
+        "no": "いいえ",
+        "search": "検索",
+        "filter": "フィルター",
+        "welcome": "ようこそ"
+    },
+    "footer": {
+        "copyright": "Blood4Life © 2025. 全著作権所有。",
+        "aboutUs": "私たちについて",
+        "privacyPolicy": "プライバシーポリシー"
+    },
+    "header": {
+        "home": "ホーム",
+        "login": "ログイン",
+        "register": "登録",
+        "campaigns": "キャンペーン",
+        "myProfile": "マイプロフィール",
+        "editProfile": "プロフィールを編集",
+        "logout": "ログアウト",
+        "logoutConfirm": "本当にログアウトしますか？",
+        "cancel": "キャンセル",
+        "notifications": "通知を表示",
+        "alerts": "アラートを表示",
+        "userMenu": "ユーザーメニュー",
+        "newNotifications": "新しい通知があります"
+    },
+    "auth": {
+        "login": {
+            "title": "ログイン",
+            "userType": "ユーザータイプ",
+            "donor": "ドナー",
+            "hospital": "病院",
+            "email": "メールアドレス",
+            "emailPlaceholder": "メールアドレスを入力",
+            "password": "パスワード",
+            "passwordPlaceholder": "パスワードを入力",
+            "submit": "送信",
+            "loading": "読み込み中...",
+            "forgotPassword": "パスワードをお忘れですか？",
+            "noAccount": "アカウントをお持ちではありませんか？こちらから登録",
+            "here": "こちら",
+            "error": "ログインエラー。資格情報を確認してください。"
+        },
+        "register": {
+            "welcome": "Blood4Lifeへようこそ",
+            "selectProfile": "登録を続けるにはプロフィールを選択してください",
+            "iAmDonor": "ドナーです",
+            "iAmHospital": "病院/センターです",
+            "registerAsDonor": "ドナーとして登録",
+            "registerAsHospital": "病院として登録",
+            "haveAccount": "すでにアカウントをお持ちですか？クリック",
+            "here": "こちら",
+            "requiredField": "アスタリスク \"*\" は必須フィールドを示します",
+            "formTitle": "新しいドナーを登録",
+            "modal": {
+                "successTitle": "登録成功！",
+                "errorTitle": "登録エラー"
+            },
+            "imageUpload": {
+                "title": "プロフィール写真",
+                "uploadButton": "写真をアップロード",
+                "formats": "形式：JPG、PNG",
+                "maxSize": "最大：5MB",
+                "preview": "プロフィール写真のプレビュー",
+                "remove": "プロフィール写真を削除",
+                "select": "プロフィール写真を選択",
+                "ready": "✓ 画像は保存準備完了",
+                "saveInfo": "登録時に保存されます",
+                "invalidFormat": "有効な画像を選択してください（JPGまたはPNG)",
+                "tooLarge": "画像は5MBを超えてはいけません"
+            },
+            "bloodDonor": {
+                "dni": "身分証明書",
+                "dniPlaceholder": "身分証明書を入力 *",
+                "firstName": "名",
+                "firstNamePlaceholder": "名を入力 *",
+                "lastName": "姓",
+                "lastNamePlaceholder": "姓を入力 *",
+                "gender": "性別",
+                "genderSelect": "性別を選択 *",
+                "male": "男性",
+                "female": "女性",
+                "preferNotToSay": "回答しない",
+                "bloodType": "血液型",
+                "bloodTypeSelect": "血液型を選択 *",
+                "email": "メールアドレス",
+                "emailPlaceholder": "メールアドレスを入力 *",
+                "phone": "電話番号",
+                "phonePlaceholder": "電話番号を入力 *",
+                "dateOfBirth": "生年月日",
+                "dateOfBirthPlaceholder": "生年月日を選択 *",
+                "password": "パスワード",
+                "passwordPlaceholder": "パスワードを入力 *",
+                "passwordHint": "大文字、小文字、数字を含む必要があります（8〜32文字）",
+                "processing": "処理中...",
+                "registerButton": "登録",
+                "resetButton": "リセット",
+                "validation": {
+                    "dniRequired": "身分証明書は必須です",
+                    "dniInvalid": "無効な身分証明書形式（8桁 + 1文字）",
+                    "firstNameRequired": "名は必須です",
+                    "firstNameMin": "名は2文字以上である必要があります",
+                    "lastNameRequired": "姓は必須です",
+                    "lastNameMin": "姓は2文字以上である必要があります",
+                    "genderRequired": "性別は必須です",
+                    "bloodTypeRequired": "血液型は必須です",
+                    "emailRequired": "メールアドレスは必須です",
+                    "emailInvalid": "メールアドレスの形式が無効です",
+                    "phoneRequired": "電話番号は必須です",
+                    "phoneMin": "電話番号は9桁以上である必要があります",
+                    "dateOfBirthRequired": "生年月日は必須です",
+                    "ageMin": "18歳以上である必要があります",
+                    "dateFuture": "日付は未来にできません",
+                    "passwordRequired": "パスワードは必須です",
+                    "passwordMin": "パスワードは8文字以上である必要があります",
+                    "fixErrors": "次のエラーを修正してください："
+                },
+                "success": "ドナーが正常に登録されました。ログインできます。",
+                "error": "ドナーの登録中にエラーが発生しました。もう一度お試しください。"
+            }
+        }
+    },
+    "theme": {
+        "toggle": "テーマを切り替える",
+        "light": "ライトモードに切り替え",
+        "dark": "ダークモードに切り替え"
+    },
+    "language": {
+        "select": "言語を選択",
+        "es": "スペイン語",
+        "en": "英語",
+        "de": "ドイツ語",
+        "fr": "フランス語",
+        "ja": "日本語",
+        "zh": "中国語"
+    },
+    "dashboard": {
+        "loading": "統計を読み込んでいます...",
+        "loadError": "統計の読み込みエラー",
+        "sidebar": {
+            "newCampaign": "新しいキャンペーン",
+            "newDonation": "新しい寄付",
+            "home": "ホーム",
+            "myCampaigns": "マイキャンペーン",
+            "news": "ニュース",
+            "newBadge": "NEW"
+        },
+        "appointments": {
+            "title": "本日の予約",
+            "noAppointments": "本日の予約はありません",
+            "unknownDonor": "不明なドナー",
+            "noTime": "時間なし",
+            "dniLabel": "ID"
+        },
+        "stats": {
+            "selectedCampaigns": "選択されたキャンペーン",
+            "clearFilter": "フィルターをクリア",
+            "searchPlaceholder": "タイトルまたは場所で検索...",
+            "campaignsOption": "キャンペーン",
+            "bloodTypeOption": "血液型別分布",
+            "genderOption": "性別分布",
+            "appointmentsToday": "今日の予約",
+            "donationsThisMonth": "今月の寄付"
+        },
+        "campaigns": {
+            "goalLabel": "目標",
+            "donors": "ドナー",
+            "editButton": "キャンペーンを編集",
+            "deleteButton": "キャンペーンを削除",
+            "datesLabel": "日付",
+            "bloodTypesLabel": "血液型",
+            "noResults": "条件に一致するキャンペーンが見つかりません",
+            "noCampaignsOnDate": "この日付にはキャンペーンがありません",
+            "noCampaigns": "アクティブなキャンペーンはありません"
+        },
+        "calendar": {
+            "title": "カレンダー",
+            "months": {
+                "january": "1月",
+                "february": "2月",
+                "march": "3月",
+                "april": "4月",
+                "may": "5月",
+                "june": "6月",
+                "july": "7月",
+                "august": "8月",
+                "september": "9月",
+                "october": "10月",
+                "november": "11月",
+                "december": "12月"
+            },
+            "days": {
+                "monday": "月",
+                "tuesday": "火",
+                "wednesday": "水",
+                "thursday": "木",
+                "friday": "金",
+                "saturday": "土",
+                "sunday": "日"
+            },
+            "legend": {
+                "completed": "完了",
+                "active": "アクティブ",
+                "upcoming": "今後"
+            }
+        },
+        "donations": {
+            "title": "受け取った寄付",
+            "subtitle": "病院で受け取った最新の献血",
+            "campaignLabel": "献血キャンペーン",
+            "donationType": "寄付の種類",
+            "hospitalLabel": "病院",
+            "completed": "完了"
+        },
+        "modal": {
+            "delete": {
+                "title": "キャンペーンを削除",
+                "confirmMessage": "このキャンペーンを削除してもよろしいですか？",
+                "warning": "この操作は元に戻せません。",
+                "instructionsLabel": "確認するには、キャンペーン名を入力してください：",
+                "placeholder": "キャンペーン名..."
+            }
+        }
+    }
+}

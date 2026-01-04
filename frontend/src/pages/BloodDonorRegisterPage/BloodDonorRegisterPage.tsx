@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import BloodDonorRegisterForm from '../../components/Forms/BloodDonorRegisterForm/BloodDonorRegisterForm';
 import Modal from '../../components/Modals/Modal/Modal';
 
 const BloodDonorRegisterPage: React.FC = () => {
+  const { t } = useTranslation();
   const [modal, setModal] = useState<{
     isOpen: boolean;
     title: string;
@@ -24,11 +26,11 @@ const BloodDonorRegisterPage: React.FC = () => {
   };
 
   const handleSuccess = (message: string) => {
-    showModal('¡Registro exitoso!', message, 'success');
+    showModal(t('auth.register.modal.successTitle'), message, 'success');
   };
 
   const handleError = (error: string) => {
-    showModal('Error en el registro', error, 'error');
+    showModal(t('auth.register.modal.errorTitle'), error, 'error');
   };
 
   return (
@@ -37,7 +39,7 @@ const BloodDonorRegisterPage: React.FC = () => {
         {/* Título */}
         <div className="text-center">
           <h2 className="font-poppins font-semibold text-h3 sm:text-h2 md:text-h1 text-gray-800 dark:text-white mb-2" style={{ transition: 'color 0.3s ease-in-out' }}>
-            Registrar nuevo donante
+            {t('auth.register.formTitle')}
           </h2>
         </div>
 
