@@ -1,4 +1,5 @@
 import { Link, useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import Button from '../../UI/Button/Button';
 import FormField from '../FormField/FormField';
 import { useState, useCallback } from 'react';
@@ -7,6 +8,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { useFormPersistence } from '../../../hooks/useFormPersistence';
 
 function LoginForm() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -69,7 +71,7 @@ function LoginForm() {
 
     } catch (err: any) {
       console.error(err);
-      setError(err.response?.data?.error || 'Error al iniciar sesión. Verifique sus credenciales.');
+      setError(err.response?.data?.error || t('auth.login.error'));
     } finally {
       setIsLoading(false);
     }
@@ -84,7 +86,7 @@ function LoginForm() {
         aria-busy={isLoading}
       >
         <h2 className="font-poppins font-bold text-h3 sm:text-h2 text-gray-800 dark:text-white text-center mb-4">
-          Iniciar sesión
+          {t('auth.login.title')}
         </h2>
 
         {error && (
@@ -99,7 +101,7 @@ function LoginForm() {
         )}
 
         <fieldset className="mb-2">
-          <legend className="sr-only">Tipo de usuario</legend>
+          <legend className="sr-only">{t('auth.login.userType')}</legend>
           <div className="flex justify-center gap-4">
             <label className="inline-flex items-center cursor-pointer">
               <input
@@ -111,7 +113,7 @@ function LoginForm() {
                 onChange={() => handleUserTypeChange('bloodDonor')}
                 disabled={formData.username.endsWith('@admin.es')}
               />
-              <span className="ml-2 text-gray-700 dark:text-gray-200">Donante</span>
+              <span className="ml-2 text-gray-700 dark:text-gray-200">{t('auth.login.donor')}</span>
             </label>
 
             <label className="inline-flex items-center cursor-pointer">
@@ -124,7 +126,7 @@ function LoginForm() {
                 onChange={() => handleUserTypeChange('hospital')}
                 disabled={formData.username.endsWith('@admin.es')}
               />
-              <span className="ml-2 text-gray-700 dark:text-gray-200">Hospital</span>
+              <span className="ml-2 text-gray-700 dark:text-gray-200">{t('auth.login.hospital')}</span>
             </label>
           </div>
         </fieldset>
@@ -133,11 +135,11 @@ function LoginForm() {
           type="email"
           id="username"
           name="username"
-          label="Correo electrónico"
+          label={t('auth.login.email')}
           value={formData.username}
           onChange={handleInputChange}
           required
-          placeholder="Ingrese su correo"
+          placeholder={t('auth.login.emailPlaceholder')}
           containerClass="mb-2"
           labelClass="text-sm sm:text-base"
           autoComplete="email"
@@ -148,11 +150,11 @@ function LoginForm() {
           type="password"
           id="password"
           name="password"
-          label="Contraseña"
+          label={t('auth.login.password')}
           value={formData.password}
           onChange={handleInputChange}
           required
-          placeholder="Ingrese su contraseña"
+          placeholder={t('auth.login.passwordPlaceholder')}
           containerClass="mb-4"
           labelClass="text-sm sm:text-base"
           showPasswordToggle={true}
@@ -167,18 +169,18 @@ function LoginForm() {
             className="px-6 sm:px-8 py-2 sm:py-3 text-body w-full sm:w-auto sm:max-w-64 disabled:opacity-50"
             disabled={isLoading}
           >
-            {isLoading ? 'Cargando...' : 'Enviar'}
+            {isLoading ? t('auth.login.loading') : t('auth.login.submit')}
           </Button>
         </div>
 
         <div className="text-center mt-2">
           <span className="text-sm sm:text-base text-gray-600 dark:text-gray-200">
-            ¿No tiene una cuenta? Regístrate haciendo click{' '}
+            {t('auth.login.noAccount')}{' '}
             <Link
               to="/register"
               className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
             >
-              aquí
+              {t('auth.login.here')}
             </Link>
           </span>
         </div>

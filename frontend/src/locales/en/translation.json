@@ -1,0 +1,238 @@
+{
+    "common": {
+        "loading": "Loading...",
+        "error": "Error",
+        "success": "Success",
+        "save": "Save",
+        "cancel": "Cancel",
+        "close": "Close",
+        "delete": "Delete",
+        "edit": "Edit",
+        "confirm": "Confirm",
+        "yes": "Yes",
+        "no": "No",
+        "search": "Search",
+        "filter": "Filter",
+        "welcome": "Welcome"
+    },
+    "footer": {
+        "copyright": "Blood4Life © 2025. All rights reserved.",
+        "aboutUs": "About us",
+        "privacyPolicy": "Privacy policy"
+    },
+    "header": {
+        "home": "Home",
+        "dashboard": "Dashboard",
+        "profile": "Profile",
+        "logout": "Log Out",
+        "login": "Log In",
+        "register": "Sign Up",
+        "campaigns": "Campaigns",
+        "myProfile": "My Profile",
+        "editProfile": "Edit My Profile",
+        "logoutConfirm": "Are you sure you want to log out?",
+        "cancel": "Cancel",
+        "notifications": "View notifications",
+        "alerts": "View alerts",
+        "userMenu": "User menu",
+        "newNotifications": "You have new notifications"
+    },
+    "auth": {
+        "login": {
+            "title": "Log In",
+            "userType": "User type",
+            "donor": "Donor",
+            "hospital": "Hospital",
+            "email": "Email",
+            "emailPlaceholder": "Enter your email",
+            "password": "Password",
+            "passwordPlaceholder": "Enter your password",
+            "submit": "Submit",
+            "loading": "Loading...",
+            "noAccount": "Don't have an account? Sign up by clicking",
+            "here": "here",
+            "error": "Login error. Please check your credentials.",
+            "forgotPassword": "Forgot your password?"
+        },
+        "register": {
+            "welcome": "Welcome to Blood4Life",
+            "selectProfile": "Select your profile to continue with registration on our platform",
+            "iAmDonor": "I'm a Donor",
+            "iAmHospital": "I'm a Hospital / Center",
+            "registerAsDonor": "Register as Donor",
+            "registerAsHospital": "Register as Hospital",
+            "haveAccount": "Already have an account? Click",
+            "here": "here",
+            "requiredField": "The asterisk \"*\" indicates that the field is required",
+            "formTitle": "Register new donor",
+            "modal": {
+                "successTitle": "Registration successful!",
+                "errorTitle": "Registration error"
+            },
+            "imageUpload": {
+                "title": "Profile Photo",
+                "uploadButton": "Upload photo",
+                "formats": "Formats: JPG, PNG",
+                "maxSize": "Maximum: 5MB",
+                "preview": "Profile photo preview",
+                "remove": "Remove profile photo",
+                "select": "Select profile photo",
+                "ready": "✓ Image ready to save",
+                "saveInfo": "Will be saved when registering the donor",
+                "invalidFormat": "Please select a valid image (JPG or PNG)",
+                "tooLarge": "Image must not exceed 5MB"
+            },
+            "bloodDonor": {
+                "dni": "ID",
+                "dniPlaceholder": "Enter ID *",
+                "firstName": "First Name",
+                "firstNamePlaceholder": "Enter first name *",
+                "lastName": "Last Name",
+                "lastNamePlaceholder": "Enter last name *",
+                "gender": "Gender",
+                "genderSelect": "Select a gender *",
+                "male": "Male",
+                "female": "Female",
+                "preferNotToSay": "Prefer not to say",
+                "bloodType": "Blood Type",
+                "bloodTypeSelect": "Select a blood type *",
+                "email": "Email",
+                "emailPlaceholder": "Enter email *",
+                "phone": "Phone",
+                "phonePlaceholder": "Enter phone *",
+                "dateOfBirth": "Date of Birth",
+                "dateOfBirthPlaceholder": "Select date of birth *",
+                "password": "Password",
+                "passwordPlaceholder": "Enter password *",
+                "passwordHint": "Must contain: uppercase, lowercase, number (8-32 characters)",
+                "processing": "Processing...",
+                "registerButton": "Register",
+                "resetButton": "Reset",
+                "validation": {
+                    "dniRequired": "ID is required",
+                    "dniInvalid": "Invalid ID format (8 numbers + 1 letter)",
+                    "firstNameRequired": "First name is required",
+                    "firstNameMin": "First name must be at least 2 characters",
+                    "lastNameRequired": "Last name is required",
+                    "lastNameMin": "Last name must be at least 2 characters",
+                    "genderRequired": "Gender is required",
+                    "bloodTypeRequired": "Blood type is required",
+                    "emailRequired": "Email is required",
+                    "emailInvalid": "Email format is not valid",
+                    "phoneRequired": "Phone is required",
+                    "phoneMin": "Phone must have at least 9 digits",
+                    "dateOfBirthRequired": "Date of birth is required",
+                    "ageMin": "You must be over 18 years old",
+                    "dateFuture": "Date cannot be in the future",
+                    "passwordRequired": "Password is required",
+                    "passwordMin": "Password must be at least 8 characters",
+                    "fixErrors": "Please fix the following errors:"
+                },
+                "success": "Donor has been registered successfully. You can now log in.",
+                "error": "An error occurred while registering the donor. Please try again."
+            }
+        }
+    },
+    "theme": {
+        "toggle": "Toggle theme",
+        "light": "Switch to light mode",
+        "dark": "Switch to dark mode"
+    },
+    "language": {
+        "select": "Select language",
+        "es": "Spanish",
+        "en": "English",
+        "de": "German",
+        "fr": "French",
+        "ja": "Japanese",
+        "zh": "Chinese"
+    },
+    "dashboard": {
+        "loading": "Loading statistics...",
+        "loadError": "Error loading statistics",
+        "sidebar": {
+            "newCampaign": "New campaign",
+            "newDonation": "New donation",
+            "home": "Home",
+            "myCampaigns": "My campaigns",
+            "news": "News",
+            "newBadge": "NEW"
+        },
+        "appointments": {
+            "title": "Appointments scheduled for today",
+            "noAppointments": "No appointments scheduled for today",
+            "unknownDonor": "Unknown donor",
+            "noTime": "No time",
+            "dniLabel": "ID"
+        },
+        "stats": {
+            "selectedCampaigns": "Selected campaigns",
+            "clearFilter": "Clear filter",
+            "searchPlaceholder": "Search by title or location...",
+            "campaignsOption": "Campaigns",
+            "bloodTypeOption": "Distribution by blood type",
+            "genderOption": "Distribution by gender",
+            "appointmentsToday": "Appointments today",
+            "donationsThisMonth": "Donations this month"
+        },
+        "campaigns": {
+            "goalLabel": "Goal",
+            "donors": "donors",
+            "editButton": "Edit campaign",
+            "deleteButton": "Delete campaign",
+            "datesLabel": "Dates",
+            "bloodTypesLabel": "Blood types",
+            "noResults": "No campaigns found matching that criteria",
+            "noCampaignsOnDate": "No campaigns on this date",
+            "noCampaigns": "No active campaigns"
+        },
+        "calendar": {
+            "title": "Calendar",
+            "months": {
+                "january": "January",
+                "february": "February",
+                "march": "March",
+                "april": "April",
+                "may": "May",
+                "june": "June",
+                "july": "July",
+                "august": "August",
+                "september": "September",
+                "october": "October",
+                "november": "November",
+                "december": "December"
+            },
+            "days": {
+                "monday": "Mon",
+                "tuesday": "Tue",
+                "wednesday": "Wed",
+                "thursday": "Thu",
+                "friday": "Fri",
+                "saturday": "Sat",
+                "sunday": "Sun"
+            },
+            "legend": {
+                "completed": "Completed",
+                "active": "Active",
+                "upcoming": "Upcoming"
+            }
+        },
+        "donations": {
+            "title": "Donations received",
+            "subtitle": "Latest blood donations received at the hospital.",
+            "campaignLabel": "Donation campaign",
+            "donationType": "Donation type",
+            "hospitalLabel": "Hospital",
+            "completed": "Completed"
+        },
+        "modal": {
+            "delete": {
+                "title": "Delete Campaign",
+                "confirmMessage": "Are you sure you want to delete this campaign?",
+                "warning": "This action cannot be undone.",
+                "instructionsLabel": "To confirm, type the campaign name:",
+                "placeholder": "Campaign name..."
+            }
+        }
+    }
+}

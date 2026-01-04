@@ -1,0 +1,237 @@
+{
+    "common": {
+        "loading": "Laden...",
+        "error": "Fehler",
+        "success": "Erfolg",
+        "save": "Speichern",
+        "cancel": "Abbrechen",
+        "close": "Schließen",
+        "delete": "Löschen",
+        "edit": "Bearbeiten",
+        "confirm": "Bestätigen",
+        "yes": "Ja",
+        "no": "Nein",
+        "search": "Suchen",
+        "filter": "Filtern",
+        "welcome": "Willkommen"
+    },
+    "footer": {
+        "copyright": "Blood4Life © 2025. Alle Rechte vorbehalten.",
+        "aboutUs": "Über uns",
+        "privacyPolicy": "Datenschutzrichtlinie"
+    },
+    "header": {
+        "home": "Startseite",
+        "login": "Anmelden",
+        "register": "Registrieren",
+        "campaigns": "Kampagnen",
+        "myProfile": "Mein Profil",
+        "editProfile": "Profil bearbeiten",
+        "logout": "Abmelden",
+        "logoutConfirm": "Möchten Sie sich wirklich abmelden?",
+        "cancel": "Abbrechen",
+        "notifications": "Benachrichtigungen anzeigen",
+        "alerts": "Warnungen anzeigen",
+        "userMenu": "Benutzermenü",
+        "newNotifications": "Sie haben neue Benachrichtigungen"
+    },
+    "auth": {
+        "login": {
+            "title": "Anmelden",
+            "userType": "Benutzertyp",
+            "donor": "Spender",
+            "hospital": "Krankenhaus",
+            "email": "E-Mail",
+            "emailPlaceholder": "Geben Sie Ihre E-Mail ein",
+            "password": "Passwort",
+            "passwordPlaceholder": "Geben Sie Ihr Passwort ein",
+            "submit": "Senden",
+            "loading": "Lädt...",
+            "forgotPassword": "Passwort vergessen?",
+            "noAccount": "Haben Sie kein Konto? Registrieren Sie sich, indem Sie",
+            "here": "hier",
+            "registerLink": "Hier registrieren",
+            "error": "Anmeldefehler. Bitte überprüfen Sie Ihre Anmeldedaten."
+        },
+        "register": {
+            "welcome": "Willkommen bei Blood4Life",
+            "selectProfile": "Wählen Sie Ihr Profil aus, um mit der Registrierung auf unserer Plattform fortzufahren",
+            "iAmDonor": "Ich bin Spender",
+            "iAmHospital": "Ich bin Krankenhaus / Zentrum",
+            "registerAsDonor": "Als Spender registrieren",
+            "registerAsHospital": "Als Krankenhaus registrieren",
+            "haveAccount": "Haben Sie bereits ein Konto? Klicken Sie",
+            "here": "hier",
+            "requiredField": "Das Sternchen \"*\" zeigt an, dass das Feld erforderlich ist",
+            "formTitle": "Neuen Spender registrieren",
+            "modal": {
+                "successTitle": "Registrierung erfolgreich!",
+                "errorTitle": "Registrierungsfehler"
+            },
+            "imageUpload": {
+                "title": "Profilfoto",
+                "uploadButton": "Foto hochladen",
+                "formats": "Formate: JPG, PNG",
+                "maxSize": "Maximum: 5MB",
+                "preview": "Profilfoto Vorschau",
+                "remove": "Profilfoto entfernen",
+                "select": "Profilfoto auswählen",
+                "ready": "✓ Bild bereit zum Speichern",
+                "saveInfo": "Wird beim Registrieren gespeichert",
+                "invalidFormat": "Bitte wählen Sie ein gültiges Bild (JPG oder PNG)",
+                "tooLarge": "Bild darf 5MB nicht überschreiten"
+            },
+            "bloodDonor": {
+                "dni": "Ausweis",
+                "dniPlaceholder": "Ausweis eingeben *",
+                "firstName": "Vorname",
+                "firstNamePlaceholder": "Vorname eingeben *",
+                "lastName": "Nachname",
+                "lastNamePlaceholder": "Nachname eingeben *",
+                "gender": "Geschlecht",
+                "genderSelect": "Geschlecht auswählen *",
+                "male": "Männlich",
+                "female": "Weiblich",
+                "preferNotToSay": "Keine Angabe",
+                "bloodType": "Blutgruppe",
+                "bloodTypeSelect": "Blutgruppe auswählen *",
+                "email": "E-Mail",
+                "emailPlaceholder": "E-Mail eingeben *",
+                "phone": "Telefon",
+                "phonePlaceholder": "Telefon eingeben *",
+                "dateOfBirth": "Geburtsdatum",
+                "dateOfBirthPlaceholder": "Geburtsdatum auswählen *",
+                "password": "Passwort",
+                "passwordPlaceholder": "Passwort eingeben *",
+                "passwordHint": "Muss enthalten: Großbuchstabe, Kleinbuchstabe, Zahl (8-32 Zeichen)",
+                "processing": "Verarbeitung...",
+                "registerButton": "Registrieren",
+                "resetButton": "Zurücksetzen",
+                "validation": {
+                    "dniRequired": "Ausweis ist erforderlich",
+                    "dniInvalid": "Ungültiges Ausweisformat (8 Zahlen + 1 Buchstabe)",
+                    "firstNameRequired": "Vorname ist erforderlich",
+                    "firstNameMin": "Vorname muss mindestens 2 Zeichen haben",
+                    "lastNameRequired": "Nachname ist erforderlich",
+                    "lastNameMin": "Nachname muss mindestens 2 Zeichen haben",
+                    "genderRequired": "Geschlecht ist erforderlich",
+                    "bloodTypeRequired": "Blutgruppe ist erforderlich",
+                    "emailRequired": "E-Mail ist erforderlich",
+                    "emailInvalid": "E-Mail-Format ist nicht gültig",
+                    "phoneRequired": "Telefon ist erforderlich",
+                    "phoneMin": "Telefon muss mindestens 9 Ziffern haben",
+                    "dateOfBirthRequired": "Geburtsdatum ist erforderlich",
+                    "ageMin": "Sie müssen über 18 Jahre alt sein",
+                    "dateFuture": "Datum kann nicht in der Zukunft liegen",
+                    "passwordRequired": "Passwort ist erforderlich",
+                    "passwordMin": "Passwort muss mindestens 8 Zeichen haben",
+                    "fixErrors": "Bitte beheben Sie die folgenden Fehler:"
+                },
+                "success": "Spender wurde erfolgreich registriert. Sie können sich jetzt anmelden.",
+                "error": "Beim Registrieren des Spenders ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+            }
+        }
+    },
+    "theme": {
+        "toggle": "Thema wechseln",
+        "light": "Zum hellen Modus wechseln",
+        "dark": "Zum dunklen Modus wechseln"
+    },
+    "language": {
+        "select": "Sprache auswählen",
+        "es": "Spanisch",
+        "en": "Englisch",
+        "de": "Deutsch",
+        "fr": "Französisch",
+        "ja": "Japanisch",
+        "zh": "Chinesisch"
+    },
+    "dashboard": {
+        "loading": "Statistiken werden geladen...",
+        "loadError": "Fehler beim Laden der Statistiken",
+        "sidebar": {
+            "newCampaign": "Neue Kampagne",
+            "newDonation": "Neue Spende",
+            "home": "Startseite",
+            "myCampaigns": "Meine Kampagnen",
+            "news": "Neuigkeiten",
+            "newBadge": "NEU"
+        },
+        "appointments": {
+            "title": "Heute geplante Termine",
+            "noAppointments": "Keine Termine für heute geplant",
+            "unknownDonor": "Unbekannter Spender",
+            "noTime": "Keine Zeit",
+            "dniLabel": "Ausweis"
+        },
+        "stats": {
+            "selectedCampaigns": "Ausgewählte Kampagnen",
+            "clearFilter": "Filter löschen",
+            "searchPlaceholder": "Nach Titel oder Ort suchen...",
+            "campaignsOption": "Kampagnen",
+            "bloodTypeOption": "Verteilung nach Blutgruppe",
+            "genderOption": "Verteilung nach Geschlecht",
+            "appointmentsToday": "Termine heute",
+            "donationsThisMonth": "Spenden diesen Monat"
+        },
+        "campaigns": {
+            "goalLabel": "Ziel",
+            "donors": "Spender",
+            "editButton": "Kampagne bearbeiten",
+            "deleteButton": "Kampagne löschen",
+            "datesLabel": "Termine",
+            "bloodTypesLabel": "Blutgruppen",
+            "noResults": "Keine Kampagnen mit diesen Kriterien gefunden",
+            "noCampaignsOnDate": "Keine Kampagnen an diesem Datum",
+            "noCampaigns": "Keine aktiven Kampagnen"
+        },
+        "calendar": {
+            "title": "Kalender",
+            "months": {
+                "january": "Januar",
+                "february": "Februar",
+                "march": "März",
+                "april": "April",
+                "may": "Mai",
+                "june": "Juni",
+                "july": "Juli",
+                "august": "August",
+                "september": "September",
+                "october": "Oktober",
+                "november": "November",
+                "december": "Dezember"
+            },
+            "days": {
+                "monday": "Mo",
+                "tuesday": "Di",
+                "wednesday": "Mi",
+                "thursday": "Do",
+                "friday": "Fr",
+                "saturday": "Sa",
+                "sunday": "So"
+            },
+            "legend": {
+                "completed": "Abgeschlossen",
+                "active": "Aktive",
+                "upcoming": "Bevorstehende"
+            }
+        },
+        "donations": {
+            "title": "Erhaltene Spenden",
+            "subtitle": "Neueste Blutspenden im Krankenhaus erhalten.",
+            "campaignLabel": "Spendenkampagne",
+            "donationType": "Spendenart",
+            "hospitalLabel": "Krankenhaus",
+            "completed": "Abgeschlossen"
+        },
+        "modal": {
+            "delete": {
+                "title": "Kampagne löschen",
+                "confirmMessage": "Möchten Sie diese Kampagne wirklich löschen?",
+                "warning": "Diese Aktion kann nicht rückgängig gemacht werden.",
+                "instructionsLabel": "Geben Sie zum Bestätigen den Kampagnennamen ein:",
+                "placeholder": "Kampagnenname..."
+            }
+        }
+    }
+}

@@ -1,12 +1,16 @@
 // components/Header/Header.tsx
 import { useLocation, Link } from 'react-router';
 import { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../context/AuthContext';
 import Logo from "../../../assets/images/LogoShadowMini.webp";
 import Button from "../Button/Button.tsx";
-import EditProfileModal from "../../Modals/EditProfileModal/EditProfileModal.tsx"
+import EditProfileModal from "../../Modals/EditProfileModal/EditProfileModal.tsx";
+import ThemeToggle from '../ThemeToggle/ThemeToggle';
+import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 
 function Header() {
+  const { t } = useTranslation();
   const location = useLocation();
   const { logout, user, isAuthenticated } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -42,31 +46,16 @@ function Header() {
               <img src={Logo} alt="Blood4Life - Plataforma de donación de sangre" className="h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
             </Link>
             <div className="flex flex-row w-full items-center justify-end gap-4">
-              {/* Notifications */}
-              <button
-                className="relative p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                aria-label="Ver notificaciones"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                </svg>
-                <span className="absolute top-1 right-1 w-2 h-2 bg-blue-600 rounded-full" aria-label="Hay nuevas notificaciones"></span>
-              </button>
-              {/* Bell */}
-              <button
-                className="relative p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-                aria-label="Ver alertas"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                </svg>
-              </button>
-              {/* User Avatar with Dropdown */}
+              {/* Theme and Language Controls */}
+              <ThemeToggle />
+              <LanguageSwitcher />
+
+              {/* User Avatar with Dropdown - Moved to Extreme Right */}
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className="w-10 h-10 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 overflow-hidden"
-                  aria-label="Menú de usuario"
+                  aria-label={t('header.userMenu')}
                   aria-haspopup="true"
                   aria-expanded={isDropdownOpen}
                 >
@@ -89,54 +78,45 @@ function Header() {
                 {isDropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-50 ring-1 ring-black ring-opacity-5">
                     {location.pathname.startsWith('/dashboard') ? (
-                      // Dashboard - show "Inicio" link and "Editar mi perfil" button
-                      <>
-                        <Link
-                          to="/index"
-                          className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                          onClick={() => setIsDropdownOpen(false)}
-                        >
-                          Inicio
-                        </Link>
-                        <button
-                          onClick={() => {
-                            setIsDropdownOpen(false);
-                            setIsEditModalOpen(true);
-                          }}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        >
-                          Editar mi perfil
-                        </button>
-                      </>
+                      // Dashboard - Show ONLY "Editar mi perfil"
+                      <button
+                        onClick={() => {
+                          setIsDropdownOpen(false);
+                          setIsEditModalOpen(true);
+                        }}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      >
+                        {t('header.editProfile')}
+                      </button>
                     ) : (
-                      // Index, Login, and other pages - show "Mi perfil" link
+                      // Index, Login, and other pages - show full menu
                       <>
                         <Link
                           to="/index" // TODO: Change to /campaigns when available
                           className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                           onClick={() => setIsDropdownOpen(false)}
                         >
-                          Campañas
+                          {t('header.campaigns')}
                         </Link>
                         <Link
                           to="/dashboard"
                           className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                           onClick={() => setIsDropdownOpen(false)}
                         >
-                          Mi perfil
+                          {t('header.myProfile')}
                         </Link>
+                        <div className="border-t border-gray-100 dark:border-gray-700 my-1"></div>
+                        <button
+                          onClick={() => {
+                            setIsDropdownOpen(false);
+                            setShowLogoutConfirm(true);
+                          }}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          {t('header.logout')}
+                        </button>
                       </>
                     )}
-                    <div className="border-t border-gray-100 dark:border-gray-700 my-1"></div>
-                    <button
-                      onClick={() => {
-                        setIsDropdownOpen(false);
-                        setShowLogoutConfirm(true);
-                      }}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      Cerrar Sesión
-                    </button>
                   </div>
                 )}
               </div>
@@ -152,25 +132,33 @@ function Header() {
               <Link to="/index">
                 <img src={Logo} alt="Logo" className="h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
               </Link>
-              <Button to="/index">Inicio</Button>
+              <div className="flex items-center gap-4">
+                <Button to="/index">{t('header.home')}</Button>
+                <ThemeToggle />
+                <LanguageSwitcher />
+              </div>
             </div>
           ) : (
             <>
               {(location.pathname === '/index' || location.pathname === '/') ? (
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center gap-4">
                   <Button to="/login">
-                    Iniciar sesión
+                    {t('header.login')}
                   </Button>
                   <Button to="/register">
-                    Registrarse
+                    {t('header.register')}
                   </Button>
+                  <ThemeToggle />
+                  <LanguageSwitcher />
                 </div>
               ) : (
                 // Default fallback for other public pages (like Login)
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center gap-4">
                   <Button to="/index">
-                    Inicio
+                    {t('header.home')}
                   </Button>
+                  <ThemeToggle />
+                  <LanguageSwitcher />
                 </div>
               )}
             </>
@@ -188,14 +176,14 @@ function Header() {
       {showLogoutConfirm && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
-            <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3">Cerrar Sesión</h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">¿Estás seguro de que deseas cerrar sesión?</p>
+            <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-3">{t('header.logout')}</h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">{t('header.logoutConfirm')}</p>
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowLogoutConfirm(false)}
                 className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
-                Cancelar
+                {t('header.cancel')}
               </button>
               <button
                 onClick={() => {
@@ -204,7 +192,7 @@ function Header() {
                 }}
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
               >
-                Cerrar Sesión
+                {t('header.logout')}
               </button>
             </div>
           </div>

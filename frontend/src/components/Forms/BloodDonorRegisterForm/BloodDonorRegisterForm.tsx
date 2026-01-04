@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from 'react-i18next';
 import Button from '../../UI/Button/Button';
 import FormField from '../FormField/FormField';
 import SelectField from '../SelectField/SelectField';
@@ -37,6 +38,7 @@ interface BloodDonorRegisterFormProps {
 }
 
 const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSuccess, onError }) => {
+    const { t } = useTranslation();
     const [formData, setFormData] = useState<BloodDonorFormData>({
         dni: '',
         firstName: '',
@@ -61,14 +63,14 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
     );
 
     const genderOptions = [
-        { value: '', label: 'Seleccione un género *' },
-        { value: 'masculino', label: 'Masculino' },
-        { value: 'femenino', label: 'Femenino' },
-        { value: 'prefiero-no-decir', label: 'Prefiero no decirlo' }
+        { value: '', label: t('auth.register.bloodDonor.genderSelect') },
+        { value: 'masculino', label: t('auth.register.bloodDonor.male') },
+        { value: 'femenino', label: t('auth.register.bloodDonor.female') },
+        { value: 'prefiero-no-decir', label: t('auth.register.bloodDonor.preferNotToSay') }
     ];
 
     const bloodTypeOptions = [
-        { value: '', label: 'Seleccione un tipo de sangre *' },
+        { value: '', label: t('auth.register.bloodDonor.bloodTypeSelect') },
         { value: 'A+', label: 'A+' },
         { value: 'A-', label: 'A-' },
         { value: 'B+', label: 'B+' },
@@ -82,60 +84,60 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
     const validateField = (name: string, value: string): string => {
         switch (name) {
             case 'dni':
-                if (!value.trim()) return 'El DNI es obligatorio';
-                if (!/^[0-9]{8}[A-Z]$/.test(value)) return 'Formato de DNI inválido (8 números + 1 letra)';
+                if (!value.trim()) return t('auth.register.bloodDonor.validation.dniRequired');
+                if (!/^[0-9]{8}[A-Z]$/.test(value)) return t('auth.register.bloodDonor.validation.dniInvalid');
                 return '';
 
             case 'firstName':
-                if (!value.trim()) return 'El nombre es obligatorio';
-                if (value.trim().length < 2) return 'El nombre debe tener al menos 2 caracteres';
+                if (!value.trim()) return t('auth.register.bloodDonor.validation.firstNameRequired');
+                if (value.trim().length < 2) return t('auth.register.bloodDonor.validation.firstNameMin');
                 return '';
 
             case 'lastName':
-                if (!value.trim()) return 'Los apellidos son obligatorios';
-                if (value.trim().length < 2) return 'Los apellidos deben tener al menos 2 caracteres';
+                if (!value.trim()) return t('auth.register.bloodDonor.validation.lastNameRequired');
+                if (value.trim().length < 2) return t('auth.register.bloodDonor.validation.lastNameMin');
                 return '';
 
             case 'gender':
-                if (!value.trim()) return 'El género es obligatorio';
+                if (!value.trim()) return t('auth.register.bloodDonor.validation.genderRequired');
                 return '';
 
             case 'bloodType':
-                if (!value.trim()) return 'El tipo de sangre es obligatorio';
+                if (!value.trim()) return t('auth.register.bloodDonor.validation.bloodTypeRequired');
                 return '';
 
             case 'email':
-                if (!value.trim()) return 'El email es obligatorio';
-                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'El formato del email no es válido';
+                if (!value.trim()) return t('auth.register.bloodDonor.validation.emailRequired');
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return t('auth.register.bloodDonor.validation.emailInvalid');
                 return '';
 
             case 'phoneNumber': {
-                if (!value.trim()) return 'El teléfono es obligatorio';
+                if (!value.trim()) return t('auth.register.bloodDonor.validation.phoneRequired');
                 const digitsOnly = value.replace(/\D/g, '');
-                if (digitsOnly.length < 9) return 'El teléfono debe tener al menos 9 dígitos';
+                if (digitsOnly.length < 9) return t('auth.register.bloodDonor.validation.phoneMin');
                 return '';
             }
 
             case 'dateOfBirth': {
-                if (!value.trim()) return 'La fecha de nacimiento es obligatoria';
+                if (!value.trim()) return t('auth.register.bloodDonor.validation.dateOfBirthRequired');
                 const birthDate = new Date(value);
                 const today = new Date();
                 const age = today.getFullYear() - birthDate.getFullYear();
                 const monthDiff = today.getMonth() - birthDate.getMonth();
 
                 if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-                    if (age - 1 < 18) return 'Debes ser mayor de 18 años';
+                    if (age - 1 < 18) return t('auth.register.bloodDonor.validation.ageMin');
                 } else {
-                    if (age < 18) return 'Debes ser mayor de 18 años';
+                    if (age < 18) return t('auth.register.bloodDonor.validation.ageMin');
                 }
 
-                if (birthDate > today) return 'La fecha no puede ser futura';
+                if (birthDate > today) return t('auth.register.bloodDonor.validation.dateFuture');
                 return '';
             }
 
             case 'password':
-                if (!value.trim()) return 'La contraseña es obligatoria';
-                if (value.length < 8) return 'La contraseña debe tener al menos 8 caracteres';
+                if (!value.trim()) return t('auth.register.bloodDonor.validation.passwordRequired');
+                if (value.length < 8) return t('auth.register.bloodDonor.validation.passwordMin');
                 return '';
 
             default:
@@ -193,7 +195,7 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
         const formErrors = validateForm();
         if (Object.keys(formErrors).length > 0) {
             const errorMessages = Object.values(formErrors).map(err => `• ${err}`).join('\n');
-            onError?.(`Por favor, corrige los siguientes errores:\n\n${errorMessages}`);
+            onError?.(`${t('auth.register.bloodDonor.validation.fixErrors')}\n\n${errorMessages}`);
             return;
         }
 
@@ -230,14 +232,14 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
         authService.registerBloodDonor(submitData)
             .then((response) => {
                 console.log("Registro exitoso:", response.data);
-                onSuccess?.('El donante ha sido registrado correctamente. Ahora puedes iniciar sesión.');
+                onSuccess?.(t('auth.register.bloodDonor.success'));
                 clearPersistedData();
                 resetForm();
                 setSelectedImage(null);
             })
             .catch((err) => {
                 console.error("Error registrando donante:", err);
-                onError?.(err.response?.data?.error || 'Ocurrió un error al registrar el donante. Por favor, inténtalo de nuevo.');
+                onError?.(err.response?.data?.error || t('auth.register.bloodDonor.error'));
             })
             .finally(() => {
                 setLoading(false);
@@ -271,7 +273,7 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
                 />
             </div>
             <p className="text-body-sm text-gray-500 dark:text-gray-400 text-center my-0">
-                El asterisco "*" indica que el dato a introducir es obligatorio
+                {t('auth.register.requiredField')}
             </p>
 
             <form
@@ -284,26 +286,26 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
                         type="text"
                         id="dni"
                         name="dni"
-                        label="DNI"
+                        label={t('auth.register.bloodDonor.dni')}
                         value={formData.dni}
                         onChange={handleInputChange}
                         required
                         disabled={loading}
                         error={errors.dni}
-                        placeholder="Ingrese el DNI *"
+                        placeholder={t('auth.register.bloodDonor.dniPlaceholder')}
                     />
 
                     <FormField
                         type="text"
                         id="firstName"
                         name="firstName"
-                        label="Nombre"
+                        label={t('auth.register.bloodDonor.firstName')}
                         value={formData.firstName}
                         onChange={handleInputChange}
                         required
                         disabled={loading}
                         error={errors.firstName}
-                        placeholder="Ingrese el nombre *"
+                        placeholder={t('auth.register.bloodDonor.firstNamePlaceholder')}
                         autoComplete="given-name"
                     />
 
@@ -311,20 +313,20 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
                         type="text"
                         id="lastName"
                         name="lastName"
-                        label="Apellidos"
+                        label={t('auth.register.bloodDonor.lastName')}
                         value={formData.lastName}
                         onChange={handleInputChange}
                         required
                         disabled={loading}
                         error={errors.lastName}
-                        placeholder="Ingrese los apellidos *"
+                        placeholder={t('auth.register.bloodDonor.lastNamePlaceholder')}
                         autoComplete="family-name"
                     />
 
                     <SelectField
                         id="gender"
                         name="gender"
-                        label="Género"
+                        label={t('auth.register.bloodDonor.gender')}
                         value={formData.gender}
                         onChange={handleSelectChange}
                         required
@@ -336,7 +338,7 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
                     <SelectField
                         id="bloodType"
                         name="bloodType"
-                        label="Tipo de sangre"
+                        label={t('auth.register.bloodDonor.bloodType')}
                         value={formData.bloodType}
                         onChange={handleSelectChange}
                         required
@@ -349,13 +351,13 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
                         type="email"
                         id="email"
                         name="email"
-                        label="Email"
+                        label={t('auth.register.bloodDonor.email')}
                         value={formData.email}
                         onChange={handleInputChange}
                         required
                         disabled={loading}
                         error={errors.email}
-                        placeholder="Ingrese el email *"
+                        placeholder={t('auth.register.bloodDonor.emailPlaceholder')}
                         autoComplete="email"
                     />
 
@@ -363,20 +365,20 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
                         type="tel"
                         id="phoneNumber"
                         name="phoneNumber"
-                        label="Teléfono"
+                        label={t('auth.register.bloodDonor.phone')}
                         value={formData.phoneNumber}
                         onChange={handleInputChange}
                         required
                         disabled={loading}
                         error={errors.phoneNumber}
-                        placeholder="Ingrese el teléfono *"
+                        placeholder={t('auth.register.bloodDonor.phonePlaceholder')}
                         autoComplete="tel"
                     />
 
                     <DatePicker
                         id="dateOfBirth"
                         name="dateOfBirth"
-                        label="Fecha de Nacimiento"
+                        label={t('auth.register.bloodDonor.dateOfBirth')}
                         value={formData.dateOfBirth}
                         onChange={(e) => {
                             // The DatePicker returns {target: {name, value}}
@@ -385,7 +387,7 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
                         required
                         disabled={loading}
                         error={errors.dateOfBirth}
-                        placeholder="Seleccione la fecha de nacimiento *"
+                        placeholder={t('auth.register.bloodDonor.dateOfBirthPlaceholder')}
                     />
 
                     <div>
@@ -393,20 +395,20 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
                             type="password"
                             id="password"
                             name="password"
-                            label="Contraseña"
+                            label={t('auth.register.bloodDonor.password')}
                             value={formData.password || ''}
                             onChange={handleInputChange}
                             required
                             disabled={loading}
                             error={errors.password}
-                            placeholder="Ingrese la contraseña *"
+                            placeholder={t('auth.register.bloodDonor.passwordPlaceholder')}
                             showPasswordToggle={true}
                             isPasswordVisible={showPassword}
                             onTogglePassword={() => setShowPassword(!showPassword)}
                             autoComplete="new-password"
                         />
                         <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                            Debe contener: mayúscula, minúscula, número (8-32 caracteres)
+                            {t('auth.register.bloodDonor.passwordHint')}
                         </p>
                     </div>
                 </div>
@@ -426,8 +428,8 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
                                     <path className="opacity-75" fill="currentColor"
                                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                <span>Procesando...</span>
-                            </>) : 'Registrarse'}
+                                <span>{t('auth.register.bloodDonor.processing')}</span>
+                            </>) : t('auth.register.bloodDonor.registerButton')}
                     </Button>
                     <Button
                         type="button"
@@ -435,7 +437,7 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
                         disabled={loading}
                         className="px-6 py-3 text-body-sm w-full sm:flex-1 sm:max-w-48"
                     >
-                        Restablecer
+                        {t('auth.register.bloodDonor.resetButton')}
                     </Button>
                 </div>
             </form>

@@ -1,0 +1,237 @@
+{
+    "common": {
+        "loading": "加载中...",
+        "error": "错误",
+        "success": "成功",
+        "save": "保存",
+        "cancel": "取消",
+        "close": "关闭",
+        "delete": "删除",
+        "edit": "编辑",
+        "confirm": "确认",
+        "yes": "是",
+        "no": "否",
+        "search": "搜索",
+        "filter": "筛选",
+        "welcome": "欢迎"
+    },
+    "footer": {
+        "copyright": "Blood4Life © 2025. 保留所有权利。",
+        "aboutUs": "关于我们",
+        "privacyPolicy": "隐私政策"
+    },
+    "header": {
+        "home": "首页",
+        "login": "登录",
+        "register": "注册",
+        "campaigns": "活动",
+        "myProfile": "我的资料",
+        "editProfile": "编辑我的资料",
+        "logout": "登出",
+        "logoutConfirm": "您确定要登出吗？",
+        "cancel": "取消",
+        "notifications": "查看通知",
+        "alerts": "查看提醒",
+        "userMenu": "用户菜单",
+        "newNotifications": "您有新通知"
+    },
+    "auth": {
+        "login": {
+            "title": "登录",
+            "userType": "用户类型",
+            "donor": "捐赠者",
+            "hospital": "医院",
+            "email": "电子邮件",
+            "emailPlaceholder": "输入您的电子邮件",
+            "password": "密码",
+            "passwordPlaceholder": "输入您的密码",
+            "submit": "提交",
+            "loading": "加载中...",
+            "forgotPassword": "忘记密码？",
+            "noAccount": "没有账户？点击这里注册",
+            "here": "这里",
+            "registerLink": "在此注册",
+            "error": "登录错误。请检查您的凭据。"
+        },
+        "register": {
+            "welcome": "欢迎来到Blood4Life",
+            "selectProfile": "选择您的个人资料以继续在我们的平台上注册",
+            "iAmDonor": "我是捐赠者",
+            "iAmHospital": "我是医院/中心",
+            "registerAsDonor": "注册为捐赠者",
+            "registerAsHospital": "注册为医院",
+            "haveAccount": "已有账户？点击",
+            "here": "这里",
+            "requiredField": "星号 \"*\" 表示必填字段",
+            "formTitle": "注册新捐赠者",
+            "modal": {
+                "successTitle": "注册成功！",
+                "errorTitle": "注册错误"
+            },
+            "imageUpload": {
+                "title": "个人照片",
+                "uploadButton": "上传照片",
+                "formats": "格式：JPG、PNG",
+                "maxSize": "最大：5MB",
+                "preview": "个人照片预览",
+                "remove": "删除个人照片",
+                "select": "选择个人照片",
+                "ready": "✓ 图片准备保存",
+                "saveInfo": "将在注册时保存",
+                "invalidFormat": "请选择有效的图片（JPG或PNG)",
+                "tooLarge": "图片不得超过5MB"
+            },
+            "bloodDonor": {
+                "dni": "身份证",
+                "dniPlaceholder": "输入身份证 *",
+                "firstName": "名字",
+                "firstNamePlaceholder": "输入名字 *",
+                "lastName": "姓氏",
+                "lastNamePlaceholder": "输入姓氏 *",
+                "gender": "性别",
+                "genderSelect": "选择性别 *",
+                "male": "男性",
+                "female": "女性",
+                "preferNotToSay": "不愿透露",
+                "bloodType": "血型",
+                "bloodTypeSelect": "选择血型 *",
+                "email": "电子邮件",
+                "emailPlaceholder": "输入电子邮件 *",
+                "phone": "电话",
+                "phonePlaceholder": "输入电话 *",
+                "dateOfBirth": "出生日期",
+                "dateOfBirthPlaceholder": "选择出生日期 *",
+                "password": "密码",
+                "passwordPlaceholder": "输入密码 *",
+                "passwordHint": "必须包含：大写字母、小写字母、数字（8-32字符）",
+                "processing": "处理中...",
+                "registerButton": "注册",
+                "resetButton": "重置",
+                "validation": {
+                    "dniRequired": "身份证是必需的",
+                    "dniInvalid": "无效的身份证格式（8位数字 + 1个字母）",
+                    "firstNameRequired": "名字是必需的",
+                    "firstNameMin": "名字必须至少2个字符",
+                    "lastNameRequired": "姓氏是必需的",
+                    "lastNameMin": "姓氏必须至少2个字符",
+                    "genderRequired": "性别是必需的",
+                    "bloodTypeRequired": "血型是必需的",
+                    "emailRequired": "电子邮件是必需的",
+                    "emailInvalid": "电子邮件格式无效",
+                    "phoneRequired": "电话是必需的",
+                    "phoneMin": "电话必须至少9位数",
+                    "dateOfBirthRequired": "出生日期是必需的",
+                    "ageMin": "您必须年满18岁",
+                    "dateFuture": "日期不能是未来",
+                    "passwordRequired": "密码是必需的",
+                    "passwordMin": "密码必须至少8个字符",
+                    "fixErrors": "请修正以下错误："
+                },
+                "success": "捐赠者已成功注册。您现在可以登录。",
+                "error": "注册捐赠者时发生错误。请重试。"
+            }
+        }
+    },
+    "theme": {
+        "toggle": "切换主题",
+        "light": "切换到浅色模式",
+        "dark": "切换到深色模式"
+    },
+    "language": {
+        "select": "选择语言",
+        "es": "西班牙语",
+        "en": "英语",
+        "de": "德语",
+        "fr": "法语",
+        "ja": "日语",
+        "zh": "中文"
+    },
+    "dashboard": {
+        "loading": "加载统计数据...",
+        "loadError": "加载统计数据时出错",
+        "sidebar": {
+            "newCampaign": "新活动",
+            "newDonation": "新捐赠",
+            "home": "首页",
+            "myCampaigns": "我的活动",
+            "news": "新闻",
+            "newBadge": "新"
+        },
+        "appointments": {
+            "title": "今日预约",
+            "noAppointments": "今天没有预约",
+            "unknownDonor": "未知捐赠者",
+            "noTime": "无时间",
+            "dniLabel": "身份证"
+        },
+        "stats": {
+            "selectedCampaigns": "选定的活动",
+            "clearFilter": "清除筛选",
+            "searchPlaceholder": "按标题或位置搜索...",
+            "campaignsOption": "活动",
+            "bloodTypeOption": "按血型分布",
+            "genderOption": "按性别分布",
+            "appointmentsToday": "今日预约",
+            "donationsThisMonth": "本月捐赠"
+        },
+        "campaigns": {
+            "goalLabel": "目标",
+            "donors": "捐赠者",
+            "editButton": "编辑活动",
+            "deleteButton": "删除活动",
+            "datesLabel": "日期",
+            "bloodTypesLabel": "血型",
+            "noResults": "未找到符合该条件的活动",
+            "noCampaignsOnDate": "此日期没有活动",
+            "noCampaigns": "没有活跃的活动"
+        },
+        "calendar": {
+            "title": "日历",
+            "months": {
+                "january": "一月",
+                "february": "二月",
+                "march": "三月",
+                "april": "四月",
+                "may": "五月",
+                "june": "六月",
+                "july": "七月",
+                "august": "八月",
+                "september": "九月",
+                "october": "十月",
+                "november": "十一月",
+                "december": "十二月"
+            },
+            "days": {
+                "monday": "一",
+                "tuesday": "二",
+                "wednesday": "三",
+                "thursday": "四",
+                "friday": "五",
+                "saturday": "六",
+                "sunday": "日"
+            },
+            "legend": {
+                "completed": "已完成",
+                "active": "活跃",
+                "upcoming": "即将到来"
+            }
+        },
+        "donations": {
+            "title": "收到的捐赠",
+            "subtitle": "医院收到的最新献血。",
+            "campaignLabel": "捐赠活动",
+            "donationType": "捐赠类型",
+            "hospitalLabel": "医院",
+            "completed": "已完成"
+        },
+        "modal": {
+            "delete": {
+                "title": "删除活动",
+                "confirmMessage": "您确定要删除此活动吗？",
+                "warning": "此操作无法撤消。",
+                "instructionsLabel": "要确认，请输入活动名称：",
+                "placeholder": "活动名称..."
+            }
+        }
+    }
+}
