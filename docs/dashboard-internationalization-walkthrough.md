@@ -233,34 +233,6 @@ This ensures month/day names update immediately when language changes.
 ---
 
 
----
-
-## 🧭 Navigation & Layout Refactoring
-
-### Objectives
-1. **Simplify Header:** Remove non-essential icons (shopping bag, bell) and move User Avatar to the extreme right.
-2. **Streamline Dropdown:** In Dashboard mode, specific actions (Home, Logout) are moved to the Sidebar, leaving only "Edit Profile" in the avatar dropdown.
-3. **Enhance Sidebar:** Integrate "Home" and "Logout" buttons directly into the Sidebar for better accessibility.
-
-### 🖼️ Evidence
-
-#### **1. Simplified Header Layout**
-*Notification icons removed. User Avatar moved to the far right. Theme/Language toggles positioned to the left of the avatar.*
-
-![Header Layout Refactored](file:///C:/Users/juan-/.gemini/antigravity/brain/562a9be7-6bcd-4c54-a5ca-49a31312fe15/header_layout_refactored_1767542554284.png)
-
-#### **2. Streamlined User Dropdown**
-*Dropdown now only shows "Editar mi perfil" when inside the Dashboard.*
-
-![Simplified Dropdown](file:///C:/Users/juan-/.gemini/antigravity/brain/562a9be7-6bcd-4c54-a5ca-49a31312fe15/header_dropdown_simplified_1767542423585.png)
-
-
-#### **3. Sidebar Integration (Logout & Confirmation)**
-*Logout button grouped with navigation items. Sidebar extends fully to footer.*
-
-![Logout Grouped & Full Height](file:///C:/Users/juan-/.gemini/antigravity/brain/562a9be7-6bcd-4c54-a5ca-49a31312fe15/sidebar_grouped_buttons_1767543005217.png)
-
----
 
 **Status:** ✅ **COMPLETE** - Dashboard fully internationalized and verified working across all tested languages.
 
