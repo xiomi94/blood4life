@@ -50,7 +50,6 @@ const ImageUpload = ({ onImageChange }: ImageUploadProps) => {
     <div className="flex items-center justify-center w-full">
       <div
         className="flex flex-col w-full md:w-5/12 items-center justify-center space-y-4 p-4 md:p-6 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm mx-4 md:mx-0"
-        style={{ transition: 'background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out' }}
       >
         <h3 className="font-poppins font-semibold text-body-lg md:text-h3 text-gray-800 dark:text-white text-center">{t('auth.register.imageUpload.title')}</h3>
         <div className="flex flex-col items-center space-y-4 w-full">
@@ -75,7 +74,6 @@ const ImageUpload = ({ onImageChange }: ImageUploadProps) => {
               className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gray-100 dark:bg-gray-700 border-2 border-dashed border-gray-300 dark:border-gray-500 flex items-center justify-center cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 active:scale-95"
               type="button"
               aria-label={t('auth.register.imageUpload.select')}
-              style={{ transition: 'background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out' }}
             >
               <div className="text-center">
                 <svg

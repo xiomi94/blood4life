@@ -14,6 +14,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/appointment")
 public class AppointmentController {
+  // Controller for managing appointments
 
   @Autowired
   private AppointmentRepository appointmentRepository;
@@ -90,6 +91,13 @@ public class AppointmentController {
 
     appointment.setHospitalComment(dto.getHospitalComment());
     appointment.setDateAppointment(dto.getDateAppointment());
+
+    // Set default hour if not present (e.g. 09:00 AM)
+    if (dto.getHourAppointment() != null) {
+      appointment.setHourAppointment(dto.getHourAppointment());
+    } else {
+      appointment.setHourAppointment(java.time.LocalTime.of(9, 0));
+    }
 
     Appointment saved = appointmentRepository.save(appointment);
 
@@ -181,6 +189,19 @@ public class AppointmentController {
     }
 
     return dtoList;
+  }
+
+  @GetMapping("/hospital/{hospitalId}/monthly-donations")
+  public ResponseEntity<Long> getMonthlyDonationsByHospital(
+      @PathVariable Integer hospitalId) {
+    java.time.LocalDate now = java.time.LocalDate.now();
+    java.time.LocalDate monthStart = now.withDayOfMonth(1);
+    java.time.LocalDate nextMonthStart = monthStart.plusMonths(1);
+
+    Long count = appointmentRepository.countCompletedDonationsThisMonth(
+        hospitalId, monthStart, nextMonthStart);
+
+    return ResponseEntity.ok(count != null ? count : 0L);
   }
 
 }

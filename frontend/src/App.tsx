@@ -16,11 +16,10 @@ import UnifiedDashboard from "./pages/UnifiedDashboard/UnifiedDashboard";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import { Toaster } from 'sonner';
 
-
 function App() {
   return (
     <AuthProvider>
-      <div className="bg-gray-100 dark:bg-gray-900 min-h-screen flex flex-col" style={{ transition: 'background-color 0.3s ease-in-out' }}>
+      <div className="bg-gray-100 dark:bg-gray-900 min-h-screen flex flex-col">
         <BrowserRouter>
           <SkipLink />
           <Header />

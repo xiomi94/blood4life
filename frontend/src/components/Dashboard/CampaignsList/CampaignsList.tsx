@@ -43,7 +43,7 @@ const CampaignsList: React.FC<CampaignsListProps> = ({
             {filteredCampaigns
                 .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime())
                 .map(campaign => (
-                    <div key={campaign.id} className="p-4 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg hover:shadow-md transition-shadow">
+                    <div key={campaign.id} className="p-4 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-lg hover:shadow-md">
                         <div className="flex justify-between items-start mb-2">
                             <div className="flex flex-row items-center gap-3 flex-wrap">
                                 <h3 className="text-xl font-bold text-gray-800 dark:text-white">{campaign.name}</h3>

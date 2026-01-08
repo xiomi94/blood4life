@@ -170,7 +170,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
                         disabled && "bg-gray-100 dark:bg-gray-700 cursor-not-allowed opacity-70"
                     )}
                     disabled={disabled}
-                    style={{ transition: 'background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out' }}
                 >
                     <span className={cn("block truncate", !value && "text-gray-400 dark:text-gray-400")}>
                         {value ? format(parseISO(value), "dd/MM/yyyy") : placeholder}

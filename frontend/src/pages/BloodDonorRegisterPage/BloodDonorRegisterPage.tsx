@@ -38,7 +38,7 @@ const BloodDonorRegisterPage: React.FC = () => {
       <div className="w-full max-w-6xl flex flex-col gap-6 md:gap-8">
         {/* Título */}
         <div className="text-center">
-          <h2 className="font-poppins font-semibold text-h3 sm:text-h2 md:text-h1 text-gray-800 dark:text-white mb-2" style={{ transition: 'color 0.3s ease-in-out' }}>
+          <h2 className="font-poppins font-semibold text-h3 sm:text-h2 md:text-h1 text-gray-800 dark:text-white mb-2">
             {t('auth.register.formTitle')}
           </h2>
         </div>

@@ -279,7 +279,6 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
             <form
                 onSubmit={handleRegister}
                 className="flex flex-col w-full max-w-4xl bg-white dark:bg-gray-800 rounded-xl md:rounded-2xl shadow-sm p-4 sm:p-6 md:p-8"
-                style={{ transition: 'background-color 0.3s ease-in-out' }}
             >
                 <div className="grid grid-cols-1 gap-4 md:gap-6 w-full">
                     <FormField

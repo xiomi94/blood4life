@@ -7,6 +7,14 @@
 
 @variant dark (&:is(.dark, .dark *));
 
+/* Global dark mode transition for smooth color changes */
+*,
+*::before,
+*::after {
+    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+
 /* Custom styles for number input spinners in dark mode */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {

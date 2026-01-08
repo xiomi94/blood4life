@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import type { Campaign } from '../../services/campaignService';
+import { appointmentService } from '../../services/appointmentService';
+import { EnrollCampaignModal } from './EnrollCampaignModal';
+import { toast } from 'sonner';
 
 interface CampaignProgressChartProps {
   campaigns: Campaign[];
@@ -18,17 +21,31 @@ export const CampaignProgressChart = ({
   const { user } = useAuth();
   const [showOnlyCompatible, setShowOnlyCompatible] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
+  const [enrollLoading, setEnrollLoading] = useState(false);
 
   // Filter campaigns by exact blood type match and search query
   const getFilteredCampaigns = () => {
     let filtered = campaigns;
 
+    // First, filter out campaigns that ended more than 1 week ago
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const oneWeekAgo = new Date(today);
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const oneWeekAgoStr = oneWeekAgo.toISOString().split('T')[0];
+
+    filtered = filtered.filter(campaign => {
+      // Keep campaign if it hasn't ended yet OR ended less than 1 week ago
+      return campaign.endDate >= oneWeekAgoStr;
+    });
+
     // Apply date filter if selected
     if (selectedDate) {
-      filtered = filteredCampaigns;
+      filtered = filteredCampaigns.filter(campaign => campaign.endDate >= oneWeekAgoStr);
     } else if (showOnlyCompatible) {
       // Apply blood type compatibility filter
-      filtered = campaigns.filter(campaign => {
+      filtered = filtered.filter(campaign => {
         const donorBloodType = user?.bloodType?.type;
         if (!donorBloodType) return false;
 
@@ -50,6 +67,41 @@ export const CampaignProgressChart = ({
     }
 
     return filtered;
+  };
+
+  const handleEnroll = async (date: string, time?: string) => {
+    if (!selectedCampaign || !user) return;
+
+    setEnrollLoading(true);
+    try {
+      const appointmentData = {
+        campaignId: selectedCampaign.id,
+        bloodDonorId: user.id,
+        dateAppointment: date, // Format: yyyy-MM-dd
+        hourAppointment: time ? (time.length === 5 ? `${time}:00` : time) : '09:00:00', // Ensure HH:mm:ss format
+        appointmentStatus: {
+          id: 1,
+          name: 'Programada'
+        }
+      };
+
+      console.log('Sending appointment data:', appointmentData);
+
+      await appointmentService.createAppointment(appointmentData);
+
+      toast.success('¡Inscripción exitosa! Tu cita ha sido programada.');
+      setSelectedCampaign(null);
+      // Optionally reload campaigns or update UI
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500); // Give time for toast to be seen
+    } catch (error: any) {
+      console.error('Error enrolling in campaign:', error);
+      console.error('Error details:', error.response?.data);
+      toast.error(`Error al inscribirse en la campaña: ${error.response?.data?.message || error.message || 'Por favor, intenta de nuevo.'}`);
+    } finally {
+      setEnrollLoading(false);
+    }
   };
 
   const displayedCampaigns = getFilteredCampaigns();
@@ -191,6 +243,39 @@ export const CampaignProgressChart = ({
                         ))}
                       </div>
                     </div>
+
+                    {/* Enroll Button */}
+                    <div className="mt-4">
+                      {(() => {
+                        const today = new Date().toISOString().split('T')[0];
+                        const campaignEnded = campaign.endDate < today;
+
+                        if (campaignEnded) {
+                          return (
+                            <div className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 font-medium rounded-lg text-center border border-gray-300 dark:border-gray-600">
+                              <div className="flex items-center justify-center gap-2">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Campaña finalizada
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <button
+                            onClick={() => setSelectedCampaign(campaign)}
+                            className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                            </svg>
+                            Inscribirse en esta campaña
+                          </button>
+                        );
+                      })()}
+                    </div>
                   </div>
                 );
               })
@@ -204,6 +289,15 @@ export const CampaignProgressChart = ({
           </>
         )}
       </div>
+
+      {/* Enrollment Modal */}
+      <EnrollCampaignModal
+        campaign={selectedCampaign}
+        isOpen={!!selectedCampaign}
+        onClose={() => setSelectedCampaign(null)}
+        onConfirm={handleEnroll}
+        loading={enrollLoading}
+      />
     </section>
   );
 };

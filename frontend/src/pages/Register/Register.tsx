@@ -20,10 +20,10 @@ const Register: React.FC = () => {
     <main className="flex flex-col flex-grow items-center justify-center px-4 sm:px-6 lg:px-8">
       {/* Título */}
       <div className="text-center mb-8 sm:mb-12">
-        <h1 className="font-poppins font-bold text-h3 sm:text-h2 md:text-h1 text-gray-800 dark:text-white mb-4" style={{ transition: "color 0.3s ease-in-out" }}>
+        <h1 className="font-poppins font-bold text-h3 sm:text-h2 md:text-h1 text-gray-800 dark:text-white mb-4">
           {t('auth.register.welcome')}
         </h1>
-        <p className="font-roboto text-body-sm sm:text-body-lg md:text-body text-gray-600 dark:text-gray-200 max-w-2xl mx-auto" style={{ transition: "color 0.3s ease-in-out" }}>
+        <p className="font-roboto text-body-sm sm:text-body-lg md:text-body text-gray-600 dark:text-gray-200 max-w-2xl mx-auto">
           {t('auth.register.selectProfile')}
         </p>
       </div>

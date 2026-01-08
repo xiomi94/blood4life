@@ -42,7 +42,6 @@ function NotFoundPage() {
                         <h2
                             className="text-h3 sm:text-h2 md:text-h1 text-gray-800 dark:text-white mb-3 sm:mb-4"
                             role="alert"
-                            style={{ transition: 'color 0.3s ease-in-out' }}
                         >
                             Vaya... parece que algo salió mal
                         </h2>
@@ -50,7 +49,6 @@ function NotFoundPage() {
                             className="text-body-sm sm:text-body md:text-body-lg text-gray-500 dark:text-gray-300 max-w-lg mx-auto"
                             aria-live="polite"
                             aria-atomic="true"
-                            style={{ transition: 'color 0.3s ease-in-out' }}
                         >
                             No te preocupes, será redirigido a la página principal en{' '}
                             <span className="font-semibold text-blue-600">{countdown}</span> segundos.
