@@ -13,8 +13,8 @@ function Footer() {
     <div className="w-full mx-auto">
 
       {isSpecialRoute ? (
-        <footer role="contentinfo" className="p-4 md:flex md:items-center md:justify-between md:p-6 border-t border-gray-300 dark:border-gray-700" style={{ transition: 'border-color 0.3s ease-in-out' }}>
-          <p className="text-sm text-gray-600 dark:text-gray-100 sm:text-center" style={{ transition: 'color 0.3s ease-in-out' }}>
+        <footer role="contentinfo" className="p-4 md:flex md:items-center md:justify-between md:p-6 border-t border-gray-300 dark:border-gray-700">
+          <p className="text-sm text-gray-600 dark:text-gray-100 sm:text-center">
             {t('footer.copyright')}
           </p>
 
@@ -29,7 +29,7 @@ function Footer() {
         </footer>
       ) : (
         <footer role="contentinfo" className="p-4 rounded-lg md:flex md:items-center md:justify-between md:p-6">
-          <p className="text-sm text-gray-600 dark:text-gray-100 sm:text-center" style={{ transition: 'color 0.3s ease-in-out' }}>
+          <p className="text-sm text-gray-600 dark:text-gray-100 sm:text-center">
             {t('footer.copyright')}
           </p>
 

@@ -52,6 +52,7 @@ const DashboardHospitalPage: React.FC = () => {
   const [showCreateCampaignModal, setShowCreateCampaignModal] = useState(false);
   const [hospitalCampaigns, setHospitalCampaigns] = useState<Campaign[]>([]);
   const [allCampaigns, setAllCampaigns] = useState<Campaign[]>([]);
+  const [showAllCampaigns, setShowAllCampaigns] = useState(false);
 
   // Delete confirmation state
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -68,6 +69,7 @@ const DashboardHospitalPage: React.FC = () => {
 
   // Appointments state
   const [todayAppointments, setTodayAppointments] = useState<AppointmentWithDonor[]>([]);
+  const [monthlyDonations, setMonthlyDonations] = useState<number>(0);
 
   // Fetch all campaigns
   useEffect(() => {
@@ -76,12 +78,16 @@ const DashboardHospitalPage: React.FC = () => {
       .catch(err => console.error('Error fetching all campaigns:', err));
   }, []);
 
-  // Fetch today's appointments
+  // Fetch today's appointments and monthly donations
   useEffect(() => {
     if (user?.id) {
       appointmentService.getTodayAppointmentsByHospital(user.id)
         .then(setTodayAppointments)
         .catch(err => console.error('Error fetching today appointments:', err));
+
+      appointmentService.getMonthlyDonationsByHospital(user.id)
+        .then(setMonthlyDonations)
+        .catch(err => console.error('Error fetching monthly donations:', err));
     }
   }, [user]);
 
@@ -102,14 +108,16 @@ const DashboardHospitalPage: React.FC = () => {
     };
   }, [subscribe]);
 
-  // Fetch hospital campaigns when chart changes
+  // Fetch hospital campaigns when user is loaded
   useEffect(() => {
     if (user?.id) {
       campaignService.getCampaignsByHospital(user.id)
         .then(data => setHospitalCampaigns(data))
-        .catch(err => console.error('Error loading campaigns:', err));
+        .catch(err => console.error('Error loading hospital campaigns:', err));
     }
   }, [user]);
+
+
 
   // Fetch dashboard stats
   useEffect(() => {
@@ -250,7 +258,9 @@ const DashboardHospitalPage: React.FC = () => {
                 {/* Stats Charts Section */}
                 <StatsChartsSection
                   stats={stats}
-                  campaigns={hospitalCampaigns}
+                  campaigns={showAllCampaigns ? allCampaigns : hospitalCampaigns}
+                  showAllCampaigns={showAllCampaigns}
+                  onToggleAllCampaigns={setShowAllCampaigns}
                   selectedDate={selectedDate}
                   filteredCampaigns={filteredCampaigns}
                   onClearSelectedDate={clearSelectedDate}
@@ -273,11 +283,11 @@ const DashboardHospitalPage: React.FC = () => {
                 <section className="space-y-4">
                   <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3">
                     <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">{t('dashboard.stats.appointmentsToday')}</p>
-                    <p className="text-4xl font-bold text-gray-800 dark:text-white">8</p>
+                    <p className="text-4xl font-bold text-gray-800 dark:text-white">{todayAppointments.length}</p>
                   </div>
                   <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3">
                     <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">{t('dashboard.stats.donationsThisMonth')}</p>
-                    <p className="text-4xl font-bold text-gray-800 dark:text-white">24</p>
+                    <p className="text-4xl font-bold text-gray-800 dark:text-white">{monthlyDonations}</p>
                   </div>
                 </section>
               </div>

@@ -49,7 +49,6 @@ const SelectField: React.FC<SelectFieldProps> = ({
           aria-describedby={error ? errorId : undefined}
           className={`w-full appearance-none font-roboto text-body-sm md:text-body px-3 py-2 md:px-4 md:py-2.5 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 dark:disabled:bg-gray-700 bg-white dark:bg-gray-700 dark:border-gray-600 ${value === "" ? "text-gray-400 dark:text-gray-400" : "text-gray-900 dark:text-white"
             } ${error ? 'border-red-500' : 'border-gray-300'}`}
-          style={{ transition: 'background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out' }}
         >
           {options.map(option => (
             <option key={option.value} value={option.value} className="text-gray-900 dark:text-white" hidden={option.value === ""}>

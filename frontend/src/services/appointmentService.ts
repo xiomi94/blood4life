@@ -44,5 +44,10 @@ export const appointmentService = {
   createAppointment: async (appointment: Partial<Appointment>): Promise<Appointment> => {
     const response = await axiosInstance.post('/appointment/create', appointment);
     return response.data;
+  },
+
+  getMonthlyDonationsByHospital: async (hospitalId: number): Promise<number> => {
+    const response = await axiosInstance.get(`/appointment/hospital/${hospitalId}/monthly-donations`);
+    return response.data;
   }
 };

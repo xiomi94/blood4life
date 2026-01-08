@@ -63,7 +63,6 @@ const FormField: React.FC<FormFieldProps> = ({
             } ${showPasswordToggle ? 'pr-10' : ''}`}
           placeholder={placeholder}
           autoComplete={autoComplete}
-          style={{ transition: 'background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out' }}
         />
 
         {showPasswordToggle && (

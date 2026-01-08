@@ -13,12 +13,13 @@ public class AppointmentDTO {
 
   private String hospitalComment;
   private LocalDate dateAppointment;
+  private java.time.LocalTime hourAppointment;
 
   public AppointmentDTO() {
   }
 
   public AppointmentDTO(Integer id, AppointmentStatus appointmentStatus, Integer campaignId,
-                        Integer bloodDonorId, String hospitalComment, LocalDate dateAppointment) {
+      Integer bloodDonorId, String hospitalComment, LocalDate dateAppointment) {
     this.id = id;
     this.appointmentStatus = appointmentStatus;
     this.campaignId = campaignId;
@@ -73,5 +74,13 @@ public class AppointmentDTO {
 
   public void setDateAppointment(LocalDate dateAppointment) {
     this.dateAppointment = dateAppointment;
+  }
+
+  public java.time.LocalTime getHourAppointment() {
+    return hourAppointment;
+  }
+
+  public void setHourAppointment(java.time.LocalTime hourAppointment) {
+    this.hourAppointment = hourAppointment;
   }
 }

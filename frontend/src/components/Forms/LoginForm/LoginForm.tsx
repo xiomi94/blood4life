@@ -81,7 +81,6 @@ function LoginForm() {
     <div className="flex justify-center items-center w-full px-4 sm:px-6 md:px-0">
       <form
         className="flex flex-col w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 gap-4 sm:gap-6"
-        style={{ transition: 'background-color 0.3s ease-in-out' }}
         onSubmit={handleSubmit}
         aria-busy={isLoading}
       >

@@ -24,7 +24,6 @@ public class Appointment {
     @JoinColumn(name = "campaign_id", nullable = false)
     private Campaign campaign;
 
-
     public Campaign getCampaign() {
         return campaign;
     }
@@ -41,28 +40,32 @@ public class Appointment {
 
     private LocalDate dateAppointment;
 
+    @jakarta.persistence.Column(name = "hour_appointment")
+    private java.time.LocalTime hourAppointment;
 
-  public Appointment() {
-  }
+    public Appointment() {
+    }
 
-  public Appointment(AppointmentStatus appointmentStatus, Campaign campaign, BloodDonor bloodDonor, String hospitalComment, LocalDate dateAppointment) {
-    this.appointmentStatus = appointmentStatus;
-    this.campaign = campaign;
-    this.bloodDonor = bloodDonor;
-    this.hospitalComment = hospitalComment;
-    this.dateAppointment = dateAppointment;
-  }
+    public Appointment(AppointmentStatus appointmentStatus, Campaign campaign, BloodDonor bloodDonor,
+            String hospitalComment, LocalDate dateAppointment) {
+        this.appointmentStatus = appointmentStatus;
+        this.campaign = campaign;
+        this.bloodDonor = bloodDonor;
+        this.hospitalComment = hospitalComment;
+        this.dateAppointment = dateAppointment;
+    }
 
-  public Appointment(Integer id, AppointmentStatus appointmentStatus, Campaign campaign, BloodDonor bloodDonor, String hospitalComment, LocalDate dateAppointment) {
-    this.id = id;
-    this.appointmentStatus = appointmentStatus;
-    this.campaign = campaign;
-    this.bloodDonor = bloodDonor;
-    this.hospitalComment = hospitalComment;
-    this.dateAppointment = dateAppointment;
-  }
+    public Appointment(Integer id, AppointmentStatus appointmentStatus, Campaign campaign, BloodDonor bloodDonor,
+            String hospitalComment, LocalDate dateAppointment) {
+        this.id = id;
+        this.appointmentStatus = appointmentStatus;
+        this.campaign = campaign;
+        this.bloodDonor = bloodDonor;
+        this.hospitalComment = hospitalComment;
+        this.dateAppointment = dateAppointment;
+    }
 
-  public Integer getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -100,6 +103,14 @@ public class Appointment {
 
     public void setDateAppointment(LocalDate dateAppointment) {
         this.dateAppointment = dateAppointment;
+    }
+
+    public java.time.LocalTime getHourAppointment() {
+        return hourAppointment;
+    }
+
+    public void setHourAppointment(java.time.LocalTime hourAppointment) {
+        this.hourAppointment = hourAppointment;
     }
 
     @Override

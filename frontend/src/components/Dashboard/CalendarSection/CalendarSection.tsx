@@ -99,7 +99,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ campaigns, onDayClick
             days.push(
                 <div
                     key={day}
-                    className={`p-2 rounded flex items-center justify-center text-sm transition-colors relative ${statusClass} ${campaignsOnDay.length > 0 ? 'cursor-pointer' : ''}`}
+                    className={`p-2 rounded flex items-center justify-center text-sm relative ${statusClass} ${campaignsOnDay.length > 0 ? 'cursor-pointer' : ''}`}
                     title={campaignsOnDay.map(c => c.name).join(', ')}
                     onClick={() => onDayClick(dateStr, campaignsOnDay)}
                 >
@@ -132,13 +132,13 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ campaigns, onDayClick
                             <>
                                 <button
                                     onClick={() => setCalendarView('months')}
-                                    className="font-semibold text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                                    className="font-semibold text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
                                 >
                                     {monthNames[currentDate.getMonth()]}
                                 </button>
                                 <button
                                     onClick={() => setCalendarView('years')}
-                                    className="font-semibold text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                                    className="font-semibold text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
                                 >
                                     {currentDate.getFullYear()}
                                 </button>
@@ -147,7 +147,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ campaigns, onDayClick
                         {calendarView === 'months' && (
                             <button
                                 onClick={() => setCalendarView('years')}
-                                className="font-semibold text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                                className="font-semibold text-gray-800 dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
                             >
                                 {currentDate.getFullYear()}
                             </button>
@@ -189,7 +189,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ campaigns, onDayClick
                             <button
                                 key={index}
                                 onClick={() => selectMonth(index)}
-                                className={`p-3 rounded-lg text-sm font-medium transition-colors ${currentDate.getMonth() === index
+                                className={`p-3 rounded-lg text-sm font-medium ${currentDate.getMonth() === index
                                     ? 'bg-blue-500 text-white'
                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                     }`}
@@ -211,7 +211,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ campaigns, onDayClick
                                 <button
                                     key={year}
                                     onClick={() => selectYear(year)}
-                                    className={`p-3 rounded-lg text-sm font-medium transition-colors ${isCurrentYear
+                                    className={`p-3 rounded-lg text-sm font-medium ${isCurrentYear
                                         ? 'bg-blue-500 text-white'
                                         : isOutOfRange
                                             ? 'bg-gray-50 text-gray-400 hover:bg-gray-100'

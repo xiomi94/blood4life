@@ -5,11 +5,13 @@ import type { DashboardStats } from '../../../services/dashboardService';
 import type { Campaign } from '../../../services/campaignService';
 import CampaignsList from '../CampaignsList/CampaignsList';
 
-type ChartType = 'bloodType' | 'gender' | 'campaigns';
+type ChartType = 'bloodType' | 'gender' | 'myCampaigns' | 'allCampaigns';
 
 interface StatsChartsSectionProps {
     stats: DashboardStats;
     campaigns: Campaign[];
+    showAllCampaigns: boolean;
+    onToggleAllCampaigns: (value: boolean) => void;
     selectedDate: string | null;
     filteredCampaigns: Campaign[];
     onClearSelectedDate: () => void;
@@ -20,6 +22,8 @@ interface StatsChartsSectionProps {
 const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
     stats,
     campaigns,
+    showAllCampaigns,
+    onToggleAllCampaigns,
     selectedDate,
     filteredCampaigns,
     onClearSelectedDate,
@@ -27,8 +31,18 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
     onDeleteCampaign
 }) => {
     const { t } = useTranslation();
-    const [selectedChart, setSelectedChart] = useState<ChartType>('campaigns');
+    const [selectedChart, setSelectedChart] = useState<ChartType>('myCampaigns');
     const [searchTerm, setSearchTerm] = useState('');
+
+    // Handle chart type change and update campaign filter
+    const handleChartChange = (newChart: ChartType) => {
+        setSelectedChart(newChart);
+        if (newChart === 'myCampaigns') {
+            onToggleAllCampaigns(false);
+        } else if (newChart === 'allCampaigns') {
+            onToggleAllCampaigns(true);
+        }
+    };
 
     // Blood Type Chart Data
     const bloodTypeChartData = {
@@ -124,7 +138,7 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
                             <h2 className="text-xl font-bold text-gray-800 dark:text-white">{t('dashboard.stats.selectedCampaigns')}</h2>
                             <button
                                 onClick={onClearSelectedDate}
-                                className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
+                                className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg"
                             >
                                 {t('dashboard.stats.clearFilter')}
                             </button>
@@ -133,23 +147,24 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
                         <select
                             id="chartType"
                             value={selectedChart}
-                            onChange={(e) => setSelectedChart(e.target.value as ChartType)}
-                            className="appearance-none pr-8 pl-0 py-1 bg-transparent text-xl font-bold text-gray-800 dark:text-white dark:bg-gray-800 border-none focus:ring-0 focus:outline-none cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22%234b5563%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:24px_24px] bg-[right_-4px_center] bg-no-repeat"
+                            onChange={(e) => handleChartChange(e.target.value as ChartType)}
+                            className="appearance-none pr-8 pl-0 py-1 bg-transparent text-xl font-bold text-gray-800 dark:text-white dark:bg-gray-800 border-none focus:ring-0 focus:outline-none cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22%234b5563%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:24px_24px] bg-[right_-4px_center] bg-no-repeat"
                         >
-                            <option value="campaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.campaignsOption')}</option>
+                            <option value="myCampaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">Mis Campañas</option>
+                            <option value="allCampaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">Todas las Campañas</option>
                             <option value="bloodType" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.bloodTypeOption')}</option>
                             <option value="gender" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.genderOption')}</option>
                         </select>
                     )}
                 </div>
-                {selectedChart === 'campaigns' && (
-                    <div className="relative w-full sm:w-auto">
+                {(selectedChart === 'myCampaigns' || selectedChart === 'allCampaigns') && (
+                    <div className="relative w-full sm:w-64">
                         <input
                             type="text"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             placeholder={t('dashboard.stats.searchPlaceholder')}
-                            className="w-full sm:w-64 pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                            className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
                         />
                         <svg
                             className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500"
@@ -190,7 +205,7 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
                 </div>
             )}
 
-            {selectedChart === 'campaigns' && (
+            {(selectedChart === 'myCampaigns' || selectedChart === 'allCampaigns') && (
                 <div className="relative h-[400px] w-full">
                     <div
                         className="h-full overflow-y-auto pr-2 pt-2 pb-2 space-y-3 custom-scrollbar"
