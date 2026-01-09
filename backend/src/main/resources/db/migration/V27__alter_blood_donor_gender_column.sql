@@ -1,0 +1,1 @@
+ALTER TABLE blood_donor MODIFY COLUMN gender VARCHAR(50);

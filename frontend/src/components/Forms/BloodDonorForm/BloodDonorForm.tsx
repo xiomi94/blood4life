@@ -108,9 +108,9 @@ export default function BloodDonorForm({ bloodDonor, onSubmit, onCancel }: Props
             className="mt-1 w-full border rounded-md px-3 py-2"
           >
             <option value="">Seleccione género</option>
-            <option value="M">Masculino</option>
-            <option value="F">Femenino</option>
-            <option value="N">No especificar</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+            <option value="Prefiero no decirlo">Prefiero no decirlo</option>
           </select>
         </div>
 

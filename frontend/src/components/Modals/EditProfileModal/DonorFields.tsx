@@ -104,7 +104,6 @@ export const DonorFields: React.FC<DonorFieldsProps> = ({ formData, errors, onIn
                     <option value="">Seleccionar género</option>
                     <option value="Masculino">Masculino</option>
                     <option value="Femenino">Femenino</option>
-                    <option value="No binario">No binario</option>
                     <option value="Prefiero no decirlo">Prefiero no decirlo</option>
                 </select>
             </div>

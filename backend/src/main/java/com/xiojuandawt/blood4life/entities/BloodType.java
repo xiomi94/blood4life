@@ -14,6 +14,7 @@ public class BloodType {
 
   private String type;
 
+  @com.fasterxml.jackson.annotation.JsonIgnore
   @ManyToMany(mappedBy = "bloodTypes")
   private List<Campaign> campaigns;
 
@@ -48,8 +49,8 @@ public class BloodType {
   @Override
   public String toString() {
     return "BloodType{" +
-      "id=" + id +
-      ", type='" + type + '\'' +
-      '}';
+        "id=" + id +
+        ", type='" + type + '\'' +
+        '}';
   }
 }

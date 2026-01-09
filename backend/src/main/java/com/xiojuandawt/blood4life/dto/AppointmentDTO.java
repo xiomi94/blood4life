@@ -12,8 +12,15 @@ public class AppointmentDTO {
   private Integer bloodDonorId;
 
   private String hospitalComment;
+
+  @com.fasterxml.jackson.annotation.JsonFormat(shape = com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private LocalDate dateAppointment;
+
+  @com.fasterxml.jackson.annotation.JsonFormat(shape = com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING, pattern = "HH:mm")
   private java.time.LocalTime hourAppointment;
+
+  private BloodDonorDTO bloodDonor;
+  private Long donorCompletedAppointments;
 
   public AppointmentDTO() {
   }
@@ -82,5 +89,21 @@ public class AppointmentDTO {
 
   public void setHourAppointment(java.time.LocalTime hourAppointment) {
     this.hourAppointment = hourAppointment;
+  }
+
+  public BloodDonorDTO getBloodDonor() {
+    return bloodDonor;
+  }
+
+  public void setBloodDonor(BloodDonorDTO bloodDonor) {
+    this.bloodDonor = bloodDonor;
+  }
+
+  public Long getDonorCompletedAppointments() {
+    return donorCompletedAppointments;
+  }
+
+  public void setDonorCompletedAppointments(Long donorCompletedAppointments) {
+    this.donorCompletedAppointments = donorCompletedAppointments;
   }
 }

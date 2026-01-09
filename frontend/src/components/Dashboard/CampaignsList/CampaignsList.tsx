@@ -83,7 +83,16 @@ const CampaignsList: React.FC<CampaignsListProps> = ({
                         <div className="grid grid-cols-2 gap-2 text-sm text-gray-500 dark:text-gray-400">
                             <div>
                                 <span className="font-semibold block mb-1">{t('dashboard.campaigns.datesLabel')}:</span>
-                                {new Date(campaign.startDate).toLocaleDateString('es-ES')} - {new Date(campaign.endDate).toLocaleDateString('es-ES')}
+                                {(() => {
+                                    const formatDate = (dateString: string) => {
+                                        const d = new Date(dateString);
+                                        const day = String(d.getDate()).padStart(2, '0');
+                                        const month = String(d.getMonth() + 1).padStart(2, '0');
+                                        const year = d.getFullYear();
+                                        return `${day}/${month}/${year}`;
+                                    };
+                                    return `${formatDate(campaign.startDate)} - ${formatDate(campaign.endDate)}`;
+                                })()}
                             </div>
                             <div>
                                 <span className="font-semibold block mb-1">{t('dashboard.campaigns.bloodTypesLabel')}:</span>

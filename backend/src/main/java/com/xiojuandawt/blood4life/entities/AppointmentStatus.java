@@ -18,24 +18,25 @@ public class AppointmentStatus {
 
     private String statusName;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @OneToMany(mappedBy = "appointmentStatus")
     private List<Appointment> appointments;
 
-  public AppointmentStatus() {
-  }
+    public AppointmentStatus() {
+    }
 
-  public AppointmentStatus(String statusName, List<Appointment> appointments) {
-    this.statusName = statusName;
-    this.appointments = appointments;
-  }
+    public AppointmentStatus(String statusName, List<Appointment> appointments) {
+        this.statusName = statusName;
+        this.appointments = appointments;
+    }
 
-  public AppointmentStatus(Integer id, String statusName, List<Appointment> appointments) {
-    this.id = id;
-    this.statusName = statusName;
-    this.appointments = appointments;
-  }
+    public AppointmentStatus(Integer id, String statusName, List<Appointment> appointments) {
+        this.id = id;
+        this.statusName = statusName;
+        this.appointments = appointments;
+    }
 
-  public Integer getId() {
+    public Integer getId() {
         return id;
     }
 

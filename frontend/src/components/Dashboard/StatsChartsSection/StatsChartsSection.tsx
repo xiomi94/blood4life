@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Bar, Doughnut } from 'react-chartjs-2';
+import { useTheme } from '../../../context/ThemeContext';
 import type { DashboardStats } from '../../../services/dashboardService';
 import type { Campaign } from '../../../services/campaignService';
 import CampaignsList from '../CampaignsList/CampaignsList';
 
-type ChartType = 'bloodType' | 'gender' | 'myCampaigns' | 'allCampaigns';
+type ChartType = 'bloodType' | 'gender' | 'myCampaigns' | 'allCampaigns' | 'completedCampaigns';
 
 interface StatsChartsSectionProps {
     stats: DashboardStats;
@@ -39,18 +40,109 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
         setSelectedChart(newChart);
         if (newChart === 'myCampaigns') {
             onToggleAllCampaigns(false);
-        } else if (newChart === 'allCampaigns') {
-            onToggleAllCampaigns(true);
+        } else if (newChart === 'allCampaigns' || newChart === 'completedCampaigns') {
+            onToggleAllCampaigns(true); // Completed campaigns are typically viewed from "All" history, or maybe just "My"?
+            // User requirement: "mostrar en el card de campañas... campañas realizadas"
+            // Usually "Completed" implies history. If the user wants ONLY THEIR completed, we might need a flag.
+            // But usually "All" vs "My" is one toggle.
+            // Let's assume 'completedCampaigns' fetches/uses ALL campaigns to filter from, OR respects the current user context?
+            // The user said: "Hay una opción (por defecto) en el que se muestran las campañas hechas por el propio usuario... Hay una opción... total de campañas... opción más... campañas realizadas".
+            // It seems "Completed" is a sibling to "My" and "All".
+            // Let's assume "Completed" shows "My" completed campaigns if we follow "My Campaigns" logic, or maybe "All".
+            // Given the context of "Dashboard", usually you want to see YOUR history.
+            // But if "All Campaigns" shows everyone's, "Completed" might typically show everyone's too?
+            // To be safe, let's keep `showAllCampaigns` as true for 'completedCampaigns' to ensure we have the candidate set, 
+            // BUT actually, we probably want "My Completed" vs "All Completed"?
+            // The user didn't specify. I will assume "All Completed" for now as it's a separate category in the list.
+            // Actually, if I toggle `onToggleAllCampaigns(true)`, `campaigns` prop will contain ALL campaigns.
         }
     };
 
+    // Filter campaigns based on logic:
+    // Active: EndDate >= Today - 7 days
+    // Completed: EndDate < Today - 7 days
+    const displayCampaigns = useMemo(() => {
+        if (selectedDate) return filteredCampaigns;
+
+        const today = new Date();
+        // Reset time to start of day for accurate comparison if needed, or just compare timestamps
+        today.setHours(0, 0, 0, 0);
+
+        const oneWeekAgo = new Date(today);
+        oneWeekAgo.setDate(today.getDate() - 7);
+
+        // Define filtering logic
+        const isActive = (c: Campaign) => {
+            const endDate = new Date(c.endDate);
+            return endDate >= oneWeekAgo;
+        };
+
+        const isCompleted = (c: Campaign) => {
+            const endDate = new Date(c.endDate);
+            return endDate < oneWeekAgo;
+        };
+
+        let baseList = campaigns;
+
+        // If we are in "Completed" mode, we want to filter by isCompleted.
+        // If we are in "My" or "All" (Active) mode, we want to filter by isActive.
+
+        if (selectedChart === 'completedCampaigns') {
+            // For completed, maybe we want to show ALL completed or MY completed?
+            // Since we set onToggleAllCampaigns(true) for this case, `campaigns` has all.
+            // If we want only MY completed, we'd need to filter by hospital ID, but I don't have explicit user ID here easily unless passed.
+            // However, `campaigns` passed from parent DEPENDS on `showAllCampaigns` flag.
+            // If `showAllCampaigns` is true, we get ALL. If false, we get MINE.
+            // I set `onToggleAllCampaigns(true)` for completed, so we get ALL.
+            // This seems safest.
+            return baseList.filter(c => isCompleted(c));
+        } else if (selectedChart === 'myCampaigns' || selectedChart === 'allCampaigns') {
+            return baseList.filter(c => isActive(c));
+        }
+
+        return baseList;
+    }, [campaigns, selectedChart, selectedDate, filteredCampaigns]);
+
+    const { isDarkMode } = useTheme();
+    const textColor = isDarkMode ? '#ffffff' : '#374151'; // White for dark mode, Gray-700 for light mode
+
+    const [bloodTypeGenderFilter, setBloodTypeGenderFilter] = useState<string>('all');
+
+    // Process Blood Type Data to ensure all types are shown in specific order
+    const orderedBloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+
+    // Calculate counts based on filter
+    const finalBloodTypeCounts = useMemo(() => {
+        if (bloodTypeGenderFilter === 'all' || !stats.breakdown) {
+            // Use standard stats if no filter or no breakdown available
+            const map = new Map<string, number>();
+            stats.bloodType.labels.forEach((label, index) => {
+                map.set(label, stats.bloodType.counts[index]);
+            });
+            return orderedBloodTypes.map(type => map.get(type) || 0);
+        } else {
+            // Filter using breakdown data
+            const map = new Map<string, number>();
+            stats.breakdown
+                .filter(item => item.gender === bloodTypeGenderFilter)
+                .forEach(item => {
+                    // If multiple entries for same type (shouldn't be, but robust), add them
+                    const current = map.get(item.bloodType) || 0;
+                    map.set(item.bloodType, current + item.count);
+                });
+            return orderedBloodTypes.map(type => map.get(type) || 0);
+        }
+    }, [stats, bloodTypeGenderFilter]);
+
+    const finalBloodTypeLabels = orderedBloodTypes;
+
     // Blood Type Chart Data
     const bloodTypeChartData = {
-        labels: stats.bloodType.labels,
+        labels: finalBloodTypeLabels,
         datasets: [
             {
                 label: 'Número de Donantes',
-                data: stats.bloodType.counts,
+                data: finalBloodTypeCounts,
                 backgroundColor: 'rgba(37, 99, 235, 0.7)',
                 borderColor: 'rgba(37, 99, 235, 1)',
                 borderWidth: 1,
@@ -66,6 +158,7 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
             legend: {
                 position: 'bottom' as const,
                 labels: {
+                    color: textColor,
                     font: {
                         family: "'Roboto', sans-serif",
                         size: 12,
@@ -78,34 +171,45 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
             y: {
                 beginAtZero: true,
                 grid: {
-                    color: 'rgba(0, 0, 0, 0.05)',
+                    color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
                 },
+                ticks: {
+                    color: textColor,
+                    stepSize: 1, // Ensure integer steps for counts
+                }
             },
             x: {
                 grid: {
                     display: false,
                 },
+                ticks: {
+                    color: textColor
+                }
             },
         },
     };
 
     // Gender Chart Data
+    const genderColors: { [key: string]: string } = {
+        'Masculino': 'rgba(59, 130, 246, 0.7)', // Blue
+        'Femenino': 'rgba(236, 72, 153, 0.7)', // Pink
+        'Prefiero no decirlo': 'rgba(107, 114, 128, 0.7)' // Gray
+    };
+
+    const genderBorderColors: { [key: string]: string } = {
+        'Masculino': 'rgba(59, 130, 246, 1)',
+        'Femenino': 'rgba(236, 72, 153, 1)',
+        'Prefiero no decirlo': 'rgba(107, 114, 128, 1)'
+    };
+
     const genderChartData = {
         labels: stats.gender.labels,
         datasets: [
             {
                 label: 'Distribución por Género',
                 data: stats.gender.counts,
-                backgroundColor: [
-                    'rgba(59, 130, 246, 0.7)',
-                    'rgba(236, 72, 153, 0.7)',
-                    'rgba(107, 114, 128, 0.7)',
-                ],
-                borderColor: [
-                    'rgba(59, 130, 246, 1)',
-                    'rgba(236, 72, 153, 1)',
-                    'rgba(107, 114, 128, 1)',
-                ],
+                backgroundColor: stats.gender.labels.map(label => genderColors[label] || 'rgba(156, 163, 175, 0.7)'),
+                borderColor: stats.gender.labels.map(label => genderBorderColors[label] || 'rgba(156, 163, 175, 1)'),
                 borderWidth: 2,
             },
         ],
@@ -118,6 +222,7 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
             legend: {
                 position: 'bottom' as const,
                 labels: {
+                    color: textColor,
                     font: {
                         family: "'Roboto', sans-serif",
                         size: 12,
@@ -126,8 +231,6 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
             },
         },
     };
-
-    const campaignsToShow = selectedDate ? filteredCampaigns : campaigns;
 
     return (
         <section className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3">
@@ -152,12 +255,13 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
                         >
                             <option value="myCampaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">Mis Campañas</option>
                             <option value="allCampaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">Todas las Campañas</option>
+                            <option value="completedCampaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">Campañas Realizadas</option>
                             <option value="bloodType" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.bloodTypeOption')}</option>
                             <option value="gender" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.genderOption')}</option>
                         </select>
                     )}
                 </div>
-                {(selectedChart === 'myCampaigns' || selectedChart === 'allCampaigns') && (
+                {(selectedChart === 'myCampaigns' || selectedChart === 'allCampaigns' || selectedChart === 'completedCampaigns') && (
                     <div className="relative w-full sm:w-64">
                         <input
                             type="text"
@@ -193,44 +297,86 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
                 )}
             </div>
 
-            {selectedChart === 'bloodType' && (
-                <div className="relative h-[350px] w-full">
-                    <Bar data={bloodTypeChartData} options={bloodTypeOptions} />
-                </div>
-            )}
-
-            {selectedChart === 'gender' && (
-                <div className="relative h-[350px] w-full">
-                    <Doughnut data={genderChartData} options={genderOptions} />
-                </div>
-            )}
-
-            {(selectedChart === 'myCampaigns' || selectedChart === 'allCampaigns') && (
-                <div className="relative h-[400px] w-full">
-                    <div
-                        className="h-full overflow-y-auto pr-2 pt-2 pb-2 space-y-3 custom-scrollbar"
-                        style={{
-                            scrollbarWidth: 'thin',
-                            scrollbarColor: '#cbd5e1 transparent'
-                        }}
-                    >
-                        <CampaignsList
-                            campaigns={campaignsToShow}
-                            searchTerm={searchTerm}
-                            selectedDate={selectedDate}
-                            onEditCampaign={onEditCampaign}
-                            onDeleteCampaign={onDeleteCampaign}
-                        />
+            <div key={selectedChart} className="animate-fade-in w-full">
+                {selectedChart === 'bloodType' && (
+                    <div className="relative h-[450px] w-full flex flex-col">
+                        <div className="flex flex-wrap justify-end gap-2 mb-2">
+                            <button
+                                onClick={() => setBloodTypeGenderFilter('all')}
+                                className={`px-2 py-1 text-xs font-medium rounded-md transition-colors ${bloodTypeGenderFilter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
+                            >
+                                Todos
+                            </button>
+                            <button
+                                onClick={() => setBloodTypeGenderFilter('Masculino')}
+                                className={`px-2 py-1 text-xs font-medium rounded-md transition-colors ${bloodTypeGenderFilter === 'Masculino' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
+                            >
+                                Masculino
+                            </button>
+                            <button
+                                onClick={() => setBloodTypeGenderFilter('Femenino')}
+                                className={`px-2 py-1 text-xs font-medium rounded-md transition-colors ${bloodTypeGenderFilter === 'Femenino' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
+                            >
+                                Femenino
+                            </button>
+                            <button
+                                onClick={() => setBloodTypeGenderFilter('Prefiero no decirlo')}
+                                className={`px-2 py-1 text-xs font-medium rounded-md transition-colors ${bloodTypeGenderFilter === 'Prefiero no decirlo' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
+                            >
+                                Prefiero no decirlo
+                            </button>
+                        </div>
+                        <div className="flex-1 relative w-full min-h-0">
+                            <Bar data={bloodTypeChartData} options={bloodTypeOptions} />
+                        </div>
                     </div>
-                    {/* Gradient fade effects */}
-                    {campaignsToShow.length > 0 && (
-                        <>
-                            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-b from-white dark:from-gray-800 via-white/90 dark:via-gray-800/90 to-transparent pointer-events-none"></div>
-                            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-t from-white dark:from-gray-800 via-white/90 dark:via-gray-800/90 to-transparent pointer-events-none"></div>
-                        </>
-                    )}
-                </div>
-            )}
+                )}
+
+                {selectedChart === 'gender' && (
+                    <div className="relative h-[450px] w-full flex items-center justify-center">
+                        <div className="h-full w-full">
+                            <Doughnut data={genderChartData} options={genderOptions} />
+                        </div>
+                    </div>
+                )}
+
+                {(selectedChart === 'myCampaigns' || selectedChart === 'allCampaigns' || selectedChart === 'completedCampaigns') && (
+                    <div className="relative h-[450px] w-full">
+                        <div
+                            className="h-full overflow-y-auto pr-2 pt-2 pb-2 space-y-3 custom-scrollbar"
+                            style={{
+                                scrollbarWidth: 'thin',
+                                scrollbarColor: '#cbd5e1 transparent'
+                            }}
+                        >
+                            {displayCampaigns.length > 0 ? (
+                                <CampaignsList
+                                    campaigns={displayCampaigns}
+                                    searchTerm={searchTerm}
+                                    selectedDate={selectedDate}
+                                    onEditCampaign={onEditCampaign}
+                                    onDeleteCampaign={onDeleteCampaign}
+                                />
+                            ) : (
+                                <div className="flex h-full items-center justify-center text-gray-500 dark:text-gray-400">
+                                    {searchTerm
+                                        ? 'No se encontraron campañas con ese criterio'
+                                        : selectedDate
+                                            ? 'No hay campañas en esta fecha'
+                                            : 'No hay campañas para mostrar'}
+                                </div>
+                            )}
+                        </div>
+                        {/* Gradient fade effects */}
+                        {displayCampaigns.length > 0 && (
+                            <>
+                                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-b from-white dark:from-gray-800 via-white/90 dark:via-gray-800/90 to-transparent pointer-events-none"></div>
+                                <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-t from-white dark:from-gray-800 via-white/90 dark:via-gray-800/90 to-transparent pointer-events-none"></div>
+                            </>
+                        )}
+                    </div>
+                )}
+            </div>
         </section>
     );
 };
