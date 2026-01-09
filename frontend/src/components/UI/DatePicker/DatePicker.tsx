@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import ReactDOM from 'react-dom';
-import { format, getDaysInMonth, startOfMonth, subMonths, addMonths, getYear, setYear, setMonth, isSameDay, isToday, parseISO } from 'date-fns';
+import { format, getDaysInMonth, startOfMonth, subMonths, addMonths, setYear, setMonth, isSameDay, isToday, parseISO } from 'date-fns';
 
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
@@ -46,8 +45,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
     className
 }) => {
     const [isOpen, setIsOpen] = useState(false);
-    // Date used for navigation in the calendar (viewing different months/years)
     const [viewDate, setViewDate] = useState(new Date());
+    const [calendarView, setCalendarView] = useState<'days' | 'months' | 'years'>('days');
 
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -66,6 +65,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
         const handleClickOutside = (event: MouseEvent) => {
             if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
                 setIsOpen(false);
+                setCalendarView('days'); // Reset view on close
             }
         };
 
@@ -77,24 +77,40 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
     const handleDateSelect = (day: number) => {
         const newDate = new Date(viewDate.getFullYear(), viewDate.getMonth(), day);
-
-        // Pass event-like object to parent handler to match standard input interface
         const dateString = format(newDate, 'yyyy-MM-dd');
         onChange({ target: { name, value: dateString } });
-
         setIsOpen(false);
+        setCalendarView('days');
     };
 
-    const handleMonthChange = (offset: number) => {
-        setViewDate(prev => offset > 0 ? addMonths(prev, offset) : subMonths(prev, Math.abs(offset)));
+    const handlePrevClick = () => {
+        if (calendarView === 'days') {
+            setViewDate(subMonths(viewDate, 1));
+        } else if (calendarView === 'months') {
+            setViewDate(subMonths(viewDate, 12)); // Go back a year
+        } else if (calendarView === 'years') {
+            setViewDate(subMonths(viewDate, 120)); // Go back a decade
+        }
     };
 
-    const handleYearChange = (year: number) => {
-        setViewDate(prev => setYear(prev, year));
+    const handleNextClick = () => {
+        if (calendarView === 'days') {
+            setViewDate(addMonths(viewDate, 1));
+        } else if (calendarView === 'months') {
+            setViewDate(addMonths(viewDate, 12)); // Go forward a year
+        } else if (calendarView === 'years') {
+            setViewDate(addMonths(viewDate, 120)); // Go forward a decade
+        }
     };
 
     const handleMonthSelect = (monthIndex: number) => {
-        setViewDate(prev => setMonth(prev, monthIndex));
+        setViewDate(setMonth(viewDate, monthIndex));
+        setCalendarView('days');
+    };
+
+    const handleYearSelect = (year: number) => {
+        setViewDate(setYear(viewDate, year));
+        setCalendarView('months');
     };
 
     const renderCalendarDays = () => {
@@ -102,12 +118,12 @@ const DatePicker: React.FC<DatePickerProps> = ({
         const startDay = startOfMonth(viewDate).getDay(); // 0 is Sunday
         const days = [];
 
-        // Empty cells for days before the 1st of the month
+        // Empty cells for days before the 1st
         for (let i = 0; i < startDay; i++) {
             days.push(<div key={`empty-${i}`} className="w-8 h-8"></div>);
         }
 
-        // Days of the month
+        // Days
         for (let day = 1; day <= daysInMonth; day++) {
             const date = new Date(viewDate.getFullYear(), viewDate.getMonth(), day);
             const isSelected = value && isSameDay(date, parseISO(value));
@@ -140,13 +156,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 </button>
             );
         }
-
         return days;
     };
-
-    // Year selection range (100 years back to 10 years forward)
-    const currentYear = new Date().getFullYear();
-    const years = Array.from({ length: 110 }, (_, i) => currentYear - 100 + i).reverse();
 
     return (
         <div className={cn("w-full mb-4", className)} ref={containerRef}>
@@ -160,88 +171,88 @@ const DatePicker: React.FC<DatePickerProps> = ({
             )}
 
             <div className="relative">
-                <button
-                    type="button"
-                    onClick={() => !disabled && setIsOpen(!isOpen)}
+                <div
                     className={cn(
-                        "w-full font-roboto text-body-sm md:text-body px-3 py-2 md:px-4 md:py-2.5 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-left flex items-center justify-between",
-                        "bg-white dark:bg-gray-700 dark:text-white dark:border-gray-600",
-                        error ? "border-red-500" : "border-gray-300",
+                        "flex w-full rounded-md shadow-sm border overflow-hidden transition-colors",
+                        "bg-white dark:bg-gray-700 dark:border-gray-600",
+                        error ? "border-red-500" : "border-gray-300 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500",
                         disabled && "bg-gray-100 dark:bg-gray-700 cursor-not-allowed opacity-70"
                     )}
-                    disabled={disabled}
                 >
-                    <span className={cn("block truncate", !value && "text-gray-400 dark:text-gray-400")}>
+                    <button
+                        type="button"
+                        onClick={() => !disabled && setIsOpen(!isOpen)}
+                        className={cn(
+                            "flex-1 text-left px-3 py-2 md:px-4 md:py-2.5 font-roboto text-body-sm md:text-body bg-transparent focus:outline-none",
+                            !value && "text-gray-400 dark:text-gray-400",
+                            "dark:text-white"
+                        )}
+                        disabled={disabled}
+                    >
                         {value ? format(parseISO(value), "dd/MM/yyyy") : placeholder}
-                    </span>
-                    <CalendarIcon className="w-5 h-5 text-gray-400 dark:text-gray-300 ml-2 flex-shrink-0" />
-                </button>
+                    </button>
 
-                {/* Calendar Dropdown - Rendered via Portal */}
-                {isOpen && containerRef.current && ReactDOM.createPortal(
+                    <button
+                        type="button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            !disabled && setIsOpen(!isOpen);
+                        }}
+                        className={cn(
+                            "px-3 flex items-center justify-center border-l border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors",
+                            disabled && "cursor-not-allowed opacity-50"
+                        )}
+                        disabled={disabled}
+                        aria-label="Abrir calendario"
+                    >
+                        <CalendarIcon className="w-5 h-5 text-gray-500 dark:text-gray-300" />
+                    </button>
+                </div>
+
+                {/* Calendar Dropdown */}
+                {isOpen && (
                     <div
-                        className="fixed p-4 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 w-[320px] animate-in fade-in zoom-in-95 duration-200"
+                        className="absolute z-50 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 w-[320px] animate-in fade-in zoom-in-95 duration-200"
                         style={{
-                            zIndex: 9999,
-                            top: (() => {
-                                const rect = containerRef.current?.getBoundingClientRect();
-                                if (!rect) return '50%';
-                                const spaceBelow = window.innerHeight - rect.bottom;
-                                const spaceAbove = rect.top;
-                                const calendarHeight = 400; // approximate
-
-                                // If more space below, position below
-                                if (spaceBelow >= calendarHeight || spaceBelow > spaceAbove) {
-                                    return `${rect.bottom + window.scrollY + 8}px`;
-                                } else {
-                                    // Position above
-                                    return `${rect.top + window.scrollY - calendarHeight - 8}px`;
-                                }
-                            })(),
-                            left: (() => {
-                                const rect = containerRef.current?.getBoundingClientRect();
-                                if (!rect) return '50%';
-                                const left = rect.left + window.scrollX;
-                                const maxLeft = window.innerWidth - 320 - 16; // 320 = calendar width, 16 = padding
-                                return `${Math.min(left, maxLeft)}px`;
-                            })()
+                            top: '0',
+                            left: 'calc(100% + 8px)',
                         }}
                     >
-                        {/* Header: Month/Year Nav */}
+                        {/* Header: Navigation */}
                         <div className="flex items-center justify-between mb-4">
                             <button
-                                onClick={() => handleMonthChange(-1)}
+                                onClick={handlePrevClick}
                                 type="button"
                                 className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full text-gray-600 dark:text-gray-300 transition-colors"
                             >
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
 
-                            <div className="flex gap-2">
-                                <select
-                                    value={viewDate.getMonth()}
-                                    onChange={(e) => handleMonthSelect(parseInt(e.target.value))}
-                                    className="bg-transparent text-sm font-semibold text-gray-800 dark:text-gray-200 cursor-pointer outline-none hover:text-red-600 transition-colors appearance-none text-center"
-                                    style={{ textAlignLast: 'center' }}
-                                >
-                                    {MONTHS.map((month, idx) => (
-                                        <option key={month} value={idx}>{month}</option>
-                                    ))}
-                                </select>
-
-                                <select
-                                    value={getYear(viewDate)}
-                                    onChange={(e) => handleYearChange(parseInt(e.target.value))}
-                                    className="bg-transparent text-sm font-semibold text-gray-800 dark:text-gray-200 cursor-pointer outline-none hover:text-red-600 transition-colors appearance-none"
-                                >
-                                    {years.map((year) => (
-                                        <option key={year} value={year}>{year}</option>
-                                    ))}
-                                </select>
+                            <div className="flex gap-2 text-sm font-semibold text-gray-800 dark:text-gray-200">
+                                {calendarView === 'days' && (
+                                    <>
+                                        <button onClick={() => setCalendarView('months')} className="hover:text-red-600 transition-colors">
+                                            {MONTHS[viewDate.getMonth()]}
+                                        </button>
+                                        <button onClick={() => setCalendarView('years')} className="hover:text-red-600 transition-colors">
+                                            {viewDate.getFullYear()}
+                                        </button>
+                                    </>
+                                )}
+                                {calendarView === 'months' && (
+                                    <button onClick={() => setCalendarView('years')} className="hover:text-red-600 transition-colors">
+                                        {viewDate.getFullYear()}
+                                    </button>
+                                )}
+                                {calendarView === 'years' && (
+                                    <span>
+                                        {Math.floor(viewDate.getFullYear() / 10) * 10} - {Math.floor(viewDate.getFullYear() / 10) * 10 + 9}
+                                    </span>
+                                )}
                             </div>
 
                             <button
-                                onClick={() => handleMonthChange(1)}
+                                onClick={handleNextClick}
                                 type="button"
                                 className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full text-gray-600 dark:text-gray-300 transition-colors"
                             >
@@ -249,19 +260,67 @@ const DatePicker: React.FC<DatePickerProps> = ({
                             </button>
                         </div>
 
-                        {/* Days Header */}
-                        <div className="grid grid-cols-7 mb-2">
-                            {DAYS.map(day => (
-                                <div key={day} className="text-center text-xs font-medium text-gray-400 dark:text-gray-500 py-1">
-                                    {day}
+                        {/* Views */}
+                        {calendarView === 'days' && (
+                            <>
+                                <div className="grid grid-cols-7 mb-2">
+                                    {DAYS.map(day => (
+                                        <div key={day} className="text-center text-xs font-medium text-gray-400 dark:text-gray-500 py-1">
+                                            {day}
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
-                        </div>
+                                <div className="grid grid-cols-7 gap-1 place-items-center">
+                                    {renderCalendarDays()}
+                                </div>
+                            </>
+                        )}
 
-                        {/* Days Grid */}
-                        <div className="grid grid-cols-7 gap-1 place-items-center">
-                            {renderCalendarDays()}
-                        </div>
+                        {calendarView === 'months' && (
+                            <div className="grid grid-cols-3 gap-2">
+                                {MONTHS.map((month, index) => (
+                                    <button
+                                        key={month}
+                                        onClick={() => handleMonthSelect(index)}
+                                        className={cn(
+                                            "p-2 rounded-lg text-sm font-medium transition-colors",
+                                            viewDate.getMonth() === index
+                                                ? "bg-red-600 text-white"
+                                                : "bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
+                                        )}
+                                    >
+                                        {month}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                        {calendarView === 'years' && (
+                            <div className="grid grid-cols-3 gap-2">
+                                {Array.from({ length: 12 }, (_, i) => {
+                                    const startDecade = Math.floor(viewDate.getFullYear() / 10) * 10;
+                                    const year = startDecade - 1 + i;
+                                    const isCurrentYear = year === viewDate.getFullYear();
+                                    const isOutOfRange = i === 0 || i === 11; // Previous/Next decade years
+
+                                    return (
+                                        <button
+                                            key={year}
+                                            onClick={() => handleYearSelect(year)}
+                                            className={cn(
+                                                "p-2 rounded-lg text-sm font-medium transition-colors",
+                                                isCurrentYear
+                                                    ? "bg-red-600 text-white"
+                                                    : "bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600",
+                                                isOutOfRange && "opacity-50"
+                                            )}
+                                        >
+                                            {year}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        )}
 
                         {/* Footer: Today Button */}
                         <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-center">
@@ -270,6 +329,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                                 onClick={() => {
                                     const today = new Date();
                                     setViewDate(today);
+                                    setCalendarView('days');
                                     handleDateSelect(today.getDate());
                                 }}
                                 className="text-xs font-medium text-red-600 hover:text-red-700 dark:text-red-400 transition-colors"
@@ -277,8 +337,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                                 Seleccionar Hoy
                             </button>
                         </div>
-                    </div>,
-                    document.body
+                    </div>
                 )}
             </div>
 

@@ -18,6 +18,11 @@ export interface DashboardStats {
         labels: string[];
         counts: number[];
     };
+    breakdown?: {
+        gender: string;
+        bloodType: string;
+        count: number;
+    }[];
 }
 
 export const dashboardService = {

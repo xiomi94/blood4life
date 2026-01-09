@@ -64,9 +64,9 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
 
     const genderOptions = [
         { value: '', label: t('auth.register.bloodDonor.genderSelect') },
-        { value: 'masculino', label: t('auth.register.bloodDonor.male') },
-        { value: 'femenino', label: t('auth.register.bloodDonor.female') },
-        { value: 'prefiero-no-decir', label: t('auth.register.bloodDonor.preferNotToSay') }
+        { value: 'Masculino', label: t('auth.register.bloodDonor.male') },
+        { value: 'Femenino', label: t('auth.register.bloodDonor.female') },
+        { value: 'Prefiero no decirlo', label: t('auth.register.bloodDonor.preferNotToSay') }
     ];
 
     const bloodTypeOptions = [

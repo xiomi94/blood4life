@@ -204,4 +204,94 @@ public class AppointmentController {
     return ResponseEntity.ok(count != null ? count : 0L);
   }
 
+  @GetMapping("/hospital/{hospitalId}/today")
+  public ResponseEntity<List<AppointmentDTO>> getTodayAppointmentsByHospital(
+      @PathVariable Integer hospitalId) {
+    java.time.LocalDate today = java.time.LocalDate.now();
+    List<Appointment> appointments = appointmentRepository
+        .findByCampaignHospitalIdAndDateAppointment(hospitalId, today);
+
+    List<AppointmentDTO> dtoList = new ArrayList<>();
+
+    for (Appointment appointment : appointments) {
+      AppointmentDTO dto = new AppointmentDTO();
+      dto.setId(appointment.getId());
+      dto.setAppointmentStatus(appointment.getAppointmentStatus());
+      dto.setCampaignId(appointment.getCampaign().getId());
+      dto.setBloodDonorId(appointment.getBloodDonor().getId());
+      dto.setHospitalComment(appointment.getHospitalComment());
+      dto.setDateAppointment(appointment.getDateAppointment());
+      dto.setHourAppointment(appointment.getHourAppointment());
+
+      // Create BloodDonorDTO
+      com.xiojuandawt.blood4life.entities.BloodDonor donor = appointment.getBloodDonor();
+      com.xiojuandawt.blood4life.dto.BloodDonorDTO donorDTO = new com.xiojuandawt.blood4life.dto.BloodDonorDTO(
+          donor.getId(),
+          donor.getDni(),
+          donor.getFirstName(),
+          donor.getLastName(),
+          donor.getGender(),
+          donor.getBloodType(),
+          donor.getEmail(),
+          donor.getPhoneNumber(),
+          donor.getDateOfBirth(),
+          donor.getImage() != null ? donor.getImage().getName() : null);
+      dto.setBloodDonor(donorDTO);
+
+      // Count completed appointments (assuming statusId 2 is completed/donated)
+      Long completedCount = appointmentRepository.countByBloodDonorIdAndAppointmentStatusId(donor.getId(), 2);
+      dto.setDonorCompletedAppointments(completedCount);
+
+      dtoList.add(dto);
+    }
+
+    return ResponseEntity.ok(dtoList);
+  }
+
+  @GetMapping("/hospital/{hospitalId}/next")
+  public ResponseEntity<AppointmentDTO> getNextAppointment(
+      @PathVariable Integer hospitalId) {
+    java.time.LocalDate today = java.time.LocalDate.now();
+    java.time.LocalTime now = java.time.LocalTime.now();
+
+    List<Appointment> nextAppointments = appointmentRepository.findNextAppointments(
+        hospitalId, today, now, org.springframework.data.domain.PageRequest.of(0, 1));
+
+    if (nextAppointments.isEmpty()) {
+      return ResponseEntity.notFound().build();
+    }
+
+    Appointment appointment = nextAppointments.get(0);
+
+    AppointmentDTO dto = new AppointmentDTO();
+    dto.setId(appointment.getId());
+    dto.setAppointmentStatus(appointment.getAppointmentStatus());
+    dto.setCampaignId(appointment.getCampaign().getId());
+    dto.setBloodDonorId(appointment.getBloodDonor().getId());
+    dto.setHospitalComment(appointment.getHospitalComment());
+    dto.setDateAppointment(appointment.getDateAppointment());
+    dto.setHourAppointment(appointment.getHourAppointment());
+
+    // Fill donor details
+    if (appointment.getBloodDonor() != null) {
+      com.xiojuandawt.blood4life.entities.BloodDonor donor = appointment.getBloodDonor();
+      com.xiojuandawt.blood4life.dto.BloodDonorDTO donorDTO = new com.xiojuandawt.blood4life.dto.BloodDonorDTO(
+          donor.getId(),
+          donor.getDni(),
+          donor.getFirstName(),
+          donor.getLastName(),
+          donor.getGender(),
+          donor.getBloodType(),
+          donor.getEmail(),
+          donor.getPhoneNumber(),
+          donor.getDateOfBirth(),
+          donor.getImage() != null ? donor.getImage().getName() : null);
+      dto.setBloodDonor(donorDTO);
+
+      Long completedCount = appointmentRepository.countByBloodDonorIdAndAppointmentStatusId(donor.getId(), 2);
+      dto.setDonorCompletedAppointments(completedCount);
+    }
+
+    return ResponseEntity.ok(dto);
+  }
 }

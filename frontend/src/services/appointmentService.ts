@@ -20,9 +20,15 @@ export interface AppointmentWithDonor extends Appointment {
     id: number;
     firstName: string;
     lastName: string;
-    bloodType: string;
+    bloodType: any; // Can be string or object
     dni: string;
+    email?: string;
+    phoneNumber?: string;
+    gender?: string;
+    dateOfBirth?: string;
+    imageName?: string;
   };
+  donorCompletedAppointments?: number;
 }
 
 export const appointmentService = {
@@ -38,6 +44,11 @@ export const appointmentService = {
 
   getTodayAppointmentsByHospital: async (hospitalId: number): Promise<AppointmentWithDonor[]> => {
     const response = await axiosInstance.get(`/appointment/hospital/${hospitalId}/today`);
+    return response.data;
+  },
+
+  getNextAppointment: async (hospitalId: number): Promise<AppointmentWithDonor> => {
+    const response = await axiosInstance.get(`/appointment/hospital/${hospitalId}/next`);
     return response.data;
   },
 

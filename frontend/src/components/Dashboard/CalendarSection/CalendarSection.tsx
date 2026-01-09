@@ -103,7 +103,18 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ campaigns, onDayClick
                     title={campaignsOnDay.map(c => c.name).join(', ')}
                     onClick={() => onDayClick(dateStr, campaignsOnDay)}
                 >
+                    {/* Start Date Marker (Top-Left) */}
+                    {campaignsOnDay.some(c => c.startDate === dateStr) && (
+                        <div className="absolute top-0 left-0 w-0 h-0 border-t-[10px] border-r-[10px] border-t-black dark:border-t-white border-r-transparent"></div>
+                    )}
+
                     {day}
+
+                    {/* End Date Marker (Bottom-Right) */}
+                    {campaignsOnDay.some(c => c.endDate === dateStr) && (
+                        <div className="absolute bottom-0 right-0 w-0 h-0 border-b-[10px] border-l-[10px] border-b-black dark:border-b-white border-l-transparent"></div>
+                    )}
+
                     {campaignsOnDay.length >= 2 && (
                         <span className="absolute bottom-0.5 right-0.5 text-[9px] font-bold text-black dark:text-gray-900 bg-white/80 dark:bg-gray-100/90 rounded-full w-3.5 h-3.5 flex items-center justify-center">
                             {campaignsOnDay.length}
