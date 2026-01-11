@@ -60,6 +60,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
         }
     }, [value]);
 
+<<<<<<< Updated upstream
     // Handle click outside to close
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -75,6 +76,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
         };
     }, []);
 
+=======
+>>>>>>> Stashed changes
     const handleDateSelect = (day: number) => {
         const newDate = new Date(viewDate.getFullYear(), viewDate.getMonth(), day);
         const dateString = format(newDate, 'yyyy-MM-dd');
@@ -137,7 +140,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 <button
                     key={day}
                     onClick={(e) => {
-                        e.preventDefault();
+                      e.stopPropagation();
+                      e.preventDefault();
                         if (!isDisabled) handleDateSelect(day);
                     }}
                     disabled={isDisabled}

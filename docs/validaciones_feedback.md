@@ -476,7 +476,7 @@ public ResponseEntity<?> loginBloodDonor(@RequestHeader("Authorization") String 
     
     // Validar credenciales
     if (donorOpt.isEmpty() || !passwordEncoder.matches(password, donorOpt.get().getPassword())) {
-      return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
+      return errorResponse("Error. Ingrese credenciales válidas", HttpStatus.UNAUTHORIZED);
     }
     
     // ... generar JWT

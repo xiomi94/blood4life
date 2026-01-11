@@ -151,7 +151,7 @@ export const useDonorDashboard = () => {
   const getAvailableCampaigns = () => {
     return allCampaigns.filter(campaign => {
       if (!user?.bloodType) return false;
-      const requiredTypes = campaign.requiredBloodType.split(',').map(t => t.trim().replace(/[\[\]\"]/g, ''));
+      const requiredTypes = campaign.requiredBloodType.split(',').map(t => t.trim().replace(/[[\]"]/g, ''));
       return requiredTypes.includes('Universal') || requiredTypes.includes(user.bloodType);
     }).slice(0, 4);
   };

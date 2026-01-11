@@ -1,19 +1,13 @@
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from 'chart.js';
+import {Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,} from 'chart.js';
 import { useDonorDashboard } from '../../hooks/useDonorDashboard';
+import { useTotalDonors } from '../../hooks/useTotalBloodDonors.ts';
 import { DonorSidebar } from '../../components/DonorDashboard/DonorSidebar';
 import { UpcomingAppointments } from '../../components/DonorDashboard/UpcomingAppointments';
 import { CampaignProgressChart } from '../../components/DonorDashboard/CampaignProgressChart';
 import { DonationHistory } from '../../components/DonorDashboard/DonationHistory';
 import { Calendar } from '../../components/DonorDashboard/Calendar';
 import { StatsCards } from '../../components/DonorDashboard/StatsCards';
+import {useEffect} from "react";
 
 // Register ChartJS components
 ChartJS.register(
@@ -44,10 +38,14 @@ const DashboardBloodDonorPage = () => {
     clearSelectedDate,
   } = useDonorDashboard();
 
+  const bloodDonorsCounter = useTotalDonors();
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-        <div className="text-xl font-semibold text-gray-600 dark:text-gray-400">Cargando estadísticas...</div>
+        <div className="text-xl font-semibold text-gray-600 dark:text-gray-400">
+          Cargando estadísticas...
+        </div>
       </div>
     );
   }
@@ -55,7 +53,9 @@ const DashboardBloodDonorPage = () => {
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-        <div className="text-xl font-semibold text-red-600 dark:text-red-400">{error}</div>
+        <div className="text-xl font-semibold text-red-600 dark:text-red-400">
+          {error}
+        </div>
       </div>
     );
   }
@@ -78,9 +78,9 @@ const DashboardBloodDonorPage = () => {
         <div className="p-8">
           <UpcomingAppointments appointments={upcomingAppointments} />
 
-          {/* Main Grid: Charts + Sidebar */}
+          {/* Main Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Column: Charts Section */}
+            {/* Left Column */}
             <div className="lg:col-span-2 space-y-6">
               <CampaignProgressChart
                 campaigns={allCampaigns}
@@ -92,7 +92,7 @@ const DashboardBloodDonorPage = () => {
               <DonationHistory donations={completedDonations} />
             </div>
 
-            {/* Right Column: Calendar + Stats */}
+            {/* Right Column */}
             <div className="space-y-6">
               <Calendar
                 currentDate={currentDate}
@@ -102,7 +102,7 @@ const DashboardBloodDonorPage = () => {
               />
 
               <StatsCards
-                completedDonationsCount={completedDonations.length}
+                bloodDonorsCounter={bloodDonorsCounter}
                 canDonateNow={canDonateNow()}
                 daysUntilNext={daysUntilNext}
                 nextAvailableDate={nextAvailableDate}

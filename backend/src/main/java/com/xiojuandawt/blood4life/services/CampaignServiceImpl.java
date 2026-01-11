@@ -102,7 +102,7 @@ public class CampaignServiceImpl implements CampaignService {
     public CampaignDTO updateCampaign(Integer id, Campaign updatedCampaign, List<String> bloodTypeStrings) {
         // Find existing campaign
         Campaign existingCampaign = campaignRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Campaign not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("Campaña no encontrada con el id: " + id));
 
         // Update fields
         existingCampaign.setName(updatedCampaign.getName());
@@ -137,7 +137,7 @@ public class CampaignServiceImpl implements CampaignService {
     public void deleteCampaign(Integer id) {
         // Verify campaign exists
         if (!campaignRepository.existsById(id)) {
-            throw new RuntimeException("Campaign not found with id: " + id);
+            throw new RuntimeException("Campaña no encontrada con el id: " + id);
         }
 
         // Delete campaign

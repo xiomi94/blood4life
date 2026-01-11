@@ -166,7 +166,7 @@ public class CampaignController {
 
       // Find existing campaign
       Campaign existingCampaign = campaignService.findById(id)
-          .orElseThrow(() -> new RuntimeException("Campaign not found"));
+          .orElseThrow(() -> new RuntimeException("Campaña no encontrada"));
 
       // Verify ownership
       if (existingCampaign.getHospital().getId() != hospital.getId()) {
@@ -255,7 +255,7 @@ public class CampaignController {
 
       // Find existing campaign
       Campaign existingCampaign = campaignService.findById(id)
-          .orElseThrow(() -> new RuntimeException("Campaign not found"));
+          .orElseThrow(() -> new RuntimeException("Campaña no encontrada"));
 
       // Verify ownership
       if (existingCampaign.getHospital().getId() != hospital.getId()) {

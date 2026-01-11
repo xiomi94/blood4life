@@ -123,7 +123,7 @@ public ResponseEntity<?> loginBloodDonor(@RequestHeader("Authorization") String 
 
     Optional<BloodDonor> donorOpt = bloodDonorService.findByEmail(email);
     if (donorOpt.isEmpty() || !passwordEncoder.matches(password, donorOpt.get().getPassword())) {
-      return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
+      return errorResponse("Error. Ingrese credenciales válidas", HttpStatus.UNAUTHORIZED);
     }
 
     BloodDonor donor = donorOpt.get();

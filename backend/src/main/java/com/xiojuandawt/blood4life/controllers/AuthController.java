@@ -2,10 +2,7 @@ package com.xiojuandawt.blood4life.controllers;
 
 import com.xiojuandawt.blood4life.dto.BloodDonorDTO;
 import com.xiojuandawt.blood4life.dto.HospitalDTO;
-import com.xiojuandawt.blood4life.entities.BloodDonor;
-import com.xiojuandawt.blood4life.entities.BloodType;
-import com.xiojuandawt.blood4life.entities.Hospital;
-import com.xiojuandawt.blood4life.entities.Image;
+import com.xiojuandawt.blood4life.entities.*;
 import com.xiojuandawt.blood4life.services.BloodDonorService;
 import com.xiojuandawt.blood4life.services.HospitalService;
 import com.xiojuandawt.blood4life.services.ImageService;
@@ -60,7 +57,7 @@ public class AuthController {
 
     try {
       if (bloodDonorService.findByEmail(email).isPresent()) {
-        return errorResponse("Email already registered", HttpStatus.CONFLICT);
+        return errorResponse("Email ya registrado", HttpStatus.CONFLICT);
       }
 
       Image imageEntity = null;
@@ -73,7 +70,7 @@ public class AuthController {
       }
 
       BloodType bloodType = bloodDonorService.findBloodTypeById(bloodTypeId)
-          .orElseThrow(() -> new IllegalArgumentException("Invalid blood type ID"));
+          .orElseThrow(() -> new IllegalArgumentException("Tipo de sangre inválido"));
 
       BloodDonor bloodDonor = new BloodDonor();
       bloodDonor.setDni(dni);
@@ -118,10 +115,10 @@ public class AuthController {
 
       Optional<BloodDonor> donorOpt = bloodDonorService.findByEmail(email);
       if (donorOpt.isEmpty()) {
-        return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
+        return errorResponse("Error al iniciar sesión. Ingrese credenciales válidas", HttpStatus.UNAUTHORIZED);
       }
       if (!passwordEncoder.matches(password, donorOpt.get().getPassword())) {
-        return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
+        return errorResponse("Error al iniciar sesión. Ingrese credenciales válidas", HttpStatus.UNAUTHORIZED);
       }
 
       BloodDonor donor = donorOpt.get();
@@ -211,12 +208,12 @@ public class AuthController {
 
       Optional<Hospital> hospitalOpt = hospitalService.findHospitalByEmail(email);
       if (hospitalOpt.isEmpty()) {
-        System.out.println("AUTH DEBUG: Hospital not found for email: " + email);
-        return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
+        System.out.println("Error: Hospital no encontrado con el email: " + email);
+        return errorResponse("Error. Ingrese credenciales válidas", HttpStatus.UNAUTHORIZED);
       }
       if (!passwordEncoder.matches(password, hospitalOpt.get().getPassword())) {
-        System.out.println("AUTH DEBUG: Password mismatch for email: " + email);
-        return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
+        System.out.println("Error: Contraseña no coincide con el email: " + email);
+        return errorResponse("Error. Ingrese credenciales válidas", HttpStatus.UNAUTHORIZED);
       }
 
       Hospital hospital = hospitalOpt.get();
@@ -232,7 +229,7 @@ public class AuthController {
 
       Map<String, Object> response = new HashMap<>();
       response.put("status", "OK");
-      response.put("message", "Login successful");
+      response.put("message", "Login exitoso");
 
       return ResponseEntity.ok()
           .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
@@ -250,14 +247,14 @@ public class AuthController {
       String email = credentials[0];
       String password = credentials[1];
 
-      Optional<com.xiojuandawt.blood4life.entities.Admin> adminOpt = adminService.findByEmail(email);
+      Optional<Admin> adminOpt = adminService.findByEmail(email);
       if (adminOpt.isEmpty()) {
-        System.out.println("AUTH DEBUG: Admin not found for email: " + email);
-        return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
+        System.out.println("AUTH DEBUG: Admin no encontrado para el email: " + email);
+        return errorResponse("Error. Ingrese credenciales válidas", HttpStatus.UNAUTHORIZED);
       }
       if (!passwordEncoder.matches(password, adminOpt.get().getPassword())) {
-        System.out.println("AUTH DEBUG: Password mismatch for email: " + email);
-        return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
+        System.out.println("Error: La contraseña no coincide para el email: " + email);
+        return errorResponse("Error. Ingrese credenciales válidas", HttpStatus.UNAUTHORIZED);
       }
 
       com.xiojuandawt.blood4life.entities.Admin admin = adminOpt.get();
@@ -273,7 +270,7 @@ public class AuthController {
 
       Map<String, Object> response = new HashMap<>();
       response.put("status", "OK");
-      response.put("message", "Login successful");
+      response.put("message", "Login exitoso");
 
       return ResponseEntity.ok()
           .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())

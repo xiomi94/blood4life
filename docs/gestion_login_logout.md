@@ -494,7 +494,7 @@ El backend (`AuthController`):
    - Crea una **cookie HttpOnly** llamada `jwt`
    - Retorna **200 OK** con `{ status: "OK", message: "Login con éxito" }`
 5. Si es inválido:
-   - Retorna **401 Unauthorized** con `{ error: "Invalid credentials" }`
+   - Retorna **401 Unauthorized** con `{ error: "Error. Ingrese credenciales válidas" }`
 
 ### Paso 6: Frontend Recibe la Respuesta
 

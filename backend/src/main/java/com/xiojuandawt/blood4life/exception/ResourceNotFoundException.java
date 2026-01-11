@@ -7,7 +7,7 @@ public class ResourceNotFoundException extends RuntimeException {
   }
 
   public ResourceNotFoundException() {
-    super("Resource not found");
+    super("No se ha encontrado");
   }
 
 }
