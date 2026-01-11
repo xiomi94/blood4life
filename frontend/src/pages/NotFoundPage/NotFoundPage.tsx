@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 import Logo from '../../assets/images/LogoShadow.webp';
-import Button from '../../components/UI/Button/Button';
+import Button from '../../components/common/ui/Button/Button';
 
 function NotFoundPage() {
     const navigate = useNavigate();

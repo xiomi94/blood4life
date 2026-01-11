@@ -7,26 +7,43 @@ import { dashboardService, type DashboardStats } from '../services/dashboardServ
 
 export const useDonorDashboard = () => {
   const { user } = useAuth();
-  const { subscribe } = useWebSocket();
+  const { subscribe, isConnected } = useWebSocket();
+
   const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [allCampaigns, setAllCampaigns] = useState<Campaign[]>([]);
   const [myAppointments, setMyAppointments] = useState<Appointment[]>([]);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
 
   useEffect(() => {
-    fetchStats();
-    fetchAllCampaigns();
-    if (user?.id) {
-      fetchMyAppointments();
+    const loadInitialData = async () => {
+      setLoading(true);
+      try {
+        await Promise.all([
+          fetchStats(),
+          fetchAllCampaigns(),
+          fetchMyAppointments()
+        ]);
+      } catch (err) {
+        console.error("Error loading initial data", err);
+        setError("Error cargando datos del dashboard");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      loadInitialData();
     }
   }, [user]);
 
   // WebSocket subscription for real-time campaign updates
   useEffect(() => {
+    if (!isConnected) return;
+
     const unsubscribe = subscribe('/topic/campaigns', (message) => {
       console.log('📨 Donor Dashboard - Received WebSocket message:', message);
       if (message.type === 'CAMPAIGN_CREATED' ||
@@ -40,7 +57,7 @@ export const useDonorDashboard = () => {
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [subscribe]);
+  }, [subscribe, isConnected]);
 
   const fetchStats = async () => {
     try {
@@ -91,19 +108,24 @@ export const useDonorDashboard = () => {
       .slice(0, 4);
   };
 
-  // Calculate next available donation date based on gender
+  // Calculamos cuándo puede volver a donar según su género
   const getNextAvailableDate = (): Date => {
     const completedDonations = getCompletedDonations();
+
+    // Si nunca ha donado, puede hacerlo hoy
     if (completedDonations.length === 0) {
       return new Date();
     }
 
+    // Ordenamos para obtener la última donación
     const sortedDonations = completedDonations.sort((a, b) =>
       new Date(b.dateAppointment).getTime() - new Date(a.dateAppointment).getTime()
     );
     const lastDonation = sortedDonations[0];
 
+    // Periodo de espera: 90 días hombres, 120 mujeres
     const waitingPeriod = user?.gender === "Masculino" ? 90 : 120;
+
     const nextDate = new Date(lastDonation.dateAppointment);
     nextDate.setDate(nextDate.getDate() + waitingPeriod);
 
@@ -147,13 +169,17 @@ export const useDonorDashboard = () => {
     setFilteredCampaigns([]);
   };
 
-  // Available campaigns for this donor
+  // Filtrar campañas disponibles para este donante
   const getAvailableCampaigns = () => {
     return allCampaigns.filter(campaign => {
       if (!user?.bloodType) return false;
+
+      // Limpiamos los caracteres raros del array de tipos de sangre
       const requiredTypes = campaign.requiredBloodType.split(',').map(t => t.trim().replace(/[\[\]\"]/g, ''));
+
+      // Si es Universal o coincide con mi tipo, me sirve
       return requiredTypes.includes('Universal') || requiredTypes.includes(user.bloodType);
-    }).slice(0, 4);
+    }).slice(0, 4); // Solo mostramos 4
   };
 
   return {

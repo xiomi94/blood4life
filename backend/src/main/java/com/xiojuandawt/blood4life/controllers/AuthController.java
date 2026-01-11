@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,6 +45,9 @@ public class AuthController {
 
   @Autowired
   private com.xiojuandawt.blood4life.services.AdminService adminService;
+
+  @Autowired
+  private SimpMessagingTemplate messagingTemplate;
 
   @PostMapping("/bloodDonor/register")
   public ResponseEntity<?> registerBloodDonor(
@@ -100,6 +104,9 @@ public class AuthController {
       responseDTO.setPhoneNumber(bloodDonor.getPhoneNumber());
       responseDTO.setDateOfBirth(bloodDonor.getDateOfBirth());
       responseDTO.setImageName(imageEntity != null ? imageEntity.getName() : null);
+
+      // Enviar notificación WebSocket para actualización en tiempo real
+      messagingTemplate.convertAndSend("/topic/blood-donors", responseDTO);
 
       return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 
@@ -194,6 +201,9 @@ public class AuthController {
       responseDTO.setPhoneNumber(hospital.getPhoneNumber());
       responseDTO.setImageName(imageEntity != null ? imageEntity.getName() : null);
 
+      // Enviar notificación WebSocket para actualización en tiempo real
+      messagingTemplate.convertAndSend("/topic/hospitals", responseDTO);
+
       return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 
     } catch (Exception e) {
@@ -255,12 +265,25 @@ public class AuthController {
         System.out.println("AUTH DEBUG: Admin not found for email: " + email);
         return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
       }
-      if (!passwordEncoder.matches(password, adminOpt.get().getPassword())) {
+
+      com.xiojuandawt.blood4life.entities.Admin admin = adminOpt.get();
+      String storedPassword = admin.getPassword();
+
+      // Check if password matches (support both hashed and plain text for backward
+      // compatibility)
+      boolean passwordMatches = false;
+      if (storedPassword.startsWith("$2a$") || storedPassword.startsWith("$2b$")) {
+        // Password is BCrypt hashed
+        passwordMatches = passwordEncoder.matches(password, storedPassword);
+      } else {
+        // Password is plain text (legacy)
+        passwordMatches = password.equals(storedPassword);
+      }
+
+      if (!passwordMatches) {
         System.out.println("AUTH DEBUG: Password mismatch for email: " + email);
         return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
       }
-
-      com.xiojuandawt.blood4life.entities.Admin admin = adminOpt.get();
       String token = jwtService.generateToken(admin.getId(), "admin");
 
       ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)

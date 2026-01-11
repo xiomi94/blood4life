@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,23 +8,18 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { dashboardService } from '../../services/dashboardService';
-import type { DashboardStats } from '../../services/dashboardService';
-import CreateCampaignModal from '../../components/Modals/CreateCampaignModal/CreateCampaignModal';
-import EditCampaignModal from '../../components/Modals/EditCampaignModal/EditCampaignModal';
-import { useAuth } from '../../context/AuthContext';
 import { useTranslation } from 'react-i18next';
-import { campaignService, type Campaign } from '../../services/campaignService';
-import { appointmentService, type AppointmentWithDonor } from '../../services/appointmentService';
-import { useWebSocket } from '../../hooks/useWebSocket';
+import { useHospitalDashboard } from '../../hooks/useHospitalDashboard';
 
 // Imported Components
-import DashboardSidebar from '../../components/Dashboard/DashboardSidebar/DashboardSidebar';
-import AppointmentsSection from '../../components/Dashboard/AppointmentsSection/AppointmentsSection';
-import StatsChartsSection from '../../components/Dashboard/StatsChartsSection/StatsChartsSection';
-import DonationsHistorySection from '../../components/Dashboard/DonationsHistorySection/DonationsHistorySection';
-import CalendarSection from '../../components/Dashboard/CalendarSection/CalendarSection';
-import DeleteCampaignModal from '../../components/Modals/DeleteCampaignModal/DeleteCampaignModal';
+import DashboardSidebar from '../../components/features/hospital/DashboardSidebar/DashboardSidebar';
+import AppointmentsSection from '../../components/features/hospital/AppointmentsSection/AppointmentsSection';
+import StatsChartsSection from '../../components/features/hospital/StatsChartsSection/StatsChartsSection';
+import DonationsHistorySection from '../../components/features/hospital/DonationsHistorySection/DonationsHistorySection';
+import CalendarSection from '../../components/features/hospital/CalendarSection/CalendarSection';
+import CreateCampaignModal from '../../components/features/hospital/CreateCampaignModal/CreateCampaignModal';
+import EditCampaignModal from '../../components/features/hospital/EditCampaignModal/EditCampaignModal';
+import DeleteCampaignModal from '../../components/features/hospital/DeleteCampaignModal/DeleteCampaignModal';
 
 // Register ChartJS components
 ChartJS.register(
@@ -40,168 +34,45 @@ ChartJS.register(
 
 const DashboardHospitalPage: React.FC = () => {
   const { t } = useTranslation();
-  const { user, logout } = useAuth();
-  const { subscribe } = useWebSocket();
+  const {
+    // State
+    stats,
+    loading,
+    error,
+    hospitalCampaigns,
+    allCampaigns,
+    showAllCampaigns,
+    todayAppointments,
+    monthlyDonations,
+    selectedDate,
+    filteredCampaigns,
 
-  // Stats and loading state
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+    // Modal State
+    showCreateCampaignModal,
+    showEditModal,
+    showDeleteModal,
+    campaignToEdit,
+    campaignToDelete,
+    deleteConfirmText,
 
-  // Campaign state
-  const [showCreateCampaignModal, setShowCreateCampaignModal] = useState(false);
-  const [hospitalCampaigns, setHospitalCampaigns] = useState<Campaign[]>([]);
-  const [allCampaigns, setAllCampaigns] = useState<Campaign[]>([]);
-  const [showAllCampaigns, setShowAllCampaigns] = useState(false);
+    // Setters
+    setShowAllCampaigns,
+    setShowCreateCampaignModal,
+    setShowEditModal,
+    setCampaignToEdit,
+    setDeleteConfirmText,
 
-  // Delete confirmation state
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [campaignToDelete, setCampaignToDelete] = useState<Campaign | null>(null);
-  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+    // Actions
+    refreshCampaigns,
+    handleDayClick,
+    clearSelectedDate,
+    handleDeleteClick,
+    handleEditClick,
+    handleDeleteConfirm,
+    handleCancelDelete
+  } = useHospitalDashboard();
 
-  // Edit campaign state
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [campaignToEdit, setCampaignToEdit] = useState<Campaign | null>(null);
-
-  // Calendar state
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
-
-  // Appointments state
-  const [todayAppointments, setTodayAppointments] = useState<AppointmentWithDonor[]>([]);
-  const [monthlyDonations, setMonthlyDonations] = useState<number>(0);
-
-  // Fetch all campaigns
-  useEffect(() => {
-    campaignService.getAllCampaigns()
-      .then(setAllCampaigns)
-      .catch(err => console.error('Error fetching all campaigns:', err));
-  }, []);
-
-  // Fetch today's appointments and monthly donations
-  useEffect(() => {
-    if (user?.id) {
-      appointmentService.getTodayAppointmentsByHospital(user.id)
-        .then(setTodayAppointments)
-        .catch(err => console.error('Error fetching today appointments:', err));
-
-      appointmentService.getMonthlyDonationsByHospital(user.id)
-        .then(setMonthlyDonations)
-        .catch(err => console.error('Error fetching monthly donations:', err));
-    }
-  }, [user]);
-
-  // WebSocket subscription for real-time campaign updates
-  useEffect(() => {
-    const unsubscribe = subscribe('/topic/campaigns', (message) => {
-      console.log('📨 Received WebSocket message:', message);
-      if (message.type === 'CAMPAIGN_CREATED' ||
-        message.type === 'CAMPAIGN_UPDATED' ||
-        message.type === 'CAMPAIGN_DELETED') {
-        console.log('🔄 Refreshing campaigns due to:', message.type);
-        refreshCampaigns();
-      }
-    });
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, [subscribe]);
-
-  // Fetch hospital campaigns when user is loaded
-  useEffect(() => {
-    if (user?.id) {
-      campaignService.getCampaignsByHospital(user.id)
-        .then(data => setHospitalCampaigns(data))
-        .catch(err => console.error('Error loading hospital campaigns:', err));
-    }
-  }, [user]);
-
-
-
-  // Fetch dashboard stats
-  useEffect(() => {
-    fetchStats();
-  }, []);
-
-  const fetchStats = async () => {
-    try {
-      setLoading(true);
-      const data = await dashboardService.getStats();
-      setStats(data);
-      setError(null);
-    } catch (err) {
-      setError('Error al cargar las estadísticas');
-      console.error('Error fetching dashboard stats:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const refreshCampaigns = async () => {
-    try {
-      console.log('🔄 Refreshing campaigns...');
-      const allCamps = await campaignService.getAllCampaigns();
-      console.log('✅ All campaigns fetched:', allCamps.length);
-      setAllCampaigns(allCamps);
-
-      if (user?.id) {
-        const hospitalCamps = await campaignService.getCampaignsByHospital(user.id);
-        console.log('✅ Hospital campaigns fetched:', hospitalCamps.length);
-        setHospitalCampaigns(hospitalCamps);
-      }
-      console.log('✅ Campaigns refresh completed');
-    } catch (err) {
-      console.error('❌ Error refreshing campaigns:', err);
-    }
-  };
-
-  const handleDayClick = (dateStr: string, campaignsOnDay: Campaign[]) => {
-    if (campaignsOnDay.length > 0) {
-      setSelectedDate(dateStr);
-      setFilteredCampaigns(campaignsOnDay);
-    }
-  };
-
-  const clearSelectedDate = () => {
-    setSelectedDate(null);
-    setFilteredCampaigns([]);
-  };
-
-  const handleDeleteClick = (campaign: Campaign) => {
-    setCampaignToDelete(campaign);
-    setShowDeleteModal(true);
-    setDeleteConfirmText('');
-  };
-
-  const handleEditClick = (campaign: Campaign) => {
-    setCampaignToEdit(campaign);
-    setShowEditModal(true);
-  };
-
-  const handleDeleteConfirm = async () => {
-    if (!campaignToDelete || deleteConfirmText !== campaignToDelete.name) return;
-
-    try {
-      console.log('🗑️ Deleting campaign:', campaignToDelete.name);
-      await campaignService.deleteCampaign(campaignToDelete.id);
-      console.log('✅ Campaign deleted successfully');
-      await refreshCampaigns();
-      setShowDeleteModal(false);
-      setCampaignToDelete(null);
-      setDeleteConfirmText('');
-    } catch (err) {
-      console.error('❌ Error deleting campaign:', err);
-      alert('Error al eliminar la campaña');
-    }
-  };
-
-  const handleCancelDelete = () => {
-    setShowDeleteModal(false);
-    setCampaignToDelete(null);
-    setDeleteConfirmText('');
-  };
-
+  // Si está cargando, mostramos un mensaje
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
@@ -242,10 +113,10 @@ const DashboardHospitalPage: React.FC = () => {
         `}
       </style>
       <div className="flex flex-row flex-grow w-full bg-gray-100 dark:bg-gray-900">
-        {/* Sidebar */}
+        {/* Sidebar: Menú de navegación */}
         <DashboardSidebar onCreateCampaign={() => setShowCreateCampaignModal(true)} />
 
-        {/* Main Content */}
+        {/* Main Content: Aquí va todo el contenido principal */}
         <main className="grid w-full">
           <div className="p-8">
             {/* Appointments Section */}
@@ -259,7 +130,6 @@ const DashboardHospitalPage: React.FC = () => {
                 <StatsChartsSection
                   stats={stats}
                   campaigns={showAllCampaigns ? allCampaigns : hospitalCampaigns}
-                  showAllCampaigns={showAllCampaigns}
                   onToggleAllCampaigns={setShowAllCampaigns}
                   selectedDate={selectedDate}
                   filteredCampaigns={filteredCampaigns}

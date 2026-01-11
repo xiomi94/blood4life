@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BloodDonorServiceImpl implements BloodDonorService{
+public class BloodDonorServiceImpl implements BloodDonorService {
 
   @Autowired
   private BloodDonorRepository bloodDonorRepository;
@@ -27,7 +27,7 @@ public class BloodDonorServiceImpl implements BloodDonorService{
     List<BloodDonor> bloodDonorList = (List<BloodDonor>) this.bloodDonorRepository.findAll();
     List<BloodDonorDTO> bloodDonorDTOList = new ArrayList<>();
 
-    for (BloodDonor bloodDonor: bloodDonorList) {
+    for (BloodDonor bloodDonor : bloodDonorList) {
       BloodDonorDTO bloodDonorDTO = this.parseEntityToDto(bloodDonor);
 
       bloodDonorDTOList.add(bloodDonorDTO);
@@ -79,6 +79,7 @@ public class BloodDonorServiceImpl implements BloodDonorService{
     bloodDonorDTO.setEmail(bloodDonor.getEmail());
     bloodDonorDTO.setPhoneNumber(bloodDonor.getPhoneNumber());
     bloodDonorDTO.setDateOfBirth(bloodDonor.getDateOfBirth());
+    bloodDonorDTO.setBloodType(bloodDonor.getBloodType());
 
     return bloodDonorDTO;
   }
@@ -87,7 +88,6 @@ public class BloodDonorServiceImpl implements BloodDonorService{
   public Optional<BloodType> findBloodTypeById(Integer bloodTypeId) {
     return bloodTypeRepository.findById(bloodTypeId);
   }
-
 
   @Override
   public Optional<BloodDonor> findByIdWithRole(Integer id) {

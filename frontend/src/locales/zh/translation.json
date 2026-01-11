@@ -41,6 +41,7 @@
             "userType": "用户类型",
             "donor": "捐赠者",
             "hospital": "医院",
+            "admin": "管理员",
             "email": "电子邮件",
             "emailPlaceholder": "输入您的电子邮件",
             "password": "密码",
@@ -173,6 +174,105 @@
             "genderOption": "按性别分布",
             "appointmentsToday": "今日预约",
             "donationsThisMonth": "本月捐赠"
+        },
+        "admin": {
+            "title": "管理员仪表板",
+            "loading": "正在加载管理员仪表板...",
+            "tabs": {
+                "donors": "捐赠者",
+                "hospitals": "医院",
+                "appointments": "预约管理",
+                "campaigns": "活动管理"
+            },
+            "toasts": {
+                "newDonor": "新捐赠者已注册",
+                "newHospital": "新医院已注册",
+                "newAppointment": "收到新预约",
+                "newCampaign": "新活动已创建",
+                "deleteDonorSuccess": "捐赠者删除成功",
+                "deleteDonorError": "删除捐赠者时出错",
+                "deleteHospitalSuccess": "医院删除成功",
+                "deleteHospitalError": "删除医院时出错",
+                "updateDonorSuccess": "捐赠者更新成功",
+                "updateDonorError": "更新捐赠者时出错",
+                "deleteAppointmentSuccess": "预约删除成功",
+                "deleteAppointmentError": "删除预约时出错",
+                "updateAppointmentSuccess": "预约更新成功",
+                "deleteCampaignSuccess": "活动删除成功",
+                "updateCampaignSuccess": "活动更新成功"
+            },
+            "confirms": {
+                "deleteDonor": "您确定要删除此捐赠者吗？",
+                "deleteHospital": "您确定要删除此医院吗？",
+                "deleteAppointment": "您确定要删除此预约吗？",
+                "deleteCampaign": "您确定要删除此活动吗？"
+            },
+            "errors": {
+                "loadAdminData": "加载管理员数据时出错"
+            },
+            "chart": {
+                "title": "用户分布",
+                "donorsLabel": "捐赠者",
+                "hospitalsLabel": "医院",
+                "xAxisLabel": "用户"
+            },
+            "table": {
+                "name": "姓名",
+                "dni": "证件号",
+                "cif": "机构代码",
+                "email": "邮件",
+                "gender": "性别",
+                "phone": "电话",
+                "birthDate": "生日期",
+                "bloodType": "血型",
+                "address": "地址",
+                "donor": "捐赠者",
+                "campaign": "活动",
+                "date": "日期",
+                "status": "状态",
+                "comment": "备注",
+                "hospital": "医院",
+                "location": "地点",
+                "progress": "进度",
+                "actions": "操作",
+                "edit": "编辑",
+                "delete": "删除",
+                "male": "男",
+                "female": "女",
+                "statusList": {
+                    "1": "已预约",
+                    "2": "已完成",
+                    "3": "已取消"
+                }
+            },
+            "modals": {
+                "editDonor": "编辑捐赠者",
+                "editHospital": "编辑医院",
+                "editAppointment": "编辑预约管",
+                "editCampaign": "编辑活动",
+                "firstName": "名字",
+                "lastName": "姓氏",
+                "dni": "证件号",
+                "gender": "性别",
+                "email": "电子邮件",
+                "phone": "电话",
+                "birthDate": "出生日期",
+                "bloodType": "血型",
+                "bloodTypePlaceholder": "选择血型",
+                "cif": "机构代码",
+                "address": "地址",
+                "status": "状态",
+                "date": "日期",
+                "time": "时间",
+                "hospitalComment": "医院备注",
+                "description": "说明",
+                "startDate": "开始日期",
+                "endDate": "结束日期",
+                "location": "地点",
+                "requiredDonors": "所需人数",
+                "saveChanges": "保存更改",
+                "cancel": "取消"
+            }
         },
         "campaigns": {
             "goalLabel": "目标",

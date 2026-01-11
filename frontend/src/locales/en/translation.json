@@ -43,6 +43,7 @@
             "userType": "User type",
             "donor": "Donor",
             "hospital": "Hospital",
+            "admin": "Administrator",
             "email": "Email",
             "emailPlaceholder": "Enter your email",
             "password": "Password",
@@ -163,7 +164,18 @@
             "noAppointments": "No appointments scheduled for today",
             "unknownDonor": "Unknown donor",
             "noTime": "No time",
-            "dniLabel": "ID"
+            "dniLabel": "ID",
+            "viewNext": "View next appointment",
+            "donationsLabel": "Hours/Donations:",
+            "viewProfile": "View profile",
+            "nextAppointmentTitle": "Next scheduled appointment",
+            "dateTimeLabel": "Date and Time",
+            "at": "at",
+            "donorLabel": "Donor",
+            "typeLabel": "Type:",
+            "historyLabel": "History:",
+            "completedDonations": "completed donations",
+            "close": "Close"
         },
         "stats": {
             "selectedCampaigns": "Selected campaigns",
@@ -173,7 +185,114 @@
             "bloodTypeOption": "Distribution by blood type",
             "genderOption": "Distribution by gender",
             "appointmentsToday": "Appointments today",
-            "donationsThisMonth": "Donations this month"
+            "donationsThisMonth": "Donations this month",
+            "myCampaigns": "My Campaigns",
+            "allCampaigns": "All Campaigns",
+            "completedCampaigns": "Completed Campaigns",
+            "allGenders": "All",
+            "male": "Male",
+            "female": "Female",
+            "preferNotToSay": "Prefer not to say",
+            "noCampaignsToShow": "No campaigns to show"
+        },
+        "admin": {
+            "title": "Admin Dashboard",
+            "loading": "Loading admin dashboard...",
+            "tabs": {
+                "donors": "Donors",
+                "hospitals": "Hospitals",
+                "appointments": "Registrations",
+                "campaigns": "Campaigns"
+            },
+            "toasts": {
+                "newDonor": "New donor registered",
+                "newHospital": "New hospital registered",
+                "newAppointment": "New registration received",
+                "newCampaign": "New campaign created",
+                "deleteDonorSuccess": "Donor deleted successfully",
+                "deleteDonorError": "Error deleting donor",
+                "deleteHospitalSuccess": "Hospital deleted successfully",
+                "deleteHospitalError": "Error deleting hospital",
+                "updateDonorSuccess": "Donor updated successfully",
+                "updateDonorError": "Error updating donor",
+                "deleteAppointmentSuccess": "Registration deleted successfully",
+                "deleteAppointmentError": "Error deleting registration",
+                "updateAppointmentSuccess": "Registration updated successfully",
+                "deleteCampaignSuccess": "Campaign deleted successfully",
+                "updateCampaignSuccess": "Campaign updated successfully"
+            },
+            "confirms": {
+                "deleteDonor": "Are you sure you want to delete this donor?",
+                "deleteHospital": "Are you sure you want to delete this hospital?",
+                "deleteAppointment": "Are you sure you want to delete this registration?",
+                "deleteCampaign": "Are you sure you want to delete this campaign?"
+            },
+            "errors": {
+                "loadAdminData": "Error loading admin data"
+            },
+            "chart": {
+                "title": "User Distribution",
+                "donorsLabel": "Donors",
+                "hospitalsLabel": "Hospitals",
+                "xAxisLabel": "Users"
+            },
+            "table": {
+                "name": "Name",
+                "dni": "ID",
+                "cif": "CIF",
+                "email": "Email",
+                "gender": "Gender",
+                "phone": "Phone",
+                "birthDate": "Birth Date",
+                "bloodType": "Blood Type",
+                "address": "Address",
+                "donor": "Donor",
+                "campaign": "Campaign",
+                "date": "Date",
+                "status": "Status",
+                "comment": "Comment",
+                "hospital": "Hospital",
+                "location": "Location",
+                "progress": "Progress",
+                "actions": "Actions",
+                "edit": "Edit",
+                "delete": "Delete",
+                "male": "Male",
+                "female": "Female",
+                "statusList": {
+                    "1": "Scheduled",
+                    "2": "Completed",
+                    "3": "Cancelled"
+                }
+            },
+            "modals": {
+                "editDonor": "Edit Donor",
+                "editHospital": "Edit Hospital",
+                "editAppointment": "Edit Registration",
+                "editCampaign": "Edit Campaign",
+                "firstName": "First Name",
+                "lastName": "Last Name",
+                "dni": "ID",
+                "gender": "Gender",
+                "email": "Email",
+                "phone": "Phone",
+                "birthDate": "Birth Date",
+                "bloodType": "Blood Type",
+                "bloodTypePlaceholder": "Select blood type",
+                "cif": "CIF",
+                "address": "Address",
+                "status": "Status",
+                "date": "Date",
+                "time": "Time",
+                "hospitalComment": "Hospital Comment",
+                "description": "Description",
+                "startDate": "Start Date",
+                "endDate": "End Date",
+                "location": "Location",
+                "requiredDonors": "Required Donors",
+                "saveChanges": "Save Changes",
+                "cancel": "Cancel"
+            }
         },
         "campaigns": {
             "goalLabel": "Goal",
@@ -233,6 +352,26 @@
                 "instructionsLabel": "To confirm, type the campaign name:",
                 "placeholder": "Campaign name..."
             }
+        }
+    },
+    "profile": {
+        "editTitle": "Edit Profile",
+        "saveChanges": "Save changes",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "admin": {
+            "info": "As an administrator, your primary information is your login email.",
+            "note": "Note: To change your password, use the password change section below."
+        },
+        "password": {
+            "changeButton": "Change password",
+            "current": "Current Password",
+            "currentPlaceholder": "Enter your current password",
+            "new": "New Password",
+            "newPlaceholder": "Minimum 8 characters",
+            "confirm": "Confirm New Password",
+            "confirmPlaceholder": "Repeat new password",
+            "hint": "Must contain: uppercase, lowercase, number (8-32 characters)"
         }
     }
 }

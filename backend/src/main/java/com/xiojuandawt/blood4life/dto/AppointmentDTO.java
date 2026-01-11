@@ -21,6 +21,7 @@ public class AppointmentDTO {
 
   private BloodDonorDTO bloodDonor;
   private Long donorCompletedAppointments;
+  private String campaignName;
 
   public AppointmentDTO() {
   }
@@ -105,5 +106,13 @@ public class AppointmentDTO {
 
   public void setDonorCompletedAppointments(Long donorCompletedAppointments) {
     this.donorCompletedAppointments = donorCompletedAppointments;
+  }
+
+  public String getCampaignName() {
+    return campaignName;
+  }
+
+  public void setCampaignName(String campaignName) {
+    this.campaignName = campaignName;
   }
 }

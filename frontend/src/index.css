@@ -8,10 +8,31 @@
 @variant dark (&:is(.dark, .dark *));
 
 /* Global dark mode transition for smooth color changes */
-*,
-*::before,
-*::after {
+*:not(label:has(#toggle)):not(label:has(#toggle) *),
+*:not(label:has(#toggle))::before,
+*:not(label:has(#toggle))::after {
     transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* Fix browser autocomplete background in dark mode */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-text-fill-color: inherit !important;
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+    box-shadow: 0 0 0 1000px white inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active {
+    -webkit-text-fill-color: white !important;
+    -webkit-box-shadow: 0 0 0 1000px rgb(55 65 81) inset !important;
+    box-shadow: 0 0 0 1000px rgb(55 65 81) inset !important;
+    transition: background-color 5000s ease-in-out 0s;
 }
 
 
@@ -228,9 +249,9 @@ textarea:focus-visible {
 /* Respect user motion preferences - WCAG 2.3.3 */
 @media (prefers-reduced-motion: reduce) {
 
-    *,
-    *::before,
-    *::after {
+    *:not(label:has(#toggle)):not(label:has(#toggle) *),
+    *:not(label:has(#toggle))::before,
+    *:not(label:has(#toggle))::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;

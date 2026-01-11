@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import HospitalRegisterForm from '../../components/Forms/HospitalRegisterForm/HospitalRegisterForm';
-import Modal from '../../components/Modals/Modal/Modal';
+import HospitalRegisterForm from '../../components/features/auth/HospitalRegisterForm/HospitalRegisterForm';
+import Modal from '../../components/common/feedback/Modal/Modal';
 
 const HospitalRegisterPage: React.FC = () => {
   const [modal, setModal] = useState<{

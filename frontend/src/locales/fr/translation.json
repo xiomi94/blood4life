@@ -41,6 +41,7 @@
             "userType": "Type d'utilisateur",
             "donor": "Donneur",
             "hospital": "Hôpital",
+            "admin": "Administrateur",
             "email": "E-mail",
             "emailPlaceholder": "Entrez votre e-mail",
             "password": "Mot de passe",
@@ -173,6 +174,105 @@
             "genderOption": "Distribution par sexe",
             "appointmentsToday": "Rendez-vous aujourd'hui",
             "donationsThisMonth": "Dons ce mois-ci"
+        },
+        "admin": {
+            "title": "Tableau de bord administrateur",
+            "loading": "Chargement du tableau de bord administrateur...",
+            "tabs": {
+                "donors": "Donneurs",
+                "hospitals": "Hôpitaux",
+                "appointments": "Inscriptions",
+                "campaigns": "Campagnes"
+            },
+            "toasts": {
+                "newDonor": "Nouveau donneur inscrit",
+                "newHospital": "Nouvel hôpital inscrit",
+                "newAppointment": "Nouvelle inscription reçue",
+                "newCampaign": "Nouvelle campagne créée",
+                "deleteDonorSuccess": "Donneur supprimé avec succès",
+                "deleteDonorError": "Erreur lors de la suppression du donneur",
+                "deleteHospitalSuccess": "Hôpital supprimé avec succès",
+                "deleteHospitalError": "Erreur lors de la suppression de l'hôpital",
+                "updateDonorSuccess": "Donneur mis à jour avec succès",
+                "updateDonorError": "Erreur lors de la mise à jour du donneur",
+                "deleteAppointmentSuccess": "Inscription supprimée avec succès",
+                "deleteAppointmentError": "Erreur lors de la suppression de l'inscription",
+                "updateAppointmentSuccess": "Inscription mise à jour avec succès",
+                "deleteCampaignSuccess": "Campagne supprimée avec succès",
+                "updateCampaignSuccess": "Campagne mise à jour avec succès"
+            },
+            "confirms": {
+                "deleteDonor": "Êtes-vous sûr de vouloir supprimer ce donneur ?",
+                "deleteHospital": "Êtes-vous sûr de vouloir supprimer cet hôpital ?",
+                "deleteAppointment": "Êtes-vous sûr de vouloir supprimer cette inscription ?",
+                "deleteCampaign": "Êtes-vous sûr de vouloir supprimer cette campagne ?"
+            },
+            "errors": {
+                "loadAdminData": "Erreur lors du chargement des données d'administration"
+            },
+            "chart": {
+                "title": "Répartition des utilisateurs",
+                "donorsLabel": "Donneurs",
+                "hospitalsLabel": "Hôpitaux",
+                "xAxisLabel": "Utilisateurs"
+            },
+            "table": {
+                "name": "Nom",
+                "dni": "ID",
+                "cif": "CIF",
+                "email": "Email",
+                "gender": "Genre",
+                "phone": "Téléphone",
+                "birthDate": "Date de naissance",
+                "bloodType": "Groupe sanguin",
+                "address": "Adresse",
+                "donor": "Donneur",
+                "campaign": "Campagne",
+                "date": "Date",
+                "status": "Statut",
+                "comment": "Commentaire",
+                "hospital": "Hôpital",
+                "location": "Lieu",
+                "progress": "Progression",
+                "actions": "Actions",
+                "edit": "Modifier",
+                "delete": "Supprimer",
+                "male": "Masculin",
+                "female": "Féminin",
+                "statusList": {
+                    "1": "Programmé",
+                    "2": "Terminé",
+                    "3": "Annulé"
+                }
+            },
+            "modals": {
+                "editDonor": "Modifier le donneur",
+                "editHospital": "Modifier l'hôpital",
+                "editAppointment": "Modifier l'inscription",
+                "editCampaign": "Modifier la campagne",
+                "firstName": "Prénom",
+                "lastName": "Nom",
+                "dni": "ID",
+                "gender": "Genre",
+                "email": "Email",
+                "phone": "Téléphone",
+                "birthDate": "Date de naissance",
+                "bloodType": "Groupe sanguin",
+                "bloodTypePlaceholder": "Sélectionner le groupe sanguin",
+                "cif": "CIF",
+                "address": "Adresse",
+                "status": "Statut",
+                "date": "Date",
+                "time": "Heure",
+                "hospitalComment": "Commentaire de l'hôpital",
+                "description": "Description",
+                "startDate": "Date de début",
+                "endDate": "Date de fin",
+                "location": "Lieu",
+                "requiredDonors": "Donneurs requis",
+                "saveChanges": "Enregistrer les modifications",
+                "cancel": "Annuler"
+            }
         },
         "campaigns": {
             "goalLabel": "Objectif",

@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 /**
  * Custom hook to persist form data in localStorage
@@ -13,69 +13,67 @@ export function useFormPersistence<T extends Record<string, any>>(
     setFormData: React.Dispatch<React.SetStateAction<T>>,
     excludeFields: string[] = []
 ) {
-    // Track if we've already loaded data from localStorage
+    // Controlamos si ya hemos cargado los datos iniciales
     const hasLoadedRef = useRef(false);
-    // Store exclude fields to check if they change
-    const excludeFieldsRef = useRef(excludeFields);
 
-    // Load persisted data ONLY on mount
+    // Cargar datos al entrar (Mount)
     useEffect(() => {
-        // Only load once when component mounts
         if (!hasLoadedRef.current) {
             try {
+                // Buscamos en localStorage
                 const savedData = localStorage.getItem(storageKey);
                 if (savedData) {
                     const parsedData = JSON.parse(savedData);
 
-                    // Restore only non-excluded fields
+                    // Filtramos los campos que no queremos recuperar (ej. contraseñas)
                     const restoredData: Partial<T> = {};
                     Object.keys(parsedData).forEach((key) => {
-                        if (!excludeFieldsRef.current.includes(key)) {
+                        if (!excludeFields.includes(key)) {
                             restoredData[key as keyof T] = parsedData[key];
                         }
                     });
 
+                    // Si hay datos, actualizamos el formulario
                     if (Object.keys(restoredData).length > 0) {
                         setFormData(prev => ({ ...prev, ...restoredData }));
                     }
                 }
                 hasLoadedRef.current = true;
             } catch (error) {
-                console.error('Error loading form data from localStorage:', error);
+                console.error('Error al cargar datos del localStorage:', error);
                 hasLoadedRef.current = true;
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [storageKey]); // Only depend on storageKey, load once per key
+    }, [storageKey, setFormData]); // Dependencias básicas
 
-    // Save form data to localStorage whenever it changes
+    // Guardar datos cada vez que cambian
     useEffect(() => {
-        // Only save if we've already loaded initial data
         if (hasLoadedRef.current) {
             try {
-                // Filter out excluded fields before saving
+                // Preparamos objeto para guardar sin los campos excluidos
                 const dataToSave: Partial<T> = {};
                 Object.keys(formData).forEach((key) => {
-                    if (!excludeFieldsRef.current.includes(key)) {
+                    if (!excludeFields.includes(key)) {
                         dataToSave[key as keyof T] = formData[key as keyof T];
                     }
                 });
 
+                // Guardamos en localStorage
                 localStorage.setItem(storageKey, JSON.stringify(dataToSave));
             } catch (error) {
-                console.error('Error saving form data to localStorage:', error);
+                console.error('Error al guardar en localStorage:', error);
             }
         }
-    }, [formData, storageKey]);
+    }, [formData, storageKey]); // Se ejecuta cuando cambia el formulario
 
-    // Function to clear persisted data
-    const clearPersistedData = useCallback(() => {
+    // Función para limpiar datos manualmente (ej. al hacer login)
+    const clearPersistedData = () => {
         try {
             localStorage.removeItem(storageKey);
         } catch (error) {
-            console.error('Error clearing form data from localStorage:', error);
+            console.error('Error al borrar del localStorage:', error);
         }
-    }, [storageKey]);
+    };
 
     return { clearPersistedData };
 }

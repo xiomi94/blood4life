@@ -1,5 +1,5 @@
 import Logo from "../../assets/images/LogoShadowMini.webp";
-import LoginForm from "../../components/Forms/LoginForm/LoginForm";
+import LoginForm from "../../components/features/auth/LoginForm/LoginForm";
 
 function Login() {
   return (

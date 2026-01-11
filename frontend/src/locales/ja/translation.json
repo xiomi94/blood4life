@@ -41,6 +41,7 @@
             "userType": "ユーザータイプ",
             "donor": "ドナー",
             "hospital": "病院",
+            "admin": "管理者",
             "email": "メールアドレス",
             "emailPlaceholder": "メールアドレスを入力",
             "password": "パスワード",
@@ -172,6 +173,105 @@
             "genderOption": "性別分布",
             "appointmentsToday": "今日の予約",
             "donationsThisMonth": "今月の寄付"
+        },
+        "admin": {
+            "title": "管理者ダッシュボード",
+            "loading": "管理者ダッシュボードを読み込み中...",
+            "tabs": {
+                "donors": "ドナー",
+                "hospitals": "病院",
+                "appointments": "登録",
+                "campaigns": "キャンペーン"
+            },
+            "toasts": {
+                "newDonor": "新しいドナーが登録されました",
+                "newHospital": "新しい病院が登録されました",
+                "newAppointment": "新しい登録を受信しました",
+                "newCampaign": "新しいキャンペーンが作成されました",
+                "deleteDonorSuccess": "ドナーを正常に削除しました",
+                "deleteDonorError": "ドナーの削除中にエラーが発生しました",
+                "deleteHospitalSuccess": "病院を正常に削除しました",
+                "deleteHospitalError": "病院の削除中にエラーが発生しました",
+                "updateDonorSuccess": "ドナーを正常に更新しました",
+                "updateDonorError": "ドナーの更新中にエラーが発生しました",
+                "deleteAppointmentSuccess": "予約を正常に削除しました",
+                "deleteAppointmentError": "予約の削除中にエラーが発生しました",
+                "updateAppointmentSuccess": "予約を正常に更新しました",
+                "deleteCampaignSuccess": "キャンペーンを正常に削除しました",
+                "updateCampaignSuccess": "キャンペーンを正常に更新しました"
+            },
+            "confirms": {
+                "deleteDonor": "このドナーを削除してもよろしいですか？",
+                "deleteHospital": "この病院を削除してもよろしいですか？",
+                "deleteAppointment": "この予約を削除してもよろしいですか？",
+                "deleteCampaign": "このキャンペーンを削除してもよろしいですか？"
+            },
+            "errors": {
+                "loadAdminData": "管理者データの読み込み中にエラーが発生しました"
+            },
+            "chart": {
+                "title": "ユーザー分布",
+                "donorsLabel": "ドナー",
+                "hospitalsLabel": "病院",
+                "xAxisLabel": "ユーザー"
+            },
+            "table": {
+                "name": "名前",
+                "dni": "ID",
+                "cif": "CIF",
+                "email": "メール",
+                "gender": "性別",
+                "phone": "電話番号",
+                "birthDate": "生年月日",
+                "bloodType": "血液型",
+                "address": "住所",
+                "donor": "ドナー",
+                "campaign": "キャンペーン",
+                "date": "日付",
+                "status": "ステータス",
+                "comment": "コメント",
+                "hospital": "病院",
+                "location": "場所",
+                "progress": "進捗",
+                "actions": "アクション",
+                "edit": "編集",
+                "delete": "削除",
+                "male": "男性",
+                "female": "女性",
+                "statusList": {
+                    "1": "予定済み",
+                    "2": "完了",
+                    "3": "キャンセル"
+                }
+            },
+            "modals": {
+                "editDonor": "ドナーを編集",
+                "editHospital": "病院を編集",
+                "editAppointment": "登録を編集",
+                "editCampaign": "キャンペーンを編集",
+                "firstName": "名",
+                "lastName": "姓",
+                "dni": "ID",
+                "gender": "性別",
+                "email": "メール",
+                "phone": "電話番号",
+                "birthDate": "生年月日",
+                "bloodType": "血液型",
+                "bloodTypePlaceholder": "血液型を選択",
+                "cif": "CIF",
+                "address": "住所",
+                "status": "ステータス",
+                "date": "日付",
+                "time": "時間",
+                "hospitalComment": "病院のコメント",
+                "description": "説明",
+                "startDate": "開始日",
+                "endDate": "終了日",
+                "location": "場所",
+                "requiredDonors": "必要ドナー数",
+                "saveChanges": "変更を保存",
+                "cancel": "キャンセル"
+            }
         },
         "campaigns": {
             "goalLabel": "目標",

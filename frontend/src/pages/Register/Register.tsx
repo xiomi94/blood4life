@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import Button from '../../components/UI/Button/Button';
+import Button from '../../components/common/ui/Button/Button';
 
 const Register: React.FC = () => {
   const { t } = useTranslation();

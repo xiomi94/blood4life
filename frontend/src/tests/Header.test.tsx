@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
-import Header from "../components/UI/Header/Header";
+import Header from "../components/layout/Header/Header";
 
 function renderWithRoute(route: string) {
     return render(
