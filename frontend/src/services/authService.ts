@@ -1,5 +1,3 @@
-import axios from 'axios';
-import { API_URL } from '../config';
 import axiosInstance from "../utils/axiosInstance.ts";
 
 export interface LoginResponse {
@@ -10,28 +8,37 @@ export interface LoginResponse {
 export const authService = {
   login: async (email: string, password: string, type: 'bloodDonor' | 'hospital' | 'admin') => {
     const credentials = btoa(`${email}:${password}`);
-    const response = await axios.post<LoginResponse>(
-      `${API_URL}/auth/${type}/login`,
+
+    // Use axiosInstance but overwrite Authorization header
+    // If axiosInstance injects Bearer, this per-call configuration should take precedence.
+    const response = await axiosInstance.post<LoginResponse>(
+      `/auth/${type}/login`,
       {},
       {
         headers: {
           Authorization: `Basic ${credentials}`,
-        },
-        withCredentials: true // Important: Receive the cookie
+        }
       }
     );
     return response.data;
   },
+
   registerHospital: async (hospitalData: FormData) => {
-    const response = await axios.post(`${API_URL}/auth/hospital/register`, hospitalData);
+    // Use axiosInstance
+    const response = await axiosInstance.post(`/auth/hospital/register`, hospitalData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
     return response.data;
   },
 
-  registerBloodDonor: (submitData: FormData) => {
-    return axiosInstance.post(
-      `/auth/bloodDonor/register`,
-      submitData,
-      { withCredentials: false }
-    );
+  registerBloodDonor: async (submitData: FormData) => {
+    const response = await axiosInstance.post(`/auth/bloodDonor/register`, submitData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return response.data;
   }
 };
