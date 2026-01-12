@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import BloodDonorRegisterForm from '../../components/Forms/BloodDonorRegisterForm/BloodDonorRegisterForm';
-import Modal from '../../components/Modals/Modal/Modal';
+import BloodDonorRegisterForm from '../../components/features/auth/BloodDonorRegisterForm/BloodDonorRegisterForm';
+import Modal from '../../components/common/feedback/Modal/Modal';
 
 const BloodDonorRegisterPage: React.FC = () => {
   const { t } = useTranslation();

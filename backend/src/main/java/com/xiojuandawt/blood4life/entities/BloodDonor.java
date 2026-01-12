@@ -17,7 +17,7 @@ public class BloodDonor {
   private String lastName;
   private String gender;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "blood_type_id")
   private BloodType bloodType;
 
@@ -34,7 +34,7 @@ public class BloodDonor {
   }
 
   public BloodDonor(String dni, String firstName, String lastName, String gender, BloodType bloodType,
-                    String email, String phoneNumber, Date dateOfBirth, String password, Image image) {
+      String email, String phoneNumber, Date dateOfBirth, String password, Image image) {
     this.dni = dni;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -48,7 +48,7 @@ public class BloodDonor {
   }
 
   public BloodDonor(int id, String dni, String firstName, String lastName, String gender, BloodType bloodType,
-                    String email, String phoneNumber, Date dateOfBirth, String password, Image image) {
+      String email, String phoneNumber, Date dateOfBirth, String password, Image image) {
     this.id = id;
     this.dni = dni;
     this.firstName = firstName;
@@ -61,7 +61,6 @@ public class BloodDonor {
     this.password = password;
     this.image = image;
   }
-
 
   public Integer getId() {
     return id;
@@ -154,17 +153,17 @@ public class BloodDonor {
   @Override
   public String toString() {
     return "BloodDonor{" +
-      "id=" + id +
-      ", dni='" + dni + '\'' +
-      ", firstName='" + firstName + '\'' +
-      ", lastName='" + lastName + '\'' +
-      ", gender='" + gender + '\'' +
-      ", bloodType=" + bloodType +
-      ", email='" + email + '\'' +
-      ", phoneNumber='" + phoneNumber + '\'' +
-      ", dateOfBirth=" + dateOfBirth +
-      ", password='" + password + '\'' +
-      ", image=" + image +
-      '}';
+        "id=" + id +
+        ", dni='" + dni + '\'' +
+        ", firstName='" + firstName + '\'' +
+        ", lastName='" + lastName + '\'' +
+        ", gender='" + gender + '\'' +
+        ", bloodType=" + bloodType +
+        ", email='" + email + '\'' +
+        ", phoneNumber='" + phoneNumber + '\'' +
+        ", dateOfBirth=" + dateOfBirth +
+        ", password='" + password + '\'' +
+        ", image=" + image +
+        '}';
   }
 }

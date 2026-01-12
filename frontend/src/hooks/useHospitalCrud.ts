@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
 import type { Hospital, HospitalFormData } from '../models/Hospital.ts';
 import { hospitalService } from '../services/hospitalService.ts';
 
@@ -53,6 +54,7 @@ export const useHospitalCrud = () => {
       setHospitales(data);
     } catch (err) {
       setError('Error al cargar los hospitales');
+      toast.error('Error al cargar los hospitales');
       console.error(err);
     } finally {
       setLoading(false);
@@ -71,9 +73,11 @@ export const useHospitalCrud = () => {
       const newHospital = await hospitalService.createHospital(formData);
       setHospitales(prev => [...prev, newHospital]);
       setSuccess('Hospital creado exitosamente');
+      toast.success('Hospital creado exitosamente');
       resetForm();
     } catch (err) {
       setError('Error al crear el hospital');
+      toast.error('Error al crear el hospital');
       console.error(err);
     } finally {
       setLoading(false);
@@ -103,10 +107,12 @@ export const useHospitalCrud = () => {
           prev.map(hosp => hosp.id === result.id ? result : hosp)
         );
         setSuccess('Hospital actualizado exitosamente');
+        toast.success('Hospital actualizado exitosamente');
         resetForm();
       }
     } catch (err) {
       setError('Error al actualizar el hospital');
+      toast.error('Error al actualizar el hospital');
       console.error(err);
     } finally {
       setLoading(false);
@@ -138,8 +144,10 @@ export const useHospitalCrud = () => {
       await hospitalService.deleteHospital(id!);
       setHospitales(prev => prev.filter(hosp => hosp.id !== id));
       setSuccess('Hospital eliminado exitosamente');
+      toast.success('Hospital eliminado exitosamente');
     } catch (err) {
       setError('Error al eliminar el hospital');
+      toast.error('Error al eliminar el hospital');
       console.error(err);
     } finally {
       setLoading(false);

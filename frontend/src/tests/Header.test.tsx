@@ -1,10 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
-import Header from "../components/UI/Header/Header";
-import { AuthContext } from "../context/AuthContext";
-import { ThemeContext } from "../context/ThemeContext";
-import { LanguageProvider } from "../context/LanguageContext";
+import Header from "../components/layout/Header/Header";
 
 const mockAuthContext = {
     user: null,

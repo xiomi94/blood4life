@@ -3,7 +3,7 @@ import axiosInstance from '../utils/axiosInstance';
 
 
 
-interface UserProfile {
+export interface UserProfile {
   id: number;
   // Blood Donor fields
   firstName?: string;
@@ -44,11 +44,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Función para verificar si el usuario sigue logueado al recargar
   const refreshUser = async () => {
-    // Get the last known user type from localStorage
+    // Recuperamos el tipo de usuario guardado
     const savedUserType = localStorage.getItem('userType') as 'bloodDonor' | 'hospital' | 'admin' | null;
 
-    // If there's no saved user type, skip verification (user is not logged in)
+    // Si no hay nada guardado, no hacemos nada
     if (!savedUserType) {
       setIsAuthenticated(false);
       setUserType(null);
@@ -56,36 +57,31 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return;
     }
 
-    // Only check the saved user type first, then fallback to others if it fails
-    const checkOrder: Array<'bloodDonor' | 'hospital' | 'admin'> = [
-      savedUserType,
-      ...(['bloodDonor', 'hospital', 'admin'].filter(t => t !== savedUserType) as Array<'bloodDonor' | 'hospital' | 'admin'>)
-    ];
+    try {
+      // Intentamos obtener los datos según el tipo guardado
+      let endpoint = '';
+      if (savedUserType === 'bloodDonor') {
+        endpoint = '/bloodDonor/me';
+      } else if (savedUserType === 'hospital') {
+        endpoint = '/hospital/me';
+      } else if (savedUserType === 'admin') {
+        endpoint = '/admin/me';
+      }
 
-    for (const type of checkOrder) {
-      try {
-        const endpoint = type === 'bloodDonor' ? '/bloodDonor/me' : type === 'hospital' ? '/hospital/me' : '/admin/me';
+      if (endpoint) {
         const res = await axiosInstance.get(endpoint);
-
-        setUserType(type);
+        setUserType(savedUserType);
         setUser(res.data);
         setIsAuthenticated(true);
-        localStorage.setItem('userType', type); // Save for next time
-        return; // Success, stop checking
-      } catch (error: any) {
-        // Only log unexpected errors (not 401/403 which are expected)
-        if (error.response?.status !== 401 && error.response?.status !== 403) {
-          console.error(`Unexpected error checking ${type} auth:`, error);
-        }
-        // Continue to next type
       }
+    } catch (error: any) {
+      console.error("Error verificando sesión:", error);
+      // Si falla, borramos todo
+      setIsAuthenticated(false);
+      setUserType(null);
+      setUser(null);
+      localStorage.removeItem('userType');
     }
-
-    // If all checks failed, clear everything
-    setIsAuthenticated(false);
-    setUserType(null);
-    setUser(null);
-    localStorage.removeItem('userType');
   };
 
   // Check if user is already logged in on mount

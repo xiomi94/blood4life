@@ -41,6 +41,7 @@
             "userType": "Tipo de usuario",
             "donor": "Donante",
             "hospital": "Hospital",
+            "admin": "Administrador",
             "email": "Correo electrónico",
             "emailPlaceholder": "Ingrese su correo",
             "password": "Contraseña",
@@ -162,7 +163,19 @@
             "noAppointments": "No hay citas programadas para hoy",
             "unknownDonor": "Donante desconocido",
             "noTime": "Sin hora",
-            "dniLabel": "DNI"
+            "dniLabel": "DNI",
+            "noNextAppointment": "No se encontró una próxima cita disponible.",
+            "viewNext": "Ver próxima cita",
+            "donationsLabel": "Horas/Donaciones:",
+            "viewProfile": "Ver perfil",
+            "nextAppointmentTitle": "Próxima cita programada",
+            "dateTimeLabel": "Fecha y Hora",
+            "at": "a las",
+            "donorLabel": "Donante",
+            "typeLabel": "Tipo:",
+            "historyLabel": "Historial:",
+            "completedDonations": "donaciones completadas",
+            "close": "Cerrar"
         },
         "stats": {
             "selectedCampaigns": "Campañas seleccionadas",
@@ -172,7 +185,114 @@
             "bloodTypeOption": "Distribución por tipo de sangre",
             "genderOption": "Distribución por género",
             "appointmentsToday": "Citas hoy",
-            "donationsThisMonth": "Donaciones este mes"
+            "donationsThisMonth": "Donaciones este mes",
+            "myCampaigns": "Mis Campañas",
+            "allCampaigns": "Todas las Campañas",
+            "completedCampaigns": "Campañas Realizadas",
+            "allGenders": "Todos",
+            "male": "Masculino",
+            "female": "Femenino",
+            "preferNotToSay": "Prefiero no decirlo",
+            "noCampaignsToShow": "No hay campañas para mostrar"
+        },
+        "admin": {
+            "title": "Panel de Administración",
+            "loading": "Cargando panel de administración...",
+            "tabs": {
+                "donors": "Donantes",
+                "hospitals": "Hospitales",
+                "appointments": "Inscripciones",
+                "campaigns": "Campañas"
+            },
+            "toasts": {
+                "newDonor": "Nuevo donante registrado",
+                "newHospital": "Nuevo hospital registrado",
+                "newAppointment": "Nueva inscripción recibida",
+                "newCampaign": "Nueva campaña creada",
+                "deleteDonorSuccess": "Donante eliminado correctamente",
+                "deleteDonorError": "Error al eliminar donante",
+                "deleteHospitalSuccess": "Hospital eliminado correctamente",
+                "deleteHospitalError": "Error al eliminar hospital",
+                "updateDonorSuccess": "Donante actualizado correctamente",
+                "updateDonorError": "Error al actualizar donante",
+                "deleteAppointmentSuccess": "Inscripción eliminada correctamente",
+                "deleteAppointmentError": "Error al eliminar inscripción",
+                "updateAppointmentSuccess": "Inscripción actualizada correctamente",
+                "deleteCampaignSuccess": "Campaña eliminada correctamente",
+                "updateCampaignSuccess": "Campaña actualizada correctamente"
+            },
+            "confirms": {
+                "deleteDonor": "¿Estás seguro de que quieres eliminar este donante?",
+                "deleteHospital": "¿Estás seguro de que quieres eliminar este hospital?",
+                "deleteAppointment": "¿Estás seguro de que quieres eliminar esta inscripción?",
+                "deleteCampaign": "¿Estás seguro de que quieres eliminar esta campaña?"
+            },
+            "errors": {
+                "loadAdminData": "Error al cargar los datos del administrador"
+            },
+            "chart": {
+                "title": "Distribución de Usuarios",
+                "donorsLabel": "Donantes",
+                "hospitalsLabel": "Hospitales",
+                "xAxisLabel": "Usuarios"
+            },
+            "table": {
+                "name": "Nombre",
+                "dni": "DNI",
+                "cif": "CIF",
+                "email": "Email",
+                "gender": "Género",
+                "phone": "Teléfono",
+                "birthDate": "Fecha Nac.",
+                "bloodType": "Tipo Sangre",
+                "address": "Dirección",
+                "donor": "Donante",
+                "campaign": "Campaña",
+                "date": "Fecha",
+                "status": "Estado",
+                "comment": "Comentario",
+                "hospital": "Hospital",
+                "location": "Ubicación",
+                "progress": "Progreso",
+                "actions": "Acciones",
+                "edit": "Editar",
+                "delete": "Eliminar",
+                "male": "Masculino",
+                "female": "Femenino",
+                "statusList": {
+                    "1": "Programada",
+                    "2": "Completada",
+                    "3": "Cancelada"
+                }
+            },
+            "modals": {
+                "editDonor": "Editar Donante",
+                "editHospital": "Editar Hospital",
+                "editAppointment": "Editar Inscripción",
+                "editCampaign": "Editar Campaña",
+                "firstName": "Nombre",
+                "lastName": "Apellido",
+                "dni": "DNI",
+                "gender": "Género",
+                "email": "Email",
+                "phone": "Teléfono",
+                "birthDate": "Fecha de Nacimiento",
+                "bloodType": "Tipo de Sangre",
+                "bloodTypePlaceholder": "Seleccionar tipo de sangre",
+                "cif": "CIF",
+                "address": "Dirección",
+                "status": "Estado",
+                "date": "Fecha",
+                "time": "Hora",
+                "hospitalComment": "Comentario del Hospital",
+                "description": "Descripción",
+                "startDate": "Fecha Inicio",
+                "endDate": "Fecha Fin",
+                "location": "Ubicación",
+                "requiredDonors": "Donantes Requeridos",
+                "saveChanges": "Guardar Cambios",
+                "cancel": "Cancelar"
+            }
         },
         "campaigns": {
             "goalLabel": "Meta",
@@ -247,6 +367,26 @@
                 "deleteDonorConfirm": "¿Estás seguro de que quieres eliminar este donante?",
                 "deleteHospitalConfirm": "¿Estás seguro de que quieres eliminar este hospital?"
             }
+        }
+    },
+    "profile": {
+        "editTitle": "Editar Perfil",
+        "saveChanges": "Guardar cambios",
+        "saving": "Guardando...",
+        "cancel": "Cancelar",
+        "admin": {
+            "info": "Como administrador, tu información principal es tu correo electrónico de acceso.",
+            "note": "Nota: Para cambiar tu contraseña, utiliza la sección de cambio de contraseña a continuación."
+        },
+        "password": {
+            "changeButton": "Cambiar contraseña",
+            "current": "Contraseña Actual",
+            "currentPlaceholder": "Ingresa tu contraseña actual",
+            "new": "Nueva Contraseña",
+            "newPlaceholder": "Mínimo 8 caracteres",
+            "confirm": "Confirmar Nueva Contraseña",
+            "confirmPlaceholder": "Repite la nueva contraseña",
+            "hint": "Debe contener: mayúscula, minúscula, número (8-32 caracteres)"
         }
     }
 }

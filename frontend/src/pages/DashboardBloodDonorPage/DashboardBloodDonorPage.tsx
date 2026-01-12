@@ -8,12 +8,12 @@ import {
   Legend,
 } from 'chart.js';
 import { useDonorDashboard } from '../../hooks/useDonorDashboard';
-import { DonorSidebar } from '../../components/DonorDashboard/DonorSidebar';
-import { UpcomingAppointments } from '../../components/DonorDashboard/UpcomingAppointments';
-import { CampaignProgressChart } from '../../components/DonorDashboard/CampaignProgressChart';
-import { DonationHistory } from '../../components/DonorDashboard/DonationHistory';
-import { Calendar } from '../../components/DonorDashboard/Calendar';
-import { StatsCards } from '../../components/DonorDashboard/StatsCards';
+import { DonorSidebar } from '../../components/features/donor/DonorSidebar';
+import { UpcomingAppointments } from '../../components/features/donor/UpcomingAppointments';
+import { CampaignProgressChart } from '../../components/features/donor/CampaignProgressChart';
+import { DonationHistory } from '../../components/features/donor/DonationHistory';
+import { Calendar } from '../../components/features/donor/Calendar';
+import { StatsCards } from '../../components/features/donor/StatsCards';
 
 // Register ChartJS components
 ChartJS.register(

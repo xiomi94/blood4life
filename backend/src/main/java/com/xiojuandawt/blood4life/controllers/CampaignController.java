@@ -93,11 +93,7 @@ public class CampaignController {
       CampaignDTO createdCampaign = campaignService.createCampaign(campaign, requiredBloodTypes);
 
       // Send WebSocket notification
-      Map<String, Object> wsMessage = Map.of(
-          "type", "CAMPAIGN_CREATED",
-          "campaignId", createdCampaign.getId(),
-          "timestamp", ZonedDateTime.now().toString());
-      messagingTemplate.convertAndSend("/topic/campaigns", wsMessage);
+      messagingTemplate.convertAndSend("/topic/campaigns", createdCampaign);
 
       return ResponseEntity
           .status(HttpStatus.CREATED)
@@ -221,11 +217,7 @@ public class CampaignController {
       CampaignDTO updated = campaignService.updateCampaign(id, updatedCampaign, requiredBloodTypes);
 
       // Send WebSocket notification
-      Map<String, Object> wsMessage = Map.of(
-          "type", "CAMPAIGN_UPDATED",
-          "campaignId", updated.getId(),
-          "timestamp", ZonedDateTime.now().toString());
-      messagingTemplate.convertAndSend("/topic/campaigns", wsMessage);
+      messagingTemplate.convertAndSend("/topic/campaigns", updated);
 
       return ResponseEntity.ok(updated);
 

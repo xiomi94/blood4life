@@ -4,6 +4,7 @@ import com.xiojuandawt.blood4life.dto.AppointmentDTO;
 import com.xiojuandawt.blood4life.entities.Appointment;
 import com.xiojuandawt.blood4life.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,6 +73,9 @@ public class AppointmentController {
     return ResponseEntity.ok(dto);
   }
 
+  @Autowired
+  private SimpMessagingTemplate messagingTemplate;
+
   @PostMapping("/create")
   public ResponseEntity<AppointmentDTO> createAppointment(
       @RequestBody AppointmentDTO dto) {
@@ -106,9 +110,23 @@ public class AppointmentController {
     result.setId(saved.getId());
     result.setAppointmentStatus(saved.getAppointmentStatus());
     result.setCampaignId(saved.getCampaign().getId());
+    result.setCampaignName(saved.getCampaign().getName());
     result.setBloodDonorId(saved.getBloodDonor().getId());
     result.setHospitalComment(saved.getHospitalComment());
     result.setDateAppointment(saved.getDateAppointment());
+    result.setHourAppointment(saved.getHourAppointment());
+
+    // Fill donor info
+    com.xiojuandawt.blood4life.entities.BloodDonor donor = saved.getBloodDonor();
+    com.xiojuandawt.blood4life.dto.BloodDonorDTO donorDTO = new com.xiojuandawt.blood4life.dto.BloodDonorDTO();
+    donorDTO.setId(donor.getId());
+    donorDTO.setFirstName(donor.getFirstName());
+    donorDTO.setLastName(donor.getLastName());
+    donorDTO.setEmail(donor.getEmail());
+    result.setBloodDonor(donorDTO);
+
+    // Notificar vÃ­a WebSocket
+    messagingTemplate.convertAndSend("/topic/appointments", result);
 
     return ResponseEntity.ok(result);
   }
@@ -149,9 +167,14 @@ public class AppointmentController {
     result.setId(updated.getId());
     result.setAppointmentStatus(updated.getAppointmentStatus());
     result.setCampaignId(updated.getCampaign().getId());
+    result.setCampaignName(updated.getCampaign().getName());
     result.setBloodDonorId(updated.getBloodDonor().getId());
     result.setHospitalComment(updated.getHospitalComment());
     result.setDateAppointment(updated.getDateAppointment());
+    result.setHourAppointment(updated.getHourAppointment());
+
+    // Notificar vÃ­a WebSocket
+    messagingTemplate.convertAndSend("/topic/appointments", result);
 
     return ResponseEntity.ok(result);
   }

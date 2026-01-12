@@ -6,10 +6,11 @@ import HospitalRegisterPage from "./pages/HospitalRegisterPage/HospitalRegisterP
 import Index from "./pages/Index.tsx";
 import Login from "./pages/Login/Login.tsx";
 import Register from "./pages/Register/Register.tsx";
-import Header from "./components/UI/Header/Header.tsx";
-import Footer from "./components/UI/Footer/Footer.tsx";
-import SkipLink from "./components/UI/SkipLink/SkipLink.tsx";
-import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import Header from "./components/layout/Header/Header.tsx";
+import Footer from "./components/layout/Footer/Footer.tsx";
+import SkipLink from "./components/common/ui/SkipLink/SkipLink.tsx";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/features/auth/ProtectedRoute/ProtectedRoute";
 import UnifiedDashboard from "./pages/UnifiedDashboard/UnifiedDashboard";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 import { Toaster } from 'sonner';
