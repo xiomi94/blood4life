@@ -102,10 +102,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsAuthenticated(true);
     localStorage.setItem('userType', type); // Save user type
 
-    // Fetch user details
-    axiosInstance.get(endpoint)
-      .then(res => setUser(res.data))
-      .catch(err => console.error("Failed to fetch user details on login", err));
+    // Wait a brief moment for the cookie to be set before fetching user details
+    // This prevents race conditions where the cookie hasn't propagated yet
+    setTimeout(() => {
+      axiosInstance.get(endpoint)
+        .then(res => setUser(res.data))
+        .catch(err => console.error("Failed to fetch user details on login", err));
+    }, 150); // 150ms delay para permitir que la cookie se establezca
   };
 
   const logout = async () => {
