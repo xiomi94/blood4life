@@ -23,7 +23,10 @@ ChartJS.register(
   Legend
 );
 
+import { useTranslation } from 'react-i18next';
+
 const AdminDashboard = () => {
+  const { t } = useTranslation();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [donors, setDonors] = useState<BloodDonor[]>([]);
   const [hospitals, setHospitals] = useState<Hospital[]>([]);
@@ -48,7 +51,7 @@ const AdminDashboard = () => {
       setHospitals(hospitalsData);
       setError(null);
     } catch (err) {
-      setError('Error al cargar los datos del administrador');
+      setError(t('dashboard.admin.errors.loadAdminData'));
       console.error(err);
     } finally {
       setLoading(false);
@@ -56,31 +59,31 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteDonor = async (id: number) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar este donante?')) {
+    if (window.confirm(t('dashboard.admin.modals.deleteDonorConfirm'))) {
       try {
         await adminService.deleteBloodDonor(id);
         setDonors(donors.filter(d => d.id !== id));
       } catch (err) {
-        alert('Error al eliminar donante');
+        alert(t('dashboard.admin.errors.deleteError'));
       }
     }
   };
 
   const handleDeleteHospital = async (id: number) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar este hospital?')) {
+    if (window.confirm(t('dashboard.admin.modals.deleteHospitalConfirm'))) {
       try {
         await adminService.deleteHospital(id);
         setHospitals(hospitals.filter(h => h.id !== id));
       } catch (err) {
-        alert('Error al eliminar hospital');
+        alert(t('dashboard.admin.errors.deleteError'));
       }
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="text-xl font-semibold text-gray-600">Cargando panel de administración...</div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-100" role="status">
+        <div className="text-xl font-semibold text-gray-600">{t('common.loading')}</div>
       </div>
     );
   }

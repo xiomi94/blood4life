@@ -232,6 +232,21 @@
                 "instructionsLabel": "Para confirmar, escribe el nombre de la campaña:",
                 "placeholder": "Nombre de la campaña..."
             }
+        },
+        "admin": {
+            "tabs": {
+                "donors": "Donantes",
+                "hospitals": "Hospitales",
+                "campaigns": "Campañas"
+            },
+            "errors": {
+                "loadAdminData": "Error al cargar los datos del administrador",
+                "deleteError": "Error al eliminar"
+            },
+            "modals": {
+                "deleteDonorConfirm": "¿Estás seguro de que quieres eliminar este donante?",
+                "deleteHospitalConfirm": "¿Estás seguro de que quieres eliminar este hospital?"
+            }
         }
     }
 }

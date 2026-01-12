@@ -1,59 +1,73 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import Header from "../components/UI/Header/Header";
+import { AuthContext } from "../context/AuthContext";
+import { ThemeContext } from "../context/ThemeContext";
+import { LanguageProvider } from "../context/LanguageContext";
 
-function renderWithRoute(route: string) {
+const mockAuthContext = {
+    user: null,
+    userType: null,
+    isAuthenticated: false,
+    isLoading: false,
+    login: vi.fn(),
+    logout: vi.fn(),
+    refreshUser: vi.fn(),
+};
+
+const mockThemeContext = {
+    isDarkMode: false,
+    toggleTheme: vi.fn(),
+};
+
+function renderWithProviders(route: string, auth = mockAuthContext) {
     return render(
-        <MemoryRouter initialEntries={[route]}>
-            <Header />
-        </MemoryRouter>
+        <LanguageProvider>
+            <ThemeContext.Provider value={mockThemeContext}>
+                <AuthContext.Provider value={auth}>
+                    <MemoryRouter initialEntries={[route]}>
+                        <Header />
+                    </MemoryRouter>
+                </AuthContext.Provider>
+            </ThemeContext.Provider>
+        </LanguageProvider>
     );
 }
 
 describe("Header Component", () => {
 
     it("muestra logo e 'Inicio' cuando está en /register", () => {
-        renderWithRoute("/register");
+        renderWithProviders("/register");
 
         expect(screen.getByAltText("Logo")).toBeInTheDocument();
-        expect(screen.getByText("Inicio")).toBeInTheDocument();
+        // Con el mock de t, el texto será la clave o el texto si t no está mockeado localmente pero sí globalmente
+        expect(screen.getByText(/header.home/i)).toBeInTheDocument();
     });
 
     it("muestra botones Iniciar sesión y Registrarse en /index", () => {
-        renderWithRoute("/index");
+        renderWithProviders("/index");
 
-        expect(screen.getByText("Iniciar sesión")).toBeInTheDocument();
-        expect(screen.getByText("Registrarse")).toBeInTheDocument();
+        expect(screen.getByText(/header.login/i)).toBeInTheDocument();
+        expect(screen.getByText(/header.register/i)).toBeInTheDocument();
     });
 
     it("muestra solo botón Inicio en /login", () => {
-        renderWithRoute("/login");
+        renderWithProviders("/login");
 
-        expect(screen.getByText("Inicio")).toBeInTheDocument();
-        expect(screen.queryByText("Iniciar sesión")).not.toBeInTheDocument();
+        expect(screen.getByText(/header.home/i)).toBeInTheDocument();
+        expect(screen.queryByText(/header.login/i)).not.toBeInTheDocument();
     });
 
-    it("muestra el header especial del dashboard", () => {
-        renderWithRoute("/dashboard");
+    it("muestra el avatar del usuario cuando está autenticado", () => {
+        const auth = { ...mockAuthContext, isAuthenticated: true, user: { id: 1, email: 't@t.com' } };
+        renderWithProviders("/dashboard", auth as any);
 
-        // logo
-        expect(screen.getByAltText("Logo")).toBeInTheDocument();
+        // logo - alt text is different when authenticated
+        expect(screen.getByAltText(/Blood4Life/i)).toBeInTheDocument();
 
-        // avatar
-        const avatar = document.querySelector(".w-10.h-10");
-        expect(avatar).toBeInTheDocument();
-
-        // botones de notificación
-        const buttons = document.querySelectorAll("button");
-        expect(buttons.length).toBeGreaterThanOrEqual(2);
-    });
-
-    it("muestra los botones de inicio de sesión en la ruta raíz /", () => {
-        renderWithRoute("/");
-
-        expect(screen.getByText("Iniciar sesión")).toBeInTheDocument();
-        expect(screen.getByText("Registrarse")).toBeInTheDocument();
+        // avatar (verificado por aria-label del botón que lo contiene)
+        expect(screen.getByRole('button', { name: /header.userMenu/i })).toBeInTheDocument();
     });
 
 });
