@@ -210,6 +210,10 @@
             "errors": {
                 "loadAdminData": "加载管理员数据时出错"
             },
+            "stats": {
+                "totalDonors": "捐赠者总数",
+                "totalHospitals": "医院总数"
+            },
             "chart": {
                 "title": "用户分布",
                 "donorsLabel": "捐赠者",

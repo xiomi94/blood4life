@@ -209,6 +209,10 @@
             "errors": {
                 "loadAdminData": "管理者データの読み込み中にエラーが発生しました"
             },
+            "stats": {
+                "totalDonors": "ドナー総数",
+                "totalHospitals": "病院総数"
+            },
             "chart": {
                 "title": "ユーザー分布",
                 "donorsLabel": "ドナー",

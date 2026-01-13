@@ -210,6 +210,10 @@
             "errors": {
                 "loadAdminData": "Erreur lors du chargement des données d'administration"
             },
+            "stats": {
+                "totalDonors": "Total de donneurs",
+                "totalHospitals": "Total d'hôpitaux"
+            },
             "chart": {
                 "title": "Répartition des utilisateurs",
                 "donorsLabel": "Donneurs",
