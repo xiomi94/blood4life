@@ -1,10 +1,37 @@
+/**
+ * =============================================================================
+ * TEST UNITARIO - CampaignList Component
+ * =============================================================================
+ * 
+ * TIPO: Unitario de Componente Asíncrono (Async Component Unit Test)
+ * 
+ * PROPÓSITO:
+ * Verifica el comportamiento del componente CampaignList que realiza fetching
+ * de datos asíncrono, probando sus diferentes estados.
+ * 
+ * QUÉ SE PRUEBA:
+ * - Estado de carga (loading) durante el fetch de datos
+ * - Renderizado correcto de la lista cuando los datos se cargan exitosamente
+ * - Manejo y visualización de errores cuando el fetch falla
+ * - Comportamiento asíncrono del componente
+ * 
+ * PARTICULARIDAD:
+ * Este test se enfoca en los estados asíncronos del componente:
+ * - Loading → Success (muestra campañas)
+ * - Loading → Error (muestra mensaje de error)
+ * 
+ * Se mockea el servicio para controlar las respuestas y simular diferentes escenarios.
+ * 
+ * =============================================================================
+ */
+
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import CampaignList from './CampaignList';
-import { campaignService } from '../../../../services/campaignService';
+import CampaignList from '../../components/features/donor/CampaignList/CampaignList';
+import { campaignService } from '../../services/campaignService';
 
 // Mock del servicio
-vi.mock('../../../../services/campaignService', () => ({
+vi.mock('../../services/campaignService', () => ({
     campaignService: {
         getAllCampaigns: vi.fn(),
     },

@@ -1,10 +1,43 @@
+/**
+ * =============================================================================
+ * TEST UNITARIO PURO - Validation Utilities
+ * =============================================================================
+ * 
+ * TIPO: Unitario Puro de Funciones (Pure Function Unit Test)
+ * 
+ * PROPÓSITO:
+ * Verifica el comportamiento de funciones de validación puras que no tienen
+ * efectos secundarios ni dependencias externas.
+ * 
+ * QUÉ SE PRUEBA:
+ * - validateEmail: Validación de formato, longitud, espacios de emails
+ * - validateDNI: Validación de formato de DNI español (8 dígitos + 1 letra)
+ * - validatePassword: Validación de requisitos de contraseña (mayúsculas, minúsculas, números, longitud)
+ * - validatePostalCode: Validación de códigos postales españoles (01000-52999)
+ * 
+ * CARACTERÍSTICAS:
+ * - Tests completamente aislados (no usan React, DOM, ni APIs)
+ * - Funciones puras: mismo input → mismo output, sin efectos secundarios
+ * - Uso de it.each para tests parametrizados (reduce código repetitivo)
+ * - 100% de cobertura de cada función de validación
+ * 
+ * ESTE ES EL TIPO MÁS SIMPLE DE TEST:
+ * - No requiere renderizado
+ * - No requiere mocks
+ * - Solo verifica entrada → salida
+ * 
+ * Ideal para lógica de negocio pura sin dependencias.
+ * 
+ * =============================================================================
+ */
+
 import { describe, it, expect } from 'vitest';
 import {
     validateEmail,
     validateDNI,
     validatePassword,
     validatePostalCode
-} from '../validation';
+} from '../../utils/validation';
 
 describe('Validation Utils - Unit Tests', () => {
 
@@ -34,7 +67,7 @@ describe('Validation Utils - Unit Tests', () => {
             expect(validateEmail('test@com')).toBe('El formato del email no es válido');
         });
 
-        it.skip('debe devolver error si excede 100 caracteres', () => {
+        it('debe devolver error si excede 100 caracteres', () => {
             const longEmail = 'a'.repeat(91) + '@example.com';
             expect(validateEmail(longEmail)).toBe('El email no puede exceder 100 caracteres');
         });

@@ -1,9 +1,33 @@
+/**
+ * =============================================================================
+ * TEST DE INTEGRACIÓN - Flujo de Autenticación
+ * =============================================================================
+ * 
+ * TIPO: Integración (Integration Test)
+ * 
+ * PROPÓSITO:
+ * Verifica el flujo completo de autenticación que involucra el componente
+ * LoginForm junto con los contextos de autenticación y lenguaje.
+ * 
+ * QUÉ SE PRUEBA:
+ * - Renderizado del formulario de login con todos sus elementos
+ * - Interacción del usuario (llenar campos, submit del formulario)
+ * - Validación de campos requeridos
+ * - Integración entre LoginForm, AuthContext y LanguageProvider
+ * 
+ * NOTA:
+ * Aunque se mockea el AuthContext, este test verifica la integración 
+ * entre múltiples componentes y contextos, no solo el LoginForm en aislamiento.
+ * 
+ * =============================================================================
+ */
+
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { BrowserRouter } from 'react-router';
 import { AuthContext } from '../../context/AuthContext';
 import { LanguageProvider } from '../../context/LanguageContext';
-import LoginForm from '../../components/Forms/LoginForm/LoginForm';
+import LoginForm from '../../components/features/auth/LoginForm/LoginForm';
 
 describe('Flujo de Autenticación (Integración)', () => {
     const mockAuthContext = {

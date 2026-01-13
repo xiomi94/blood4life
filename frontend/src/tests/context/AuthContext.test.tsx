@@ -1,10 +1,40 @@
+/**
+ * =============================================================================
+ * TEST UNITARIO - AuthContext (React Context)
+ * =============================================================================
+ * 
+ * TIPO: Unitario de Lógica de Estado Global (Global State Logic Unit Test)
+ * 
+ * PROPÓSITO:
+ * Verifica que el contexto de autenticación maneje correctamente el estado 
+ * global de autenticación, persistencia en localStorage, y llamadas a la API.
+ * 
+ * QUÉ SE PRUEBA:
+ * - Estado inicial (no autenticado, loading)
+ * - Carga de sesión persistida desde localStorage al montar
+ * - Selección correcta de endpoint según userType (bloodDonor, hospital, admin)
+ * - Limpieza de autenticación cuando el token es inválido (401)
+ * - Protección contra uso fuera del Provider (error esperado)
+ * 
+ * TÉCNICA:
+ * - Se mockea axiosInstance para controlar respuestas de la API
+ * - Se usa un TestComponent interno para consumir el contexto
+ * - Se verifica el comportamiento del Provider, no de componentes UI
+ * 
+ * NOTA:
+ * Aunque se renderiza un componente, el foco está en la LÓGICA del contexto,
+ * no en la UI. Por eso es unitario, no de integración.
+ * 
+ * =============================================================================
+ */
+
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
-import { AuthProvider, useAuth } from './AuthContext';
-import axiosInstance from '../utils/axiosInstance';
+import { AuthProvider, useAuth } from '../../context/AuthContext';
+import axiosInstance from '../../utils/axiosInstance';
 
 // Mock axiosInstance
-vi.mock('../utils/axiosInstance', () => ({
+vi.mock('../../utils/axiosInstance', () => ({
     default: {
         get: vi.fn(),
         post: vi.fn(),

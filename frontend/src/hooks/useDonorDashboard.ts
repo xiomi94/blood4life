@@ -178,7 +178,7 @@ export const useDonorDashboard = () => {
       const requiredTypes = campaign.requiredBloodType.split(',').map(t => t.trim().replace(/[\[\]\"]/g, ''));
 
       // Si es Universal o coincide con mi tipo, me sirve
-      return requiredTypes.includes('Universal') || requiredTypes.includes(user.bloodType);
+      return requiredTypes.includes('Universal') || (user.bloodType?.type ? requiredTypes.includes(user.bloodType.type) : false);
     }).slice(0, 4); // Solo mostramos 4
   };
 

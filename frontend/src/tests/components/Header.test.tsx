@@ -1,7 +1,38 @@
+/**
+ * =============================================================================
+ * TEST UNITARIO - Header Component
+ * =============================================================================
+ * 
+ * TIPO: Unitario de Componente de Layout (Layout Component Unit Test)
+ * 
+ * PROPÓSITO:
+ * Verifica que el Header se renderice correctamente según el estado de 
+ * autenticación y la ruta actual, probando la lógica condicional de renderizado.
+ * 
+ * QUÉ SE PRUEBA:
+ * - Renderizado diferenciado según la ruta actual (/, /login, /register, /dashboard)
+ * - Visualización de elementos cuando el usuario NO está autenticado:
+ *   - Botones de "Iniciar sesión" y "Registrarse" en rutas públicas
+ *   - Logo y enlace a inicio
+ * - Visualización de elementos cuando el usuario SÍ está autenticado:
+ *   - Avatar del usuario
+ *   - Menú de usuario
+ * - Integración con múltiples contextos (Auth, Theme, Language)
+ * 
+ * TÉCNICA:
+ * Usa MemoryRouter para simular diferentes rutas sin navegación real.
+ * Los contextos se mockean para controlar el estado.
+ * 
+ * =============================================================================
+ */
+
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
-import Header from "../components/layout/Header/Header";
+import Header from "../../components/layout/Header/Header";
+import { LanguageProvider } from "../../context/LanguageContext";
+import { ThemeContext } from "../../context/ThemeContext";
+import { AuthContext } from "../../context/AuthContext";
 
 const mockAuthContext = {
     user: null,

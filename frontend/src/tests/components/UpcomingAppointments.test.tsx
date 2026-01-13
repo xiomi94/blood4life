@@ -1,6 +1,34 @@
+/**
+ * =============================================================================
+ * TEST UNITARIO - UpcomingAppointments Component
+ * =============================================================================
+ * 
+ * TIPO: Unitario de Componente de Presentación (Presentational Component Unit Test)
+ * 
+ * PROPÓSITO:
+ * Verifica el comportamiento de un componente puramente presentacional que
+ * recibe datos via props y los renderiza sin lógica compleja ni efectos.
+ * 
+ * QUÉ SE PRUEBA:
+ * - Renderizado correcto cuando hay citas (muestra la lista)
+ * - Renderizado del estado vacío (no hay citas programadas)
+ * - Formateo correcto de fechas según locale
+ * - Visualización correcta de información de cada cita
+ * 
+ * PARTICULARIDAD:
+ * Este es uno de los tests más simples - un componente puro que:
+ * - No hace fetch de datos
+ * - No tiene estado interno complejo
+ * - Solo renderiza lo que recibe por props
+ * 
+ * Ideal para verificar lógica de presentación y formateo de datos.
+ * 
+ * =============================================================================
+ */
+
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { UpcomingAppointments } from './UpcomingAppointments';
+import { UpcomingAppointments } from '../../components/features/donor/UpcomingAppointments';
 import type { Appointment } from '../../services/appointmentService';
 
 describe('UpcomingAppointments Component', () => {
@@ -10,7 +38,7 @@ describe('UpcomingAppointments Component', () => {
             campaignId: 10,
             dateAppointment: '2026-05-20',
             hourAppointment: '10:00 AM',
-            status: 'scheduled',
+            appointmentStatus: { id: 1, name: 'Scheduled' },
             bloodDonorId: 1
         },
         {
@@ -18,7 +46,7 @@ describe('UpcomingAppointments Component', () => {
             campaignId: 11,
             dateAppointment: '2026-06-15',
             hourAppointment: '11:00 AM',
-            status: 'scheduled',
+            appointmentStatus: { id: 1, name: 'Scheduled' },
             bloodDonorId: 1
         }
     ];

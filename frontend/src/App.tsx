@@ -9,7 +9,6 @@ import Register from "./pages/Register/Register.tsx";
 import Header from "./components/layout/Header/Header.tsx";
 import Footer from "./components/layout/Footer/Footer.tsx";
 import SkipLink from "./components/common/ui/SkipLink/SkipLink.tsx";
-import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/features/auth/ProtectedRoute/ProtectedRoute";
 import UnifiedDashboard from "./pages/UnifiedDashboard/UnifiedDashboard";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
