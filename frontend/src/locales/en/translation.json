@@ -352,6 +352,21 @@
                 "instructionsLabel": "To confirm, type the campaign name:",
                 "placeholder": "Campaign name..."
             }
+        },
+        "admin": {
+            "tabs": {
+                "donors": "Donors",
+                "hospitals": "Hospitals",
+                "campaigns": "Campaigns"
+            },
+            "errors": {
+                "loadAdminData": "Error loading administrator data",
+                "deleteError": "Error while deleting"
+            },
+            "modals": {
+                "deleteDonorConfirm": "Are you sure you want to delete this donor?",
+                "deleteHospitalConfirm": "Are you sure you want to delete this hospital?"
+            }
         }
     },
     "profile": {

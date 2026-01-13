@@ -26,7 +26,10 @@ ChartJS.register(
   Legend
 );
 
+import { useTranslation } from 'react-i18next';
+
 const AdminDashboard = () => {
+  const { t } = useTranslation();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [donors, setDonors] = useState<BloodDonor[]>([]);
   const [hospitals, setHospitals] = useState<Hospital[]>([]);

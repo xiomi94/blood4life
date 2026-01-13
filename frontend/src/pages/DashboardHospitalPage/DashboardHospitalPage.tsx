@@ -76,7 +76,7 @@ const DashboardHospitalPage: React.FC = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
-        <div className="text-xl font-semibold text-gray-600 dark:text-gray-400">Cargando estadísticas...</div>
+        <div className="text-xl font-semibold text-gray-600 dark:text-gray-400">{t('dashboard.loading')}</div>
       </div>
     );
   }
