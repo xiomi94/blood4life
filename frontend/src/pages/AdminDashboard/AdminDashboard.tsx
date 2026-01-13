@@ -10,7 +10,19 @@ import Button from '../../components/common/ui/Button/Button';
 import ConfirmDialog from '../../components/common/feedback/ConfirmDialog/ConfirmDialog';
 import type { BloodDonor, Hospital, Appointment, Campaign } from '../../services/adminService';
 
+import { useTranslation } from 'react-i18next';
+
 const AdminDashboard = () => {
+  const { t } = useTranslation();
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [donors, setDonors] = useState<BloodDonor[]>([]);
+  const [hospitals, setHospitals] = useState<Hospital[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [appointmentStatuses, setAppointmentStatuses] = useState<AppointmentStatus[]>([]);
+  const [activeTab, setActiveTab] = useState<'donors' | 'hospitals' | 'appointments' | 'campaigns'>('donors');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<TabType>('donors');
 
