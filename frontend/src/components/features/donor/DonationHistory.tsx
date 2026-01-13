@@ -1,4 +1,4 @@
-import type { Appointment } from '../../services/appointmentService';
+import type { Appointment } from '../../../services/appointmentService';
 
 interface DonationHistoryProps {
   donations: Appointment[];

@@ -1,9 +1,35 @@
+/**
+ * =============================================================================
+ * TEST UNITARIO - LoginForm Component
+ * =============================================================================
+ * 
+ * TIPO: Unitario de Componente (Component Unit Test)
+ * 
+ * PROPÓSITO:
+ * Verifica que el componente LoginForm funcione correctamente de forma aislada,
+ * mockeando sus dependencias externas (servicios, contextos).
+ * 
+ * QUÉ SE PRUEBA:
+ * - Renderizado del componente con todos sus elementos UI
+ * - Validación de campos requeridos
+ * - Manejo de entrada de usuario (cambio de valores en inputs)
+ * - Llamadas al servicio de autenticación con datos correctos
+ * - Manejo y visualización de errores de autenticación
+ * 
+ * DIFERENCIA CON TESTS DE INTEGRACIÓN:
+ * - Aquí se mockean todas las dependencias externas (authService)
+ * - El foco está en la lógica del componente, no en cómo interactúa con otros
+ * - Se prueba el componente en aislamiento
+ * 
+ * =============================================================================
+ */
+
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import LoginForm from './LoginForm';
+import LoginForm from '../../components/features/auth/LoginForm/LoginForm';
 import { BrowserRouter } from 'react-router';
-import { AuthContext } from '../../../context/AuthContext';
-import { authService } from '../../../services/authService';
+import { AuthContext } from '../../context/AuthContext';
+import { authService } from '../../services/authService';
 
 // Mock de i18next
 vi.mock('react-i18next', () => ({

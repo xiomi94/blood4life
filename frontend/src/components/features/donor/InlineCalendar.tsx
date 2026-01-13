@@ -3,7 +3,6 @@ import { format, getDaysInMonth, startOfMonth, subMonths, addMonths, getYear, se
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import type { Appointment } from '../../../services/appointmentService';
 
 function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));

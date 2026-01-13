@@ -1,7 +1,36 @@
+/**
+ * =============================================================================
+ * TEST UNITARIO - ThemeToggle Component
+ * =============================================================================
+ * 
+ * TIPO: Unitario de Componente Interactivo Simple (Simple Interactive Component Unit Test)
+ * 
+ * PROPÓSITO:
+ * Verifica el comportamiento de un componente pequeño e interactivo que 
+ * permite cambiar entre modo claro y oscuro.
+ * 
+ * QUÉ SE PRUEBA:
+ * - Renderizado correcto del toggle en modo claro (aria-label apropiado)
+ * - Renderizado correcto del toggle en modo oscuro  
+ * - Interacción del usuario (click en el toggle)
+ * - Llamada correcta a la función toggleTheme del contexto
+ * 
+ * PARTICULARIDAD:
+ * Este es un test de componente "tonto" (dumb component) que:
+ * - Recibe datos del contexto
+ * - Ejecuta una función callback cuando se interactúa con él
+ * - No tiene lógica de negocio compleja
+ * - Solo maneja UI e interacción básica
+ * 
+ * La lógica del tema en sí está en el ThemeContext, no en este componente.
+ * 
+ * =============================================================================
+ */
+
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import ThemeToggle from './ThemeToggle';
-import { ThemeContext } from '../../../context/ThemeContext';
+import ThemeToggle from '../../components/common/ui/ThemeToggle/ThemeToggle';
+import { ThemeContext } from '../../context/ThemeContext';
 
 const mockThemeContext = {
     isDarkMode: false,

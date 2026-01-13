@@ -1,4 +1,3 @@
-import { appointmentService } from '../../../services/appointmentService';
 import type { Campaign } from '../../../services/campaignService';
 
 interface CalendarProps {
