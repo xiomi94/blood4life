@@ -230,6 +230,10 @@
             "errors": {
                 "loadAdminData": "Error al cargar los datos del administrador"
             },
+            "stats": {
+                "totalDonors": "Total de Donantes",
+                "totalHospitals": "Total de Hospitales"
+            },
             "chart": {
                 "title": "Distribución de Usuarios",
                 "donorsLabel": "Donantes",

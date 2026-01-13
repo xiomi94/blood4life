@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Bar, Doughnut } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import { useTheme } from '../../../../context/ThemeContext';
 import type { Campaign } from '../../../../services/campaignService';
 import type { DashboardStats } from '../../../../services/dashboardService';
 import CampaignsList from '../CampaignsList/CampaignsList';
 
-type ChartType = 'bloodType' | 'gender' | 'myCampaigns' | 'allCampaigns' | 'completedCampaigns';
+type ChartType = 'bloodType' | 'myCampaigns' | 'allCampaigns' | 'completedCampaigns';
 
 interface StatsChartsSectionProps {
     stats: DashboardStats;
@@ -120,20 +120,100 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
 
     const finalBloodTypeLabels = orderedBloodTypes;
 
-    // Blood Type Chart Data
+    // Prepare gender-separated data for grouped bar chart
+    let maleData: number[] = [];
+    let femaleData: number[] = [];
+    let otherData: number[] = [];
+
+    if (bloodTypeGenderFilter === 'all' && stats.breakdown) {
+        // Create grouped data showing all genders
+        const maleMap = new Map<string, number>();
+        const femaleMap = new Map<string, number>();
+        const otherMap = new Map<string, number>();
+
+        stats.breakdown.forEach(item => {
+            const genderLower = item.gender.toLowerCase();
+            if (genderLower === 'masculino') {
+                maleMap.set(item.bloodType, item.count);
+            } else if (genderLower === 'femenino') {
+                femaleMap.set(item.bloodType, item.count);
+            } else {
+                // Captura cualquier otra variación (Otro, Prefiero no decirlo, etc.)
+                otherMap.set(item.bloodType, item.count);
+            }
+        });
+
+        maleData = orderedBloodTypes.map(type => maleMap.get(type) || 0);
+        femaleData = orderedBloodTypes.map(type => femaleMap.get(type) || 0);
+        otherData = orderedBloodTypes.map(type => otherMap.get(type) || 0);
+    } else if (stats.breakdown) {
+        // When filtered by gender, use breakdown to show only that gender's data
+        const genderMap = new Map<string, number>();
+
+        stats.breakdown
+            .filter(item => item.gender.toLowerCase() === bloodTypeGenderFilter.toLowerCase())
+            .forEach(item => {
+                genderMap.set(item.bloodType, item.count);
+            });
+
+        const filteredCounts = orderedBloodTypes.map(type => genderMap.get(type) || 0);
+
+        maleData = bloodTypeGenderFilter === 'Masculino' ? filteredCounts : new Array(8).fill(0);
+        femaleData = bloodTypeGenderFilter === 'Femenino' ? filteredCounts : new Array(8).fill(0);
+        otherData = bloodTypeGenderFilter === 'Prefiero no decirlo' ? filteredCounts : new Array(8).fill(0);
+    } else {
+        // Fallback: use finalBloodTypeCounts if breakdown is not available
+        maleData = bloodTypeGenderFilter === 'Masculino' ? finalBloodTypeCounts : new Array(8).fill(0);
+        femaleData = bloodTypeGenderFilter === 'Femenino' ? finalBloodTypeCounts : new Array(8).fill(0);
+        otherData = bloodTypeGenderFilter === 'Prefiero no decirlo' ? finalBloodTypeCounts : new Array(8).fill(0);
+    }
+
+    // Blood Type Chart Data (Stacked)
     const bloodTypeChartData = {
         labels: finalBloodTypeLabels,
         datasets: [
             {
-                label: 'Número de Donantes',
-                data: finalBloodTypeCounts,
-                backgroundColor: 'rgba(37, 99, 235, 0.7)',
-                borderColor: 'rgba(37, 99, 235, 1)',
+                label: 'Masculino',
+                data: maleData,
+                backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                borderColor: 'rgba(59, 130, 246, 1)',
+                borderWidth: 1,
+                borderRadius: 6,
+            },
+            {
+                label: 'Femenino',
+                data: femaleData,
+                backgroundColor: 'rgba(236, 72, 153, 0.8)',
+                borderColor: 'rgba(236, 72, 153, 1)',
+                borderWidth: 1,
+                borderRadius: 6,
+            },
+            {
+                label: 'Prefiero no decirlo',
+                data: otherData,
+                backgroundColor: 'rgba(107, 114, 128, 0.8)',
+                borderColor: 'rgba(107, 114, 128, 1)',
                 borderWidth: 1,
                 borderRadius: 6,
             },
         ],
     };
+
+    // Calcular el máximo para el eje Y (redondeo al siguiente múltiplo de 5)
+    const allValues = [...maleData, ...femaleData, ...otherData];
+    const maxBloodTypeCount = Math.max(...allValues, 0);
+    // Redondear al siguiente múltiplo de 5 (mínimo 5)
+    const bloodTypeYAxisMax = Math.ceil(maxBloodTypeCount / 5) * 5 || 5;
+
+    // Calcular stepSize dinámico para evitar acumulación de números
+    let stepSize = 1;
+    if (bloodTypeYAxisMax > 50) {
+        stepSize = 10;
+    } else if (bloodTypeYAxisMax > 20) {
+        stepSize = 5;
+    } else if (bloodTypeYAxisMax > 10) {
+        stepSize = 2;
+    }
 
     const bloodTypeOptions = {
         responsive: true,
@@ -148,72 +228,87 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
                         size: 12,
                     },
                     padding: 15,
+                    usePointStyle: true,
+                    pointStyle: 'rectRounded',
                 },
+            },
+            tooltip: {
+                mode: 'index' as const,
+                intersect: false,
+                backgroundColor: isDarkMode ? 'rgba(30, 41, 59, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                titleColor: textColor,
+                bodyColor: textColor,
+                borderColor: isDarkMode ? 'rgba(71, 85, 105, 0.5)' : 'rgba(226, 232, 240, 0.5)',
+                borderWidth: 1,
             },
         },
         scales: {
             y: {
                 beginAtZero: true,
+                max: bloodTypeYAxisMax,
+                position: 'left' as const,
                 grid: {
-                    color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
+                    color: isDarkMode ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.1)',
+                    lineWidth: 1,
+                },
+                border: {
+                    display: true,
+                    color: isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)',
+                    width: 2,
                 },
                 ticks: {
                     color: textColor,
-                    stepSize: 1, // Ensure integer steps for counts
+                    stepSize: stepSize,
+                    font: {
+                        size: 11,
+                        weight: 500,
+                    },
+                    padding: 8,
+                }
+            },
+            y1: {
+                beginAtZero: true,
+                max: bloodTypeYAxisMax,
+                position: 'right' as const,
+                display: true,
+                grid: {
+                    display: false,
+                },
+                border: {
+                    display: true,
+                    color: isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)',
+                    width: 2,
+                },
+                ticks: {
+                    display: false,
                 }
             },
             x: {
                 grid: {
-                    display: false,
+                    display: true,
+                    drawOnChartArea: true,
+                    drawTicks: false,
+                    color: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)',
+                    lineWidth: 1,
+                },
+                border: {
+                    display: true,
+                    color: isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.15)',
+                    width: 2,
                 },
                 ticks: {
-                    color: textColor
+                    color: textColor,
+                    font: {
+                        size: 11,
+                        weight: 600,
+                    },
+                    padding: 8,
                 }
             },
         },
-    };
-
-    // Gender Chart Data
-    const genderColors: { [key: string]: string } = {
-        'Masculino': 'rgba(59, 130, 246, 0.7)', // Blue
-        'Femenino': 'rgba(236, 72, 153, 0.7)', // Pink
-        'Prefiero no decirlo': 'rgba(107, 114, 128, 0.7)' // Gray
-    };
-
-    const genderBorderColors: { [key: string]: string } = {
-        'Masculino': 'rgba(59, 130, 246, 1)',
-        'Femenino': 'rgba(236, 72, 153, 1)',
-        'Prefiero no decirlo': 'rgba(107, 114, 128, 1)'
-    };
-
-    const genderChartData = {
-        labels: stats.gender.labels,
-        datasets: [
-            {
-                label: 'Distribución por Género',
-                data: stats.gender.counts,
-                backgroundColor: stats.gender.labels.map(label => genderColors[label] || 'rgba(156, 163, 175, 0.7)'),
-                borderColor: stats.gender.labels.map(label => genderBorderColors[label] || 'rgba(156, 163, 175, 1)'),
-                borderWidth: 2,
-            },
-        ],
-    };
-
-    const genderOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                position: 'bottom' as const,
-                labels: {
-                    color: textColor,
-                    font: {
-                        family: "'Roboto', sans-serif",
-                        size: 12,
-                    },
-                },
-            },
-        },
+        // Configuración para separación entre grupos (tipos de sangre)
+        barPercentage: 0.8,
+        categoryPercentage: 0.75,
     };
 
     return (
@@ -241,10 +336,84 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
                             <option value="allCampaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.allCampaigns')}</option>
                             <option value="completedCampaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.completedCampaigns')}</option>
                             <option value="bloodType" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.bloodTypeOption')}</option>
-                            <option value="gender" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.genderOption')}</option>
                         </select>
                     )}
                 </div>
+
+                {/* Botones de filtro de género - solo para gráfico de tipo de sangre */}
+                {selectedChart === 'bloodType' && (
+                    <div className="flex flex-wrap gap-3">
+                        <button
+                            onClick={() => setBloodTypeGenderFilter('all')}
+                            className={`
+                                group relative px-4 py-2.5 text-sm font-semibold rounded-lg 
+                                transition-all duration-300 ease-in-out
+                                flex items-center gap-2
+                                ${bloodTypeGenderFilter === 'all'
+                                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-500/50'
+                                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-blue-500/30 hover:scale-105 hover:text-blue-600 dark:hover:text-blue-400'
+                                }
+                            `}
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            {t('dashboard.stats.allGenders')}
+                        </button>
+                        <button
+                            onClick={() => setBloodTypeGenderFilter('Masculino')}
+                            className={`
+                                group relative px-4 py-2.5 text-sm font-semibold rounded-lg 
+                                transition-all duration-300 ease-in-out
+                                flex items-center gap-2
+                                ${bloodTypeGenderFilter === 'Masculino'
+                                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg shadow-blue-500/50'
+                                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-blue-500/30 hover:scale-105 hover:text-blue-600 dark:hover:text-blue-400'
+                                }
+                            `}
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            {t('dashboard.stats.male')}
+                        </button>
+                        <button
+                            onClick={() => setBloodTypeGenderFilter('Femenino')}
+                            className={`
+                                group relative px-4 py-2.5 text-sm font-semibold rounded-lg 
+                                transition-all duration-300 ease-in-out
+                                flex items-center gap-2
+                                ${bloodTypeGenderFilter === 'Femenino'
+                                    ? 'bg-gradient-to-r from-pink-600 to-pink-700 text-white shadow-lg shadow-pink-500/50'
+                                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50 hover:border-pink-500 dark:hover:border-pink-400 hover:shadow-pink-500/30 hover:scale-105 hover:text-pink-600 dark:hover:text-pink-400'
+                                }
+                            `}
+                        >
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                            </svg>
+                            {t('dashboard.stats.female')}
+                        </button>
+                        <button
+                            onClick={() => setBloodTypeGenderFilter('Prefiero no decirlo')}
+                            className={`
+                                group relative px-4 py-2.5 text-sm font-semibold rounded-lg 
+                                transition-all duration-300 ease-in-out
+                                flex items-center gap-2
+                                ${bloodTypeGenderFilter === 'Prefiero no decirlo'
+                                    ? 'bg-gradient-to-r from-gray-600 to-gray-700 text-white shadow-lg shadow-gray-500/50'
+                                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50 hover:border-gray-500 dark:hover:border-gray-400 hover:shadow-gray-500/30 hover:scale-105 hover:text-gray-600 dark:hover:text-gray-400'
+                                }
+                            `}
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {t('dashboard.stats.preferNotToSay')}
+                        </button>
+                    </div>
+                )}
+
                 {(selectedChart === 'myCampaigns' || selectedChart === 'allCampaigns' || selectedChart === 'completedCampaigns') && (
                     <div className="relative w-full sm:w-64">
                         <input
@@ -283,44 +452,8 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
 
             <div key={selectedChart} className="animate-fade-in w-full">
                 {selectedChart === 'bloodType' && (
-                    <div className="relative h-[450px] w-full flex flex-col">
-                        <div className="flex flex-wrap justify-end gap-2 mb-2">
-                            <button
-                                onClick={() => setBloodTypeGenderFilter('all')}
-                                className={`px - 2 py - 1 text - xs font - medium rounded - md transition - colors ${bloodTypeGenderFilter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'} `}
-                            >
-                                {t('dashboard.stats.allGenders')}
-                            </button>
-                            <button
-                                onClick={() => setBloodTypeGenderFilter('Masculino')}
-                                className={`px - 2 py - 1 text - xs font - medium rounded - md transition - colors ${bloodTypeGenderFilter === 'Masculino' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'} `}
-                            >
-                                {t('dashboard.stats.male')}
-                            </button>
-                            <button
-                                onClick={() => setBloodTypeGenderFilter('Femenino')}
-                                className={`px - 2 py - 1 text - xs font - medium rounded - md transition - colors ${bloodTypeGenderFilter === 'Femenino' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'} `}
-                            >
-                                {t('dashboard.stats.female')}
-                            </button>
-                            <button
-                                onClick={() => setBloodTypeGenderFilter('Prefiero no decirlo')}
-                                className={`px - 2 py - 1 text - xs font - medium rounded - md transition - colors ${bloodTypeGenderFilter === 'Prefiero no decirlo' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'} `}
-                            >
-                                {t('dashboard.stats.preferNotToSay')}
-                            </button>
-                        </div>
-                        <div className="flex-1 relative w-full min-h-0">
-                            <Bar data={bloodTypeChartData} options={bloodTypeOptions} />
-                        </div>
-                    </div>
-                )}
-
-                {selectedChart === 'gender' && (
-                    <div className="relative h-[450px] w-full flex items-center justify-center">
-                        <div className="h-full w-full">
-                            <Doughnut data={genderChartData} options={genderOptions} />
-                        </div>
+                    <div className="relative h-[450px] w-full">
+                        <Bar data={bloodTypeChartData} options={bloodTypeOptions} />
                     </div>
                 )}
 

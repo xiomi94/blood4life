@@ -170,13 +170,26 @@ public class AdminController {
 
   @GetMapping("/appointments")
   public ResponseEntity<List<AppointmentDTO>> getAllAppointments() {
-    List<Appointment> appointments = appointmentRepository.findAll();
-    List<AppointmentDTO> dtoList = new ArrayList<>();
+    try {
+      List<Appointment> appointments = appointmentRepository.findAll();
+      List<AppointmentDTO> dtoList = new ArrayList<>();
 
-    for (Appointment app : appointments) {
-      dtoList.add(convertAppointmentToDTO(app));
+      for (Appointment app : appointments) {
+        try {
+          dtoList.add(convertAppointmentToDTO(app));
+        } catch (Exception e) {
+          System.err.println("Error converting appointment ID " + app.getId() + ": " + e.getMessage());
+          e.printStackTrace();
+          // Continue with next appointment instead of failing completely
+        }
+      }
+      return ResponseEntity.ok(dtoList);
+    } catch (Exception e) {
+      System.err.println("Error fetching appointments: " + e.getMessage());
+      e.printStackTrace();
+      // Return empty list instead of 500 error
+      return ResponseEntity.ok(new ArrayList<>());
     }
-    return ResponseEntity.ok(dtoList);
   }
 
   @PostMapping("/appointments")
@@ -222,21 +235,36 @@ public class AdminController {
     AppointmentDTO dto = new AppointmentDTO();
     dto.setId(app.getId());
     dto.setAppointmentStatus(app.getAppointmentStatus());
-    dto.setCampaignId(app.getCampaign().getId());
-    dto.setCampaignName(app.getCampaign().getName());
-    dto.setBloodDonorId(app.getBloodDonor().getId());
+    // Validación de null para campaign
+    if (app.getCampaign() != null) {
+      dto.setCampaignId(app.getCampaign().getId());
+      dto.setCampaignName(app.getCampaign().getName());
+    } else {
+      dto.setCampaignId(null);
+      dto.setCampaignName("N/A");
+    }
+
+    if (app.getBloodDonor() != null) {
+      dto.setBloodDonorId(app.getBloodDonor().getId());
+    } else {
+      dto.setBloodDonorId(null);
+    }
     dto.setHospitalComment(app.getHospitalComment());
     dto.setDateAppointment(app.getDateAppointment());
     dto.setHourAppointment(app.getHourAppointment());
 
-    // Basic donor info for display
-    BloodDonor donor = app.getBloodDonor();
-    BloodDonorDTO donorDTO = new BloodDonorDTO();
-    donorDTO.setId(donor.getId());
-    donorDTO.setFirstName(donor.getFirstName());
-    donorDTO.setLastName(donor.getLastName());
-    donorDTO.setEmail(donor.getEmail());
-    dto.setBloodDonor(donorDTO);
+    // Basic donor info for display - Validación de null
+    if (app.getBloodDonor() != null) {
+      BloodDonor donor = app.getBloodDonor();
+      BloodDonorDTO donorDTO = new BloodDonorDTO();
+      donorDTO.setId(donor.getId());
+      donorDTO.setFirstName(donor.getFirstName());
+      donorDTO.setLastName(donor.getLastName());
+      donorDTO.setEmail(donor.getEmail());
+      dto.setBloodDonor(donorDTO);
+    } else {
+      dto.setBloodDonor(null);
+    }
 
     return dto;
   }

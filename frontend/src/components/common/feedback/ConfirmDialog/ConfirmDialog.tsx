@@ -7,7 +7,8 @@ interface ConfirmDialogProps {
     onClose: () => void;
     onConfirm: () => void;
     title: string;
-    message: string;
+    message?: string;
+    children?: React.ReactNode;
     confirmText?: string;
     cancelText?: string;
     variant?: 'danger' | 'warning' | 'info';
@@ -20,6 +21,7 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     onConfirm,
     title,
     message,
+    children,
     confirmText = 'Confirmar',
     cancelText = 'Cancelar',
     variant = 'danger',
@@ -34,13 +36,18 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             isOpen={isOpen}
             onClose={onClose}
             title={title}
-            message={message}
+            message={message || ''}
             type={variant === 'danger' ? 'error' : variant === 'warning' ? 'info' : 'success'}
         >
+            {children && (
+                <div className="mt-4 mb-6">
+                    {children}
+                </div>
+            )}
             <div className="flex flex-col sm:flex-row gap-3 mt-6">
                 <Button
                     variant="gray"
-                    textColor="black"
+                    textColor="white"
                     onClick={onClose}
                     disabled={isLoading}
                     className="flex-1"
