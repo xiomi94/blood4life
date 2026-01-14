@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import type { UserProfile } from '../../../context/AuthContext';
+import type { UserProfile, UserType } from '../../../types/common.types';
 
 interface ProfileDropdownProps {
     user: UserProfile | null;
-    userType: 'bloodDonor' | 'hospital' | 'admin' | null;
+    userType: UserType | null;
     onEditProfile: () => void;
     onLogout: () => void;
     pathname: string;

@@ -1,6 +1,8 @@
 import axiosInstance from '../utils/axiosInstance';
-import { API_URL } from '../config';
 
+/**
+ * Estadísticas del dashboard
+ */
 export interface DashboardStats {
     bloodType: {
         labels: string[];
@@ -25,9 +27,16 @@ export interface DashboardStats {
     }[];
 }
 
+/**
+ * Servicio de dashboard
+ * Obtiene estadísticas generales del sistema
+ */
 export const dashboardService = {
+    /**
+     * Obtiene las estadísticas del dashboard
+     */
     async getStats(): Promise<DashboardStats> {
-        const response = await axiosInstance.get(`${API_URL}/dashboard/stats`);
+        const response = await axiosInstance.get<DashboardStats>('/dashboard/stats');
         return response.data;
     }
 };

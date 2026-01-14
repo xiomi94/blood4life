@@ -7,6 +7,10 @@ import { toast } from 'sonner';
 import { authService } from '../../../../services/authService';
 import { useAuth } from '../../../../context/AuthContext';
 import { useFormPersistence } from '../../../../hooks/useFormPersistence';
+import { detectUserTypeFromEmail } from '../../../../utils/userTypeDetector';
+import { logError } from '../../../../utils/errorHandler';
+import { ROUTES } from '../../../../constants/app.constants';
+import type { UserType } from '../../../../types/common.types';
 
 function LoginForm() {
   const { t } = useTranslation();
@@ -16,7 +20,7 @@ function LoginForm() {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
-    userType: 'bloodDonor' as 'bloodDonor' | 'hospital' | 'admin'
+    userType: 'bloodDonor' as UserType
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -31,29 +35,25 @@ function LoginForm() {
     ['password'] // Exclude password from persistence
   );
 
-  // Manejador del cambio de inputs
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
 
-    // Auto-detect admin based on email (Truco para detectar admin rápido)
     if (name === 'username') {
-      if (value.endsWith('@admin.es') || value.endsWith('@admin.com')) {
-        setFormData(prev => ({ ...prev, username: value, userType: 'admin' }));
-      } else {
-        // Si no es admin y estaba marcado como admin, lo volvemos donor
-        if (formData.userType === 'admin') {
-          setFormData(prev => ({ ...prev, username: value, userType: 'bloodDonor' }));
-        }
-      }
+      const detectedUserType = detectUserTypeFromEmail(value, formData.userType);
+      setFormData(prev => ({
+        ...prev,
+        username: value,
+        userType: detectedUserType
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
     }
   };
 
-  // Cambiar tipo de usuario
-  const handleUserTypeChange = (userType: 'bloodDonor' | 'hospital' | 'admin') => {
+  const handleUserTypeChange = (userType: UserType) => {
     setFormData(prev => ({
       ...prev,
       userType
@@ -68,16 +68,16 @@ function LoginForm() {
     try {
       await authService.login(formData.username, formData.password, formData.userType);
       login(formData.userType);
-
       clearPersistedData();
-      navigate('/dashboard');
-
-    } catch (err: any) {
-      console.error(err);
-      // Siempre usar la traducción en español, ignorar el mensaje del backend que viene en inglés
+      navigate(ROUTES.DASHBOARD);
+    } catch (error) {
       const errorMessage = t('auth.login.error');
       setError(errorMessage);
       toast.error(errorMessage);
+      logError(error, 'LoginForm.handleSubmit', {
+        email: formData.username,
+        userType: formData.userType
+      });
     } finally {
       setIsLoading(false);
     }
