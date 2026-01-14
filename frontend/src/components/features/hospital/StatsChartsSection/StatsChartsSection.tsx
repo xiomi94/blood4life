@@ -102,8 +102,10 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
     if (bloodTypeGenderFilter === 'all' || !stats.breakdown) {
         // Datos normales si no hay filtro
         const map = new Map<string, number>();
+        console.log('🩸 Backend sends these blood types:', stats.bloodType.labels);
+
         stats.bloodType.labels.forEach((label, index) => {
-            map.set(label, stats.bloodType.counts[index]);
+            map.set(label.trim(), stats.bloodType.counts[index]);
         });
         finalBloodTypeCounts = orderedBloodTypes.map(type => map.get(type) || 0);
     } else {
@@ -112,8 +114,9 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
         stats.breakdown
             .filter(item => item.gender === bloodTypeGenderFilter)
             .forEach(item => {
-                const current = map.get(item.bloodType) || 0;
-                map.set(item.bloodType, current + item.count);
+                const type = item.bloodType.trim();
+                const current = map.get(type) || 0;
+                map.set(type, current + item.count);
             });
         finalBloodTypeCounts = orderedBloodTypes.map(type => map.get(type) || 0);
     }
@@ -134,12 +137,12 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
         stats.breakdown.forEach(item => {
             const genderLower = item.gender.toLowerCase();
             if (genderLower === 'masculino') {
-                maleMap.set(item.bloodType, item.count);
+                maleMap.set(item.bloodType.trim(), item.count);
             } else if (genderLower === 'femenino') {
-                femaleMap.set(item.bloodType, item.count);
+                femaleMap.set(item.bloodType.trim(), item.count);
             } else {
                 // Captura cualquier otra variación (Otro, Prefiero no decirlo, etc.)
-                otherMap.set(item.bloodType, item.count);
+                otherMap.set(item.bloodType.trim(), item.count);
             }
         });
 
@@ -153,7 +156,7 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
         stats.breakdown
             .filter(item => item.gender.toLowerCase() === bloodTypeGenderFilter.toLowerCase())
             .forEach(item => {
-                genderMap.set(item.bloodType, item.count);
+                genderMap.set(item.bloodType.trim(), item.count);
             });
 
         const filteredCounts = orderedBloodTypes.map(type => genderMap.get(type) || 0);

@@ -49,6 +49,7 @@ const AdminDashboard = () => {
     handleDeleteHospital,
     handleDeleteAppointment,
     handleDeleteCampaign,
+    fetchData,
   } = useAdminData();
 
   // WebSocket para actualizaciones en tiempo real
@@ -64,6 +65,7 @@ const AdminDashboard = () => {
     setHospitals,
     setAppointments,
     setCampaigns,
+    refreshData: async () => { await fetchData(); },
   });
 
   // Funciones wrapper para confirmación de eliminación

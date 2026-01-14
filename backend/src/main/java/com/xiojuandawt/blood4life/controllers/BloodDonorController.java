@@ -76,6 +76,9 @@ public class BloodDonorController {
         .body(bloodDonorList);
   }
 
+  @Autowired
+  private org.springframework.messaging.simp.SimpMessagingTemplate messagingTemplate;
+
   @PutMapping("/{id}")
   public ResponseEntity<?> updateBloodDonor(
       @PathVariable Integer id,
@@ -118,6 +121,9 @@ public class BloodDonorController {
 
       // Save updated donor
       BloodDonorDTO updatedDTO = this.bloodDonorService.update(bloodDonorInDatabase, id);
+
+      // Notify WebSocket subscribers about the update
+      messagingTemplate.convertAndSend("/topic/blood-donors", updatedDTO);
 
       return ResponseEntity
           .status(HttpStatus.OK)
