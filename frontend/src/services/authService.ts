@@ -1,18 +1,14 @@
 import axiosInstance from "../utils/axiosInstance.ts";
-
-export interface LoginResponse {
-  status: string;
-  message: string;
-}
+import { AUTH_ENDPOINTS, HEADERS } from '../constants/app.constants';
+import { getLoginEndpoint } from '../utils/userTypeDetector';
+import type { LoginResponse, UserType } from '../types/common.types';
 
 export const authService = {
-  login: async (email: string, password: string, type: 'bloodDonor' | 'hospital' | 'admin') => {
+  login: async (email: string, password: string, type: UserType) => {
     const credentials = btoa(`${email}:${password}`);
 
-    // Use axiosInstance but overwrite Authorization header
-    // If axiosInstance injects Bearer, this per-call configuration should take precedence.
     const response = await axiosInstance.post<LoginResponse>(
-      `/auth/${type}/login`,
+      getLoginEndpoint(type),
       {},
       {
         headers: {
@@ -24,21 +20,20 @@ export const authService = {
   },
 
   registerHospital: async (hospitalData: FormData) => {
-    // Use axiosInstance
-    const response = await axiosInstance.post(`/auth/hospital/register`, hospitalData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
+    const response = await axiosInstance.post(
+      AUTH_ENDPOINTS.HOSPITAL_REGISTER,
+      hospitalData,
+      { headers: HEADERS.MULTIPART_FORM_DATA }
+    );
     return response.data;
   },
 
   registerBloodDonor: async (submitData: FormData) => {
-    const response = await axiosInstance.post(`/auth/bloodDonor/register`, submitData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
+    const response = await axiosInstance.post(
+      AUTH_ENDPOINTS.BLOOD_DONOR_REGISTER,
+      submitData,
+      { headers: HEADERS.MULTIPART_FORM_DATA }
+    );
     return response.data;
   }
 };

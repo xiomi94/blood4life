@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axiosInstance from '../../../../utils/axiosInstance';
 import { validateCurrentPassword, validateNewPassword, validateConfirmPassword, type PasswordData } from './validationUtils';
+import type { UserType } from '../../../../types/common.types';
 
 interface UsePasswordChangeReturn {
     passwordData: PasswordData;
@@ -13,12 +14,24 @@ interface UsePasswordChangeReturn {
 }
 
 /**
+ * Obtiene el endpoint de cambio de contraseña según el tipo de usuario
+ */
+const getPasswordChangeEndpoint = (userType: UserType): string => {
+    const endpoints: Record<UserType, string> = {
+        bloodDonor: '/bloodDonor/change-password',
+        hospital: '/hospital/change-password',
+        admin: '/admin/change-password',
+    };
+    return endpoints[userType];
+};
+
+/**
  * Custom hook for managing password change functionality
  * - Handles password input state and validation
  * - Manages password change API call
  * - 100% shared between donor and hospital (only endpoint differs)
  */
-export const usePasswordChange = (userType: 'bloodDonor' | 'hospital' | 'admin' | null): UsePasswordChangeReturn => {
+export const usePasswordChange = (userType: UserType | null): UsePasswordChangeReturn => {
     const [passwordData, setPasswordData] = useState<PasswordData>({
         currentPassword: '',
         newPassword: '',
@@ -55,17 +68,16 @@ export const usePasswordChange = (userType: 'bloodDonor' | 'hospital' | 'admin' 
     };
 
     const changePassword = async () => {
+        if (!userType) {
+            throw new Error('User type is required for password change');
+        }
+
         const passwordFormData = new FormData();
         passwordFormData.append('currentPassword', passwordData.currentPassword);
         passwordFormData.append('newPassword', passwordData.newPassword);
 
-        const passwordEndpoint = userType === 'bloodDonor'
-            ? `/bloodDonor/change-password`
-            : userType === 'hospital'
-                ? `/hospital/change-password`
-                : `/admin/change-password`;
-
-        await axiosInstance.post(passwordEndpoint, passwordFormData);
+        const endpoint = getPasswordChangeEndpoint(userType);
+        await axiosInstance.post(endpoint, passwordFormData);
     };
 
     return {
