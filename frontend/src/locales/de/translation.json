@@ -210,6 +210,10 @@
             "errors": {
                 "loadAdminData": "Fehler beim Laden der Admin-Daten"
             },
+            "stats": {
+                "totalDonors": "Gesamtzahl Spender",
+                "totalHospitals": "Gesamtzahl Krankenhäuser"
+            },
             "chart": {
                 "title": "Benutzerverteilung",
                 "donorsLabel": "Spender",

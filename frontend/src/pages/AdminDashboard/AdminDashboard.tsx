@@ -435,7 +435,7 @@ const AdminDashboard = () => {
         isOpen={confirmDelete.isOpen}
         onClose={closeDeleteConfirm}
         onConfirm={confirmDeleteAction}
-        title={t(`dashboard.admin.confirms.delete${confirmDelete.type?.charAt(0).toUpperCase()}${confirmDelete.type?.slice(1)}`)}
+        title={confirmDelete.type ? t(`dashboard.admin.confirms.delete${confirmDelete.type.charAt(0).toUpperCase()}${confirmDelete.type.slice(1)}`) : ''}
         confirmText={t('common.delete')}
         cancelText={t('common.cancel')}
         variant="danger"
