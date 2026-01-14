@@ -46,7 +46,7 @@ function Header() {
             <Link to="/index" aria-label="Ir a la página principal">
               <img src={Logo} alt="Blood4Life - Plataforma de donación de sangre" className="h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
             </Link>
-            <div className="flex flex-row w-full items-center justify-end gap-4">
+            <div className="flex flex-row w-full items-center justify-end gap-4 h-14">
               {/* Theme and Language Controls */}
               <ThemeToggle />
               <LanguageSwitcher />
@@ -104,7 +104,7 @@ function Header() {
               <Link to="/index">
                 <img src={Logo} alt="Logo" className="h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
               </Link>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-4 h-14">
                 <Button to="/index">{t('header.home')}</Button>
                 <ThemeToggle />
                 <LanguageSwitcher />
@@ -113,7 +113,7 @@ function Header() {
           ) : (
             <>
               {(location.pathname === '/index' || location.pathname === '/') ? (
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 h-14">
                   <Button to="/login">
                     {t('header.login')}
                   </Button>
@@ -125,7 +125,7 @@ function Header() {
                 </div>
               ) : (
                 // Default fallback for other public pages (like Login)
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 h-14">
                   <Button to="/index">
                     {t('header.home')}
                   </Button>
