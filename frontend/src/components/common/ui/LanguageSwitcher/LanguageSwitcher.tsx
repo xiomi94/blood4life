@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLanguage, type LanguageCode } from '../../../../context/LanguageContext';
 import { Globe } from 'lucide-react';
-import styles from './LanguageSwitcher.module.css';
 
 const LanguageSwitcher = () => {
     const { t } = useTranslation();
@@ -58,35 +57,40 @@ const LanguageSwitcher = () => {
     const CurrentFlagComponent = currentLang?.FlagComponent;
 
     return (
-        <div className={styles.languageSwitcher} ref={dropdownRef}>
+        <div className="relative" ref={dropdownRef}>
             <button
                 onClick={toggleDropdown}
-                className={styles.button}
                 aria-label={t('language.select')}
                 aria-expanded={isOpen}
                 aria-haspopup="true"
+                className="inline-flex items-center justify-center gap-1.5 px-[13px] py-2 sm:py-2.5 md:py-3 bg-transparent hover:bg-gray-800/10 dark:hover:bg-gray-700/20 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm font-poppins font-medium transition-all duration-150 transform active:scale-95"
             >
-                <Globe className={styles.icon} size={16} />
-                {CurrentFlagComponent && <CurrentFlagComponent className={styles.buttonFlag} />}
+                <Globe size={20} />
+                {CurrentFlagComponent && <CurrentFlagComponent className="w-7 h-5 rounded" />}
             </button>
 
             {isOpen && (
-                <div className={styles.dropdown} role="menu">
+                <div
+                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
+                    role="menu"
+                >
                     {languages.map((lang) => {
                         const FlagComponent = lang.FlagComponent;
                         return (
                             <button
                                 key={lang.code}
                                 onClick={() => handleLanguageChange(lang.code)}
-                                className={`${styles.dropdownItem} ${currentLanguage === lang.code ? styles.active : ''
+                                className={`w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors ${currentLanguage === lang.code ? 'bg-blue-50 dark:bg-blue-900/20' : ''
                                     }`}
                                 role="menuitem"
                                 aria-label={`${t('language.select')}: ${lang.nativeName}`}
                             >
-                                <FlagComponent className={styles.flagIcon} />
-                                <span className={styles.langName}>{lang.nativeName}</span>
+                                <FlagComponent className="w-6 h-4 rounded shadow-sm" />
+                                <span className="flex-1 text-sm font-medium text-gray-700 dark:text-gray-200">
+                                    {lang.nativeName}
+                                </span>
                                 {currentLanguage === lang.code && (
-                                    <span className={styles.checkmark}>✓</span>
+                                    <span className="text-blue-600 dark:text-blue-400 font-bold">✓</span>
                                 )}
                             </button>
                         );
