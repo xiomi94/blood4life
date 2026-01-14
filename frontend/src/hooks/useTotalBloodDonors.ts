@@ -10,22 +10,36 @@ export const useTotalDonors = () => {
 
     const client = new Client({
       webSocketFactory: () => socket,
-      onConnect: (messageConnect) => {
-        console.log('conectadito');
-        client.subscribe('/topic/total-bloodDonors', (messageTotalDonors) => {
-          console.log(messageTotalDonors);
-          setTotalDonors(Number(messageTotalDonors.body));
+      onConnect: () => {
+        console.log('✅ WebSocket conectado al servidor');
+
+        // Suscribirse al topic para recibir actualizaciones
+        client.subscribe('/topic/total-bloodDonors', (message) => {
+          console.log('📊 Total de donantes recibido:', message.body);
+          setTotalDonors(Number(message.body));
         });
+
+        // Solicitar el total actual de donantes al servidor
+        client.publish({
+          destination: '/app/getTotalDonors',
+          body: '',
+        });
+      },
+      onStompError: (frame) => {
+        console.error('❌ Error en WebSocket:', frame);
+      },
+      onWebSocketClose: () => {
+        console.log('🔌 WebSocket desconectado');
       },
     });
 
     client.activate();
 
     return () => {
+      console.log('🔌 Cerrando conexión WebSocket...');
       client.deactivate();
     };
   }, []);
 
   return totalDonors;
 };
-

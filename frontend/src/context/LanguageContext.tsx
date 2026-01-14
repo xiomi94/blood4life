@@ -10,7 +10,7 @@ export interface Language {
     code: LanguageCode;
     name: string;
     nativeName: string;
-    FlagComponent: any;
+    FlagComponent: React.ComponentType<{ className?: string }>;
 }
 
 // Available languages

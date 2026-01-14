@@ -5,7 +5,7 @@ interface StatsCardsProps {
   nextAvailableDate: Date;
 }
 
-export const StatsCards = ({bloodDonorsCounter, canDonateNow, daysUntilNext, nextAvailableDate}: StatsCardsProps) => {
+export const StatsCards = ({ bloodDonorsCounter, canDonateNow, daysUntilNext, nextAvailableDate }: StatsCardsProps) => {
   return (
     <section className="space-y-4">
       {/* Total Donantes */}

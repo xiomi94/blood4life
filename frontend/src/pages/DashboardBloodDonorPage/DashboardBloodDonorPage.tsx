@@ -1,6 +1,11 @@
-import {Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,} from 'chart.js';
-import { useDonorDashboard } from '../../hooks/useDonorDashboard';
-import { useTotalDonors } from '../../hooks/useTotalBloodDonors.ts';
+import { useState, useEffect } from 'react';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, } from 'chart.js';
+import { useAuth } from '../../context/AuthContext';
+import { useWebSocket } from '../../hooks/useWebSocket';
+import { useTotalDonors } from '../../hooks/useTotalBloodDonors';
+import { campaignService, type Campaign } from '../../services/campaignService';
+import { appointmentService, type Appointment } from '../../services/appointmentService';
+import { dashboardService, type DashboardStats } from '../../services/dashboardService';
 import { DonorSidebar } from '../../components/DonorDashboard/DonorSidebar';
 import { UpcomingAppointments } from '../../components/DonorDashboard/UpcomingAppointments';
 import { CampaignProgressChart } from '../../components/DonorDashboard/CampaignProgressChart';
@@ -18,25 +23,148 @@ ChartJS.register(
 );
 
 const DashboardBloodDonorPage = () => {
-  const {
-    stats,
-    loading,
-    error,
-    allCampaigns,
-    currentDate,
-    selectedDate,
-    filteredCampaigns,
-    getCompletedDonations,
-    getUpcomingAppointments,
-    getNextAvailableDate,
-    canDonateNow,
-    getDaysUntilNextDonation,
-    changeMonth,
-    handleDayClick,
-    clearSelectedDate,
-  } = useDonorDashboard();
+  const { user } = useAuth();
+  const { subscribe } = useWebSocket();
 
-  const bloodDonorsCounter = useTotalDonors();
+  // WebSocket hook for total donors counter
+  const totalDonors = useTotalDonors();
+
+  // Dashboard state
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [allCampaigns, setAllCampaigns] = useState<Campaign[]>([]);
+  const [myAppointments, setMyAppointments] = useState<Appointment[]>([]);
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
+
+  // Fetch dashboard stats
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      const data = await dashboardService.getStats();
+      setStats(data);
+      setError(null);
+    } catch (err) {
+      setError('Error al cargar las estadísticas');
+      console.error('Error fetching dashboard stats:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch all campaigns
+  const fetchAllCampaigns = async () => {
+    try {
+      const campaigns = await campaignService.getAllCampaigns();
+      setAllCampaigns(campaigns);
+    } catch (err) {
+      console.error('Error fetching campaigns:', err);
+    }
+  };
+
+  // Fetch my appointments
+  const fetchMyAppointments = async () => {
+    if (!user?.id) return;
+    try {
+      const appointments = await appointmentService.getAppointmentsByDonor(user.id);
+      setMyAppointments(appointments);
+    } catch (err) {
+      console.error('Error fetching appointments:', err);
+    }
+  };
+
+  // Initial data fetch
+  useEffect(() => {
+    fetchStats();
+    fetchAllCampaigns();
+    if (user?.id) {
+      fetchMyAppointments();
+    }
+  }, [user]);
+
+  // WebSocket subscription for campaign updates
+  useEffect(() => {
+    const unsubscribe = subscribe('/topic/campaigns', (message) => {
+      console.log('📨 Donor Dashboard - Received WebSocket message:', message);
+      if (message.type === 'CAMPAIGN_CREATED' ||
+        message.type === 'CAMPAIGN_UPDATED' ||
+        message.type === 'CAMPAIGN_DELETED') {
+        console.log('🔄 Refreshing campaigns in donor dashboard');
+        fetchAllCampaigns();
+      }
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [subscribe]);
+
+
+
+  // Helper functions
+  const getCompletedDonations = () => {
+    return myAppointments.filter(apt => apt.appointmentStatus.id === 3);
+  };
+
+  const getUpcomingAppointments = () => {
+    const now = new Date();
+    return myAppointments
+      .filter(apt =>
+        (apt.appointmentStatus.id === 1 || apt.appointmentStatus.id === 2) &&
+        new Date(apt.dateAppointment) >= now
+      )
+      .slice(0, 4);
+  };
+
+  const getNextAvailableDate = (): Date => {
+    const completedDonations = getCompletedDonations();
+    if (completedDonations.length === 0) {
+      return new Date();
+    }
+
+    const sortedDonations = completedDonations.sort((a, b) =>
+      new Date(b.dateAppointment).getTime() - new Date(a.dateAppointment).getTime()
+    );
+    const lastDonation = sortedDonations[0];
+
+    const waitingPeriod = user?.gender === "Masculino" ? 90 : 120;
+    const nextDate = new Date(lastDonation.dateAppointment);
+    nextDate.setDate(nextDate.getDate() + waitingPeriod);
+
+    return nextDate;
+  };
+
+  const canDonateNow = (): boolean => {
+    const nextAvailableDate = getNextAvailableDate();
+    return new Date() >= nextAvailableDate;
+  };
+
+  const getDaysUntilNextDonation = (): number => {
+    if (canDonateNow()) return 0;
+    const nextDate = getNextAvailableDate();
+    const today = new Date();
+    const diffTime = nextDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
+  const changeMonth = (increment: number) => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + increment, 1));
+  };
+
+  const handleDayClick = (dateStr: string, campaignsOnDay: Campaign[]) => {
+    if (campaignsOnDay.length > 0) {
+      setSelectedDate(dateStr);
+      setFilteredCampaigns(campaignsOnDay);
+    }
+  };
+
+  const clearSelectedDate = () => {
+    setSelectedDate(null);
+    setFilteredCampaigns([]);
+  };
 
   if (loading) {
     return (
@@ -100,7 +228,7 @@ const DashboardBloodDonorPage = () => {
               />
 
               <StatsCards
-                bloodDonorsCounter={bloodDonorsCounter}
+                bloodDonorsCounter={totalDonors}
                 canDonateNow={canDonateNow()}
                 daysUntilNext={daysUntilNext}
                 nextAvailableDate={nextAvailableDate}
