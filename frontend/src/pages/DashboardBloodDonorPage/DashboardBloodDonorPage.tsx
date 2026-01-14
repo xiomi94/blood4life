@@ -7,9 +7,7 @@ import { CampaignProgressChart } from '../../components/DonorDashboard/CampaignP
 import { DonationHistory } from '../../components/DonorDashboard/DonationHistory';
 import { Calendar } from '../../components/DonorDashboard/Calendar';
 import { StatsCards } from '../../components/DonorDashboard/StatsCards';
-import {useEffect} from "react";
 
-// Register ChartJS components
 ChartJS.register(
   CategoryScale,
   LinearScale,

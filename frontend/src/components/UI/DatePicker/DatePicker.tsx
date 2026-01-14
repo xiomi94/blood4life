@@ -60,24 +60,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
         }
     }, [value]);
 
-<<<<<<< Updated upstream
-    // Handle click outside to close
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-                setCalendarView('days'); // Reset view on close
-            }
-        };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, []);
-
-=======
->>>>>>> Stashed changes
     const handleDateSelect = (day: number) => {
         const newDate = new Date(viewDate.getFullYear(), viewDate.getMonth(), day);
         const dateString = format(newDate, 'yyyy-MM-dd');

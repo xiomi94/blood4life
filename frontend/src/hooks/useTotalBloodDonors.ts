@@ -11,7 +11,7 @@ export const useTotalDonors = () => {
     const client = new Client({
       webSocketFactory: () => socket,
       onConnect: (messageConnect) => {
-        console.log(messageConnect);
+        console.log('conectadito');
         client.subscribe('/topic/total-bloodDonors', (messageTotalDonors) => {
           console.log(messageTotalDonors);
           setTotalDonors(Number(messageTotalDonors.body));
