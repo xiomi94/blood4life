@@ -113,7 +113,7 @@ function Header() {
           ) : (
             <>
               {(location.pathname === '/index' || location.pathname === '/') ? (
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 h-14">
                   <Button to="/login">
                     {t('header.login')}
                   </Button>
@@ -125,7 +125,7 @@ function Header() {
                 </div>
               ) : (
                 // Default fallback for other public pages (like Login)
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 h-14">
                   <Button to="/index">
                     {t('header.home')}
                   </Button>
