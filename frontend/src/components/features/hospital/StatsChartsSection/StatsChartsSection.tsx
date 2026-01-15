@@ -109,7 +109,13 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
         console.log('🩸 Backend sends these blood types:', stats.bloodType.labels);
 
         stats.bloodType.labels.forEach((label, index) => {
+<<<<<<< Updated upstream
             map.set(label.trim(), stats.bloodType.counts[index]);
+=======
+            // Normalize blood types: Convert "0+" to "O+" and "0-" to "O-"
+            const normalizedLabel = label.replace(/^0([+-])$/, 'O$1');
+            map.set(normalizedLabel, stats.bloodType.counts[index]);
+>>>>>>> Stashed changes
         });
         finalBloodTypeCounts = orderedBloodTypes.map(type => map.get(type) || 0);
     } else {
@@ -118,9 +124,16 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
         stats.breakdown
             .filter(item => item.gender === bloodTypeGenderFilter)
             .forEach(item => {
+<<<<<<< Updated upstream
                 const type = item.bloodType.trim();
                 const current = map.get(type) || 0;
                 map.set(type, current + item.count);
+=======
+                // Normalize blood type
+                const normalizedType = item.bloodType.replace(/^0([+-])$/, 'O$1');
+                const current = map.get(normalizedType) || 0;
+                map.set(normalizedType, current + item.count);
+>>>>>>> Stashed changes
             });
         finalBloodTypeCounts = orderedBloodTypes.map(type => map.get(type) || 0);
     }
@@ -139,14 +152,25 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
         const otherMap = new Map<string, number>();
 
         stats.breakdown.forEach(item => {
+            // Normalize blood type
+            const normalizedType = item.bloodType.replace(/^0([+-])$/, 'O$1');
             const genderLower = item.gender.toLowerCase();
             if (genderLower === 'masculino') {
+<<<<<<< Updated upstream
                 maleMap.set(item.bloodType.trim(), item.count);
             } else if (genderLower === 'femenino') {
                 femaleMap.set(item.bloodType.trim(), item.count);
             } else {
                 // Captura cualquier otra variación (Otro, Prefiero no decirlo, etc.)
                 otherMap.set(item.bloodType.trim(), item.count);
+=======
+                maleMap.set(normalizedType, item.count);
+            } else if (genderLower === 'femenino') {
+                femaleMap.set(normalizedType, item.count);
+            } else {
+                // Captura cualquier otra variación (Otro, Prefiero no decirlo, etc.)
+                otherMap.set(normalizedType, item.count);
+>>>>>>> Stashed changes
             }
         });
 

@@ -80,6 +80,7 @@ input[type="number"]::-webkit-outer-spin-button {
     appearance: auto;
 }
 
+<<<<<<< Updated upstream
 /* Custom scrollbar styles for dark mode */
 /* Custom scrollbar styles - Global */
 ::-webkit-scrollbar {
@@ -125,6 +126,8 @@ input[type="number"]::-webkit-outer-spin-button {
 .dark * {
     scrollbar-color: #475569 transparent;
 }
+=======
+>>>>>>> Stashed changes
 
 /* Calendar view transition animation */
 @keyframes fadeSlideIn {
