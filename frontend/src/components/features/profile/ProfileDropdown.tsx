@@ -1,14 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router';
 import type { UserProfile, UserType } from '../../../types/common.types';
 
 interface ProfileDropdownProps {
     user: UserProfile | null;
     userType: UserType | null;
     onEditProfile: () => void;
+    onOpenNotifications?: () => void;
     onLogout: () => void;
     pathname: string;
+    unreadCount?: number;
 }
 
 /**
@@ -21,42 +23,42 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
     user,
     userType,
     onEditProfile,
+    onOpenNotifications,
     onLogout,
-    pathname
+    pathname,
+    unreadCount = 0
 }) => {
     const { t } = useTranslation();
     const isDashboard = pathname.startsWith('/dashboard');
 
     return (
-        <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-xl py-1 z-50 ring-1 ring-black ring-opacity-5 border border-gray-100 dark:border-gray-700">
-            {/* User Info Header */}
-            <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700 mb-1">
-                <p className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">
-                    {userType === 'admin' ? t('auth.login.admin') : userType === 'hospital' ? t('auth.login.hospital') : t('auth.login.donor')}
-                </p>
-                <p className="text-sm font-medium text-gray-900 dark:text-gray-200 truncate">
-                    {userType === 'bloodDonor'
-                        ? `${user?.firstName} ${user?.lastName}`
-                        : userType === 'hospital'
-                            ? user?.name
-                            : user?.email}
-                </p>
-                {userType !== 'admin' && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                        {user?.email}
-                    </p>
-                )}
+        <div className="absolute right-0 top-12 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-100 dark:border-gray-700 py-2 z-50 animate-fadeIn">
+            <div className="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                <span className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
+                    {userType?.toUpperCase()}
+                </span>
+                <span className="block text-sm font-bold text-gray-800 dark:text-white truncate">
+                    {userType === 'hospital' ? (user as any)?.name : user?.email}
+                </span>
+                <span className="block text-xs text-gray-500 dark:text-gray-400 truncate">
+                    {user?.email}
+                </span>
             </div>
 
-            {/* Menu Items */}
-            <div className="py-1">
+            <div className="py-2 space-y-1">
                 {userType === 'admin' ? (
                     <>
+                        <Link
+                            to="/dashboard"
+                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        >
+                            {t('header.dashboard')}
+                        </Link>
                         <button
                             onClick={onEditProfile}
                             className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                         >
-                            {t('header.myProfile')}
+                            {t('header.editProfile')}
                         </button>
                     </>
                 ) : (
@@ -75,6 +77,18 @@ export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({
                             className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                         >
                             {t('header.editProfile')}
+                        </button>
+
+                        <button
+                            onClick={onOpenNotifications}
+                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex justify-between items-center"
+                        >
+                            <span>{t('notifications.menuTitle')}</span>
+                            {unreadCount > 0 && (
+                                <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[1.25rem] text-center">
+                                    {unreadCount}
+                                </span>
+                            )}
                         </button>
                     </>
                 )}

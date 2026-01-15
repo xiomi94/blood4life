@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { websocketService } from '../services/websocketService';
 
 // Build WebSocket URL
@@ -46,14 +46,14 @@ export const useWebSocket = () => {
 
         return () => {
             mounted = false;
-            websocketService.disconnect();
-            setIsConnected(false);
+            // websocketService.disconnect(); // Avoid disconnection to keep Header connected
+            // setIsConnected(false);
         };
     }, []);
 
-    const subscribe = (destination: string, callback: (message: any) => void) => {
+    const subscribe = useCallback((destination: string, callback: (message: any) => void) => {
         return websocketService.subscribe(destination, callback);
-    };
+    }, []);
 
     return {
         isConnected,

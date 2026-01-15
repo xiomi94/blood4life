@@ -1,11 +1,12 @@
-// components/Header/Header.tsx
 import { useLocation, Link } from 'react-router';
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../context/AuthContext';
+import { useNotifications } from '../../../hooks/useNotifications';
 import Logo from "../../../assets/images/LogoShadowMini.webp";
 import Button from "../../common/ui/Button/Button.tsx";
 import EditProfileModal from "../../features/profile/EditProfileModal/EditProfileModal.tsx";
+import { NotificationsModal } from '../../features/notifications/NotificationsModal';
 import { ProfileDropdown } from '../../features/profile/ProfileDropdown';
 import ThemeToggle from '../../common/ui/ThemeToggle/ThemeToggle';
 import LanguageSwitcher from '../../common/ui/LanguageSwitcher/LanguageSwitcher';
@@ -14,8 +15,10 @@ function Header() {
   const { t } = useTranslation();
   const location = useLocation();
   const { logout, user, isAuthenticated, userType } = useAuth();
+  const { unreadCount, notifications, markMultipleAsRead } = useNotifications();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isNotificationsModalOpen, setIsNotificationsModalOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -55,7 +58,7 @@ function Header() {
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-10 h-10 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 overflow-hidden"
+                  className="w-10 h-10 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 overflow-hidden relative"
                   aria-label={t('header.userMenu')}
                   aria-haspopup="true"
                   aria-expanded={isDropdownOpen}
@@ -76,14 +79,26 @@ function Header() {
                   )}
                 </button>
 
+                {/* Notification Badge on Avatar */}
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 flex items-center justify-center px-1 h-4 min-w-[1rem] bg-red-500 text-white text-[10px] font-bold rounded-full ring-2 ring-white dark:ring-gray-900 pointer-events-none z-10">
+                    {unreadCount}
+                  </span>
+                )}
+
                 {isDropdownOpen && (
                   <ProfileDropdown
                     user={user}
                     userType={userType}
                     pathname={location.pathname}
+                    unreadCount={unreadCount}
                     onEditProfile={() => {
                       setIsDropdownOpen(false);
                       setIsEditModalOpen(true);
+                    }}
+                    onOpenNotifications={() => {
+                      setIsDropdownOpen(false);
+                      setIsNotificationsModalOpen(true);
                     }}
                     onLogout={() => {
                       setIsDropdownOpen(false);
@@ -144,6 +159,14 @@ function Header() {
         onClose={() => setIsEditModalOpen(false)}
       />
 
+      {/* Notifications Modal */}
+      <NotificationsModal
+        isOpen={isNotificationsModalOpen}
+        onClose={() => setIsNotificationsModalOpen(false)}
+        notifications={notifications}
+        onMarkAsRead={markMultipleAsRead}
+      />
+
       {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
@@ -175,4 +198,5 @@ function Header() {
 }
 
 export default Header;
+
 

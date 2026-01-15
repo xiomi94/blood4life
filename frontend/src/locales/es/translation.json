@@ -377,5 +377,13 @@
             "confirmPlaceholder": "Repite la nueva contraseña",
             "hint": "Debe contener: mayúscula, minúscula, número (8-32 caracteres)"
         }
+    },
+    "notifications": {
+        "title": "Notificaciones",
+        "empty": "No tienes notificaciones",
+        "markAllRead": "Marcar todas como leídas",
+        "new": "Nueva",
+        "viewAll": "Ver todas",
+        "menuTitle": "Notificaciones"
     }
 }

@@ -76,6 +76,9 @@ public class AppointmentController {
   @Autowired
   private SimpMessagingTemplate messagingTemplate;
 
+  @Autowired
+  private com.xiojuandawt.blood4life.services.NotificationService notificationService;
+
   @PostMapping("/create")
   public ResponseEntity<AppointmentDTO> createAppointment(
       @RequestBody AppointmentDTO dto) {
@@ -124,6 +127,34 @@ public class AppointmentController {
     donorDTO.setLastName(donor.getLastName());
     donorDTO.setEmail(donor.getEmail());
     result.setBloodDonor(donorDTO);
+
+    // Notify Hospital (Internal)
+    try {
+      if (saved.getCampaign().getHospital() != null) {
+        System.out.println("DEBUG: Notificando a Hospital ID: " + saved.getCampaign().getHospital().getId());
+      } else {
+        System.out.println("DEBUG: ERROR - La campaña no tiene hospital asignado!");
+      }
+
+      String title = "Nueva inscripción del donante " + donor.getFirstName() + " a la campaña "
+          + saved.getCampaign().getName();
+
+      String jsonDetail = "{" +
+          "\"nombre\": \"" + donor.getFirstName() + " " + donor.getLastName() + "\"," +
+          "\"dni\": \"" + donor.getDni() + "\"," +
+          "\"tipoSangre\": \"" + donor.getBloodType().getType() + "\"," +
+          "\"campaignName\": \"" + saved.getCampaign().getName() + "\"," +
+          "\"fecha\": \"" + saved.getDateAppointment() + "\"," +
+          "\"hora\": \"" + saved.getHourAppointment() + "\"" +
+          "}";
+
+      String msg = title + "|" + jsonDetail;
+      notificationService.createNotification(saved.getCampaign().getHospital(), msg);
+      System.out.println("DEBUG: Notificación creada exitosamente.");
+    } catch (Exception e) {
+      System.err.println("Error creando notificación interna: " + e.getMessage());
+      e.printStackTrace();
+    }
 
     // Notificar vÃ­a WebSocket
     messagingTemplate.convertAndSend("/topic/appointments", result);
