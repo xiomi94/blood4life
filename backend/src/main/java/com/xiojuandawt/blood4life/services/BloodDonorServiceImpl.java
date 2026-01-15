@@ -22,6 +22,9 @@ public class BloodDonorServiceImpl implements BloodDonorService {
   @Autowired
   private BloodTypeRepository bloodTypeRepository;
 
+  @Autowired
+  private BloodDonorWebSocketService bloodDonorWebSocketService;
+
   @Override
   public List<BloodDonorDTO> findAll() {
     List<BloodDonor> bloodDonorList = (List<BloodDonor>) this.bloodDonorRepository.findAll();
@@ -39,6 +42,11 @@ public class BloodDonorServiceImpl implements BloodDonorService {
   @Override
   public BloodDonorDTO createNew(BloodDonor bloodDonor) {
     BloodDonor newBloodDonor = this.bloodDonorRepository.save(bloodDonor);
+
+    // Broadcast nuevo total por WebSocket
+    long totalBloodDonors = bloodDonorRepository.count();
+    bloodDonorWebSocketService.sentTotalBloodDonors(totalBloodDonors);
+
     BloodDonorDTO newBloodDonorDTO = this.parseEntityToDto(newBloodDonor);
 
     return newBloodDonorDTO;
@@ -63,6 +71,10 @@ public class BloodDonorServiceImpl implements BloodDonorService {
   @Override
   public void delete(int id) {
     this.bloodDonorRepository.deleteById(id);
+
+    // Broadcast nuevo total por WebSocket
+    long totalBloodDonors = bloodDonorRepository.count();
+    bloodDonorWebSocketService.sentTotalBloodDonors(totalBloodDonors);
   }
 
   public Optional<BloodDonor> findByEmail(String email) {
