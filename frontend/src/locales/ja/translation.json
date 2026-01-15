@@ -172,7 +172,15 @@
             "bloodTypeOption": "血液型別分布",
             "genderOption": "性別分布",
             "appointmentsToday": "今日の予約",
-            "donationsThisMonth": "今月の寄付"
+            "donationsThisMonth": "今月の寄付",
+            "myCampaigns": "マイキャンペーン",
+            "allCampaigns": "すべてのキャンペーン",
+            "completedCampaigns": "完了したキャンペーン",
+            "allGenders": "すべて",
+            "male": "男性",
+            "female": "女性",
+            "preferNotToSay": "回答しない",
+            "noCampaignsToShow": "表示するキャンペーンがありません"
         },
         "admin": {
             "title": "管理者ダッシュボード",

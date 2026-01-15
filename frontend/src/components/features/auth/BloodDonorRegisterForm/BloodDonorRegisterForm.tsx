@@ -317,11 +317,11 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
                     </div>
                 </div>
 
-                <div className="flex flex-row justify-center sm:flex-row gap-3 mt-8">
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8 w-full">
                     <Button
                         type="submit"
                         disabled={loading}
-                        className="px-6 py-3 text-body-sm w-full sm:flex-1 sm:max-w-48"
+                        className="px-6 py-3 text-body-sm w-full sm:w-48"
                         aria-busy={loading}
                     >
                         {loading ? (
@@ -339,7 +339,7 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
                         type="button"
                         onClick={resetForm}
                         disabled={loading}
-                        className="px-6 py-3 text-body-sm w-full sm:flex-1 sm:max-w-48"
+                        className="px-6 py-3 text-body-sm w-full sm:w-48"
                     >
                         {t('auth.register.bloodDonor.resetButton')}
                     </Button>

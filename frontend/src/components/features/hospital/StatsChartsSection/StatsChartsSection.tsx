@@ -30,12 +30,16 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
     onDeleteCampaign
 }) => {
     const { t } = useTranslation();
-    const [selectedChart, setSelectedChart] = useState<ChartType>('myCampaigns');
+    const [selectedChart, setSelectedChart] = useState<ChartType>(() => {
+        const saved = localStorage.getItem('dashboard_lastSelectedChart');
+        return (saved as ChartType) || 'myCampaigns';
+    });
     const [searchTerm, setSearchTerm] = useState('');
 
     // Handle chart type change and update campaign filter
     const handleChartChange = (newChart: ChartType) => {
         setSelectedChart(newChart);
+        localStorage.setItem('dashboard_lastSelectedChart', newChart);
         if (newChart === 'myCampaigns') {
             onToggleAllCampaigns(false);
         } else if (newChart === 'allCampaigns' || newChart === 'completedCampaigns') {
@@ -176,23 +180,23 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
         labels: finalBloodTypeLabels,
         datasets: [
             {
-                label: 'Masculino',
+                label: t('dashboard.stats.male'),
                 data: maleData,
-                backgroundColor: 'rgba(59, 130, 246, 0.8)',
-                borderColor: 'rgba(59, 130, 246, 1)',
+                backgroundColor: 'rgba(37, 99, 235, 0.8)',
+                borderColor: 'rgba(37, 99, 235, 1)',
                 borderWidth: 1,
                 borderRadius: 6,
             },
             {
-                label: 'Femenino',
+                label: t('dashboard.stats.female'),
                 data: femaleData,
-                backgroundColor: 'rgba(236, 72, 153, 0.8)',
-                borderColor: 'rgba(236, 72, 153, 1)',
+                backgroundColor: 'rgba(239, 68, 68, 0.8)',
+                borderColor: 'rgba(239, 68, 68, 1)',
                 borderWidth: 1,
                 borderRadius: 6,
             },
             {
-                label: 'Prefiero no decirlo',
+                label: t('dashboard.stats.preferNotToSay'),
                 data: otherData,
                 backgroundColor: 'rgba(107, 114, 128, 0.8)',
                 borderColor: 'rgba(107, 114, 128, 1)',
@@ -335,10 +339,10 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
                             onChange={(e) => handleChartChange(e.target.value as ChartType)}
                             className="appearance-none pr-8 pl-0 py-1 bg-transparent text-xl font-bold text-gray-800 dark:text-white dark:bg-gray-800 border-none focus:ring-0 focus:outline-none cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22%234b5563%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:24px_24px] bg-[right_-4px_center] bg-no-repeat"
                         >
-                            <option value="myCampaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.myCampaigns')}</option>
-                            <option value="allCampaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.allCampaigns')}</option>
                             <option value="completedCampaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.completedCampaigns')}</option>
                             <option value="bloodType" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.bloodTypeOption')}</option>
+                            <option value="myCampaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.myCampaigns')}</option>
+                            <option value="allCampaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.allCampaigns')}</option>
                         </select>
                     )}
                 </div>
@@ -387,8 +391,8 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
                                 transition-all duration-300 ease-in-out
                                 flex items-center gap-2
                                 ${bloodTypeGenderFilter === 'Femenino'
-                                    ? 'bg-gradient-to-r from-pink-600 to-pink-700 text-white shadow-lg shadow-pink-500/50'
-                                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50 hover:border-pink-500 dark:hover:border-pink-400 hover:shadow-pink-500/30 hover:scale-105 hover:text-pink-600 dark:hover:text-pink-400'
+                                    ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/50'
+                                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50 hover:border-red-500 dark:hover:border-red-400 hover:shadow-red-500/30 hover:scale-105 hover:text-red-600 dark:hover:text-red-400'
                                 }
                             `}
                         >

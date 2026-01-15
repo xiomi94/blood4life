@@ -173,7 +173,15 @@
             "bloodTypeOption": "Distribution par groupe sanguin",
             "genderOption": "Distribution par sexe",
             "appointmentsToday": "Rendez-vous aujourd'hui",
-            "donationsThisMonth": "Dons ce mois-ci"
+            "donationsThisMonth": "Dons ce mois-ci",
+            "myCampaigns": "Mes campagnes",
+            "allCampaigns": "Toutes les campagnes",
+            "completedCampaigns": "Campagnes terminées",
+            "allGenders": "Tous",
+            "male": "Masculin",
+            "female": "Féminin",
+            "preferNotToSay": "Préfère ne pas dire",
+            "noCampaignsToShow": "Aucune campagne à afficher"
         },
         "admin": {
             "title": "Tableau de bord administrateur",
