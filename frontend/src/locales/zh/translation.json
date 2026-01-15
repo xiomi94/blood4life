@@ -173,7 +173,15 @@
             "bloodTypeOption": "按血型分布",
             "genderOption": "按性别分布",
             "appointmentsToday": "今日预约",
-            "donationsThisMonth": "本月捐赠"
+            "donationsThisMonth": "本月捐赠",
+            "myCampaigns": "我的活动",
+            "allCampaigns": "所有活动",
+            "completedCampaigns": "已完成活动",
+            "allGenders": "所有",
+            "male": "男性",
+            "female": "女性",
+            "preferNotToSay": "不愿透露",
+            "noCampaignsToShow": "没有可显示的活动"
         },
         "admin": {
             "title": "管理员仪表板",

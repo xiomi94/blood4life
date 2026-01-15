@@ -14,6 +14,7 @@ interface UseAdminWebSocketProps {
     setHospitals: React.Dispatch<React.SetStateAction<Hospital[]>>;
     setAppointments: React.Dispatch<React.SetStateAction<Appointment[]>>;
     setCampaigns: React.Dispatch<React.SetStateAction<Campaign[]>>;
+    refreshData: () => Promise<void>;
 }
 
 export const useAdminWebSocket = ({
@@ -26,6 +27,7 @@ export const useAdminWebSocket = ({
     setHospitals,
     setAppointments,
     setCampaigns,
+    refreshData
 }: UseAdminWebSocketProps) => {
     const { t } = useTranslation();
     const { subscribe } = useWebSocket();
@@ -44,6 +46,7 @@ export const useAdminWebSocket = ({
                     }
                     return [...prev, newDonor];
                 });
+                refreshData(); // Refresh stats chart
                 toast.success(t('dashboard.admin.toasts.newDonor'));
             });
 
@@ -57,6 +60,7 @@ export const useAdminWebSocket = ({
                     }
                     return [...prev, newHospital];
                 });
+                refreshData(); // Refresh stats
                 toast.success(t('dashboard.admin.toasts.newHospital'));
             });
 
@@ -69,6 +73,7 @@ export const useAdminWebSocket = ({
                     }
                     return [newApp, ...prev];
                 });
+                refreshData(); // Refresh stats
                 toast.info(t('dashboard.admin.toasts.newAppointment'));
             });
 
@@ -81,6 +86,7 @@ export const useAdminWebSocket = ({
                     }
                     return [newCampaign, ...prev];
                 });
+                refreshData(); // Refresh stats
                 toast.info(t('dashboard.admin.toasts.newCampaign'));
             });
 
@@ -95,5 +101,5 @@ export const useAdminWebSocket = ({
             console.warn('WebSocket subscription error (will retry):', error);
             // No hacer nada - el componente seguirá funcionando sin WebSocket
         }
-    }, [isConnected, subscribe, donors, hospitals, appointments, campaigns]);
+    }, [isConnected, subscribe, donors, hospitals, appointments, campaigns, refreshData]);
 };

@@ -5,6 +5,25 @@
     --font-poppins: "Poppins", sans-serif;
 }
 
+html {
+    width: 100%;
+    overflow-x: hidden;
+    scrollbar-gutter: stable;
+    background-color: #f3f4f6;
+    /* gray-100 */
+}
+
+html.dark {
+    background-color: #111827;
+    /* gray-900 */
+    color-scheme: dark;
+}
+
+body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
 @variant dark (&:is(.dark, .dark *));
 
 /* Global dark mode transition for smooth color changes */
@@ -63,46 +82,48 @@ input[type="number"]::-webkit-outer-spin-button {
 
 /* Custom scrollbar styles for dark mode */
 /* Custom scrollbar styles - Global */
-*::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
 }
 
-*::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
     background: transparent;
 }
 
-/* Light mode scrollbar thumb */
-*::-webkit-scrollbar-thumb {
-    background-color: rgba(107, 114, 128, 0.8);
-    /* gray-500 for high visibility */
-    border-radius: 4px;
+::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    /* slate-300 */
+    border-radius: 20px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: background-color 0.2s ease;
 }
 
-*::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(75, 85, 99, 0.8);
-    /* gray-600 hover */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8;
+    /* slate-400 */
 }
 
-/* Dark mode scrollbar thumb override */
-.dark *::-webkit-scrollbar-thumb {
-    background-color: rgba(75, 85, 99, 0.6);
-    /* gray-600 */
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+    background-color: #475569;
+    /* slate-600 */
 }
 
-.dark *::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(107, 114, 128, 0.8);
-    /* gray-500 */
+.dark ::-webkit-scrollbar-thumb:hover {
+    background-color: #64748b;
+    /* slate-500 */
 }
 
 /* Firefox scrollbar */
 * {
     scrollbar-width: thin;
-    scrollbar-color: rgba(209, 213, 219, 0.8) transparent;
+    scrollbar-color: #cbd5e1 transparent;
 }
 
 .dark * {
-    scrollbar-color: rgba(75, 85, 99, 0.6) transparent;
+    scrollbar-color: #475569 transparent;
 }
 
 /* Calendar view transition animation */

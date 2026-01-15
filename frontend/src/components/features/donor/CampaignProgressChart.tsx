@@ -62,7 +62,8 @@ export const CampaignProgressChart = ({
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(campaign =>
         campaign.name.toLowerCase().includes(query) ||
-        campaign.hospitalName.toLowerCase().includes(query)
+        campaign.hospitalName.toLowerCase().includes(query) ||
+        campaign.location.toLowerCase().includes(query)
       );
     }
 
@@ -107,12 +108,12 @@ export const CampaignProgressChart = ({
   const displayedCampaigns = getFilteredCampaigns();
 
   return (
-    <section className="bg-white rounded-xl shadow-sm border border-gray-200 p-3">
+    <section className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3">
       {/* Title and Search bar in same row */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
         {selectedDate ? (
           <>
-            <h2 className="text-xl font-bold text-gray-800">Campañas seleccionadas</h2>
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white">Campañas seleccionadas</h2>
             <button
               onClick={onClearFilter}
               className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
@@ -122,7 +123,7 @@ export const CampaignProgressChart = ({
           </>
         ) : (
           <>
-            <h2 className="text-xl font-bold text-gray-800">Progreso de Campañas</h2>
+            <h2 className="text-xl font-bold text-gray-800 dark:text-white">Progreso de Campañas</h2>
             {/* Search bar */}
             <div className="relative w-full sm:w-64">
               <input
@@ -130,10 +131,10 @@ export const CampaignProgressChart = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Buscar por título o ubicación..."
-                className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
               />
               <svg
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -148,7 +149,7 @@ export const CampaignProgressChart = ({
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -163,12 +164,12 @@ export const CampaignProgressChart = ({
       {/* Toggle filter */}
       {!selectedDate && (
         <div className="flex items-center gap-2 mb-4">
-          <span className="text-sm font-medium text-gray-600">Visualizando:</span>
+          <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Visualizando:</span>
           <button
             onClick={() => setShowOnlyCompatible(!showOnlyCompatible)}
             className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${showOnlyCompatible
               ? 'bg-blue-600 text-white hover:bg-blue-700'
-              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
               }`}
           >
             {showOnlyCompatible ? 'Compatibles conmigo' : 'Todas las campañas'}
@@ -184,7 +185,7 @@ export const CampaignProgressChart = ({
           }}
         >
           {displayedCampaigns.length === 0 ? (
-            <div className="flex h-full items-center justify-center text-gray-500">
+            <div className="flex h-full items-center justify-center text-gray-500 dark:text-gray-400">
               {showOnlyCompatible
                 ? 'No hay campañas compatibles con tu tipo de sangre'
                 : 'No hay campañas disponibles'}
@@ -198,22 +199,22 @@ export const CampaignProgressChart = ({
                   : 0;
 
                 return (
-                  <div key={campaign.id} className="p-4 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+                  <div key={campaign.id} className="p-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-start mb-2">
                       <div className="flex flex-col gap-1 flex-1">
-                        <h3 className="text-lg font-bold text-gray-800">{campaign.name}</h3>
-                        <p className="text-sm text-gray-600 line-clamp-2">{campaign.description}</p>
+                        <h3 className="text-lg font-bold text-gray-800 dark:text-white">{campaign.name}</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{campaign.description}</p>
                       </div>
                     </div>
 
                     <div className="mt-3 space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Progreso</span>
-                        <span className="font-semibold text-gray-800">
+                        <span className="text-gray-600 dark:text-gray-300">Progreso</span>
+                        <span className="font-semibold text-gray-800 dark:text-white">
                           {campaign.currentDonorCount || 0} / {campaign.requiredDonorQuantity} donantes
                         </span>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2.5">
                         <div
                           className="bg-blue-600 h-2.5 rounded-full transition-all"
                           style={{ width: `${Math.min(progress, 100)}%` }}
@@ -222,22 +223,31 @@ export const CampaignProgressChart = ({
                     </div>
 
                     <div className="mt-3 flex flex-wrap gap-2 text-sm items-center">
-                      <span className="text-gray-600 flex items-center gap-1">
+                      <span className="text-gray-600 dark:text-gray-300 flex items-center gap-1">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                         {campaign.location}
                       </span>
-                      <span className="text-gray-600 flex items-center gap-1">
+                      <span className="text-gray-600 dark:text-gray-300 flex items-center gap-1">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
-                        {new Date(campaign.startDate).toLocaleDateString('es-ES')} - {new Date(campaign.endDate).toLocaleDateString('es-ES')}
+                        {(() => {
+                          const formatDate = (dateStr: string) => {
+                            const date = new Date(dateStr);
+                            const day = String(date.getDate()).padStart(2, '0');
+                            const month = String(date.getMonth() + 1).padStart(2, '0');
+                            const year = date.getFullYear();
+                            return `${day}/${month}/${year}`;
+                          };
+                          return `${formatDate(campaign.startDate)} - ${formatDate(campaign.endDate)}`;
+                        })()}
                       </span>
                       <div className="flex flex-wrap gap-1 ml-auto">
                         {campaign.requiredBloodType.split(',').map((type, idx) => (
-                          <span key={idx} className="bg-red-100 text-red-700 px-2 py-0.5 rounded text-xs font-bold">
+                          <span key={idx} className="bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 px-2 py-0.5 rounded text-xs font-bold">
                             {type.replace(/[\[\]\s"]/g, '')}
                           </span>
                         ))}
@@ -284,8 +294,8 @@ export const CampaignProgressChart = ({
         {/* Gradient fade effects */}
         {displayedCampaigns.length > 0 && (
           <>
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-b from-white via-white/90 to-transparent pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-t from-white via-white/90 to-transparent pointer-events-none"></div>
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-b from-white dark:from-gray-800 via-white/90 dark:via-gray-800/90 to-transparent pointer-events-none"></div>
+            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-t from-white dark:from-gray-800 via-white/90 dark:via-gray-800/90 to-transparent pointer-events-none"></div>
           </>
         )}
       </div>

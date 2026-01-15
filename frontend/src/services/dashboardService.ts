@@ -36,7 +36,7 @@ export const dashboardService = {
      * Obtiene las estadísticas del dashboard
      */
     async getStats(): Promise<DashboardStats> {
-        const response = await axiosInstance.get<DashboardStats>('/dashboard/stats');
+        const response = await axiosInstance.get<DashboardStats>(`/dashboard/stats?t=${Date.now()}`);
         return response.data;
     }
 };

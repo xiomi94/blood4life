@@ -40,18 +40,19 @@ export const useHospitalDashboard = () => {
     const [monthlyDonations, setMonthlyDonations] = useState<number>(0);
 
     // Función para cargar estadísticas del servidor
-    const fetchStats = async () => {
+    const fetchStats = async (isBackground = false) => {
         try {
-            setLoading(true); // Ponemos loading a true antes de cargar
+            if (!isBackground) setLoading(true);
             const data = await dashboardService.getStats();
+            console.log('📊 Dashboard Stats Refreshed:', data);
             setStats(data);
             setError(null);
         } catch (err) {
-            // Si falla, mostramos un error
-            setError(t('dashboard.errors.loadStats', 'Error al cargar las estadísticas'));
+            // Si falla en background, quizás no queremos mostrar error y bloquear UI, pero por ahora lo dejamos
+            if (!isBackground) setError(t('dashboard.errors.loadStats', 'Error al cargar las estadísticas'));
             console.error('Error fetching dashboard stats:', err);
         } finally {
-            setLoading(false); // Siempre quitamos el loading al final
+            if (!isBackground) setLoading(false);
         }
     };
 
@@ -103,12 +104,22 @@ export const useHospitalDashboard = () => {
     useEffect(() => {
         if (!isConnected) return;
 
-        const unsubscribe = subscribe('/topic/campaigns', (message) => {
-            if (['CAMPAIGN_CREATED', 'CAMPAIGN_UPDATED', 'CAMPAIGN_DELETED'].includes(message.type)) {
-                refreshCampaigns();
-            }
+        const unsubscribeCampaigns = subscribe('/topic/campaigns', (message) => {
+            // Check message structure - if it's just the object or has type, we refresh anyway for safety
+            refreshCampaigns();
         });
-        return () => { if (unsubscribe) unsubscribe(); };
+
+        const unsubscribeDonors = subscribe('/topic/blood-donors', () => {
+            // When a donor updates their profile, wait a bit for DB consistency then refresh
+            setTimeout(() => {
+                fetchStats(true);
+            }, 500);
+        });
+
+        return () => {
+            if (unsubscribeCampaigns) unsubscribeCampaigns();
+            if (unsubscribeDonors) unsubscribeDonors();
+        };
     }, [subscribe, refreshCampaigns, isConnected]);
 
     // Handlers

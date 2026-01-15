@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.5% </span>
+                <span class="strong">87.09% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>28/32</span>
+                <span class='fraction'>27/31</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">87.09% </span>
+                <span class="strong">86.66% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>27/31</span>
+                <span class='fraction'>26/30</span>
             </div>
         
             
@@ -143,9 +143,7 @@
 <a name='L78'></a><a href='#L78'>78</a>
 <a name='L79'></a><a href='#L79'>79</a>
 <a name='L80'></a><a href='#L80'>80</a>
-<a name='L81'></a><a href='#L81'>81</a>
-<a name='L82'></a><a href='#L82'>82</a>
-<a name='L83'></a><a href='#L83'>83</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L81'></a><a href='#L81'>81</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -163,13 +161,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -179,6 +175,7 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -195,9 +192,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -208,6 +203,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -227,7 +223,7 @@
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useEffect, useCallback, useRef } from 'react';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useEffect, useRef } from 'react';
 &nbsp;
 /**
  * Custom hook to persist form data in localStorage
@@ -242,69 +238,67 @@ export function useFormPersistence&lt;T extends Record&lt;string, any&gt;&gt;(
     setFormData: React.Dispatch&lt;React.SetStateAction&lt;T&gt;&gt;,
     excludeFields: string[] = []
 ) {
-    // Track if we've already loaded data from localStorage
+    // Controlamos si ya hemos cargado los datos iniciales
     const hasLoadedRef = useRef(false);
-    // Store exclude fields to check if they change
-    const excludeFieldsRef = useRef(excludeFields);
 &nbsp;
-    // Load persisted data ONLY on mount
+    // Cargar datos al entrar (Mount)
     useEffect(() =&gt; {
-        // Only load once when component mounts
         <span class="missing-if-branch" title="else path not taken" >E</span>if (!hasLoadedRef.current) {
             try {
+                // Buscamos en localStorage
                 const savedData = localStorage.getItem(storageKey);
                 if (savedData) {
                     const parsedData = JSON.parse(savedData);
 &nbsp;
-                    // Restore only non-excluded fields
+                    // Filtramos los campos que no queremos recuperar (ej. contraseñas)
                     const restoredData: Partial&lt;T&gt; = {};
                     Object.keys(parsedData).forEach((key) =&gt; {
-                        <span class="missing-if-branch" title="else path not taken" >E</span>if (!excludeFieldsRef.current.includes(key)) {
+                        <span class="missing-if-branch" title="else path not taken" >E</span>if (!excludeFields.includes(key)) {
                             restoredData[key as keyof T] = parsedData[key];
                         }
                     });
 &nbsp;
+                    // Si hay datos, actualizamos el formulario
                     <span class="missing-if-branch" title="else path not taken" >E</span>if (Object.keys(restoredData).length &gt; 0) {
                         setFormData(prev =&gt; ({ ...prev, ...restoredData }));
                     }
                 }
                 hasLoadedRef.current = true;
             } catch (error) {
-<span class="cstat-no" title="statement not covered" >                console.error('Error loading form data from localStorage:', error);</span>
+<span class="cstat-no" title="statement not covered" >                console.error('Error al cargar datos del localStorage:', error);</span>
 <span class="cstat-no" title="statement not covered" >                hasLoadedRef.current = true;</span>
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [storageKey]); // Only depend on storageKey, load once per key
+    }, [storageKey, setFormData]); // Dependencias básicas
 &nbsp;
-    // Save form data to localStorage whenever it changes
+    // Guardar datos cada vez que cambian
     useEffect(() =&gt; {
-        // Only save if we've already loaded initial data
         <span class="missing-if-branch" title="else path not taken" >E</span>if (hasLoadedRef.current) {
             try {
-                // Filter out excluded fields before saving
+                // Preparamos objeto para guardar sin los campos excluidos
                 const dataToSave: Partial&lt;T&gt; = {};
                 Object.keys(formData).forEach((key) =&gt; {
-                    if (!excludeFieldsRef.current.includes(key)) {
+                    if (!excludeFields.includes(key)) {
                         dataToSave[key as keyof T] = formData[key as keyof T];
                     }
                 });
 &nbsp;
+                // Guardamos en localStorage
                 localStorage.setItem(storageKey, JSON.stringify(dataToSave));
             } catch (error) {
-<span class="cstat-no" title="statement not covered" >                console.error('Error saving form data to localStorage:', error);</span>
+<span class="cstat-no" title="statement not covered" >                console.error('Error al guardar en localStorage:', error);</span>
             }
         }
-    }, [formData, storageKey]);
+    }, [formData, storageKey]); // Se ejecuta cuando cambia el formulario
 &nbsp;
-    // Function to clear persisted data
-    const clearPersistedData = useCallback(() =&gt; {
+    // Función para limpiar datos manualmente (ej. al hacer login)
+    const clearPersistedData = () =&gt; {
         try {
             localStorage.removeItem(storageKey);
         } catch (error) {
-<span class="cstat-no" title="statement not covered" >            console.error('Error clearing form data from localStorage:', error);</span>
+<span class="cstat-no" title="statement not covered" >            console.error('Error al borrar del localStorage:', error);</span>
         }
-    }, [storageKey]);
+    };
 &nbsp;
     return { clearPersistedData };
 }
@@ -316,7 +310,7 @@ export function useFormPersistence&lt;T extends Record&lt;string, any&gt;&gt;(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-12T12:15:17.107Z
+                at 2026-01-14T19:19:47.086Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

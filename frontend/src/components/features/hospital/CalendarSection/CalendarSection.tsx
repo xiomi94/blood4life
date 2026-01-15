@@ -93,7 +93,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ campaigns, onDayClick
                 if (isActive) {
                     statusClass = "bg-green-500 text-white font-medium hover:bg-green-600 cursor-pointer relative";
                 } else if (isFuture) {
-                    statusClass = "bg-blue-400 text-white font-medium hover:bg-blue-500 cursor-pointer relative";
+                    statusClass = "bg-blue-600 text-white font-medium hover:bg-blue-700 cursor-pointer relative";
                 } else if (isPast) {
                     statusClass = "bg-red-500 text-white font-medium hover:bg-red-600 cursor-pointer relative";
                 }
@@ -210,7 +210,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ campaigns, onDayClick
                                 key={index}
                                 onClick={() => selectMonth(index)}
                                 className={`p-3 rounded-lg text-sm font-medium ${currentDate.getMonth() === index
-                                    ? 'bg-blue-500 text-white'
+                                    ? 'bg-blue-600 text-white'
                                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                     }`}
                             >
@@ -232,7 +232,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ campaigns, onDayClick
                                     key={year}
                                     onClick={() => selectYear(year)}
                                     className={`p-3 rounded-lg text-sm font-medium ${isCurrentYear
-                                        ? 'bg-blue-500 text-white'
+                                        ? 'bg-blue-600 text-white'
                                         : isOutOfRange
                                             ? 'bg-gray-50 text-gray-400 hover:bg-gray-100'
                                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -248,7 +248,7 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ campaigns, onDayClick
                 <div className="mt-4 flex flex-wrap gap-2 text-xs justify-center text-gray-500">
                     <div className="flex items-center gap-1"><div className="w-3 h-3 bg-red-500 rounded"></div> {t('dashboard.calendar.legend.completed')}</div>
                     <div className="flex items-center gap-1"><div className="w-3 h-3 bg-green-500 rounded"></div> {t('dashboard.calendar.legend.active')}</div>
-                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-blue-400 rounded"></div> {t('dashboard.calendar.legend.upcoming')}</div>
+                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-blue-600 rounded"></div> {t('dashboard.calendar.legend.upcoming')}</div>
                 </div>
             </div>
         </section>

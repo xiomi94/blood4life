@@ -173,7 +173,15 @@
             "bloodTypeOption": "Verteilung nach Blutgruppe",
             "genderOption": "Verteilung nach Geschlecht",
             "appointmentsToday": "Termine heute",
-            "donationsThisMonth": "Spenden diesen Monat"
+            "donationsThisMonth": "Spenden diesen Monat",
+            "myCampaigns": "Meine Kampagnen",
+            "allCampaigns": "Alle Kampagnen",
+            "completedCampaigns": "Abgeschlossene Kampagnen",
+            "allGenders": "Alle",
+            "male": "Männlich",
+            "female": "Weiblich",
+            "preferNotToSay": "Keine Angabe",
+            "noCampaignsToShow": "Keine Kampagnen anzuzeigen"
         },
         "admin": {
             "title": "Admin-Dashboard",
