@@ -214,8 +214,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
                     <div
                         className="absolute z-50 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 w-[320px] animate-in fade-in zoom-in-95 duration-200"
                         style={{
-                            top: '0',
-                            left: 'calc(100% + 8px)',
+                            top: 'calc(100% + 4px)',
+                            left: '0',
                         }}
                     >
                         {/* Header: Navigation */}
