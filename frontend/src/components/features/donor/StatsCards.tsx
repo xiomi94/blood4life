@@ -1,12 +1,12 @@
 interface StatsCardsProps {
-  completedDonationsCount: number;
+  totalDonors: number;
   canDonateNow: boolean;
   daysUntilNext: number;
   nextAvailableDate: Date;
 }
 
 export const StatsCards = ({
-  completedDonationsCount,
+  totalDonors,
   canDonateNow,
   daysUntilNext,
   nextAvailableDate
@@ -14,8 +14,8 @@ export const StatsCards = ({
   return (
     <section className="space-y-4">
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-        <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Mis donaciones totales</p>
-        <p className="text-4xl font-bold text-gray-800 dark:text-white">{completedDonationsCount}</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Total Donantes</p>
+        <p className="text-4xl font-bold text-gray-800 dark:text-white">{totalDonors}</p>
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
