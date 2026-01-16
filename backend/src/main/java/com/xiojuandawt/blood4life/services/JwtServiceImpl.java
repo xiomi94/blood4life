@@ -54,4 +54,22 @@ public class JwtServiceImpl implements JwtService {
         .getExpiration();
     return expiration.before(new Date(System.currentTimeMillis()));
   }
+
+  @Override
+  public boolean shouldRefreshToken(String token) {
+    try {
+      Date expiration = Jwts.parser()
+          .verifyWith(getSigningKey())
+          .build()
+          .parseSignedClaims(token)
+          .getPayload()
+          .getExpiration();
+
+      // Refresh if token expires in less than 30 minutes (1800000 ms)
+      long timeUntilExpiration = expiration.getTime() - System.currentTimeMillis();
+      return timeUntilExpiration < (30 * 60 * 1000);
+    } catch (Exception e) {
+      return false;
+    }
+  }
 }

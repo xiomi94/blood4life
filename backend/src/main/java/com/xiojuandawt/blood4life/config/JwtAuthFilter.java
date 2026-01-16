@@ -90,6 +90,20 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             this.authenticatedByAdmin(userId, token);
             break;
         }
+
+        // Check if token should be refreshed (sliding session)
+        if (jwtService.shouldRefreshToken(token)) {
+          String newToken = jwtService.generateToken(userId, userType);
+
+          // Create new cookie with refreshed token
+          Cookie refreshedCookie = new Cookie("jwt", newToken);
+          refreshedCookie.setHttpOnly(true);
+          refreshedCookie.setSecure(false); // Set to true in production with HTTPS
+          refreshedCookie.setPath("/");
+          refreshedCookie.setMaxAge(7 * 24 * 60 * 60); // 7 days
+
+          response.addCookie(refreshedCookie);
+        }
       }
 
     } catch (Exception e) {

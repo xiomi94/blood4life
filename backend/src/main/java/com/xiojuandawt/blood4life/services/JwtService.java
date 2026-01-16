@@ -9,4 +9,6 @@ public interface JwtService {
   Claims extractPayload(String token);
 
   public boolean isTokenExpired(String token);
+
+  public boolean shouldRefreshToken(String token);
 }
