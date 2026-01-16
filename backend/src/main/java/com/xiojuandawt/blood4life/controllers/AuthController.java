@@ -10,8 +10,6 @@ import com.xiojuandawt.blood4life.services.BloodDonorService;
 import com.xiojuandawt.blood4life.services.HospitalService;
 import com.xiojuandawt.blood4life.services.ImageService;
 import com.xiojuandawt.blood4life.services.JwtService;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,6 +45,12 @@ public class AuthController {
 
   @Autowired
   private com.xiojuandawt.blood4life.services.AdminService adminService;
+
+  @Autowired
+  private com.xiojuandawt.blood4life.services.LdapService ldapService;
+
+  @Autowired
+  private SimpMessagingTemplate messagingTemplate;
 
   @PostMapping("/bloodDonor/register")
   public ResponseEntity<?> registerBloodDonor(
@@ -103,6 +108,9 @@ public class AuthController {
       responseDTO.setDateOfBirth(bloodDonor.getDateOfBirth());
       responseDTO.setImageName(imageEntity != null ? imageEntity.getName() : null);
 
+      // Enviar notificación WebSocket para actualización en tiempo real
+      messagingTemplate.convertAndSend("/topic/blood-donors", responseDTO);
+
       return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 
     } catch (Exception e) {
@@ -112,7 +120,6 @@ public class AuthController {
 
   @PostMapping("/bloodDonor/login")
   public ResponseEntity<?> loginBloodDonor(@RequestHeader("Authorization") String authHeader) {
-    System.out.println("AUTH DEBUG: loginBloodDonor called");
     try {
 
       String[] credentials = extractCredentials(authHeader);
@@ -121,11 +128,9 @@ public class AuthController {
 
       Optional<BloodDonor> donorOpt = bloodDonorService.findByEmail(email);
       if (donorOpt.isEmpty()) {
-        System.out.println("AUTH DEBUG: BloodDonor not found for email: " + email);
         return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
       }
       if (!passwordEncoder.matches(password, donorOpt.get().getPassword())) {
-        System.out.println("AUTH DEBUG: Password mismatch for email: " + email);
         return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
       }
 
@@ -136,7 +141,7 @@ public class AuthController {
           .httpOnly(true)
           .secure(false)
           .path("/")
-          .maxAge(24 * 60 * 60)
+          .maxAge(7 * 24 * 60 * 60)
           .sameSite("Lax")
           .build();
 
@@ -194,9 +199,13 @@ public class AuthController {
       responseDTO.setCif(hospital.getCif());
       responseDTO.setName(hospital.getName());
       responseDTO.setAddress(hospital.getAddress());
+      responseDTO.setPostalCode(hospital.getPostalCode());
       responseDTO.setEmail(hospital.getEmail());
       responseDTO.setPhoneNumber(hospital.getPhoneNumber());
       responseDTO.setImageName(imageEntity != null ? imageEntity.getName() : null);
+
+      // Enviar notificación WebSocket para actualización en tiempo real
+      messagingTemplate.convertAndSend("/topic/hospitals", responseDTO);
 
       return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
 
@@ -230,7 +239,7 @@ public class AuthController {
           .httpOnly(true)
           .secure(false)
           .path("/")
-          .maxAge(24 * 60 * 60)
+          .maxAge(7 * 24 * 60 * 60)
           .sameSite("Lax")
           .build();
 
@@ -259,25 +268,87 @@ public class AuthController {
         System.out.println("AUTH DEBUG: Admin not found for email: " + email);
         return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
       }
-      if (!passwordEncoder.matches(password, adminOpt.get().getPassword())) {
+
+      com.xiojuandawt.blood4life.entities.Admin admin = adminOpt.get();
+      String storedPassword = admin.getPassword();
+
+      // Check if password matches (support both hashed and plain text for backward
+      // compatibility)
+      boolean passwordMatches = false;
+      if (storedPassword.startsWith("$2a$") || storedPassword.startsWith("$2b$")) {
+        // Password is BCrypt hashed
+        passwordMatches = passwordEncoder.matches(password, storedPassword);
+      } else {
+        // Password is plain text (legacy)
+        passwordMatches = password.equals(storedPassword);
+      }
+
+      if (!passwordMatches) {
         System.out.println("AUTH DEBUG: Password mismatch for email: " + email);
         return errorResponse("Invalid credentials", HttpStatus.UNAUTHORIZED);
       }
-
-      com.xiojuandawt.blood4life.entities.Admin admin = adminOpt.get();
       String token = jwtService.generateToken(admin.getId(), "admin");
 
       ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
           .httpOnly(true)
           .secure(false)
           .path("/")
-          .maxAge(24 * 60 * 60)
+          .maxAge(7 * 24 * 60 * 60)
           .sameSite("Lax")
           .build();
 
       Map<String, Object> response = new HashMap<>();
       response.put("status", "OK");
       response.put("message", "Login successful");
+
+      return ResponseEntity.ok()
+          .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+          .body(response);
+
+    } catch (IllegalArgumentException e) {
+      return errorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @PostMapping("/admin/ldap-login")
+  public ResponseEntity<?> loginAdminLdap(@RequestHeader("Authorization") String authHeader) {
+    try {
+      String[] credentials = extractCredentials(authHeader);
+      String email = credentials[0];
+      String password = credentials[1];
+
+      // 1. Authenticate against LDAP
+      boolean ldapAuthenticated = ldapService.authenticate(email, password);
+
+      if (!ldapAuthenticated) {
+        System.out.println("LDAP AUTH DEBUG: Failed for email: " + email);
+        return errorResponse("Invalid credentials (LDAP)", HttpStatus.UNAUTHORIZED);
+      }
+
+      // 2. Find admin in local DB to get ID/Role
+      Optional<com.xiojuandawt.blood4life.entities.Admin> adminOpt = adminService.findByEmail(email);
+      if (adminOpt.isEmpty()) {
+        System.out.println("AUTH DEBUG: Admin not found in local DB for email: " + email);
+        return errorResponse("User not found locally", HttpStatus.UNAUTHORIZED);
+      }
+
+      com.xiojuandawt.blood4life.entities.Admin admin = adminOpt.get();
+
+      // 3. Generate Token
+      String token = jwtService.generateToken(admin.getId(), "admin");
+
+      ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
+          .httpOnly(true)
+          .secure(false)
+          .path("/")
+          .maxAge(7 * 24 * 60 * 60)
+          .sameSite("Lax")
+          .build();
+
+      Map<String, Object> response = new HashMap<>();
+      response.put("status", "OK");
+      response.put("message", "LDAP Login successful");
+      response.put("token", token); // Add token to response for frontend
 
       return ResponseEntity.ok()
           .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
@@ -333,6 +404,7 @@ public class AuthController {
         hospital.getCif(),
         hospital.getName(),
         hospital.getAddress(),
+        hospital.getPostalCode(),
         hospital.getEmail(),
         hospital.getPhoneNumber(),
         hospital.getImage() != null ? hospital.getImage().getName() : null);

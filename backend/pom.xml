@@ -104,6 +104,20 @@
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-crypto</artifactId>
       </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-websocket</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-ldap</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>com.unboundid</groupId>
+        <artifactId>unboundid-ldapsdk</artifactId>
+        <version>7.0.1</version>
+        <scope>runtime</scope>
+      </dependency>
     </dependencies>
 
     <build>

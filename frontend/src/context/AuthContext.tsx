@@ -1,141 +1,177 @@
 import React, { createContext, useState, useContext, useEffect, type ReactNode } from 'react';
 import axiosInstance from '../utils/axiosInstance';
+import { DELAYS, AUTH_ENDPOINTS, ROUTES } from '../constants/app.constants';
+import { getUserEndpoint } from '../utils/userTypeDetector';
+import { saveUserType, getSavedUserType, clearAuthData } from '../utils/authPersistence';
+import { logError } from '../utils/errorHandler';
+import type { UserProfile, UserType } from '../types/common.types';
 
-
-
-interface UserProfile {
-  id: number;
-  // Blood Donor fields
-  firstName?: string;
-  lastName?: string;
-  // Hospital fields
-  name?: string;
-  // Common fields
-  email: string;
-  imageName?: string;
-  bloodType?: {
-    id: number;
-    type: string;
-  };
-  dni?: string;
-  gender?: string;
-  phoneNumber?: string;
-  dateOfBirth?: string;
-  cif?: string;
-  address?: string;
-}
+// ========================================
+// Types
+// ========================================
 
 interface AuthContextType {
-  userType: 'bloodDonor' | 'hospital' | 'admin' | null;
+  userType: UserType | null;
   user: UserProfile | null;
-  login: (type: 'bloodDonor' | 'hospital' | 'admin') => void;
+  login: (type: UserType) => void;
   logout: () => void;
   refreshUser: () => Promise<void>;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// ========================================
+// Context
+// ========================================
+
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+// ========================================
+// Provider
+// ========================================
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [userType, setUserType] = useState<'bloodDonor' | 'hospital' | 'admin' | null>(null);
+  const [userType, setUserType] = useState<UserType | null>(null);
   const [user, setUser] = useState<UserProfile | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  const refreshUser = async () => {
-    // Get the last known user type from localStorage
-    const savedUserType = localStorage.getItem('userType') as 'bloodDonor' | 'hospital' | 'admin' | null;
-
-    // If there's no saved user type, skip verification (user is not logged in)
-    if (!savedUserType) {
-      setIsAuthenticated(false);
-      setUserType(null);
-      setUser(null);
-      return;
-    }
-
-    // Define the order to check based on saved type
-    const checkOrder: Array<'bloodDonor' | 'hospital' | 'admin'> = savedUserType
-      ? [savedUserType, ...(['bloodDonor', 'hospital', 'admin'].filter(t => t !== savedUserType) as Array<'bloodDonor' | 'hospital' | 'admin'>)]
-      : ['bloodDonor', 'hospital', 'admin'];
-
-    for (const type of checkOrder) {
-      try {
-        const endpoint = type === 'bloodDonor' ? '/bloodDonor/me' : type === 'hospital' ? '/hospital/me' : '/admin/me';
-        const res = await axiosInstance.get(endpoint);
-
-        setUserType(type);
-        setUser(res.data);
-        setIsAuthenticated(true);
-        localStorage.setItem('userType', type); // Save for next time
-        return; // Success, stop checking
-      } catch (error: any) {
-        // Only log unexpected errors (not 401/403 which are expected)
-        if (error.response?.status !== 401 && error.response?.status !== 403) {
-          console.error(`Unexpected error checking ${type} auth:`, error);
-        }
-        // Continue to next type
-      }
-    }
-
-    // If all checks failed, clear everything
+  /**
+   * Limpia el estado de autenticación
+   */
+  const clearAuthState = (): void => {
     setIsAuthenticated(false);
     setUserType(null);
     setUser(null);
-    localStorage.removeItem('userType');
   };
 
-  // Check if user is already logged in on mount
+  /**
+   * Establece el estado de autenticación exitosa
+   */
+  const setAuthenticatedState = (type: UserType, userProfile: UserProfile): void => {
+    setUserType(type);
+    setUser(userProfile);
+    setIsAuthenticated(true);
+  };
+
+  /**
+   * Obtiene los datos del usuario desde el servidor
+   */
+  const fetchUserProfile = async (type: UserType): Promise<UserProfile | null> => {
+    try {
+      const endpoint = getUserEndpoint(type);
+      const response = await axiosInstance.get<UserProfile>(endpoint);
+      return response.data;
+    } catch (error) {
+      logError(error, 'fetchUserProfile', { userType: type });
+      return null;
+    }
+  };
+
+  /**
+   * Verifica si el usuario sigue logueado al recargar la página
+   */
+  const refreshUser = async (): Promise<void> => {
+    const savedUserType = getSavedUserType();
+
+    if (!savedUserType) {
+      clearAuthState();
+      return;
+    }
+
+    const userProfile = await fetchUserProfile(savedUserType);
+
+    if (userProfile) {
+      setAuthenticatedState(savedUserType, userProfile);
+    } else {
+      clearAuthState();
+      clearAuthData();
+    }
+  };
+
+  /**
+   * Inicializa el estado de autenticación al montar el componente
+   */
   useEffect(() => {
-    const initAuth = async () => {
+    const initializeAuth = async () => {
       await refreshUser();
       setIsLoading(false);
     };
-    initAuth();
+
+    initializeAuth();
   }, []);
 
-  const login = (type: 'bloodDonor' | 'hospital' | 'admin') => {
-    // Determine the endpoint based on type
-    const endpoint = type === 'bloodDonor' ? '/bloodDonor/me' : type === 'hospital' ? '/hospital/me' : '/admin/me';
-
-    // We optimistically set authenticated, but we should fetch the user details immediately
+  /**
+   * Maneja el login del usuario
+   * Establece el estado y recupera los datos del servidor después de un delay
+   * para permitir que la cookie se propague
+   */
+  const login = (type: UserType): void => {
+    // Establecer estado optimista
     setUserType(type);
     setIsAuthenticated(true);
-    localStorage.setItem('userType', type); // Save user type
+    saveUserType(type);
 
-    // Fetch user details
-    axiosInstance.get(endpoint)
-      .then(res => setUser(res.data))
-      .catch(err => console.error("Failed to fetch user details on login", err));
+    // Esperar a que la cookie se establezca antes de obtener los datos del usuario
+    setTimeout(async () => {
+      const userProfile = await fetchUserProfile(type);
+
+      if (userProfile) {
+        setUser(userProfile);
+      } else {
+        logError(new Error('Failed to fetch user profile'), 'login', { userType: type });
+      }
+    }, DELAYS.COOKIE_PROPAGATION_MS);
   };
 
-  const logout = async () => {
+  /**
+   * Maneja el logout del usuario
+   * Limpia el estado local y redirige al login
+   */
+  const logout = async (): Promise<void> => {
     try {
-      await axiosInstance.get('/auth/logout');
+      await axiosInstance.get(AUTH_ENDPOINTS.LOGOUT);
     } catch (error) {
-      console.error("Logout failed on server:", error);
+      logError(error, 'logout');
     } finally {
-      setUserType(null);
-      setUser(null);
-      setIsAuthenticated(false);
-      localStorage.removeItem('userType'); // Clear saved type
-      // Force reload to clear any in-memory state and redirect to login
-      window.location.href = '/login';
+      clearAuthState();
+      clearAuthData();
+      // Forzar recarga para limpiar cualquier estado en memoria
+      window.location.href = ROUTES.LOGIN;
     }
   };
 
   return (
-    <AuthContext.Provider value={{ userType, user, login, logout, refreshUser, isAuthenticated, isLoading }}>
+    <AuthContext.Provider
+      value={{
+        userType,
+        user,
+        login,
+        logout,
+        refreshUser,
+        isAuthenticated,
+        isLoading
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
+// ========================================
+// Hook
+// ========================================
+
+/**
+ * Hook para acceder al contexto de autenticación
+ * Lanza un error si se usa fuera del AuthProvider
+ */
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
+
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
+
   return context;
 };

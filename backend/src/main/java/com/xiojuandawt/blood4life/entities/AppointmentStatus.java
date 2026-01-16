@@ -18,10 +18,24 @@ public class AppointmentStatus {
 
     private String statusName;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     @OneToMany(mappedBy = "appointmentStatus")
     private List<Appointment> appointments;
 
-    // getters y setters
+    public AppointmentStatus() {
+    }
+
+    public AppointmentStatus(String statusName, List<Appointment> appointments) {
+        this.statusName = statusName;
+        this.appointments = appointments;
+    }
+
+    public AppointmentStatus(Integer id, String statusName, List<Appointment> appointments) {
+        this.id = id;
+        this.statusName = statusName;
+        this.appointments = appointments;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -38,6 +52,7 @@ public class AppointmentStatus {
         this.statusName = statusName;
     }
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     public List<Appointment> getAppointments() {
         return appointments;
     }
@@ -49,6 +64,6 @@ public class AppointmentStatus {
     // toString
     @Override
     public String toString() {
-        return "AppointmentStatus [id=" + id + ", statusName=" + statusName + ", appointments=" + appointments + "]";
+        return "AppointmentStatus [id=" + id + ", statusName=" + statusName + "]";
     }
 }

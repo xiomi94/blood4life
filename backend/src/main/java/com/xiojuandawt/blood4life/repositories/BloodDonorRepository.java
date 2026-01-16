@@ -1,14 +1,14 @@
 package com.xiojuandawt.blood4life.repositories;
 
 import com.xiojuandawt.blood4life.entities.BloodDonor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface BloodDonorRepository extends CrudRepository<BloodDonor, Integer> {
+public interface BloodDonorRepository extends JpaRepository<BloodDonor, Integer> {
   Optional<BloodDonor> findByEmail(String email);
 
   Optional<BloodDonor> findById(Integer id);
@@ -16,6 +16,14 @@ public interface BloodDonorRepository extends CrudRepository<BloodDonor, Integer
   @Query("SELECT b.bloodType.type, COUNT(b) FROM BloodDonor b GROUP BY b.bloodType.type")
   java.util.List<Object[]> countDonorsByBloodType();
 
-  @Query("SELECT b.gender, COUNT(b) FROM BloodDonor b GROUP BY b.gender")
+  @Query("SELECT b.gender, COUNT(b) FROM BloodDonor b WHERE b.gender IN ('Masculino', 'Femenino', 'Prefiero no decirlo') GROUP BY b.gender")
   java.util.List<Object[]> countDonorsByGender();
+
+  @org.springframework.transaction.annotation.Transactional
+  void deleteByGender(String gender);
+
+  java.util.List<BloodDonor> findByBloodTypeIsNull();
+
+  @Query("SELECT b.gender, b.bloodType.type, COUNT(b) FROM BloodDonor b WHERE b.gender IN ('Masculino', 'Femenino', 'Prefiero no decirlo') GROUP BY b.gender, b.bloodType.type")
+  java.util.List<Object[]> countDonorsByGenderAndBloodType();
 }

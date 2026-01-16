@@ -5,6 +5,108 @@
     --font-poppins: "Poppins", sans-serif;
 }
 
+html {
+    width: 100%;
+    overflow-x: hidden;
+    scrollbar-gutter: stable;
+    background-color: #f3f4f6;
+    /* gray-100 */
+}
+
+html.dark {
+    background-color: #111827;
+    /* gray-900 */
+    color-scheme: dark;
+}
+
+body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
+@variant dark (&:is(.dark, .dark *));
+
+/* Global dark mode transition for smooth color changes */
+*:not(label:has(#toggle)):not(label:has(#toggle) *),
+*:not(label:has(#toggle))::before,
+*:not(label:has(#toggle))::after {
+    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+/* Fix browser autocomplete background in dark mode */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-text-fill-color: inherit !important;
+    -webkit-box-shadow: 0 0 0 1000px white inset !important;
+    box-shadow: 0 0 0 1000px white inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active {
+    -webkit-text-fill-color: white !important;
+    -webkit-box-shadow: 0 0 0 1000px rgb(55 65 81) inset !important;
+    box-shadow: 0 0 0 1000px rgb(55 65 81) inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+
+/* Custom styles for number input spinners in dark mode */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    /* Default opacity, can be overridden by dark mode */
+    opacity: 1;
+}
+
+.dark input[type="number"]::-webkit-inner-spin-button,
+.dark input[type="number"]::-webkit-outer-spin-button {
+    filter: invert(1) brightness(0.7);
+    cursor: pointer;
+}
+
+/* Firefox number input spinner */
+.dark input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.dark input[type="number"]:hover,
+.dark input[type="number"]:focus {
+    -moz-appearance: number-input;
+    appearance: auto;
+}
+
+/* Calendar view transition animation */
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
 @layer components {
     .text-display {
         font-size: 3.5rem;
@@ -120,9 +222,10 @@ textarea:focus-visible {
 
 /* Respect user motion preferences - WCAG 2.3.3 */
 @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
+
+    *:not(label:has(#toggle)):not(label:has(#toggle) *),
+    *:not(label:has(#toggle))::before,
+    *:not(label:has(#toggle))::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;

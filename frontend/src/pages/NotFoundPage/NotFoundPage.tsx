@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 import Logo from '../../assets/images/LogoShadow.webp';
-import Button from '../../components/UI/Button/Button';
+import Button from '../../components/common/ui/Button/Button';
 
 function NotFoundPage() {
     const navigate = useNavigate();
@@ -24,7 +24,7 @@ function NotFoundPage() {
     }, [navigate]);
 
     return (
-        <main className="flex flex-col lg:flex-row flex-grow w-full items-center justify-center gap-6 sm:gap-10 md:gap-20 lg:gap-40 px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-12 bg-gray-100">
+        <main className="flex flex-col lg:flex-row flex-grow w-full items-center justify-center gap-6 sm:gap-10 md:gap-20 lg:gap-40 px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-12">
             {/* Logo - Hidden on mobile, visible on lg+ */}
             <div className="hidden lg:flex items-center justify-center flex-shrink-0">
                 <img
@@ -40,13 +40,13 @@ function NotFoundPage() {
                     {/* Error Message */}
                     <div className="mb-6 sm:mb-8 md:mb-10">
                         <h2
-                            className="text-h3 sm:text-h2 md:text-h1 text-gray-800 mb-3 sm:mb-4"
+                            className="text-h3 sm:text-h2 md:text-h1 text-gray-800 dark:text-white mb-3 sm:mb-4"
                             role="alert"
                         >
                             Vaya... parece que algo salió mal
                         </h2>
                         <p
-                            className="text-body-sm sm:text-body md:text-body-lg text-gray-500 max-w-lg mx-auto"
+                            className="text-body-sm sm:text-body md:text-body-lg text-gray-500 dark:text-gray-300 max-w-lg mx-auto"
                             aria-live="polite"
                             aria-atomic="true"
                         >
@@ -56,8 +56,8 @@ function NotFoundPage() {
                     </div>
 
                     {/* Additional Help */}
-                    <div className="flex flex-col items-center justify-center pt-6 sm:pt-8 border-t border-gray-300">
-                        <p className="flex flex-col items-center justify-center gap-4 text-body-sm sm:text-body md:text-body-lg text-gray-600 max-w-md mx-auto">
+                    <div className="flex flex-col items-center justify-center pt-6 sm:pt-8 border-t border-gray-300 dark:border-gray-700">
+                        <p className="flex flex-col items-center justify-center gap-4 text-body-sm sm:text-body md:text-body-lg text-gray-600 dark:text-gray-300 max-w-md mx-auto">
                             O si lo prefieres, puedes{' '}
                             <Button
                                 onClick={() => navigate(-1)}

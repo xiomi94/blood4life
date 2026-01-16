@@ -45,7 +45,11 @@ public class BloodDonorController {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
-    BloodDonor me = (BloodDonor) authentication.getPrincipal();
+    // Get the ID from authentication but fetch FRESH data from database
+    BloodDonor authUser = (BloodDonor) authentication.getPrincipal();
+    BloodDonor me = bloodDonorService.findByIdWithRole(authUser.getId())
+        .orElseThrow(() -> new ResourceNotFoundException());
+
     String imageName = me.getImage() != null ? me.getImage().getName() : null;
     BloodDonorDTO meDTO = new BloodDonorDTO(
         me.getId(),
@@ -71,6 +75,9 @@ public class BloodDonorController {
         .status(HttpStatus.OK)
         .body(bloodDonorList);
   }
+
+  @Autowired
+  private org.springframework.messaging.simp.SimpMessagingTemplate messagingTemplate;
 
   @PutMapping("/{id}")
   public ResponseEntity<?> updateBloodDonor(
@@ -114,6 +121,9 @@ public class BloodDonorController {
 
       // Save updated donor
       BloodDonorDTO updatedDTO = this.bloodDonorService.update(bloodDonorInDatabase, id);
+
+      // Notify WebSocket subscribers about the update
+      messagingTemplate.convertAndSend("/topic/blood-donors", updatedDTO);
 
       return ResponseEntity
           .status(HttpStatus.OK)

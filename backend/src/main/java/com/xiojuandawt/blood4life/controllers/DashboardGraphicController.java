@@ -93,6 +93,18 @@ public class DashboardGraphicController {
 
     response.put("campaigns", campaignsData);
 
+    // Breakdown Data (Gender + BloodType)
+    List<Object[]> breakdownStats = bloodDonorRepository.countDonorsByGenderAndBloodType();
+    List<Map<String, Object>> breakdownList = new java.util.ArrayList<>();
+    for (Object[] row : breakdownStats) {
+      Map<String, Object> item = new HashMap<>();
+      item.put("gender", row[0]);
+      item.put("bloodType", row[1]);
+      item.put("count", row[2]);
+      breakdownList.add(item);
+    }
+    response.put("breakdown", breakdownList);
+
     return ResponseEntity.ok(response);
   }
 }

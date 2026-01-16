@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BloodDonorServiceImpl implements BloodDonorService{
+public class BloodDonorServiceImpl implements BloodDonorService {
 
   @Autowired
   private BloodDonorRepository bloodDonorRepository;
@@ -22,12 +22,15 @@ public class BloodDonorServiceImpl implements BloodDonorService{
   @Autowired
   private BloodTypeRepository bloodTypeRepository;
 
+  @Autowired
+  private BloodDonorWebSocketService bloodDonorWebSocketService;
+
   @Override
   public List<BloodDonorDTO> findAll() {
     List<BloodDonor> bloodDonorList = (List<BloodDonor>) this.bloodDonorRepository.findAll();
     List<BloodDonorDTO> bloodDonorDTOList = new ArrayList<>();
 
-    for (BloodDonor bloodDonor: bloodDonorList) {
+    for (BloodDonor bloodDonor : bloodDonorList) {
       BloodDonorDTO bloodDonorDTO = this.parseEntityToDto(bloodDonor);
 
       bloodDonorDTOList.add(bloodDonorDTO);
@@ -39,6 +42,11 @@ public class BloodDonorServiceImpl implements BloodDonorService{
   @Override
   public BloodDonorDTO createNew(BloodDonor bloodDonor) {
     BloodDonor newBloodDonor = this.bloodDonorRepository.save(bloodDonor);
+
+    // Broadcast nuevo total por WebSocket
+    long totalBloodDonors = bloodDonorRepository.count();
+    bloodDonorWebSocketService.sentTotalBloodDonors(totalBloodDonors);
+
     BloodDonorDTO newBloodDonorDTO = this.parseEntityToDto(newBloodDonor);
 
     return newBloodDonorDTO;
@@ -63,6 +71,10 @@ public class BloodDonorServiceImpl implements BloodDonorService{
   @Override
   public void delete(int id) {
     this.bloodDonorRepository.deleteById(id);
+
+    // Broadcast nuevo total por WebSocket
+    long totalBloodDonors = bloodDonorRepository.count();
+    bloodDonorWebSocketService.sentTotalBloodDonors(totalBloodDonors);
   }
 
   public Optional<BloodDonor> findByEmail(String email) {
@@ -79,6 +91,7 @@ public class BloodDonorServiceImpl implements BloodDonorService{
     bloodDonorDTO.setEmail(bloodDonor.getEmail());
     bloodDonorDTO.setPhoneNumber(bloodDonor.getPhoneNumber());
     bloodDonorDTO.setDateOfBirth(bloodDonor.getDateOfBirth());
+    bloodDonorDTO.setBloodType(bloodDonor.getBloodType());
 
     return bloodDonorDTO;
   }
@@ -87,7 +100,6 @@ public class BloodDonorServiceImpl implements BloodDonorService{
   public Optional<BloodType> findBloodTypeById(Integer bloodTypeId) {
     return bloodTypeRepository.findById(bloodTypeId);
   }
-
 
   @Override
   public Optional<BloodDonor> findByIdWithRole(Integer id) {

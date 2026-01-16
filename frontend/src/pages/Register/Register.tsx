@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router';
-import Button from '../../components/UI/Button/Button';
+import { useTranslation } from 'react-i18next';
+import Button from '../../components/common/ui/Button/Button';
 
 const Register: React.FC = () => {
+  const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
 
   useEffect(() => {
@@ -15,21 +17,21 @@ const Register: React.FC = () => {
   }, []);
 
   return (
-    <main className="flex flex-col flex-grow items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+    <main className="flex flex-col flex-grow items-center justify-center px-4 sm:px-6 lg:px-8">
       {/* Título */}
       <div className="text-center mb-8 sm:mb-12">
-        <h1 className="font-poppins font-bold text-h3 sm:text-h2 md:text-h1 text-gray-800 mb-4">
-          Bienvenido a Blood4Life
+        <h1 className="font-poppins font-bold text-h3 sm:text-h2 md:text-h1 text-gray-800 dark:text-white mb-4">
+          {t('auth.register.welcome')}
         </h1>
-        <p className="font-roboto text-body-sm sm:text-body-lg md:text-body text-gray-600 max-w-2xl mx-auto">
-          Selecciona tu perfil para continuar con el registro en nuestra plataforma
+        <p className="font-roboto text-body-sm sm:text-body-lg md:text-body text-gray-600 dark:text-gray-200 max-w-2xl mx-auto">
+          {t('auth.register.selectProfile')}
         </p>
       </div>
 
       {/* Tarjetas */}
       <div className={`flex ${isMobile ? 'flex-col items-center' : 'flex-row items-start'} gap-4 sm:gap-6 md:gap-8 mb-8 w-full max-w-6xl justify-center`}>
         {/* Donante */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 w-full sm:w-5/12 lg:w-1/3 flex flex-col items-center">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 w-full sm:w-5/12 lg:w-1/3 flex flex-col items-center">
           <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-6">
             <svg
               className="w-10 h-10 text-blue-600"
@@ -46,11 +48,11 @@ const Register: React.FC = () => {
               />
             </svg>
           </div>
-          <h2 className="font-poppins font-bold text-body-lg sm:text-h3 text-gray-800 mb-4 sm:mb-8">
-            Soy Donante
+          <h2 className="font-poppins font-bold text-body-lg sm:text-h3 text-gray-800 dark:text-white mb-4 sm:mb-8">
+            {t('auth.register.iAmDonor')}
           </h2>
           <Button to="/registerbloodDonor" className="flex items-center justify-center">
-            Registrarme como Donante
+            {t('auth.register.registerAsDonor')}
             <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
@@ -58,7 +60,7 @@ const Register: React.FC = () => {
         </div>
 
         {/* Hospital */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 w-full sm:w-5/12 lg:w-1/3 flex flex-col items-center">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6 sm:p-8 hover:shadow-2xl transition-all duration-300 w-full sm:w-5/12 lg:w-1/3 flex flex-col items-center">
           <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mb-6">
             <svg
               className="w-10 h-10 text-blue-600"
@@ -75,11 +77,11 @@ const Register: React.FC = () => {
               />
             </svg>
           </div>
-          <h2 className="font-poppins font-bold text-body-lg sm:text-h3 text-gray-800 mb-4 sm:mb-8">
-            Soy Hospital / Centro
+          <h2 className="font-poppins font-bold text-body-lg sm:text-h3 text-gray-800 dark:text-white mb-4 sm:mb-8">
+            {t('auth.register.iAmHospital')}
           </h2>
           <Button to="/registerhospital" className="flex items-center justify-center">
-            Registrarme como Hospital
+            {t('auth.register.registerAsHospital')}
             <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
             </svg>
@@ -90,13 +92,13 @@ const Register: React.FC = () => {
 
       {/* Link a login */}
       <div className="text-center mt-4">
-        <span className="font-roboto text-caption sm:text-body-sm text-gray-600">
-          ¿Ya tiene una cuenta? Click{' '}
+        <span className="font-roboto text-caption sm:text-body-sm text-gray-600 dark:text-gray-200">
+          {t('auth.register.haveAccount')}{' '}
           <Link
             to="/login"
-            className="text-blue-600 hover:text-blue-800 underline"
+            className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline"
           >
-            aquí
+            {t('auth.register.here')}
           </Link>
         </span>
       </div>

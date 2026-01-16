@@ -1,9 +1,6 @@
 package com.xiojuandawt.blood4life.entities;
 
 import java.time.LocalDate;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,8 +24,6 @@ public class Appointment {
     @JoinColumn(name = "campaign_id", nullable = false)
     private Campaign campaign;
 
-    // ...
-
     public Campaign getCampaign() {
         return campaign;
     }
@@ -45,7 +40,31 @@ public class Appointment {
 
     private LocalDate dateAppointment;
 
-    // getters y setters
+    @jakarta.persistence.Column(name = "hour_appointment")
+    private java.time.LocalTime hourAppointment;
+
+    public Appointment() {
+    }
+
+    public Appointment(AppointmentStatus appointmentStatus, Campaign campaign, BloodDonor bloodDonor,
+            String hospitalComment, LocalDate dateAppointment) {
+        this.appointmentStatus = appointmentStatus;
+        this.campaign = campaign;
+        this.bloodDonor = bloodDonor;
+        this.hospitalComment = hospitalComment;
+        this.dateAppointment = dateAppointment;
+    }
+
+    public Appointment(Integer id, AppointmentStatus appointmentStatus, Campaign campaign, BloodDonor bloodDonor,
+            String hospitalComment, LocalDate dateAppointment) {
+        this.id = id;
+        this.appointmentStatus = appointmentStatus;
+        this.campaign = campaign;
+        this.bloodDonor = bloodDonor;
+        this.hospitalComment = hospitalComment;
+        this.dateAppointment = dateAppointment;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -86,7 +105,14 @@ public class Appointment {
         this.dateAppointment = dateAppointment;
     }
 
-    // toString
+    public java.time.LocalTime getHourAppointment() {
+        return hourAppointment;
+    }
+
+    public void setHourAppointment(java.time.LocalTime hourAppointment) {
+        this.hourAppointment = hourAppointment;
+    }
+
     @Override
     public String toString() {
         return "Appointment [id=" + id + ", appointmentStatus=" + appointmentStatus +

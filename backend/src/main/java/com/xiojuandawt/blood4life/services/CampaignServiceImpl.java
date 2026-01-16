@@ -85,7 +85,7 @@ public class CampaignServiceImpl implements CampaignService {
                 campaign.getRequiredBloodType());
 
         if (campaign.getId() != null) {
-            Long count = appointmentRepository.countByCampaignId(campaign.getId());
+            Integer count = appointmentRepository.countByCampaignId(campaign.getId());
             dto.setCurrentDonorCount(count.intValue());
         } else {
             dto.setCurrentDonorCount(0);

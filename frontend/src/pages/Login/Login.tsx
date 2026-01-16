@@ -1,9 +1,9 @@
 import Logo from "../../assets/images/LogoShadowMini.webp";
-import LoginForm from "../../components/LoginForm/LoginForm";
+import LoginForm from "../../components/features/auth/LoginForm/LoginForm";
 
 function Login() {
   return (
-    <div className="flex flex-col flex-grow items-center justify-center bg-gray-100 px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col flex-grow items-center justify-center px-4 sm:px-6 lg:px-8">
       {/* Logo */}
       <div className="flex justify-center mb-6">
         <img

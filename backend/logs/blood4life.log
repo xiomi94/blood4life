@@ -1,0 +1,545 @@
+2026-01-16T16:20:48.225Z  INFO 23092 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : Starting Blood4lifeApplication using Java 17.0.15 with PID 23092 (C:\Users\xiomara\Documents\proyectos\blood4life\backend\target\classes started by xiomara in C:\Users\xiomara\Documents\proyectos\blood4life\backend)
+2026-01-16T16:20:48.230Z  INFO 23092 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-01-16T16:20:48.288Z  INFO 23092 --- [blood4life] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-01-16T16:20:48.290Z  INFO 23092 --- [blood4life] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-01-16T16:20:48.985Z  INFO 23092 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-16T16:20:49.102Z  INFO 23092 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 103 ms. Found 9 JPA repository interfaces.
+2026-01-16T16:20:49.695Z  INFO 23092 --- [blood4life] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-01-16T16:20:49.708Z  INFO 23092 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-16T16:20:49.709Z  INFO 23092 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2026-01-16T16:20:49.759Z  INFO 23092 --- [blood4life] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-16T16:20:49.759Z  INFO 23092 --- [blood4life] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1468 ms
+2026-01-16T16:20:49.940Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-01-16T16:20:50.219Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@2b22f270
+2026-01-16T16:20:50.221Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-01-16T16:20:50.275Z  INFO 23092 --- [blood4life] [restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://localhost:3307/railway (MySQL 9.4)
+2026-01-16T16:20:50.298Z  WARN 23092 --- [blood4life] [restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-01-16T16:20:50.384Z  INFO 23092 --- [blood4life] [restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 29 migrations (execution time 00:00.072s)
+2026-01-16T16:20:50.421Z  INFO 23092 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `railway`: 31
+2026-01-16T16:20:50.425Z  INFO 23092 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Schema `railway` is up to date. No migration necessary.
+2026-01-16T16:20:50.511Z  INFO 23092 --- [blood4life] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-16T16:20:50.558Z  INFO 23092 --- [blood4life] [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.33.Final
+2026-01-16T16:20:50.586Z  INFO 23092 --- [blood4life] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-01-16T16:20:50.861Z  INFO 23092 --- [blood4life] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-16T16:20:50.924Z  WARN 23092 --- [blood4life] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-16T16:20:50.940Z  INFO 23092 --- [blood4life] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 9.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-01-16T16:20:51.848Z  INFO 23092 --- [blood4life] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-16T16:20:51.851Z  INFO 23092 --- [blood4life] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-16T16:20:52.032Z  INFO 23092 --- [blood4life] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-01-16T16:20:53.306Z  WARN 23092 --- [blood4life] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-16T16:20:53.848Z  INFO 23092 --- [blood4life] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-01-16T16:20:53.867Z  INFO 23092 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-01-16T16:20:53.867Z  INFO 23092 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@9d877ae]]
+2026-01-16T16:20:53.867Z  INFO 23092 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-01-16T16:20:53.889Z  INFO 23092 --- [blood4life] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-01-16T16:20:53.899Z  INFO 23092 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : Started Blood4lifeApplication in 6.169 seconds (process running for 6.504)
+2026-01-16T16:21:33.086Z  INFO 23092 --- [blood4life] [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-01-16T16:21:33.087Z  INFO 23092 --- [blood4life] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-01-16T16:21:33.088Z  INFO 23092 --- [blood4life] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-01-16T16:21:53.883Z  INFO 23092 --- [blood4life] [MessageBroker-1] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+2026-01-16T16:22:41.399Z  INFO 23092 --- [blood4life] [clientInboundChannel-22] c.x.b.c.BloodDonorWebSocketController    : Solicitud WebSocket de total de donantes. Devolviendo: 6
+2026-01-16T16:22:52.369Z  INFO 23092 --- [blood4life] [http-nio-8080-exec-2] c.x.b.services.HospitalWebSocketService  : Broadcasting appointment update to /topic/appointments: ID 49
+2026-01-16T16:25:37.821Z  INFO 23092 --- [blood4life] [http-nio-8080-exec-1] o.s.w.s.m.SubProtocolWebSocketHandler    : No messages received after 176517 ms. Closing WebSocketServerSockJsSession[id=py53um1s].
+2026-01-16T16:28:27.583Z  WARN 23092 --- [blood4life] [http-nio-8080-exec-1] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'GET' is not supported]
+2026-01-16T16:31:16.323Z  INFO 23092 --- [blood4life] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-01-16T16:31:16.331Z  INFO 23092 --- [blood4life] [Thread-5] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-01-16T16:31:16.985Z  INFO 23092 --- [blood4life] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-01-16T16:31:16.988Z  INFO 23092 --- [blood4life] [Thread-5] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-01-16T16:31:16.989Z  INFO 23092 --- [blood4life] [Thread-5] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@9d877ae]]
+2026-01-16T16:31:16.989Z  INFO 23092 --- [blood4life] [Thread-5] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-01-16T16:31:16.998Z  INFO 23092 --- [blood4life] [Thread-5] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-01-16T16:31:17.010Z  INFO 23092 --- [blood4life] [Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-01-16T16:31:17.050Z  INFO 23092 --- [blood4life] [Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-01-16T16:31:55.215Z  INFO 23092 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : Starting Blood4lifeApplication using Java 17.0.15 with PID 23092 (C:\Users\xiomara\Documents\proyectos\blood4life\backend\target\classes started by xiomara in C:\Users\xiomara\Documents\proyectos\blood4life\backend)
+2026-01-16T16:31:55.216Z  INFO 23092 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-01-16T16:31:55.555Z  INFO 23092 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-16T16:31:55.608Z  INFO 23092 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 48 ms. Found 9 JPA repository interfaces.
+2026-01-16T16:31:55.773Z  INFO 23092 --- [blood4life] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-01-16T16:31:55.775Z  INFO 23092 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-16T16:31:55.776Z  INFO 23092 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2026-01-16T16:31:55.806Z  INFO 23092 --- [blood4life] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-16T16:31:55.806Z  INFO 23092 --- [blood4life] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 586 ms
+2026-01-16T16:31:55.863Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Starting...
+2026-01-16T16:31:55.899Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-3 - Added connection com.mysql.cj.jdbc.ConnectionImpl@37357a9a
+2026-01-16T16:31:55.900Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-3 - Start completed.
+2026-01-16T16:31:55.911Z  INFO 23092 --- [blood4life] [restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://localhost:3307/railway (MySQL 9.4)
+2026-01-16T16:31:55.928Z  WARN 23092 --- [blood4life] [restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-01-16T16:31:55.978Z  INFO 23092 --- [blood4life] [restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 29 migrations (execution time 00:00.042s)
+2026-01-16T16:31:56.011Z  INFO 23092 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `railway`: 31
+2026-01-16T16:31:56.014Z  INFO 23092 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Schema `railway` is up to date. No migration necessary.
+2026-01-16T16:31:56.049Z  INFO 23092 --- [blood4life] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-16T16:31:56.054Z  INFO 23092 --- [blood4life] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-01-16T16:31:56.068Z  INFO 23092 --- [blood4life] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-16T16:31:56.079Z  WARN 23092 --- [blood4life] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-16T16:31:56.080Z  INFO 23092 --- [blood4life] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-3)']
+	Database driver: undefined/unknown
+	Database version: 9.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-01-16T16:31:56.361Z  INFO 23092 --- [blood4life] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-16T16:31:56.362Z  INFO 23092 --- [blood4life] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-16T16:31:56.795Z  WARN 23092 --- [blood4life] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-16T16:31:57.144Z  INFO 23092 --- [blood4life] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-01-16T16:31:57.159Z  INFO 23092 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-01-16T16:31:57.160Z  INFO 23092 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@315a7828]]
+2026-01-16T16:31:57.161Z  INFO 23092 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-01-16T16:31:57.166Z  INFO 23092 --- [blood4life] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-01-16T16:31:57.177Z  INFO 23092 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : Started Blood4lifeApplication in 2.01 seconds (process running for 669.765)
+2026-01-16T16:31:57.178Z  INFO 23092 --- [blood4life] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-01-16T16:32:57.170Z  INFO 23092 --- [blood4life] [MessageBroker-1] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+2026-01-16T17:02:05.256Z  INFO 23092 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : Starting Blood4lifeApplication using Java 17.0.15 with PID 23092 (C:\Users\xiomara\Documents\proyectos\blood4life\backend\target\classes started by xiomara in C:\Users\xiomara\Documents\proyectos\blood4life\backend)
+2026-01-16T17:02:05.258Z  INFO 23092 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-01-16T17:02:05.681Z  INFO 23092 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-16T17:02:05.735Z  INFO 23092 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 53 ms. Found 9 JPA repository interfaces.
+2026-01-16T17:02:05.937Z  INFO 23092 --- [blood4life] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-01-16T17:02:05.941Z  INFO 23092 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-16T17:02:05.941Z  INFO 23092 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2026-01-16T17:02:05.974Z  INFO 23092 --- [blood4life] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-16T17:02:05.974Z  INFO 23092 --- [blood4life] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 711 ms
+2026-01-16T17:02:06.044Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Starting...
+2026-01-16T17:02:06.088Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-5 - Added connection com.mysql.cj.jdbc.ConnectionImpl@787bf663
+2026-01-16T17:02:06.088Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Start completed.
+2026-01-16T17:02:06.100Z  INFO 23092 --- [blood4life] [restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://localhost:3307/railway (MySQL 9.4)
+2026-01-16T17:02:06.118Z  WARN 23092 --- [blood4life] [restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-01-16T17:02:06.162Z  INFO 23092 --- [blood4life] [restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 29 migrations (execution time 00:00.039s)
+2026-01-16T17:02:06.191Z  INFO 23092 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `railway`: 31
+2026-01-16T17:02:06.194Z  INFO 23092 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Schema `railway` is up to date. No migration necessary.
+2026-01-16T17:02:06.232Z  INFO 23092 --- [blood4life] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-16T17:02:06.237Z  INFO 23092 --- [blood4life] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-01-16T17:02:06.252Z  INFO 23092 --- [blood4life] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-16T17:02:06.258Z  WARN 23092 --- [blood4life] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-16T17:02:06.258Z  INFO 23092 --- [blood4life] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-5)']
+	Database driver: undefined/unknown
+	Database version: 9.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-01-16T17:02:06.489Z  INFO 23092 --- [blood4life] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-16T17:02:06.490Z  INFO 23092 --- [blood4life] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-16T17:02:06.863Z  WARN 23092 --- [blood4life] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-16T17:02:07.137Z  INFO 23092 --- [blood4life] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-01-16T17:02:07.154Z  INFO 23092 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-01-16T17:02:07.155Z  INFO 23092 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@4e513e9c]]
+2026-01-16T17:02:07.155Z  INFO 23092 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-01-16T17:02:07.175Z  INFO 23092 --- [blood4life] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-01-16T17:02:07.185Z  INFO 23092 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : Started Blood4lifeApplication in 1.979 seconds (process running for 2479.742)
+2026-01-16T17:02:07.188Z  INFO 23092 --- [blood4life] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-01-16T17:02:46.412Z  INFO 23092 --- [blood4life] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-01-16T17:02:46.412Z  INFO 23092 --- [blood4life] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-01-16T17:02:46.414Z  INFO 23092 --- [blood4life] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-01-16T17:02:46.862Z  INFO 23092 --- [blood4life] [clientInboundChannel-13] c.x.b.c.BloodDonorWebSocketController    : Solicitud WebSocket de total de donantes. Devolviendo: 6
+2026-01-16T17:02:55.578Z  WARN 23092 --- [blood4life] [http-nio-8080-exec-2] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'GET' is not supported]
+2026-01-16T17:03:07.157Z  INFO 23092 --- [blood4life] [MessageBroker-6] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 5 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(4)-CONNECTED(4)-DISCONNECT(1)], stompBrokerRelay[null], inboundChannel[pool size = 24, active threads = 0, queued tasks = 0, completed tasks = 36], outboundChannel[pool size = 11, active threads = 0, queued tasks = 0, completed tasks = 11], sockJsScheduler[pool size = 12, active threads = 1, queued tasks = 1, completed tasks = 5]
+2026-01-16T17:03:25.040Z  INFO 23092 --- [blood4life] [clientInboundChannel-5] c.x.b.c.BloodDonorWebSocketController    : Solicitud WebSocket de total de donantes. Devolviendo: 6
+2026-01-16T17:03:42.728Z  INFO 23092 --- [blood4life] [clientInboundChannel-2] c.x.b.c.BloodDonorWebSocketController    : Solicitud WebSocket de total de donantes. Devolviendo: 6
+2026-01-16T17:10:25.762Z  INFO 23092 --- [blood4life] [clientInboundChannel-31] c.x.b.c.BloodDonorWebSocketController    : Solicitud WebSocket de total de donantes. Devolviendo: 6
+2026-01-16T17:17:58.014Z  INFO 23092 --- [blood4life] [clientInboundChannel-53] c.x.b.c.BloodDonorWebSocketController    : Solicitud WebSocket de total de donantes. Devolviendo: 6
+2026-01-16T17:19:16.806Z  WARN 23092 --- [blood4life] [http-nio-8080-exec-6] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'GET' is not supported]
+2026-01-16T17:19:56.286Z  WARN 23092 --- [blood4life] [http-nio-8080-exec-10] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'GET' is not supported]
+2026-01-16T17:20:02.798Z  INFO 23092 --- [blood4life] [clientInboundChannel-75] c.x.b.c.BloodDonorWebSocketController    : Solicitud WebSocket de total de donantes. Devolviendo: 6
+2026-01-16T17:23:10.191Z  INFO 23092 --- [blood4life] [http-nio-8080-exec-6] o.s.w.s.m.SubProtocolWebSocketHandler    : No messages received after 187454 ms. Closing WebSocketServerSockJsSession[id=bmiezqgc].
+2026-01-16T17:25:33.069Z  INFO 23092 --- [blood4life] [clientInboundChannel-131] c.x.b.c.BloodDonorWebSocketController    : Solicitud WebSocket de total de donantes. Devolviendo: 6
+2026-01-16T17:33:07.175Z  INFO 23092 --- [blood4life] [MessageBroker-8] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[5 current WS(5)-HttpStream(0)-HttpPoll(0), 49 total, 1 closed abnormally (1 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(42)-CONNECTED(42)-DISCONNECT(3)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 378], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 96], sockJsScheduler[pool size = 12, active threads = 1, queued tasks = 6, completed tasks = 700]
+2026-01-16T18:00:48.454Z  INFO 23092 --- [blood4life] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 1 deletion, 0 modifications)
+2026-01-16T18:00:48.460Z  INFO 23092 --- [blood4life] [Thread-22] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-01-16T18:00:48.742Z  INFO 23092 --- [blood4life] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-01-16T18:00:48.751Z  INFO 23092 --- [blood4life] [Thread-22] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-01-16T18:00:48.751Z  INFO 23092 --- [blood4life] [Thread-22] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@4e513e9c]]
+2026-01-16T18:00:48.751Z  INFO 23092 --- [blood4life] [Thread-22] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-01-16T18:00:48.756Z  INFO 23092 --- [blood4life] [Thread-22] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-01-16T18:00:48.757Z  INFO 23092 --- [blood4life] [Thread-22] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Shutdown initiated...
+2026-01-16T18:00:48.768Z  INFO 23092 --- [blood4life] [Thread-22] com.zaxxer.hikari.HikariDataSource       : HikariPool-5 - Shutdown completed.
+2026-01-16T18:00:48.902Z  INFO 23092 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : Starting Blood4lifeApplication using Java 17.0.15 with PID 23092 (C:\Users\xiomara\Documents\proyectos\blood4life\backend\target\classes started by xiomara in C:\Users\xiomara\Documents\proyectos\blood4life\backend)
+2026-01-16T18:00:48.903Z  INFO 23092 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-01-16T18:00:49.059Z  INFO 23092 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-16T18:00:49.082Z  INFO 23092 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 21 ms. Found 9 JPA repository interfaces.
+2026-01-16T18:00:49.177Z  INFO 23092 --- [blood4life] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-01-16T18:00:49.178Z  INFO 23092 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-16T18:00:49.178Z  INFO 23092 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2026-01-16T18:00:49.190Z  INFO 23092 --- [blood4life] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-16T18:00:49.191Z  INFO 23092 --- [blood4life] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 286 ms
+2026-01-16T18:00:49.220Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Starting...
+2026-01-16T18:00:49.240Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-6 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3e440403
+2026-01-16T18:00:49.241Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Start completed.
+2026-01-16T18:00:49.257Z  INFO 23092 --- [blood4life] [restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://localhost:3307/railway (MySQL 9.4)
+2026-01-16T18:00:49.273Z  WARN 23092 --- [blood4life] [restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-01-16T18:00:49.301Z  INFO 23092 --- [blood4life] [restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 29 migrations (execution time 00:00.024s)
+2026-01-16T18:00:49.322Z  INFO 23092 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `railway`: 31
+2026-01-16T18:00:49.324Z  INFO 23092 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Schema `railway` is up to date. No migration necessary.
+2026-01-16T18:00:49.345Z  INFO 23092 --- [blood4life] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-16T18:00:49.347Z  INFO 23092 --- [blood4life] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-01-16T18:00:49.357Z  INFO 23092 --- [blood4life] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-16T18:00:49.362Z  WARN 23092 --- [blood4life] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-16T18:00:49.363Z  INFO 23092 --- [blood4life] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-6)']
+	Database driver: undefined/unknown
+	Database version: 9.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-01-16T18:00:49.492Z  INFO 23092 --- [blood4life] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-16T18:00:49.493Z  INFO 23092 --- [blood4life] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-16T18:00:49.620Z  WARN 23092 --- [blood4life] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Cannot deserialize session attribute [SPRING_SECURITY_CONTEXT] for session [0B1219E554A495D219CD085A0B59E5E8]
+2026-01-16T18:00:49.715Z  WARN 23092 --- [blood4life] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-16T18:00:49.877Z  INFO 23092 --- [blood4life] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-01-16T18:00:49.884Z  INFO 23092 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-01-16T18:00:49.884Z  INFO 23092 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@19fd6217]]
+2026-01-16T18:00:49.885Z  INFO 23092 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-01-16T18:00:49.887Z  INFO 23092 --- [blood4life] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-01-16T18:00:49.891Z  INFO 23092 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : Started Blood4lifeApplication in 1.012 seconds (process running for 6002.422)
+2026-01-16T18:00:49.892Z  INFO 23092 --- [blood4life] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation unchanged
+2026-01-16T18:01:33.087Z  INFO 23092 --- [blood4life] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-01-16T18:01:33.088Z  INFO 23092 --- [blood4life] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-01-16T18:01:33.090Z  INFO 23092 --- [blood4life] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-01-16T18:01:49.895Z  INFO 23092 --- [blood4life] [MessageBroker-1] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+2026-01-16T18:03:42.252Z  INFO 23092 --- [blood4life] [clientInboundChannel-13] c.x.b.c.BloodDonorWebSocketController    : Solicitud WebSocket de total de donantes. Devolviendo: 6
+2026-01-16T18:10:56.304Z  INFO 23092 --- [blood4life] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 1 deletion, 0 modifications)
+2026-01-16T18:10:56.308Z  INFO 23092 --- [blood4life] [Thread-36] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-01-16T18:10:56.601Z  INFO 23092 --- [blood4life] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-01-16T18:10:56.602Z  INFO 23092 --- [blood4life] [Thread-36] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-01-16T18:10:56.602Z  INFO 23092 --- [blood4life] [Thread-36] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@19fd6217]]
+2026-01-16T18:10:56.602Z  INFO 23092 --- [blood4life] [Thread-36] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-01-16T18:10:56.607Z  INFO 23092 --- [blood4life] [Thread-36] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-01-16T18:10:56.607Z  INFO 23092 --- [blood4life] [Thread-36] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Shutdown initiated...
+2026-01-16T18:10:56.614Z  INFO 23092 --- [blood4life] [Thread-36] com.zaxxer.hikari.HikariDataSource       : HikariPool-6 - Shutdown completed.
+2026-01-16T18:10:56.716Z  INFO 23092 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : Starting Blood4lifeApplication using Java 17.0.15 with PID 23092 (C:\Users\xiomara\Documents\proyectos\blood4life\backend\target\classes started by xiomara in C:\Users\xiomara\Documents\proyectos\blood4life\backend)
+2026-01-16T18:10:56.717Z  INFO 23092 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-01-16T18:10:56.901Z  INFO 23092 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-16T18:10:56.965Z  INFO 23092 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 62 ms. Found 8 JPA repository interfaces.
+2026-01-16T18:10:57.380Z  INFO 23092 --- [blood4life] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-01-16T18:10:57.381Z  INFO 23092 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-16T18:10:57.382Z  INFO 23092 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2026-01-16T18:10:57.415Z  INFO 23092 --- [blood4life] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-16T18:10:57.415Z  INFO 23092 --- [blood4life] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 697 ms
+2026-01-16T18:10:57.473Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Starting...
+2026-01-16T18:10:57.507Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-7 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3e143f96
+2026-01-16T18:10:57.507Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Start completed.
+2026-01-16T18:10:57.525Z  INFO 23092 --- [blood4life] [restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://localhost:3307/railway (MySQL 9.4)
+2026-01-16T18:10:57.545Z  WARN 23092 --- [blood4life] [restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-01-16T18:10:57.593Z  INFO 23092 --- [blood4life] [restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 29 migrations (execution time 00:00.044s)
+2026-01-16T18:10:57.627Z  INFO 23092 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `railway`: 31
+2026-01-16T18:10:57.629Z  INFO 23092 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Schema `railway` is up to date. No migration necessary.
+2026-01-16T18:10:57.670Z  INFO 23092 --- [blood4life] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-16T18:10:57.675Z  INFO 23092 --- [blood4life] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-01-16T18:10:57.694Z  INFO 23092 --- [blood4life] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-16T18:10:57.700Z  WARN 23092 --- [blood4life] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-16T18:10:57.700Z  INFO 23092 --- [blood4life] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-7)']
+	Database driver: undefined/unknown
+	Database version: 9.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-01-16T18:10:58.050Z  INFO 23092 --- [blood4life] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-16T18:10:58.051Z  INFO 23092 --- [blood4life] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-16T18:10:58.313Z  WARN 23092 --- [blood4life] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Cannot deserialize session attribute [SPRING_SECURITY_CONTEXT] for session [34C009B7B71EC5005763EBCB36E74921]
+2026-01-16T18:10:58.384Z  WARN 23092 --- [blood4life] [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'appointmentController': Unsatisfied dependency expressed through field 'notificationService': Error creating bean with name 'notificationServiceImpl' defined in file [C:\Users\xiomara\Documents\proyectos\blood4life\backend\target\classes\com\xiojuandawt\blood4life\services\NotificationServiceImpl.class]: Post-processing of merged bean definition failed
+2026-01-16T18:10:58.385Z  INFO 23092 --- [blood4life] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-01-16T18:10:58.386Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Shutdown initiated...
+2026-01-16T18:10:58.400Z  INFO 23092 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-7 - Shutdown completed.
+2026-01-16T18:10:58.402Z  INFO 23092 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2026-01-16T18:10:58.416Z  INFO 23092 --- [blood4life] [restartedMain] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-01-16T18:10:58.453Z ERROR 23092 --- [blood4life] [restartedMain] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'appointmentController': Unsatisfied dependency expressed through field 'notificationService': Error creating bean with name 'notificationServiceImpl' defined in file [C:\Users\xiomara\Documents\proyectos\blood4life\backend\target\classes\com\xiojuandawt\blood4life\services\NotificationServiceImpl.class]: Post-processing of merged bean definition failed
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:788) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:768) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:509) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1459) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:606) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1228) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1194) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1130) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:990) ~[spring-context-6.2.12.jar:6.2.12]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.12.jar:6.2.12]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.5.7.jar:3.5.7]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.5.7.jar:3.5.7]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.5.7.jar:3.5.7]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.5.7.jar:3.5.7]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.5.7.jar:3.5.7]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.5.7.jar:3.5.7]
+	at com.xiojuandawt.blood4life.Blood4lifeApplication.main(Blood4lifeApplication.java:10) ~[classes/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50) ~[spring-boot-devtools-3.5.7.jar:3.5.7]
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'notificationServiceImpl' defined in file [C:\Users\xiomara\Documents\proyectos\blood4life\backend\target\classes\com\xiojuandawt\blood4life\services\NotificationServiceImpl.class]: Post-processing of merged bean definition failed
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:584) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:529) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:373) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1770) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1653) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:785) ~[spring-beans-6.2.12.jar:6.2.12]
+	... 27 common frames omitted
+Caused by: java.lang.IllegalStateException: Failed to introspect Class [com.xiojuandawt.blood4life.services.NotificationServiceImpl] from ClassLoader [org.springframework.boot.devtools.restart.classloader.RestartClassLoader@4794cde5]
+	at org.springframework.util.ReflectionUtils.getDeclaredFields(ReflectionUtils.java:756) ~[spring-core-6.2.12.jar:6.2.12]
+	at org.springframework.util.ReflectionUtils.doWithLocalFields(ReflectionUtils.java:689) ~[spring-core-6.2.12.jar:6.2.12]
+	at org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor.buildPersistenceMetadata(PersistenceAnnotationBeanPostProcessor.java:437) ~[spring-orm-6.2.12.jar:6.2.12]
+	at org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor.findPersistenceMetadata(PersistenceAnnotationBeanPostProcessor.java:418) ~[spring-orm-6.2.12.jar:6.2.12]
+	at org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor.findInjectionMetadata(PersistenceAnnotationBeanPostProcessor.java:377) ~[spring-orm-6.2.12.jar:6.2.12]
+	at org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor.postProcessMergedBeanDefinition(PersistenceAnnotationBeanPostProcessor.java:353) ~[spring-orm-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyMergedBeanDefinitionPostProcessors(AbstractAutowireCapableBeanFactory.java:1123) ~[spring-beans-6.2.12.jar:6.2.12]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:581) ~[spring-beans-6.2.12.jar:6.2.12]
+	... 36 common frames omitted
+Caused by: java.lang.NoClassDefFoundError: com/xiojuandawt/blood4life/repositories/NotificationRepository
+	at java.base/java.lang.Class.getDeclaredFields0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.privateGetDeclaredFields(Class.java:3297) ~[na:na]
+	at java.base/java.lang.Class.getDeclaredFields(Class.java:2371) ~[na:na]
+	at org.springframework.util.ReflectionUtils.getDeclaredFields(ReflectionUtils.java:751) ~[spring-core-6.2.12.jar:6.2.12]
+	... 43 common frames omitted
+Caused by: java.lang.ClassNotFoundException: com.xiojuandawt.blood4life.repositories.NotificationRepository
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641) ~[na:na]
+	at java.base/jdk.internal.loader.ClassLoaders$AppClassLoader.loadClass(ClassLoaders.java:188) ~[na:na]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525) ~[na:na]
+	at java.base/java.lang.Class.forName0(Native Method) ~[na:na]
+	at java.base/java.lang.Class.forName(Class.java:467) ~[na:na]
+	at org.springframework.boot.devtools.restart.classloader.RestartClassLoader.loadClass(RestartClassLoader.java:121) ~[spring-boot-devtools-3.5.7.jar:3.5.7]
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:525) ~[na:na]
+	... 47 common frames omitted
+
+2026-01-16T18:11:55.744Z  INFO 22308 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : Starting Blood4lifeApplication using Java 17.0.15 with PID 22308 (C:\Users\xiomara\Documents\proyectos\blood4life\backend\target\classes started by xiomara in C:\Users\xiomara\Documents\proyectos\blood4life\backend)
+2026-01-16T18:11:55.750Z  INFO 22308 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-01-16T18:11:55.807Z  INFO 22308 --- [blood4life] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-01-16T18:11:55.808Z  INFO 22308 --- [blood4life] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-01-16T18:11:56.564Z  INFO 22308 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-16T18:11:56.648Z  INFO 22308 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 71 ms. Found 9 JPA repository interfaces.
+2026-01-16T18:11:57.204Z  INFO 22308 --- [blood4life] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-01-16T18:11:57.217Z  INFO 22308 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-16T18:11:57.218Z  INFO 22308 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2026-01-16T18:11:57.258Z  INFO 22308 --- [blood4life] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-16T18:11:57.258Z  INFO 22308 --- [blood4life] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1450 ms
+2026-01-16T18:11:57.503Z  INFO 22308 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-01-16T18:11:57.777Z  INFO 22308 --- [blood4life] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@540a6d09
+2026-01-16T18:11:57.779Z  INFO 22308 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-01-16T18:11:57.830Z  INFO 22308 --- [blood4life] [restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://localhost:3307/railway (MySQL 9.4)
+2026-01-16T18:11:57.856Z  WARN 22308 --- [blood4life] [restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-01-16T18:11:57.989Z  INFO 22308 --- [blood4life] [restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 29 migrations (execution time 00:00.117s)
+2026-01-16T18:11:58.035Z  INFO 22308 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `railway`: 31
+2026-01-16T18:11:58.039Z  INFO 22308 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Schema `railway` is up to date. No migration necessary.
+2026-01-16T18:11:58.120Z  INFO 22308 --- [blood4life] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-16T18:11:58.173Z  INFO 22308 --- [blood4life] [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.33.Final
+2026-01-16T18:11:58.223Z  INFO 22308 --- [blood4life] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-01-16T18:11:58.464Z  INFO 22308 --- [blood4life] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-16T18:11:58.517Z  WARN 22308 --- [blood4life] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-16T18:11:58.529Z  INFO 22308 --- [blood4life] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 9.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-01-16T18:11:59.430Z  INFO 22308 --- [blood4life] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-16T18:11:59.433Z  INFO 22308 --- [blood4life] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-16T18:11:59.658Z  INFO 22308 --- [blood4life] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-01-16T18:12:00.933Z  WARN 22308 --- [blood4life] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-16T18:12:01.474Z  INFO 22308 --- [blood4life] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-01-16T18:12:01.493Z  INFO 22308 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-01-16T18:12:01.494Z  INFO 22308 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@5691a1e2]]
+2026-01-16T18:12:01.494Z  INFO 22308 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-01-16T18:12:01.513Z  INFO 22308 --- [blood4life] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-01-16T18:12:01.528Z  INFO 22308 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : Started Blood4lifeApplication in 6.203 seconds (process running for 6.547)
+2026-01-16T18:12:06.101Z  INFO 22308 --- [blood4life] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-01-16T18:12:06.102Z  INFO 22308 --- [blood4life] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-01-16T18:12:06.108Z  INFO 22308 --- [blood4life] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+2026-01-16T18:12:07.313Z  INFO 22308 --- [blood4life] [clientInboundChannel-16] c.x.b.c.BloodDonorWebSocketController    : Solicitud WebSocket de total de donantes. Devolviendo: 6
+2026-01-16T18:13:01.502Z  INFO 22308 --- [blood4life] [MessageBroker-9] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[5 current WS(5)-HttpStream(0)-HttpPoll(0), 5 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(4)-CONNECTED(4)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 21, active threads = 0, queued tasks = 0, completed tasks = 21], outboundChannel[pool size = 5, active threads = 0, queued tasks = 0, completed tasks = 5], sockJsScheduler[pool size = 12, active threads = 1, queued tasks = 6, completed tasks = 21]
+2026-01-16T22:41:41.031Z  INFO 3464 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : Starting Blood4lifeApplication using Java 17.0.12 with PID 3464 (E:\blood4life\backend\target\classes started by juan- in E:\blood4life\backend)
+2026-01-16T22:41:41.033Z  INFO 3464 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-01-16T22:41:41.062Z  INFO 3464 --- [blood4life] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-01-16T22:41:41.062Z  INFO 3464 --- [blood4life] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-01-16T22:41:41.493Z  INFO 3464 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-01-16T22:41:41.495Z  INFO 3464 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-16T22:41:41.551Z  INFO 3464 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 49 ms. Found 9 JPA repository interfaces.
+2026-01-16T22:41:41.557Z  INFO 3464 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-01-16T22:41:41.557Z  INFO 3464 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data LDAP repositories in DEFAULT mode.
+2026-01-16T22:41:41.562Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.AdminRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:41:41.563Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.AppointmentRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:41:41.563Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.AppointmentStatusRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:41:41.564Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.BloodDonorRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:41:41.564Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.BloodTypeRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:41:41.564Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.CampaignRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:41:41.565Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.HospitalRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:41:41.565Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.ImageRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:41:41.565Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.NotificationRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:41:41.566Z  INFO 3464 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 7 ms. Found 0 LDAP repository interfaces.
+2026-01-16T22:41:41.968Z  INFO 3464 --- [blood4life] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-01-16T22:41:41.977Z  INFO 3464 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-16T22:41:41.978Z  INFO 3464 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2026-01-16T22:41:42.013Z  INFO 3464 --- [blood4life] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-16T22:41:42.014Z  INFO 3464 --- [blood4life] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 952 ms
+2026-01-16T22:41:42.154Z  INFO 3464 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-01-16T22:41:42.357Z  INFO 3464 --- [blood4life] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6d87a4a2
+2026-01-16T22:41:42.359Z  INFO 3464 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-01-16T22:41:42.401Z  INFO 3464 --- [blood4life] [restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://localhost:3307/railway (MySQL 9.4)
+2026-01-16T22:41:42.420Z  WARN 3464 --- [blood4life] [restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-01-16T22:41:42.483Z  INFO 3464 --- [blood4life] [restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 29 migrations (execution time 00:00.053s)
+2026-01-16T22:41:42.502Z  INFO 3464 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `railway`: 31
+2026-01-16T22:41:42.505Z  INFO 3464 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Schema `railway` is up to date. No migration necessary.
+2026-01-16T22:41:42.561Z  INFO 3464 --- [blood4life] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-16T22:41:42.598Z  INFO 3464 --- [blood4life] [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.33.Final
+2026-01-16T22:41:42.621Z  INFO 3464 --- [blood4life] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-01-16T22:41:42.794Z  INFO 3464 --- [blood4life] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-16T22:41:42.835Z  WARN 3464 --- [blood4life] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-16T22:41:42.845Z  INFO 3464 --- [blood4life] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 9.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-01-16T22:41:43.486Z  INFO 3464 --- [blood4life] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-16T22:41:43.488Z  INFO 3464 --- [blood4life] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-16T22:41:43.610Z  INFO 3464 --- [blood4life] [restartedMain] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-01-16T22:41:44.462Z  INFO 3464 --- [blood4life] [restartedMain] o.s.l.c.support.AbstractContextSource    : Property 'userDn' not set - anonymous context will be used for read-only operations
+2026-01-16T22:41:44.503Z  WARN 3464 --- [blood4life] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-16T22:41:44.838Z  INFO 3464 --- [blood4life] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-01-16T22:41:44.849Z  INFO 3464 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-01-16T22:41:44.850Z  INFO 3464 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@325f0c4b]]
+2026-01-16T22:41:44.851Z  INFO 3464 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-01-16T22:41:44.863Z  INFO 3464 --- [blood4life] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-01-16T22:41:44.869Z  INFO 3464 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : Started Blood4lifeApplication in 4.113 seconds (process running for 4.384)
+2026-01-16T22:42:12.473Z  INFO 3464 --- [blood4life] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-01-16T22:42:12.473Z  INFO 3464 --- [blood4life] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-01-16T22:42:12.475Z  INFO 3464 --- [blood4life] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-01-16T22:42:44.860Z  INFO 3464 --- [blood4life] [MessageBroker-1] o.s.w.s.c.WebSocketMessageBrokerStats    : WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+2026-01-16T22:48:32.957Z  INFO 3464 --- [blood4life] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2026-01-16T22:48:32.960Z  INFO 3464 --- [blood4life] [Thread-5] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-01-16T22:48:32.984Z  INFO 3464 --- [blood4life] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-01-16T22:48:32.985Z  INFO 3464 --- [blood4life] [Thread-5] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-01-16T22:48:32.986Z  INFO 3464 --- [blood4life] [Thread-5] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@325f0c4b]]
+2026-01-16T22:48:32.986Z  INFO 3464 --- [blood4life] [Thread-5] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-01-16T22:48:32.989Z  INFO 3464 --- [blood4life] [Thread-5] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-01-16T22:48:32.991Z  INFO 3464 --- [blood4life] [Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-01-16T22:48:32.996Z  INFO 3464 --- [blood4life] [Thread-5] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-01-16T22:48:33.043Z  INFO 3464 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : Starting Blood4lifeApplication using Java 17.0.12 with PID 3464 (E:\blood4life\backend\target\classes started by juan- in E:\blood4life\backend)
+2026-01-16T22:48:33.044Z  INFO 3464 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-01-16T22:48:33.172Z  INFO 3464 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-01-16T22:48:33.172Z  INFO 3464 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-16T22:48:33.190Z  INFO 3464 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 18 ms. Found 9 JPA repository interfaces.
+2026-01-16T22:48:33.191Z  INFO 3464 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-01-16T22:48:33.192Z  INFO 3464 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data LDAP repositories in DEFAULT mode.
+2026-01-16T22:48:33.196Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.AdminRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:48:33.196Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.AppointmentRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:48:33.196Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.AppointmentStatusRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:48:33.196Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.BloodDonorRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:48:33.197Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.BloodTypeRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:48:33.197Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.CampaignRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:48:33.197Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.HospitalRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:48:33.197Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.ImageRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:48:33.198Z  INFO 3464 --- [blood4life] [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data LDAP - Could not safely identify store assignment for repository candidate interface com.xiojuandawt.blood4life.repositories.NotificationRepository; If you want this repository to be a LDAP repository, consider annotating your entities with one of these annotations: org.springframework.ldap.odm.annotations.Entry (preferred), or consider extending one of the following types with your repository: org.springframework.data.ldap.repository.LdapRepository
+2026-01-16T22:48:33.198Z  INFO 3464 --- [blood4life] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 5 ms. Found 0 LDAP repository interfaces.
+2026-01-16T22:48:33.267Z  INFO 3464 --- [blood4life] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-01-16T22:48:33.268Z  INFO 3464 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-16T22:48:33.268Z  INFO 3464 --- [blood4life] [restartedMain] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.48]
+2026-01-16T22:48:33.283Z  INFO 3464 --- [blood4life] [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-01-16T22:48:33.284Z  INFO 3464 --- [blood4life] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 238 ms
+2026-01-16T22:48:33.305Z  INFO 3464 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Starting...
+2026-01-16T22:48:33.319Z  INFO 3464 --- [blood4life] [restartedMain] com.zaxxer.hikari.pool.HikariPool        : HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@129ae652
+2026-01-16T22:48:33.320Z  INFO 3464 --- [blood4life] [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Start completed.
+2026-01-16T22:48:33.327Z  INFO 3464 --- [blood4life] [restartedMain] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://localhost:3307/railway (MySQL 9.4)
+2026-01-16T22:48:33.335Z  WARN 3464 --- [blood4life] [restartedMain] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.4 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-01-16T22:48:33.353Z  INFO 3464 --- [blood4life] [restartedMain] o.f.core.internal.command.DbValidate     : Successfully validated 29 migrations (execution time 00:00.015s)
+2026-01-16T22:48:33.365Z  INFO 3464 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Current version of schema `railway`: 31
+2026-01-16T22:48:33.366Z  INFO 3464 --- [blood4life] [restartedMain] o.f.core.internal.command.DbMigrate      : Schema `railway` is up to date. No migration necessary.
+2026-01-16T22:48:33.380Z  INFO 3464 --- [blood4life] [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-16T22:48:33.381Z  INFO 3464 --- [blood4life] [restartedMain] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-01-16T22:48:33.388Z  INFO 3464 --- [blood4life] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-16T22:48:33.391Z  WARN 3464 --- [blood4life] [restartedMain] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-16T22:48:33.391Z  INFO 3464 --- [blood4life] [restartedMain] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 9.4
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-01-16T22:48:33.483Z  INFO 3464 --- [blood4life] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-16T22:48:33.483Z  INFO 3464 --- [blood4life] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-16T22:48:33.685Z  INFO 3464 --- [blood4life] [restartedMain] o.s.l.c.support.AbstractContextSource    : Property 'userDn' not set - anonymous context will be used for read-only operations
+2026-01-16T22:48:33.699Z  WARN 3464 --- [blood4life] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-16T22:48:33.796Z  INFO 3464 --- [blood4life] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2026-01-16T22:48:33.801Z  INFO 3464 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Starting...
+2026-01-16T22:48:33.801Z  INFO 3464 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=true, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@448e10dd]]
+2026-01-16T22:48:33.801Z  INFO 3464 --- [blood4life] [restartedMain] o.s.m.s.b.SimpleBrokerMessageHandler     : Started.
+2026-01-16T22:48:33.804Z  INFO 3464 --- [blood4life] [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-01-16T22:48:33.807Z  INFO 3464 --- [blood4life] [restartedMain] c.x.blood4life.Blood4lifeApplication     : Started Blood4lifeApplication in 0.778 seconds (process running for 413.322)
+2026-01-16T22:48:33.809Z  INFO 3464 --- [blood4life] [restartedMain] .ConditionEvaluationDeltaLoggingListener : Condition evaluation delta:
+
+
+==========================
+CONDITION EVALUATION DELTA
+==========================
+
+
+Positive matches:
+-----------------
+
+   EmbeddedLdapAutoConfiguration matched:
+      - @ConditionalOnClass found required class 'com.unboundid.ldap.listener.InMemoryDirectoryServer' (OnClassCondition)
+      - Embedded LDAP Found base-dn property (EmbeddedLdapAutoConfiguration.EmbeddedLdapCondition)
+
+   EmbeddedLdapAutoConfiguration.EmbeddedLdapContextConfiguration matched:
+      - @ConditionalOnClass found required class 'org.springframework.ldap.core.ContextSource' (OnClassCondition)
+
+   EmbeddedLdapAutoConfiguration.EmbeddedLdapContextConfiguration#ldapContextSource matched:
+      - @ConditionalOnMissingBean (types: org.springframework.ldap.core.support.LdapContextSource; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+
+Negative matches:
+-----------------
+
+   LdapAutoConfiguration#ldapContextSource:
+      Did not match:
+         - @ConditionalOnMissingBean (types: org.springframework.ldap.core.support.LdapContextSource; SearchStrategy: all) found beans of type 'org.springframework.ldap.core.support.LdapContextSource' ldapContextSource (OnBeanCondition)
+
+
+Exclusions:
+-----------
+
+    None
+
+
+Unconditional classes:
+----------------------
+
+    None
+
+
+
+2026-01-16T22:48:35.123Z  INFO 3464 --- [blood4life] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-01-16T22:48:35.150Z  INFO 3464 --- [blood4life] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-01-16T22:48:35.151Z  INFO 3464 --- [blood4life] [SpringApplicationShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopping...
+2026-01-16T22:48:35.151Z  INFO 3464 --- [blood4life] [SpringApplicationShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : BrokerAvailabilityEvent[available=false, SimpleBrokerMessageHandler [org.springframework.messaging.simp.broker.DefaultSubscriptionRegistry@448e10dd]]
+2026-01-16T22:48:35.151Z  INFO 3464 --- [blood4life] [SpringApplicationShutdownHook] o.s.m.s.b.SimpleBrokerMessageHandler     : Stopped.
+2026-01-16T22:48:35.159Z  INFO 3464 --- [blood4life] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-01-16T22:48:35.159Z  INFO 3464 --- [blood4life] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown initiated...
+2026-01-16T22:48:35.164Z  INFO 3464 --- [blood4life] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-2 - Shutdown completed.

@@ -1,37 +1,39 @@
-import axios from 'axios';
-import { API_URL } from '../config';
 import axiosInstance from "../utils/axiosInstance.ts";
-
-export interface LoginResponse {
-  status: string;
-  message: string;
-}
+import { AUTH_ENDPOINTS, HEADERS } from '../constants/app.constants';
+import { getLoginEndpoint } from '../utils/userTypeDetector';
+import type { LoginResponse, UserType } from '../types/common.types';
 
 export const authService = {
-  login: async (email: string, password: string, type: 'bloodDonor' | 'hospital' | 'admin') => {
+  login: async (email: string, password: string, type: UserType) => {
     const credentials = btoa(`${email}:${password}`);
-    const response = await axios.post<LoginResponse>(
-      `${API_URL}/auth/${type}/login`,
+
+    const response = await axiosInstance.post<LoginResponse>(
+      getLoginEndpoint(type),
       {},
       {
         headers: {
           Authorization: `Basic ${credentials}`,
-        },
-        withCredentials: true // Important: Receive the cookie
+        }
       }
     );
     return response.data;
   },
+
   registerHospital: async (hospitalData: FormData) => {
-    const response = await axios.post(`${API_URL}/auth/hospital/register`, hospitalData);
+    const response = await axiosInstance.post(
+      AUTH_ENDPOINTS.HOSPITAL_REGISTER,
+      hospitalData,
+      { headers: HEADERS.MULTIPART_FORM_DATA }
+    );
     return response.data;
   },
 
-  registerBloodDonor: (submitData: FormData) => {
-    return axiosInstance.post(
-      `/auth/bloodDonor/register`,
+  registerBloodDonor: async (submitData: FormData) => {
+    const response = await axiosInstance.post(
+      AUTH_ENDPOINTS.BLOOD_DONOR_REGISTER,
       submitData,
-      { withCredentials: false }
+      { headers: HEADERS.MULTIPART_FORM_DATA }
     );
+    return response.data;
   }
 };

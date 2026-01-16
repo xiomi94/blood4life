@@ -7,6 +7,12 @@ const axiosInstance = axios.create({
   maxRedirects: 0, // Don't follow redirects - treat them as errors
 });
 
-// No request interceptor needed for token injection anymore!
+// Response interceptor to handle 401 Unauthorized errors
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export default axiosInstance;

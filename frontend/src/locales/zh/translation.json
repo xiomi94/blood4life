@@ -1,0 +1,466 @@
+{
+    "common": {
+        "loading": "加载中...",
+        "error": "错误",
+        "success": "成功",
+        "save": "保存",
+        "cancel": "取消",
+        "close": "关闭",
+        "delete": "删除",
+        "edit": "编辑",
+        "confirm": "确认",
+        "yes": "是",
+        "no": "否",
+        "search": "搜索",
+        "filter": "筛选",
+        "welcome": "欢迎"
+    },
+    "footer": {
+        "copyright": "Blood4Life © 2025. 保留所有权利。",
+        "aboutUs": "关于我们",
+        "privacyPolicy": "隐私政策"
+    },
+    "header": {
+        "home": "首页",
+        "login": "登录",
+        "register": "注册",
+        "campaigns": "活动",
+        "myProfile": "我的资料",
+        "editProfile": "编辑我的资料",
+        "logout": "登出",
+        "logoutConfirm": "您确定要登出吗？",
+        "cancel": "取消",
+        "notifications": "查看通知",
+        "alerts": "查看提醒",
+        "userMenu": "用户菜单",
+        "newNotifications": "您有新通知"
+    },
+    "auth": {
+        "login": {
+            "title": "登录",
+            "userType": "用户类型",
+            "donor": "捐赠者",
+            "hospital": "医院",
+            "admin": "管理员",
+            "email": "电子邮件",
+            "emailPlaceholder": "输入您的电子邮件",
+            "password": "密码",
+            "passwordPlaceholder": "输入您的密码",
+            "submit": "提交",
+            "loading": "加载中...",
+            "forgotPassword": "忘记密码？",
+            "noAccount": "没有账户？点击这里注册",
+            "here": "这里",
+            "registerLink": "在此注册",
+            "error": "登录错误。请检查您的凭据。"
+        },
+        "register": {
+            "welcome": "欢迎来到Blood4Life",
+            "selectProfile": "选择您的个人资料以继续在我们的平台上注册",
+            "iAmDonor": "我是捐赠者",
+            "iAmHospital": "我是医院/中心",
+            "registerAsDonor": "注册为捐赠者",
+            "registerAsHospital": "注册为医院",
+            "haveAccount": "已有账户？点击",
+            "here": "这里",
+            "requiredField": "星号 \"*\" 表示必填字段",
+            "formTitle": "注册新捐赠者",
+            "modal": {
+                "successTitle": "注册成功！",
+                "errorTitle": "注册错误"
+            },
+            "imageUpload": {
+                "title": "个人照片",
+                "uploadButton": "上传照片",
+                "formats": "格式：JPG、PNG",
+                "maxSize": "最大：5MB",
+                "preview": "个人照片预览",
+                "remove": "删除个人照片",
+                "select": "选择个人照片",
+                "ready": "✓ 图片准备保存",
+                "saveInfo": "将在注册时保存",
+                "invalidFormat": "请选择有效的图片（JPG或PNG)",
+                "tooLarge": "图片不得超过5MB"
+            },
+            "bloodDonor": {
+                "dni": "身份证",
+                "dniPlaceholder": "输入身份证 *",
+                "firstName": "名字",
+                "firstNamePlaceholder": "输入名字 *",
+                "lastName": "姓氏",
+                "lastNamePlaceholder": "输入姓氏 *",
+                "gender": "性别",
+                "genderSelect": "选择性别 *",
+                "male": "男性",
+                "female": "女性",
+                "preferNotToSay": "不愿透露",
+                "bloodType": "血型",
+                "bloodTypeSelect": "选择血型 *",
+                "email": "电子邮件",
+                "emailPlaceholder": "输入电子邮件 *",
+                "phone": "电话",
+                "phonePlaceholder": "输入电话 *",
+                "dateOfBirth": "出生日期",
+                "dateOfBirthPlaceholder": "选择出生日期 *",
+                "password": "密码",
+                "passwordPlaceholder": "输入密码 *",
+                "passwordHint": "必须包含：大写字母、小写字母、数字（8-32字符）",
+                "processing": "处理中...",
+                "registerButton": "注册",
+                "resetButton": "重置",
+                "validation": {
+                    "dniRequired": "身份证是必需的",
+                    "dniInvalid": "无效的身份证格式（8位数字 + 1个字母）",
+                    "firstNameRequired": "名字是必需的",
+                    "firstNameMin": "名字必须至少2个字符",
+                    "lastNameRequired": "姓氏是必需的",
+                    "lastNameMin": "姓氏必须至少2个字符",
+                    "genderRequired": "性别是必需的",
+                    "bloodTypeRequired": "血型是必需的",
+                    "emailRequired": "电子邮件是必需的",
+                    "emailInvalid": "电子邮件格式无效",
+                    "phoneRequired": "电话是必需的",
+                    "phoneMin": "电话必须至少9位数",
+                    "dateOfBirthRequired": "出生日期是必需的",
+                    "ageMin": "您必须年满18岁",
+                    "dateFuture": "日期不能是未来",
+                    "passwordRequired": "密码是必需的",
+                    "passwordMin": "密码必须至少8个字符",
+                    "fixErrors": "请修正以下错误："
+                },
+                "success": "捐赠者已成功注册。您现在可以登录。",
+                "error": "注册捐赠者时发生错误。请重试。"
+            }
+        }
+    },
+    "theme": {
+        "toggle": "切换主题",
+        "light": "切换到浅色模式",
+        "dark": "切换到深色模式"
+    },
+    "language": {
+        "select": "选择语言",
+        "es": "西班牙语",
+        "en": "英语",
+        "de": "德语",
+        "fr": "法语",
+        "ja": "日语",
+        "zh": "中文"
+    },
+    "dashboard": {
+        "loading": "加载统计数据...",
+        "loadError": "加载统计数据时出错",
+        "sidebar": {
+            "newCampaign": "新活动",
+            "newDonation": "新捐赠",
+            "home": "首页",
+            "myCampaigns": "我的活动",
+            "news": "新闻",
+            "newBadge": "新"
+        },
+        "appointments": {
+            "title": "今日预约",
+            "noAppointments": "今天没有预约",
+            "unknownDonor": "未知捐赠者",
+            "noTime": "无时间",
+            "dniLabel": "身份证"
+        },
+        "stats": {
+            "selectedCampaigns": "选定的活动",
+            "clearFilter": "清除筛选",
+            "searchPlaceholder": "按标题或位置搜索...",
+            "campaignsOption": "活动",
+            "bloodTypeOption": "按血型分布",
+            "genderOption": "按性别分布",
+            "appointmentsToday": "今日预约",
+            "donationsThisMonth": "本月捐赠",
+            "myCampaigns": "我的活动",
+            "allCampaigns": "所有活动",
+            "completedCampaigns": "已完成活动",
+            "allGenders": "所有",
+            "male": "男性",
+            "female": "女性",
+            "preferNotToSay": "不愿透露",
+            "noCampaignsToShow": "没有可显示的活动"
+        },
+        "admin": {
+            "title": "管理员仪表板",
+            "loading": "正在加载管理员仪表板...",
+            "tabs": {
+                "donors": "捐赠者",
+                "hospitals": "医院",
+                "appointments": "预约管理",
+                "campaigns": "活动管理"
+            },
+            "toasts": {
+                "newDonor": "新捐赠者已注册",
+                "newHospital": "新医院已注册",
+                "newAppointment": "收到新预约",
+                "newCampaign": "新活动已创建",
+                "deleteDonorSuccess": "捐赠者删除成功",
+                "deleteDonorError": "删除捐赠者时出错",
+                "deleteHospitalSuccess": "医院删除成功",
+                "deleteHospitalError": "删除医院时出错",
+                "updateDonorSuccess": "捐赠者更新成功",
+                "updateDonorError": "更新捐赠者时出错",
+                "deleteAppointmentSuccess": "预约删除成功",
+                "deleteAppointmentError": "删除预约时出错",
+                "updateAppointmentSuccess": "预约更新成功",
+                "deleteCampaignSuccess": "活动删除成功",
+                "updateCampaignSuccess": "活动更新成功"
+            },
+            "confirms": {
+                "deleteDonor": "您确定要删除此捐赠者吗？",
+                "deleteHospital": "您确定要删除此医院吗？",
+                "deleteAppointment": "您确定要删除此预约吗？",
+                "deleteCampaign": "您确定要删除此活动吗？"
+            },
+            "errors": {
+                "loadAdminData": "加载管理员数据时出错"
+            },
+            "stats": {
+                "totalDonors": "捐赠者总数",
+                "totalHospitals": "医院总数"
+            },
+            "chart": {
+                "title": "用户分布",
+                "donorsLabel": "捐赠者",
+                "hospitalsLabel": "医院",
+                "xAxisLabel": "用户"
+            },
+            "table": {
+                "name": "姓名",
+                "dni": "证件号",
+                "cif": "机构代码",
+                "email": "邮件",
+                "gender": "性别",
+                "phone": "电话",
+                "birthDate": "生日期",
+                "bloodType": "血型",
+                "address": "地址",
+                "donor": "捐赠者",
+                "campaign": "活动",
+                "date": "日期",
+                "status": "状态",
+                "comment": "备注",
+                "hospital": "医院",
+                "location": "地点",
+                "progress": "进度",
+                "actions": "操作",
+                "edit": "编辑",
+                "delete": "删除",
+                "male": "男",
+                "female": "女",
+                "statusList": {
+                    "1": "已预约",
+                    "2": "已完成",
+                    "3": "已取消"
+                }
+            },
+            "modals": {
+                "editDonor": "编辑捐赠者",
+                "editHospital": "编辑医院",
+                "editAppointment": "编辑预约管",
+                "editCampaign": "编辑活动",
+                "firstName": "名字",
+                "lastName": "姓氏",
+                "dni": "证件号",
+                "gender": "性别",
+                "email": "电子邮件",
+                "phone": "电话",
+                "birthDate": "出生日期",
+                "bloodType": "血型",
+                "bloodTypePlaceholder": "选择血型",
+                "cif": "机构代码",
+                "address": "地址",
+                "status": "状态",
+                "date": "日期",
+                "time": "时间",
+                "hospitalComment": "医院备注",
+                "description": "说明",
+                "startDate": "开始日期",
+                "endDate": "结束日期",
+                "location": "地点",
+                "requiredDonors": "所需人数",
+                "saveChanges": "保存更改",
+                "cancel": "取消"
+            }
+        },
+        "campaigns": {
+            "goalLabel": "目标",
+            "donors": "捐赠者",
+            "editButton": "编辑活动",
+            "deleteButton": "删除活动",
+            "datesLabel": "日期",
+            "bloodTypesLabel": "血型",
+            "noResults": "未找到符合该条件的活动",
+            "noCampaignsOnDate": "此日期没有活动",
+            "noCampaigns": "没有活跃的活动"
+        },
+        "calendar": {
+            "title": "日历",
+            "months": {
+                "january": "一月",
+                "february": "二月",
+                "march": "三月",
+                "april": "四月",
+                "may": "五月",
+                "june": "六月",
+                "july": "七月",
+                "august": "八月",
+                "september": "九月",
+                "october": "十月",
+                "november": "十一月",
+                "december": "十二月"
+            },
+            "days": {
+                "monday": "一",
+                "tuesday": "二",
+                "wednesday": "三",
+                "thursday": "四",
+                "friday": "五",
+                "saturday": "六",
+                "sunday": "日"
+            },
+            "legend": {
+                "completed": "已完成",
+                "active": "活跃",
+                "upcoming": "即将到来"
+            }
+        },
+        "donations": {
+            "title": "收到的捐赠",
+            "subtitle": "医院收到的最新献血。",
+            "campaignLabel": "捐赠活动",
+            "donationType": "捐赠类型",
+            "hospitalLabel": "医院",
+            "completed": "已完成"
+        },
+        "modal": {
+            "delete": {
+                "title": "删除活动",
+                "confirmMessage": "您确定要删除此活动吗？",
+                "warning": "此操作无法撤消。",
+                "instructionsLabel": "要确认，请输入活动名称：",
+                "placeholder": "活动名称..."
+            }
+        }
+    },
+    "index": {
+        "title": "Blood4Life",
+        "header": {
+            "title": "Blood4Life"
+        },
+        "content": {
+            "p1": "我们认为献血应该是一个简单、方便且组织良好的过程。我们的平台诞生的目标很明确：将充满爱心的人们与需要捐赠的医院联系起来，促进沟通和参与献血活动。",
+            "p2": "我们充当医院和捐赠者之间的数字汇合点。医疗中心可以发布其活跃的活动，报告其需求并管理预约，而捐赠者可以轻松注册，查看可用的活动或在其首选医院安排预约。",
+            "p3": "我们的承诺是提高捐赠过程的效率，减少信息匮乏，并培养持续团结的文化。每一笔捐赠都很重要，我们相信，当技术服务于健康和社会时，它可以带来改变。"
+        },
+        "hero": {
+            "alt": "献血与连接"
+        },
+        "footerSlogan": "“因为献血可以挽救生命，<br />我们提供连接。”"
+    },
+    "aboutUs": {
+        "title": "关于我们",
+        "subtitle": "将捐赠者与希望联系起来，将生命与生命联系起来。",
+        "mission": {
+            "title": "我们的使命",
+            "text": "在 Blood4Life，我们的使命是简化和加强献血过程。我们不懈努力，建立一个高效的网络，将无私的捐赠者与医院和卫生中心联系起来，确保血液快速、安全地送达最需要的人手中。我们创造技术来挽救生命。"
+        },
+        "vision": {
+            "title": "我们的愿景",
+            "text": "我们渴望成为全球领先的献血管理平台，通过提高认识、技术和社区来消除医院的储备短缺。我们梦想着一个没有病人需要等待重要输血的世界。"
+        },
+        "values": {
+            "title": "我们的价值观",
+            "solidarity": {
+                "title": "团结",
+                "text": "我们相信互助和利他主义是变革的驱动力。"
+            },
+            "transparency": {
+                "title": "透明度",
+                "text": "我们的运作完全清晰，在过程的每一步都建立信任。"
+            },
+            "innovation": {
+                "title": "创新",
+                "text": "我们使用最先进的技术来优化医疗保健管理。"
+            }
+        },
+        "backButton": "返回首页"
+    },
+    "privacyPolicy": {
+        "title": "隐私政策",
+        "lastUpdate": "最后更新：2026年1月",
+        "sections": {
+            "intro": {
+                "title": "1. 简介",
+                "text": "在 Blood4Life，我们致力于保护您的隐私和个人数据。本隐私政策解释了我们如何根据欧盟通用数据保护条例 (GDPR) 和现行西班牙法规收集、使用、共享和保护您的个人信息。"
+            },
+            "responsible": {
+                "title": "2. 数据控制者",
+                "text": "您数据的控制者是：",
+                "company": "Blood4Life S.L.",
+                "address": "地址：Calle Tecnología 123, 28000 Madrid, Spain",
+                "email": "联系邮箱：privacidad@blood4life.com"
+            },
+            "dataCollected": {
+                "title": "3. 我们收集的数据",
+                "text": "我们收集以下信息来管理平台：",
+                "list": {
+                    "id": "身份数据：姓名、身份证/NIE。",
+                    "contact": "联系数据：电子邮件、电话号码、邮政地址。",
+                    "health": "健康数据（特殊类别）：血型、捐赠资格历史（在您的明确同意下或在公共卫生领域的公共利益下处理）。",
+                    "session": "会话数据：IP 地址、访问日志、技术 cookie。"
+                }
+            },
+            "purpose": {
+                "title": "4. 处理目的",
+                "text": "处理您的数据用于以下目的：",
+                "list": {
+                    "users": "用户管理（捐赠者和医院）和身份验证。",
+                    "appointments": "协调预约和献血活动。",
+                    "comms": "发送相关通讯（预约提醒、短缺警报）（如果您已给予同意）。",
+                    "legal": "遵守健康法律义务。"
+                }
+            },
+            "legalBasis": {
+                "title": "5. 法律依据",
+                "text": "处理您的数据的法律依据是：",
+                "list": {
+                    "consent": "同意：通过注册，您明确同意处理您的数据。",
+                    "publicInterest": "公共利益：为了管理公共卫生服务和捐赠。",
+                    "legal": "法律义务：为了遵守健康和税收法规。"
+                }
+            },
+            "recipients": {
+                "title": "6. 数据接收者",
+                "text": "您的数据可能会传达给：",
+                "list": {
+                    "hospitals": "连接到该平台的授权医院和输血中心。",
+                    "authorities": "法律要求的主管卫生当局。",
+                    "tech": "保证数据安全的技术服务提供商（数据处理者）。"
+                },
+                "noSale": "我们不会向第三方出售或出租您的个人数据。"
+            },
+            "retention": {
+                "title": "7. 数据保留",
+                "text": "只要您保持帐户处于活动状态，我们将保留您的个人数据。一旦帐户关闭，它们将被封锁以遵守法律义务（例如，关于捐赠可追溯性的健康法规）所需的时间，之后将被安全删除。"
+            },
+            "rights": {
+                "title": "8. 您的权利 (ARCO+ 权利)",
+                "text": "根据 GDPR，您有权：",
+                "list": {
+                    "access": "访问：了解我们拥有关于您的哪些数据。",
+                    "rectification": "更正：更正不准确的数据。",
+                    "deletion": "删除（“被遗忘权”）：在不再需要时请求删除您的数据。",
+                    "limitation": "限制：请求在某些情况下限制处理。",
+                    "portability": "可移植性：以结构化格式接收您的数据。",
+                    "opposition": "反对：反对处理您的数据。"
+                },
+                "contact": "要行使这些权利，请联系我们：privacidad@blood4life.com"
+            }
+        },
+        "backButton": "返回首页"
+    }
+}

@@ -45,13 +45,20 @@ public class HospitalController {
       return ResponseEntity.status(org.springframework.http.HttpStatus.FORBIDDEN).body(error);
     }
 
-    Hospital me = (Hospital) authentication.getPrincipal();
+    Hospital authenticatedHospital = (Hospital) authentication.getPrincipal();
+
+    // Fetch fresh data from database instead of using cached authentication object
+    Hospital me = hospitalService.findById(authenticatedHospital.getId())
+        .orElseThrow(
+            () -> new ResourceNotFoundException("Hospital not found with id " + authenticatedHospital.getId()));
+
     String imageName = me.getImage() != null ? me.getImage().getName() : null;
 
     // DEBUG: Log what we're returning
     System.out.println("===== DEBUG /me endpoint =====");
     System.out.println("Hospital ID: " + me.getId());
     System.out.println("Hospital Name: " + me.getName());
+    System.out.println("Hospital Phone: " + me.getPhoneNumber());
     System.out.println("Has Image: " + (me.getImage() != null));
     System.out.println("Image Name: " + imageName);
     System.out.println("==============================");
@@ -61,6 +68,7 @@ public class HospitalController {
     meDTO.setCif(me.getCif());
     meDTO.setName(me.getName());
     meDTO.setAddress(me.getAddress());
+    meDTO.setPostalCode(me.getPostalCode());
     meDTO.setEmail(me.getEmail());
     meDTO.setPhoneNumber(me.getPhoneNumber());
     meDTO.setImageName(imageName);
@@ -88,10 +96,21 @@ public class HospitalController {
       @RequestParam("cif") String cif,
       @RequestParam("name") String name,
       @RequestParam("address") String address,
+      @RequestParam("postalCode") String postalCode,
       @RequestParam("email") String email,
       @RequestParam("phoneNumber") String phoneNumber,
       @RequestParam(value = "image", required = false) org.springframework.web.multipart.MultipartFile imageFile) {
     try {
+      System.out.println("===== DEBUG updateHospital =====");
+      System.out.println("ID: " + id);
+      System.out.println("CIF: " + cif);
+      System.out.println("Name: " + name);
+      System.out.println("Address: " + address);
+      System.out.println("Email: " + email);
+      System.out.println("PhoneNumber: " + phoneNumber);
+      System.out.println("Has Image: " + (imageFile != null && !imageFile.isEmpty()));
+      System.out.println("==============================");
+
       Hospital hospitalInDatabase = hospitalService.findById(id)
           .orElseThrow(() -> new ResourceNotFoundException("Hospital not found with id " + id));
 
@@ -99,6 +118,7 @@ public class HospitalController {
       hospitalInDatabase.setCif(cif);
       hospitalInDatabase.setName(name);
       hospitalInDatabase.setAddress(address);
+      hospitalInDatabase.setPostalCode(postalCode);
       hospitalInDatabase.setEmail(email);
       hospitalInDatabase.setPhoneNumber(phoneNumber);
 

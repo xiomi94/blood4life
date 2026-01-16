@@ -1,0 +1,37 @@
+# LDAP Directory Structure for Blood4Life
+
+# Base DN
+dn: dc=blood4life,dc=com
+objectClass: top
+objectClass: domain
+dc: blood4life
+
+# Organizational Units
+dn: ou=empleados,dc=blood4life,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: empleados
+
+dn: ou=grupos,dc=blood4life,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: grupos
+
+# Admin user - The only user in the system
+dn: uid=admin,ou=empleados,dc=blood4life,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Admin User
+sn: Admin
+uid: admin
+userPassword: admin1234
+mail: admin@admin.es
+
+# Admin group
+dn: cn=admins,ou=grupos,dc=blood4life,dc=com
+objectClass: top
+objectClass: groupOfNames
+cn: admins
+member: uid=admin,ou=empleados,dc=blood4life,dc=com

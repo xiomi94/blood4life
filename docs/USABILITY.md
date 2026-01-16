@@ -99,7 +99,7 @@ toast('Archivo listo', {
 
 ### 2. ConfirmDialog - Confirmaciones Accesibles ⭐
 
-**Ubicación**: `src/components/UI/ConfirmDialog/ConfirmDialog.tsx`
+**Ubicación**: `src/components/common/feedback/ConfirmDialog/ConfirmDialog.tsx`
 
 **Props**:
 ```typescript
@@ -168,7 +168,7 @@ return (
 
 ### 3. EmptyState - Estados Vacíos Informativos
 
-**Ubicación**: `src/components/UI/EmptyState/EmptyState.tsx`
+**Ubicación**: `src/components/common/feedback/EmptyState/EmptyState.tsx`
 
 **Props**:
 ```typescript
@@ -213,7 +213,7 @@ interface EmptyStateProps {
 
 ### 4. Skeleton - Loading States
 
-**Ubicación**: `src/components/UI/Skeleton/Skeleton.tsx`
+**Ubicación**: `src/components/common/feedback/Skeleton/Skeleton.tsx`
 
 **Props**:
 ```typescript
@@ -265,7 +265,7 @@ const SkeletonCard = () => (
 
 ### 5. SearchBar - Búsqueda
 
-**Ubicación**: `src/components/UI/SearchBar/SearchBar.tsx`
+**Ubicación**: `src/components/common/forms/SearchBar/SearchBar.tsx`
 
 **Props**:
 ```typescript
@@ -317,7 +317,7 @@ return (
 
 ### 6. Pagination - Paginación
 
-**Ubicación**: `src/components/UI/Pagination/Pagination.tsx`
+**Ubicación**: `src/components/common/ui/Pagination/Pagination.tsx`
 
 **Props**:
 ```typescript
@@ -361,7 +361,7 @@ return (
 
 ### 7. ProgressBar - Indicador de Progreso
 
-**Ubicación**: `src/components/UI/ProgressBar/ProgressBar.tsx`
+**Ubicación**: `src/components/common/feedback/ProgressBar/ProgressBar.tsx`
 
 **Props**:
 ```typescript
@@ -410,7 +410,7 @@ return (
 
 ### 8. Tooltip - Ayuda Contextual
 
-**Ubicación**: `src/components/UI/Tooltip/Tooltip.tsx`
+**Ubicación**: `src/components/common/ui/Tooltip/Tooltip.tsx`
 
 **Props**:
 ```typescript

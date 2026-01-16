@@ -1,0 +1,466 @@
+{
+    "common": {
+        "loading": "Laden...",
+        "error": "Fehler",
+        "success": "Erfolg",
+        "save": "Speichern",
+        "cancel": "Abbrechen",
+        "close": "Schließen",
+        "delete": "Löschen",
+        "edit": "Bearbeiten",
+        "confirm": "Bestätigen",
+        "yes": "Ja",
+        "no": "Nein",
+        "search": "Suchen",
+        "filter": "Filtern",
+        "welcome": "Willkommen"
+    },
+    "footer": {
+        "copyright": "Blood4Life © 2025. Alle Rechte vorbehalten.",
+        "aboutUs": "Über uns",
+        "privacyPolicy": "Datenschutzrichtlinie"
+    },
+    "header": {
+        "home": "Startseite",
+        "login": "Anmelden",
+        "register": "Registrieren",
+        "campaigns": "Kampagnen",
+        "myProfile": "Mein Profil",
+        "editProfile": "Profil bearbeiten",
+        "logout": "Abmelden",
+        "logoutConfirm": "Möchten Sie sich wirklich abmelden?",
+        "cancel": "Abbrechen",
+        "notifications": "Benachrichtigungen anzeigen",
+        "alerts": "Warnungen anzeigen",
+        "userMenu": "Benutzermenü",
+        "newNotifications": "Sie haben neue Benachrichtigungen"
+    },
+    "auth": {
+        "login": {
+            "title": "Anmelden",
+            "userType": "Benutzertyp",
+            "donor": "Spender",
+            "hospital": "Krankenhaus",
+            "admin": "Administrator",
+            "email": "E-Mail",
+            "emailPlaceholder": "Geben Sie Ihre E-Mail ein",
+            "password": "Passwort",
+            "passwordPlaceholder": "Geben Sie Ihr Passwort ein",
+            "submit": "Senden",
+            "loading": "Lädt...",
+            "forgotPassword": "Passwort vergessen?",
+            "noAccount": "Haben Sie kein Konto? Registrieren Sie sich, indem Sie",
+            "here": "hier",
+            "registerLink": "Hier registrieren",
+            "error": "Anmeldefehler. Bitte überprüfen Sie Ihre Anmeldedaten."
+        },
+        "register": {
+            "welcome": "Willkommen bei Blood4Life",
+            "selectProfile": "Wählen Sie Ihr Profil aus, um mit der Registrierung auf unserer Plattform fortzufahren",
+            "iAmDonor": "Ich bin Spender",
+            "iAmHospital": "Ich bin Krankenhaus / Zentrum",
+            "registerAsDonor": "Als Spender registrieren",
+            "registerAsHospital": "Als Krankenhaus registrieren",
+            "haveAccount": "Haben Sie bereits ein Konto? Klicken Sie",
+            "here": "hier",
+            "requiredField": "Das Sternchen \"*\" zeigt an, dass das Feld erforderlich ist",
+            "formTitle": "Neuen Spender registrieren",
+            "modal": {
+                "successTitle": "Registrierung erfolgreich!",
+                "errorTitle": "Registrierungsfehler"
+            },
+            "imageUpload": {
+                "title": "Profilfoto",
+                "uploadButton": "Foto hochladen",
+                "formats": "Formate: JPG, PNG",
+                "maxSize": "Maximum: 5MB",
+                "preview": "Profilfoto Vorschau",
+                "remove": "Profilfoto entfernen",
+                "select": "Profilfoto auswählen",
+                "ready": "✓ Bild bereit zum Speichern",
+                "saveInfo": "Wird beim Registrieren gespeichert",
+                "invalidFormat": "Bitte wählen Sie ein gültiges Bild (JPG oder PNG)",
+                "tooLarge": "Bild darf 5MB nicht überschreiten"
+            },
+            "bloodDonor": {
+                "dni": "Ausweis",
+                "dniPlaceholder": "Ausweis eingeben *",
+                "firstName": "Vorname",
+                "firstNamePlaceholder": "Vorname eingeben *",
+                "lastName": "Nachname",
+                "lastNamePlaceholder": "Nachname eingeben *",
+                "gender": "Geschlecht",
+                "genderSelect": "Geschlecht auswählen *",
+                "male": "Männlich",
+                "female": "Weiblich",
+                "preferNotToSay": "Keine Angabe",
+                "bloodType": "Blutgruppe",
+                "bloodTypeSelect": "Blutgruppe auswählen *",
+                "email": "E-Mail",
+                "emailPlaceholder": "E-Mail eingeben *",
+                "phone": "Telefon",
+                "phonePlaceholder": "Telefon eingeben *",
+                "dateOfBirth": "Geburtsdatum",
+                "dateOfBirthPlaceholder": "Geburtsdatum auswählen *",
+                "password": "Passwort",
+                "passwordPlaceholder": "Passwort eingeben *",
+                "passwordHint": "Muss enthalten: Großbuchstabe, Kleinbuchstabe, Zahl (8-32 Zeichen)",
+                "processing": "Verarbeitung...",
+                "registerButton": "Registrieren",
+                "resetButton": "Zurücksetzen",
+                "validation": {
+                    "dniRequired": "Ausweis ist erforderlich",
+                    "dniInvalid": "Ungültiges Ausweisformat (8 Zahlen + 1 Buchstabe)",
+                    "firstNameRequired": "Vorname ist erforderlich",
+                    "firstNameMin": "Vorname muss mindestens 2 Zeichen haben",
+                    "lastNameRequired": "Nachname ist erforderlich",
+                    "lastNameMin": "Nachname muss mindestens 2 Zeichen haben",
+                    "genderRequired": "Geschlecht ist erforderlich",
+                    "bloodTypeRequired": "Blutgruppe ist erforderlich",
+                    "emailRequired": "E-Mail ist erforderlich",
+                    "emailInvalid": "E-Mail-Format ist nicht gültig",
+                    "phoneRequired": "Telefon ist erforderlich",
+                    "phoneMin": "Telefon muss mindestens 9 Ziffern haben",
+                    "dateOfBirthRequired": "Geburtsdatum ist erforderlich",
+                    "ageMin": "Sie müssen über 18 Jahre alt sein",
+                    "dateFuture": "Datum kann nicht in der Zukunft liegen",
+                    "passwordRequired": "Passwort ist erforderlich",
+                    "passwordMin": "Passwort muss mindestens 8 Zeichen haben",
+                    "fixErrors": "Bitte beheben Sie die folgenden Fehler:"
+                },
+                "success": "Spender wurde erfolgreich registriert. Sie können sich jetzt anmelden.",
+                "error": "Beim Registrieren des Spenders ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut."
+            }
+        }
+    },
+    "theme": {
+        "toggle": "Thema wechseln",
+        "light": "Zum hellen Modus wechseln",
+        "dark": "Zum dunklen Modus wechseln"
+    },
+    "language": {
+        "select": "Sprache auswählen",
+        "es": "Spanisch",
+        "en": "Englisch",
+        "de": "Deutsch",
+        "fr": "Französisch",
+        "ja": "Japanisch",
+        "zh": "Chinesisch"
+    },
+    "dashboard": {
+        "loading": "Statistiken werden geladen...",
+        "loadError": "Fehler beim Laden der Statistiken",
+        "sidebar": {
+            "newCampaign": "Neue Kampagne",
+            "newDonation": "Neue Spende",
+            "home": "Startseite",
+            "myCampaigns": "Meine Kampagnen",
+            "news": "Neuigkeiten",
+            "newBadge": "NEU"
+        },
+        "appointments": {
+            "title": "Heute geplante Termine",
+            "noAppointments": "Keine Termine für heute geplant",
+            "unknownDonor": "Unbekannter Spender",
+            "noTime": "Keine Zeit",
+            "dniLabel": "Ausweis"
+        },
+        "stats": {
+            "selectedCampaigns": "Ausgewählte Kampagnen",
+            "clearFilter": "Filter löschen",
+            "searchPlaceholder": "Nach Titel oder Ort suchen...",
+            "campaignsOption": "Kampagnen",
+            "bloodTypeOption": "Verteilung nach Blutgruppe",
+            "genderOption": "Verteilung nach Geschlecht",
+            "appointmentsToday": "Termine heute",
+            "donationsThisMonth": "Spenden diesen Monat",
+            "myCampaigns": "Meine Kampagnen",
+            "allCampaigns": "Alle Kampagnen",
+            "completedCampaigns": "Abgeschlossene Kampagnen",
+            "allGenders": "Alle",
+            "male": "Männlich",
+            "female": "Weiblich",
+            "preferNotToSay": "Keine Angabe",
+            "noCampaignsToShow": "Keine Kampagnen anzuzeigen"
+        },
+        "admin": {
+            "title": "Admin-Dashboard",
+            "loading": "Admin-Dashboard wird geladen...",
+            "tabs": {
+                "donors": "Spender",
+                "hospitals": "Krankenhäuser",
+                "appointments": "Anmeldungen",
+                "campaigns": "Kampagnen"
+            },
+            "toasts": {
+                "newDonor": "Neuer Spender registriert",
+                "newHospital": "Neues Krankenhaus registriert",
+                "newAppointment": "Neue Anmeldung erhalten",
+                "newCampaign": "Neue Kampagne erstellt",
+                "deleteDonorSuccess": "Spender erfolgreich gelöscht",
+                "deleteDonorError": "Fehler beim Löschen des Spenders",
+                "deleteHospitalSuccess": "Krankenhaus erfolgreich gelöscht",
+                "deleteHospitalError": "Fehler beim Löschen des Krankenhauses",
+                "updateDonorSuccess": "Spender erfolgreich aktualisiert",
+                "updateDonorError": "Fehler beim Aktualisieren des Spenders",
+                "deleteAppointmentSuccess": "Anmeldung erfolgreich gelöscht",
+                "deleteAppointmentError": "Fehler beim Löschen der Anmeldung",
+                "updateAppointmentSuccess": "Anmeldung erfolgreich aktualisiert",
+                "deleteCampaignSuccess": "Kampagne erfolgreich gelöscht",
+                "updateCampaignSuccess": "Kampagne erfolgreich aktualisiert"
+            },
+            "confirms": {
+                "deleteDonor": "Sind Sie sicher, dass Sie diesen Spender löschen möchten?",
+                "deleteHospital": "Sind Sie sicher, dass Sie dieses Krankenhaus löschen möchten?",
+                "deleteAppointment": "Sind Sie sicher, dass Sie diese Anmeldung löschen möchten?",
+                "deleteCampaign": "Sind Sie sicher, dass Sie diese Kampagne löschen möchten?"
+            },
+            "errors": {
+                "loadAdminData": "Fehler beim Laden der Admin-Daten"
+            },
+            "stats": {
+                "totalDonors": "Gesamtzahl Spender",
+                "totalHospitals": "Gesamtzahl Krankenhäuser"
+            },
+            "chart": {
+                "title": "Benutzerverteilung",
+                "donorsLabel": "Spender",
+                "hospitalsLabel": "Krankenhäuser",
+                "xAxisLabel": "Benutzer"
+            },
+            "table": {
+                "name": "Name",
+                "dni": "Ausweis",
+                "cif": "CIF",
+                "email": "Email",
+                "gender": "Geschlecht",
+                "phone": "Telefon",
+                "birthDate": "Geburtsdatum",
+                "bloodType": "Blutgruppe",
+                "address": "Adresse",
+                "donor": "Spender",
+                "campaign": "Kampagne",
+                "date": "Datum",
+                "status": "Status",
+                "comment": "Kommentar",
+                "hospital": "Krankenhaus",
+                "location": "Ort",
+                "progress": "Fortschritt",
+                "actions": "Aktionen",
+                "edit": "Bearbeiten",
+                "delete": "Löschen",
+                "male": "Männlich",
+                "female": "Weiblich",
+                "statusList": {
+                    "1": "Geplant",
+                    "2": "Abgeschlossen",
+                    "3": "Abgesagt"
+                }
+            },
+            "modals": {
+                "editDonor": "Spender bearbeiten",
+                "editHospital": "Krankenhaus bearbeiten",
+                "editAppointment": "Anmeldung bearbeiten",
+                "editCampaign": "Kampagne bearbeiten",
+                "firstName": "Vorname",
+                "lastName": "Nachname",
+                "dni": "Ausweis",
+                "gender": "Geschlecht",
+                "email": "E-Mail",
+                "phone": "Telefon",
+                "birthDate": "Geburtsdatum",
+                "bloodType": "Blutgruppe",
+                "bloodTypePlaceholder": "Blutgruppe auswählen",
+                "cif": "CIF",
+                "address": "Adresse",
+                "status": "Status",
+                "date": "Datum",
+                "time": "Uhrzeit",
+                "hospitalComment": "Krankenhauskommentar",
+                "description": "Beschreibung",
+                "startDate": "Startdatum",
+                "endDate": "Enddatum",
+                "location": "Ort",
+                "requiredDonors": "Benötigte Spender",
+                "saveChanges": "Änderungen speichern",
+                "cancel": "Abbrechen"
+            }
+        },
+        "campaigns": {
+            "goalLabel": "Ziel",
+            "donors": "Spender",
+            "editButton": "Kampagne bearbeiten",
+            "deleteButton": "Kampagne löschen",
+            "datesLabel": "Termine",
+            "bloodTypesLabel": "Blutgruppen",
+            "noResults": "Keine Kampagnen mit diesen Kriterien gefunden",
+            "noCampaignsOnDate": "Keine Kampagnen an diesem Datum",
+            "noCampaigns": "Keine aktiven Kampagnen"
+        },
+        "calendar": {
+            "title": "Kalender",
+            "months": {
+                "january": "Januar",
+                "february": "Februar",
+                "march": "März",
+                "april": "April",
+                "may": "Mai",
+                "june": "Juni",
+                "july": "Juli",
+                "august": "August",
+                "september": "September",
+                "october": "Oktober",
+                "november": "November",
+                "december": "Dezember"
+            },
+            "days": {
+                "monday": "Mo",
+                "tuesday": "Di",
+                "wednesday": "Mi",
+                "thursday": "Do",
+                "friday": "Fr",
+                "saturday": "Sa",
+                "sunday": "So"
+            },
+            "legend": {
+                "completed": "Abgeschlossen",
+                "active": "Aktive",
+                "upcoming": "Bevorstehende"
+            }
+        },
+        "donations": {
+            "title": "Erhaltene Spenden",
+            "subtitle": "Neueste Blutspenden im Krankenhaus erhalten.",
+            "campaignLabel": "Spendenkampagne",
+            "donationType": "Spendenart",
+            "hospitalLabel": "Krankenhaus",
+            "completed": "Abgeschlossen"
+        },
+        "modal": {
+            "delete": {
+                "title": "Kampagne löschen",
+                "confirmMessage": "Möchten Sie diese Kampagne wirklich löschen?",
+                "warning": "Diese Aktion kann nicht rückgängig gemacht werden.",
+                "instructionsLabel": "Geben Sie zum Bestätigen den Kampagnennamen ein:",
+                "placeholder": "Kampagnenname..."
+            }
+        }
+    },
+    "index": {
+        "title": "Blood4Life",
+        "header": {
+            "title": "Blood4Life"
+        },
+        "content": {
+            "p1": "Wir glauben, dass Blutspenden ein einfacher, zugänglicher und gut organisierter Prozess sein sollte. Unsere Plattform wurde mit einem klaren Ziel gegründet: solidarische Menschen mit Krankenhäusern zu verbinden, die Spenden benötigen, und die Kommunikation sowie die Teilnahme an Blutspendekampagnen zu erleichtern.",
+            "p2": "Wir fungieren als digitaler Treffpunkt zwischen Krankenhäusern und Spendern. Gesundheitseinrichtungen können ihre aktiven Kampagnen veröffentlichen, über ihre Bedürfnisse informieren und Termine verwalten, während sich Spender einfach anmelden, verfügbare Kampagnen prüfen oder einen Termin in ihrem bevorzugten Krankenhaus vereinbaren können.",
+            "p3": "Unser Engagement besteht darin, die Effizienz des Spendeprozesses zu verbessern, Informationsmangel zu reduzieren und eine Kultur der kontinuierlichen Solidarität zu fördern. Jede Spende zählt, und wir glauben, dass Technologie einen Unterschied machen kann, wenn sie in den Dienst von Gesundheit und Gesellschaft gestellt wird."
+        },
+        "hero": {
+            "alt": "Blutspende und Verbindung"
+        },
+        "footerSlogan": "\"Weil Blutspenden Leben rettet,<br />stellen wir die Verbindung her.\""
+    },
+    "aboutUs": {
+        "title": "Über Uns",
+        "subtitle": "Spender mit Hoffnung verbinden, Leben mit Leben.",
+        "mission": {
+            "title": "Unsere Mission",
+            "text": "Bei Blood4Life ist es unsere Mission, den Blutspendeprozess zu vereinfachen und zu stärken. Wir arbeiten unermüdlich daran, ein effizientes Netzwerk zu schaffen, das altruistische Spender mit Krankenhäusern und Gesundheitszentren verbindet und sicherstellt, dass Blut diejenigen, die es am dringendsten benötigen, schnell und sicher erreicht. Wir schaffen Technologie, um Leben zu retten."
+        },
+        "vision": {
+            "title": "Unsere Vision",
+            "text": "Wir streben danach, die weltweit führende Plattform für das Blutspendemanagement zu sein und Reservenengpässe in Krankenhäusern durch Bewusstsein, Technologie und Gemeinschaft zu beseitigen. Wir träumen von einer Welt, in der kein Patient auf eine lebenswichtige Transfusion warten muss."
+        },
+        "values": {
+            "title": "Unsere Werte",
+            "solidarity": {
+                "title": "Solidarität",
+                "text": "Wir glauben an die Kraft der gegenseitigen Hilfe und des Altruismus als Motor für Veränderungen."
+            },
+            "transparency": {
+                "title": "Transparenz",
+                "text": "Wir arbeiten mit völliger Klarheit und schaffen Vertrauen in jedem Schritt des Prozesses."
+            },
+            "innovation": {
+                "title": "Innovation",
+                "text": "Wir nutzen die fortschrittlichste Technologie, um das Gesundheitsmanagement zu optimieren."
+            }
+        },
+        "backButton": "Zurück zur Startseite"
+    },
+    "privacyPolicy": {
+        "title": "Datenschutzrichtlinie",
+        "lastUpdate": "Letzte Aktualisierung: Januar 2026",
+        "sections": {
+            "intro": {
+                "title": "1. Einführung",
+                "text": "Bei Blood4Life verpflichten wir uns, Ihre Privatsphäre und Ihre persönlichen Daten zu schützen. Diese Datenschutzrichtlinie erklärt, wie wir Ihre persönlichen Daten erfassen, verwenden, weitergeben und schützen, in Übereinstimmung mit der Datenschutz-Grundverordnung (DSGVO) der Europäischen Union und den geltenden spanischen Vorschriften."
+            },
+            "responsible": {
+                "title": "2. Verantwortlicher für die Verarbeitung",
+                "text": "Der Verantwortliche für die Verarbeitung Ihrer Daten ist:",
+                "company": "Blood4Life S.L.",
+                "address": "Adresse: Calle Tecnología 123, 28000 Madrid, Spanien",
+                "email": "Kontakt-E-Mail: privacidad@blood4life.com"
+            },
+            "dataCollected": {
+                "title": "3. Daten, die wir erfassen",
+                "text": "Wir erfassen die folgenden Informationen, um die Plattform zu verwalten:",
+                "list": {
+                    "id": "Identifikationsdaten: Name, Nachname, Ausweis/NIE.",
+                    "contact": "Kontaktdaten: E-Mail, Telefonnummer, Postanschrift.",
+                    "health": "Gesundheitsdaten (Besondere Kategorie): Blutgruppe, Historie der Spendereignung (verarbeitet mit Ihrer ausdrücklichen Zustimmung oder im öffentlichen Interesse im Bereich der öffentlichen Gesundheit).",
+                    "session": "Sitzungsdaten: IP-Adresse, Zugriffsprotokolle, technische Cookies."
+                }
+            },
+            "purpose": {
+                "title": "4. Zweck der Verarbeitung",
+                "text": "Ihre Daten werden für folgende Zwecke verarbeitet:",
+                "list": {
+                    "users": "Benutzerverwaltung (Spender und Krankenhäuser) und Authentifizierung.",
+                    "appointments": "Koordination von Terminen und Blutspendekampagnen.",
+                    "comms": "Versand relevanter Mitteilungen (Terminerinnerungen, Mangelwarnungen), wenn Sie Ihre Zustimmung gegeben haben.",
+                    "legal": "Einhaltung gesetzlicher Gesundheitsverpflichtungen."
+                }
+            },
+            "legalBasis": {
+                "title": "5. Rechtsgrundlage",
+                "text": "Die Rechtsgrundlage für die Verarbeitung Ihrer Daten ist:",
+                "list": {
+                    "consent": "Zustimmung: Durch die Registrierung stimmen Sie der Verarbeitung Ihrer Daten ausdrücklich zu.",
+                    "publicInterest": "Öffentliches Interesse: Für die Verwaltung öffentlicher Gesundheitsdienste und Spenden.",
+                    "legal": "Gesetzliche Verpflichtung: Zur Einhaltung von Gesundheits- und Steuervorschriften."
+                }
+            },
+            "recipients": {
+                "title": "6. Empfänger der Daten",
+                "text": "Ihre Daten können weitergegeben werden an:",
+                "list": {
+                    "hospitals": "Autorisierte Krankenhäuser und Transfusionszentren, die mit der Plattform verbunden sind.",
+                    "authorities": "Zuständige Gesundheitsbehörden, wenn gesetzlich vorgeschrieben.",
+                    "tech": "Technologiedienstleister (Auftragsverarbeiter), die die Datensicherheit gewährleisten."
+                },
+                "noSale": "Wir verkaufen oder vermieten Ihre persönlichen Daten nicht an Dritte."
+            },
+            "retention": {
+                "title": "7. Datenaufbewahrung",
+                "text": "Wir bewahren Ihre persönlichen Daten auf, solange Sie Ihr Konto aktiv halten. Sobald das Konto geschlossen ist, werden sie für die Zeit gesperrt, die zur Einhaltung gesetzlicher Verpflichtungen (z. B. Gesundheitsvorschriften zur Rückverfolgbarkeit von Spenden) erforderlich ist, danach werden sie sicher gelöscht."
+            },
+            "rights": {
+                "title": "8. Ihre Rechte (ARCO+ Rechte)",
+                "text": "Gemäß der DSGVO haben Sie das Recht auf:",
+                "list": {
+                    "access": "Zugang: Wissen, welche Daten wir über Sie haben.",
+                    "rectification": "Berichtigung: Unrichtige Daten korrigieren.",
+                    "deletion": "Löschung (\"Recht auf Vergessenwerden\"): Löschung Ihrer Daten verlangen, wenn diese nicht mehr erforderlich sind.",
+                    "limitation": "Einschränkung: Verlangen, dass die Verarbeitung unter bestimmten Umständen eingeschränkt wird.",
+                    "portability": "Übertragbarkeit: Ihre Daten in einem strukturierten Format erhalten.",
+                    "opposition": "Widerspruch: Der Verarbeitung Ihrer Daten widersprechen."
+                },
+                "contact": "Um diese Rechte auszuüben, kontaktieren Sie uns unter: privacidad@blood4life.com"
+            }
+        },
+        "backButton": "Zurück zur Startseite"
+    }
+}

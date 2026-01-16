@@ -1,3 +1,11 @@
 .idea/
 node_modules/
 uploads/
+DEVDOCUMENTATION/
+.gemini/FINAL_SUMMARY.md
+.gemini/FIX_BLOOD_TYPE_O.md
+.gemini/PENDING_CHANGES_DETAILED.md
+.gemini/REAPPLIED_CHANGES.md
+.gemini/REIMPLEMENTATION_PLAN.md
+.gemini/TRANSLATIONS_SCROLLBAR_FIXES.md
+.gemini/VERIFICATION_REPORT.md
