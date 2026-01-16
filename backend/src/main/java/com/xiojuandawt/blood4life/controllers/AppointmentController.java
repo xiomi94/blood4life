@@ -42,6 +42,7 @@ public class AppointmentController {
       dto.setBloodDonorId(appointment.getBloodDonor().getId());
       dto.setHospitalComment(appointment.getHospitalComment());
       dto.setDateAppointment(appointment.getDateAppointment());
+      dto.setHourAppointment(appointment.getHourAppointment());
 
       dtoList.add(dto);
     }
@@ -69,6 +70,7 @@ public class AppointmentController {
     dto.setBloodDonorId(appointment.getBloodDonor().getId());
     dto.setHospitalComment(appointment.getHospitalComment());
     dto.setDateAppointment(appointment.getDateAppointment());
+    dto.setHourAppointment(appointment.getHourAppointment());
 
     return ResponseEntity.ok(dto);
   }
@@ -238,6 +240,7 @@ public class AppointmentController {
       dto.setBloodDonorId(appointment.getBloodDonor().getId());
       dto.setHospitalComment(appointment.getHospitalComment());
       dto.setDateAppointment(appointment.getDateAppointment());
+      dto.setHourAppointment(appointment.getHourAppointment());
 
       dtoList.add(dto);
     }

@@ -31,6 +31,9 @@ public class CampaignController {
   private com.xiojuandawt.blood4life.repositories.HospitalRepository hospitalRepository;
 
   @Autowired
+  private com.xiojuandawt.blood4life.repositories.BloodDonorRepository bloodDonorRepository;
+
+  @Autowired
   private com.xiojuandawt.blood4life.services.NotificationService notificationService;
 
   @GetMapping("/all")
@@ -97,6 +100,29 @@ public class CampaignController {
 
       // Save campaign with blood types
       CampaignDTO createdCampaign = campaignService.createCampaign(campaign, requiredBloodTypes);
+
+      // Notify compatible blood donors
+      try {
+        List<com.xiojuandawt.blood4life.entities.BloodDonor> allDonors = bloodDonorRepository.findAll();
+
+        for (com.xiojuandawt.blood4life.entities.BloodDonor donor : allDonors) {
+          String donorBloodType = donor.getBloodType().getType();
+
+          // Check if donor's blood type matches any required type or if Universal is
+          // needed
+          boolean isCompatible = requiredBloodTypes.contains("Universal") ||
+              requiredBloodTypes.contains(donorBloodType);
+
+          if (isCompatible) {
+            String msg = "Nueva campaña disponible: " + name + " en " + location +
+                ". Tu tipo de sangre (" + donorBloodType + ") es compatible.";
+            notificationService.createNotification(donor, msg);
+          }
+        }
+      } catch (Exception e) {
+        System.err.println("Error enviando notificaciones a donantes: " + e.getMessage());
+        e.printStackTrace();
+      }
 
       // Notify other hospitals
       try {
