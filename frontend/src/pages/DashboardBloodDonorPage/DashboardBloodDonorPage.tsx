@@ -8,6 +8,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { toast } from 'sonner';
 import { useAuth } from '../../context/AuthContext';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import { campaignService } from '../../services/campaignService';
@@ -22,6 +23,7 @@ import { Calendar } from '../../components/features/donor/Calendar';
 import { StatsCards } from '../../components/features/donor/StatsCards';
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
+import CreateDonationModal from '../../components/features/donor/CreateDonationModal/CreateDonationModal';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -38,6 +40,7 @@ const DashboardBloodDonorPage = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
+  const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
 
   // WebSocket state for total donors counter
   const [totalDonors, setTotalDonors] = useState(0);
@@ -75,6 +78,22 @@ const DashboardBloodDonorPage = () => {
       setMyAppointments(appointments);
     } catch (err) {
       console.error('Error fetching appointments:', err);
+    }
+  };
+
+  // Delete appointment
+  const handleDeleteAppointment = async (appointmentId: number) => {
+    try {
+      await appointmentService.deleteAppointment(appointmentId);
+      // Refresh appointments list
+      await fetchMyAppointments();
+      // Refresh stats
+      await fetchStats();
+      // Show success message
+      toast.success('Cita eliminada correctamente');
+    } catch (err) {
+      console.error('Error deleting appointment:', err);
+      toast.error('Error al eliminar la cita. Por favor, intenta de nuevo.');
     }
   };
 
@@ -191,6 +210,38 @@ const DashboardBloodDonorPage = () => {
     return diffDays;
   };
 
+  // Check if donor can schedule a new appointment (considering pending appointments)
+  const canScheduleNewAppointment = (): { canSchedule: boolean; nextDate: Date | null } => {
+    const now = new Date();
+
+    // Check for pending or confirmed appointments (status 1 or 2)
+    const upcomingAppointments = myAppointments.filter(
+      (apt) =>
+        (apt.appointmentStatus.id === 1 || apt.appointmentStatus.id === 2) &&
+        new Date(apt.dateAppointment) >= now
+    );
+
+    if (upcomingAppointments.length > 0) {
+      // Has a pending appointment, calculate when they can schedule next
+      const nextAppointment = upcomingAppointments[0];
+      const appointmentDate = new Date(nextAppointment.dateAppointment);
+      const waitingPeriod = user?.gender === 'Masculino' ? 90 : 120;
+      const availableDate = new Date(appointmentDate);
+      availableDate.setDate(availableDate.getDate() + waitingPeriod);
+
+      return { canSchedule: false, nextDate: availableDate };
+    }
+
+    // No pending appointments, check based on last completed donation
+    const nextAvailableDate = getNextAvailableDate();
+    const canDonate = now >= nextAvailableDate;
+
+    return {
+      canSchedule: canDonate,
+      nextDate: canDonate ? null : nextAvailableDate
+    };
+  };
+
   const changeMonth = (increment: number) => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + increment, 1));
   };
@@ -233,14 +284,32 @@ const DashboardBloodDonorPage = () => {
   const upcomingAppointments = getUpcomingAppointments();
   const nextAvailableDate = getNextAvailableDate();
   const daysUntilNext = getDaysUntilNextDonation();
+  const { canSchedule, nextDate } = canScheduleNewAppointment();
 
   return (
     <div className="flex flex-row flex-grow w-full bg-gray-100 dark:bg-gray-900">
-      <DonorSidebar />
+      <DonorSidebar
+        onNewDonationClick={() => setIsDonationModalOpen(true)}
+        canDonate={canSchedule}
+        nextAvailableDate={nextDate || undefined}
+      />
+
+      <CreateDonationModal
+        isOpen={isDonationModalOpen}
+        onClose={() => setIsDonationModalOpen(false)}
+        onSuccess={() => {
+          fetchMyAppointments();
+          fetchStats(); // Refresh stats too
+        }}
+      />
 
       <main className="grid w-full">
         <div className="p-8">
-          <UpcomingAppointments appointments={upcomingAppointments} />
+          <UpcomingAppointments
+            appointments={upcomingAppointments}
+            campaigns={allCampaigns}
+            onDelete={handleDeleteAppointment}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
@@ -249,6 +318,8 @@ const DashboardBloodDonorPage = () => {
                 selectedDate={selectedDate}
                 filteredCampaigns={filteredCampaigns}
                 onClearFilter={clearSelectedDate}
+                canDonate={canSchedule}
+                nextAvailableDate={nextDate || undefined}
               />
 
               <DonationHistory donations={completedDonations} />

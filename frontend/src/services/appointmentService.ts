@@ -46,6 +46,7 @@ export interface AppointmentWithDonor extends Appointment {
 const APPOINTMENT_ENDPOINTS = {
   GET_ALL: '/appointment/all',
   CREATE: '/appointment/create',
+  DELETE: (appointmentId: number) => `/appointment/delete/${appointmentId}`,
   GET_BY_DONOR: (donorId: number) => `/appointment/donor/${donorId}`,
   GET_TODAY_BY_HOSPITAL: (hospitalId: number) => `/appointment/hospital/${hospitalId}/today`,
   GET_NEXT_BY_HOSPITAL: (hospitalId: number) => `/appointment/hospital/${hospitalId}/next`,
@@ -114,5 +115,14 @@ export const appointmentService = {
       APPOINTMENT_ENDPOINTS.GET_MONTHLY_DONATIONS(hospitalId)
     );
     return response.data;
+  },
+
+  /**
+   * Elimina una cita
+   */
+  deleteAppointment: async (appointmentId: number): Promise<void> => {
+    await axiosInstance.delete(
+      APPOINTMENT_ENDPOINTS.DELETE(appointmentId)
+    );
   }
 };

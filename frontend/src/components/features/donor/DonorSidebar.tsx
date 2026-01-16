@@ -2,22 +2,50 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../context/AuthContext';
 
-export const DonorSidebar = () => {
+interface DonorSidebarProps {
+  onNewDonationClick?: () => void;
+  canDonate?: boolean;
+  nextAvailableDate?: Date;
+}
+
+export const DonorSidebar = ({ onNewDonationClick, canDonate = true, nextAvailableDate }: DonorSidebarProps) => {
   const { t } = useTranslation();
   const { logout } = useAuth();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
+  const buttonDisabled = !canDonate;
+  const tooltipText = nextAvailableDate
+    ? `Podrás agendar una nueva cita a partir del ${nextAvailableDate.toLocaleDateString('es-ES')}`
+    : '';
+
   return (
     <aside className="w-80 border-r border-gray-300 dark:border-gray-700 dark:bg-gray-900 flex flex-col py-4 min-h-full relative">
       {/* Action Button */}
-      <div className="px-4 mb-6">
+      <div className="px-4 mb-6 relative group">
         <button
-          className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors">
+          onClick={buttonDisabled ? undefined : onNewDonationClick}
+          disabled={buttonDisabled}
+          title={buttonDisabled ? tooltipText : undefined}
+          className={`w-full font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors ${buttonDisabled
+              ? 'bg-gray-400 dark:bg-gray-600 text-gray-200 dark:text-gray-400 cursor-not-allowed'
+              : 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white'
+            }`}>
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
           </svg>
           {t('dashboard.sidebar.newDonation')}
         </button>
+        {/* Tooltip on hover */}
+        {buttonDisabled && tooltipText && (
+          <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+            <div className="bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-lg py-2 px-3 max-w-xs whitespace-normal text-center shadow-lg">
+              {tooltipText}
+              <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1">
+                <div className="border-4 border-transparent border-t-gray-900 dark:border-t-gray-700"></div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Navigation */}

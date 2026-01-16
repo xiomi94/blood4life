@@ -33,7 +33,7 @@ export const DonationHistory = ({ donations }: DonationHistoryProps) => {
               </div>
               <div className="text-right">
                 <p className="font-medium text-gray-800 dark:text-white">
-                  {new Date(donation.dateAppointment).toLocaleDateString('es-ES')}
+                  {new Date(donation.dateAppointment).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                 </p>
               </div>
             </div>
