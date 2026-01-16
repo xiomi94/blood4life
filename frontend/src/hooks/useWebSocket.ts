@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { websocketService } from '../services/websocketService';
+import { useAuth } from '../context/AuthContext';
 
 // Build WebSocket URL
 // In development, always use the local Vite dev server which will proxy to backend
@@ -22,12 +23,15 @@ const getWebSocketURL = () => {
 const WEBSOCKET_URL = getWebSocketURL();
 
 export const useWebSocket = () => {
+    const { isAuthenticated } = useAuth();
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
         let mounted = true;
 
         const connectWebSocket = async () => {
+            if (!isAuthenticated) return;
+
             try {
                 console.log('🔗 Connecting to WebSocket:', WEBSOCKET_URL);
                 await websocketService.connect(WEBSOCKET_URL);
@@ -42,14 +46,14 @@ export const useWebSocket = () => {
             }
         };
 
-        connectWebSocket();
+        if (isAuthenticated) {
+            connectWebSocket();
+        }
 
         return () => {
             mounted = false;
-            // websocketService.disconnect(); // Avoid disconnection to keep Header connected
-            // setIsConnected(false);
         };
-    }, []);
+    }, [isAuthenticated]);
 
     const subscribe = useCallback((destination: string, callback: (message: any) => void) => {
         return websocketService.subscribe(destination, callback);

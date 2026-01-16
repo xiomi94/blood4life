@@ -46,6 +46,7 @@
     "@types/sockjs-client": "^1.5.4",
     "@vitejs/plugin-react": "^5.0.4",
     "@vitest/coverage-v8": "^4.0.17",
+    "baseline-browser-mapping": "^2.9.14",
     "eslint": "^9.36.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.22",
