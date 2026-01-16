@@ -16,7 +16,7 @@ public class JwtServiceImpl implements JwtService {
 
   @Value("${application.security.jwt.secret-key}")
   private String SECRET_KEY;
-  private final long EXPIRATION_TIME = 1000 * 60 * 60;
+  private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 hour
 
   @Override
   public String generateToken(Integer EntityId, String entityType) {
@@ -25,20 +25,20 @@ public class JwtServiceImpl implements JwtService {
     claims.put("type", entityType);
 
     return Jwts.builder()
-      .claims(claims) // Adding identity id and identity type to the token
-      .issuedAt(new Date(System.currentTimeMillis())) // Token creation date
-      .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) // Token expiration date
-      .signWith(this.getSigningKey(), Jwts.SIG.HS256) // Sign token with secret key
-      .compact(); // Create token
+        .claims(claims) // Adding identity id and identity type to the token
+        .issuedAt(new Date(System.currentTimeMillis())) // Token creation date
+        .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) // Token expiration date
+        .signWith(this.getSigningKey(), Jwts.SIG.HS256) // Sign token with secret key
+        .compact(); // Create token
   }
 
   @Override
   public Claims extractPayload(String token) {
     return Jwts.parser()
-      .verifyWith(this.getSigningKey()) // Verify token with sign
-      .build()
-      .parseSignedClaims(token) // Parse token to data
-      .getPayload(); // Obtain token data
+        .verifyWith(this.getSigningKey()) // Verify token with sign
+        .build()
+        .parseSignedClaims(token) // Parse token to data
+        .getPayload(); // Obtain token data
   }
 
   private SecretKey getSigningKey() {
@@ -47,12 +47,11 @@ public class JwtServiceImpl implements JwtService {
 
   public boolean isTokenExpired(String token) {
     Date expiration = Jwts.parser()
-      .verifyWith(getSigningKey())
-      .build()
-      .parseSignedClaims(token)
-      .getPayload()
-      .getExpiration();
+        .verifyWith(getSigningKey())
+        .build()
+        .parseSignedClaims(token)
+        .getPayload()
+        .getExpiration();
     return expiration.before(new Date(System.currentTimeMillis()));
   }
 }
-
