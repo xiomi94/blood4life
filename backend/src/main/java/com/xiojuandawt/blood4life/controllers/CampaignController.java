@@ -103,7 +103,9 @@ public class CampaignController {
 
       // Notify compatible blood donors
       try {
-        List<com.xiojuandawt.blood4life.entities.BloodDonor> allDonors = bloodDonorRepository.findAll();
+        Iterable<com.xiojuandawt.blood4life.entities.BloodDonor> donorsIterable = bloodDonorRepository.findAll();
+        List<com.xiojuandawt.blood4life.entities.BloodDonor> allDonors = new java.util.ArrayList<>();
+        donorsIterable.forEach(allDonors::add);
 
         for (com.xiojuandawt.blood4life.entities.BloodDonor donor : allDonors) {
           String donorBloodType = donor.getBloodType().getType();
@@ -114,8 +116,20 @@ public class CampaignController {
               requiredBloodTypes.contains(donorBloodType);
 
           if (isCompatible) {
-            String msg = "Nueva campaña disponible: " + name + " en " + location +
-                ". Tu tipo de sangre (" + donorBloodType + ") es compatible.";
+            // Format dates
+            String formattedStartDate = start.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            String formattedEndDate = end.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
+            // Create JSON with campaign details
+            String campaignDetails = String.format(
+                "{\"nombre\":\"%s\",\"ubicacion\":\"%s\",\"fechaInicio\":\"%s\",\"fechaFin\":\"%s\",\"tiposSangre\":\"%s\"}",
+                name.replace("\"", "\\\""),
+                location.replace("\"", "\\\""),
+                formattedStartDate,
+                formattedEndDate,
+                String.join(", ", requiredBloodTypes));
+
+            String msg = "Nueva campaña disponible: " + name + "|" + campaignDetails;
             notificationService.createNotification(donor, msg);
           }
         }
