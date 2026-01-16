@@ -83,7 +83,7 @@ export const CampaignProgressChart = ({
         campaignId: selectedCampaign.id,
         bloodDonorId: user.id,
         dateAppointment: date, // Format: yyyy-MM-dd
-        hourAppointment: time ? (time.length === 5 ? `${time}:00` : time) : '09:00:00', // Ensure HH:mm:ss format
+        hourAppointment: time || '09:00', // Format: HH:mm (backend expects LocalTime)
         appointmentStatus: {
           id: 1,
           name: 'Programada'

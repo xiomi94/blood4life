@@ -7,9 +7,10 @@ interface UpcomingAppointmentsProps {
   appointments: Appointment[];
   campaigns: Campaign[];
   onDelete?: (appointmentId: number) => void;
+  userBloodType?: string;
 }
 
-export const UpcomingAppointments = ({ appointments, campaigns, onDelete }: UpcomingAppointmentsProps) => {
+export const UpcomingAppointments = ({ appointments, campaigns, onDelete, userBloodType }: UpcomingAppointmentsProps) => {
   // Debug: Log appointments to see the data
   console.log('📅 Upcoming Appointments Data:', appointments);
 
@@ -21,10 +22,13 @@ export const UpcomingAppointments = ({ appointments, campaigns, onDelete }: Upco
     date: string;
   } | null>(null);
 
-  // Helper function to get hospital name
-  const getHospitalName = (campaignId: number): string => {
+  // Helper function to get hospital name and location
+  const getCampaignDetails = (campaignId: number) => {
     const campaign = campaigns.find(c => c.id === campaignId);
-    return campaign?.hospitalName || 'Hospital no encontrado';
+    return {
+      hospitalName: campaign?.hospitalName || 'Hospital no encontrado',
+      location: campaign?.location || 'Ubicación no disponible'
+    };
   };
 
   const handleDeleteClick = (appointmentId: number, hospitalName: string, date: string) => {
@@ -52,28 +56,32 @@ export const UpcomingAppointments = ({ appointments, campaigns, onDelete }: Upco
       </h2>
 
       <div className="w-full overflow-hidden">
-        <div className="flex flex-row gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2">
+        <div className="flex flex-row gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4">
           {appointments.length === 0 ? (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 min-w-[180px]">
-              <p className="text-sm text-gray-500 dark:text-gray-400">No tienes citas programadas</p>
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 min-w-[280px]">
+              <p className="text-sm text-gray-500 dark:text-gray-400 text-center">No tienes citas programadas</p>
             </div>
           ) : (
             appointments.map(apt => {
               console.log(`Cita #${apt.id} - hourAppointment:`, apt.hourAppointment);
-              const hospitalName = getHospitalName(apt.campaignId);
+              const { hospitalName, location } = getCampaignDetails(apt.campaignId);
               const formattedDate = new Date(apt.dateAppointment).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+              // Ensure time format is HH:mm
+              const formattedTime = apt.hourAppointment ? apt.hourAppointment.slice(0, 5) : '--:--';
 
               return (
                 <div
                   key={apt.id}
-                  className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow min-w-[200px] snap-start relative group">
-                  {/* Delete button */}
+                  className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-5 min-w-[280px] snap-start relative group flex flex-col justify-between hover:shadow-md transition-shadow">
+
+                  {/* Delete button (top right) */}
                   {onDelete && (
                     <button
                       onClick={() => handleDeleteClick(apt.id, hospitalName, formattedDate)}
-                      className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-400 hover:text-red-600 dark:hover:text-red-400"
-                      title="Eliminar cita"
-                      aria-label="Eliminar cita">
+                      className="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20"
+                      title="Cancelar cita"
+                      aria-label="Cancelar cita">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5"
@@ -81,21 +89,40 @@ export const UpcomingAppointments = ({ appointments, campaigns, onDelete }: Upco
                         fill="currentColor">
                         <path
                           fillRule="evenodd"
-                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                           clipRule="evenodd" />
                       </svg>
                     </button>
                   )}
 
-                  <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">
-                    {hospitalName}
-                  </p>
-                  <p className="text-2xl font-bold text-gray-800 dark:text-white">
-                    {formattedDate}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    Hora: {apt.hourAppointment?.slice(0, 5) || '--:--'}
-                  </p>
+                  {/* Header: Name & Type */}
+                  <div className="mb-3 pr-8">
+                    <h3 className="font-bold text-gray-900 dark:text-white text-lg leading-tight mb-2">
+                      {hospitalName}
+                    </h3>
+                    {userBloodType && (
+                      <span className="inline-block px-2 py-0.5 rounded bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-sm font-bold border border-red-200 dark:border-red-800/20">
+                        {userBloodType}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Location (like DNI in example) */}
+                  <div className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                    <span className="font-medium text-gray-400 dark:text-gray-500 uppercase text-xs mr-1">UBICACIÓN:</span>
+                    {location}
+                  </div>
+
+                  {/* Time (Huge) */}
+                  <div className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                    {formattedTime}
+                  </div>
+
+                  {/* Footer Line */}
+                  <div className="border-t border-gray-100 dark:border-gray-700 pt-3 flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
+                    <span>{formattedDate}</span>
+                    <span className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded text-xs font-medium">Programada</span>
+                  </div>
                 </div>
               );
             })
@@ -106,13 +133,13 @@ export const UpcomingAppointments = ({ appointments, campaigns, onDelete }: Upco
       {/* Confirmation Dialog */}
       <ConfirmDialog
         isOpen={showDeleteConfirm}
-        title="Eliminar cita"
+        title="Cancelar Cita"
         message={appointmentToDelete
-          ? `¿Estás seguro de que deseas eliminar la cita en ${appointmentToDelete.hospitalName} el ${appointmentToDelete.date}?`
+          ? `¿Estás seguro de que deseas cancelar tu cita en ${appointmentToDelete.hospitalName} para el ${appointmentToDelete.date}?`
           : ''
         }
-        confirmText="Eliminar"
-        cancelText="Cancelar"
+        confirmText="Sí, cancelar cita"
+        cancelText="No, mantener cita"
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
         variant="danger"

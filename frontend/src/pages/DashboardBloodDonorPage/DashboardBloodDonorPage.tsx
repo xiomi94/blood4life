@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -61,14 +61,15 @@ const DashboardBloodDonorPage = () => {
   };
 
   // Fetch all campaigns
-  const fetchAllCampaigns = async () => {
+  const fetchAllCampaigns = useCallback(async () => {
     try {
       const campaigns = await campaignService.getAllCampaigns();
       setAllCampaigns(campaigns);
+      console.log('✅ Campaigns refreshed:', campaigns.length, 'campaigns loaded');
     } catch (err) {
       console.error('Error fetching campaigns:', err);
     }
-  };
+  }, []);
 
   // Fetch my appointments
   const fetchMyAppointments = async () => {
@@ -115,7 +116,7 @@ const DashboardBloodDonorPage = () => {
         message.type === 'CAMPAIGN_UPDATED' ||
         message.type === 'CAMPAIGN_DELETED'
       ) {
-        console.log('Refreshing campaigns in donor dashboard');
+        console.log('🔄 Refreshing campaigns in donor dashboard');
         fetchAllCampaigns();
       }
     });
@@ -123,7 +124,7 @@ const DashboardBloodDonorPage = () => {
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [subscribe]);
+  }, [subscribe, fetchAllCampaigns]);
 
   // WebSocket connection for total donors counter
   useEffect(() => {
@@ -309,6 +310,7 @@ const DashboardBloodDonorPage = () => {
             appointments={upcomingAppointments}
             campaigns={allCampaigns}
             onDelete={handleDeleteAppointment}
+            userBloodType={user?.bloodType?.type}
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
