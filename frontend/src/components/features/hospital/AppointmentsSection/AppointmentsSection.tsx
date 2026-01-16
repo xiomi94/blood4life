@@ -5,6 +5,7 @@ import { appointmentService } from '../../../../services/appointmentService';
 import type { AppointmentWithDonor } from '../../../../services/appointmentService';
 import { useAuth } from '../../../../context/AuthContext';
 import ViewDonorModal from '../ViewDonorModal/ViewDonorModal';
+import { useModalAnimation } from '../../../../hooks/useModalAnimation';
 
 interface AppointmentsSectionProps {
     appointments: AppointmentWithDonor[];
@@ -20,6 +21,9 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ appointments 
     // State for viewing donor profile
     const [showDonorProfile, setShowDonorProfile] = useState(false);
     const [selectedDonor, setSelectedDonor] = useState<any>(null);
+
+    // Animation for inline modal
+    const { shouldRender: showNextRender, isVisible: nextVisible } = useModalAnimation(showNextModal);
 
     const handleViewNext = async () => {
         if (!user?.id) return;
@@ -42,7 +46,7 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ appointments 
     };
 
     return (
-        <section className="mb-8 relative">
+        <section className="mb-4 relative">
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
                     {t('dashboard.appointments.title')}
@@ -50,7 +54,7 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ appointments 
                 <button
                     onClick={handleViewNext}
                     disabled={loadingNext}
-                    className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white rounded-lg text-sm font-medium shadow-sm transition-all disabled:opacity-50"
+                    className="px-4 py-2 bg-[#E7000B] hover:bg-[#c40009] dark:bg-[#E7000B]/20 dark:hover:bg-[#E7000B]/30 text-white dark:text-[#ff8080] dark:border dark:border-[#E7000B]/20 rounded-lg text-sm font-medium shadow-sm transition-all disabled:opacity-50"
                 >
                     {loadingNext ? t('common.loading') : t('dashboard.appointments.viewNext')}
                 </button>
@@ -58,7 +62,7 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ appointments 
 
             {/* Contenedor limitado en ancho */}
             <div className="w-full overflow-hidden">
-                <div className="flex flex-row gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 custom-scrollbar">
+                <div className="flex flex-row gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pt-4 pr-4 pb-4 custom-scrollbar">
                     {appointments.length === 0 ? (
                         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 min-w-[280px]">
                             <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
@@ -75,33 +79,36 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ appointments 
                             .map((appointment) => (
                                 <div
                                     key={appointment.id}
-                                    className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 hover:shadow-md transition-shadow min-w-[220px] snap-start relative group"
+                                    className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 px-4 pt-4 pb-2 hover:shadow-md transition-shadow min-w-[220px] snap-start relative group"
                                 >
-                                    <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+                                    <p className="text-base font-bold text-gray-900 dark:text-white tracking-tight mb-1 pr-6">
                                         {appointment.bloodDonor
                                             ? `${appointment.bloodDonor.firstName} ${appointment.bloodDonor.lastName} `
                                             : t('dashboard.appointments.unknownDonor')}
                                     </p>
 
                                     {appointment.bloodDonor && (
-                                        <p className="text-xs text-red-500 font-semibold mb-1">
-                                            {typeof appointment.bloodDonor.bloodType === 'string'
-                                                ? appointment.bloodDonor.bloodType
-                                                : (appointment.bloodDonor.bloodType as any)?.type || 'N/A'}
-                                        </p>
+                                        <div className="flex items-center gap-2 mb-2">
+                                            <span className="inline-flex items-center px-2 py-0.5 rounded text-sm font-bold bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300">
+                                                {typeof appointment.bloodDonor.bloodType === 'string'
+                                                    ? appointment.bloodDonor.bloodType
+                                                    : (appointment.bloodDonor.bloodType as any)?.type || 'N/A'}
+                                            </span>
+                                        </div>
                                     )}
 
                                     {appointment.bloodDonor?.dni && (
-                                        <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">
-                                            {t('dashboard.appointments.dniLabel')}: {appointment.bloodDonor.dni}
+                                        <p className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
+                                            <span className="text-gray-400 dark:text-gray-500 font-normal mr-1">{t('dashboard.appointments.dniLabel')}:</span>
+                                            {appointment.bloodDonor.dni}
                                         </p>
                                     )}
-                                    <p className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
-                                        {appointment.hourAppointment || t('dashboard.appointments.noTime')}
+                                    <p className="text-2xl font-bold text-gray-800 dark:text-white mb-1">
+                                        {appointment.hourAppointment?.substring(0, 5) || t('dashboard.appointments.noTime')}
                                     </p>
                                     {/* Display Completed Donations if available */}
                                     {appointment.donorCompletedAppointments !== undefined && (
-                                        <div className="pt-2 border-t border-gray-100 dark:border-gray-700 mt-2">
+                                        <div className="pt-1 border-t border-gray-300 dark:border-gray-600 mt-1">
                                             <p className="text-xs text-gray-500">
                                                 {t('dashboard.appointments.donationsLabel')} <span className="font-semibold text-gray-700 dark:text-gray-300">{appointment.donorCompletedAppointments}</span>
                                             </p>
@@ -115,10 +122,12 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ appointments 
                                                 e.stopPropagation();
                                                 handleOpenDonorProfile(appointment.bloodDonor);
                                             }}
-                                            className="absolute top-3 right-3 text-gray-400 hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                            className="absolute -top-2 -right-2 w-8 h-8 flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-90 group-hover:scale-100 z-10"
                                             title={t('dashboard.appointments.viewProfile')}
                                         >
-                                            <span className="text-lg">👤</span>
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
                                         </button>
                                     )}
                                 </div>
@@ -128,9 +137,15 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ appointments 
             </div>
 
             {/* Modal Next Appointment */}
-            {showNextModal && nextAppointment && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-md w-full p-6 relative animate-in fade-in zoom-in duration-200">
+            {showNextRender && nextAppointment && (
+                <div
+                    className={`fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 transition-opacity duration-200 ${nextVisible ? 'opacity-100' : 'opacity-0'}`}
+                    onClick={() => setShowNextModal(false)}
+                >
+                    <div
+                        className={`bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-md w-full p-6 relative transition-all duration-200 transform ${nextVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
+                        onClick={(e) => e.stopPropagation()}
+                    >
                         <button
                             onClick={() => setShowNextModal(false)}
                             className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
@@ -146,7 +161,7 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ appointments 
                             <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-xl border border-red-100 dark:border-red-800">
                                 <p className="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide">{t('dashboard.appointments.dateTimeLabel')}</p>
                                 <p className="text-2xl font-bold text-red-600 dark:text-red-400">
-                                    {nextAppointment.dateAppointment} <span className="text-lg text-gray-600 dark:text-gray-300">{t('dashboard.appointments.at')} {nextAppointment.hourAppointment}</span>
+                                    {new Date(nextAppointment.dateAppointment).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })} <span className="text-lg text-gray-600 dark:text-gray-300">{t('dashboard.appointments.at')} {nextAppointment.hourAppointment?.substring(0, 5)}</span>
                                 </p>
                             </div>
 
@@ -196,8 +211,9 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ appointments 
             )}
 
             {/* View Donor Profile Modal */}
-            {showDonorProfile && selectedDonor && (
+            {selectedDonor && (
                 <ViewDonorModal
+                    isOpen={showDonorProfile}
                     donor={selectedDonor}
                     onClose={() => setShowDonorProfile(false)}
                 />

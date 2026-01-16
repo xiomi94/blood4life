@@ -13,13 +13,18 @@ export const NotificationsModal = ({ isOpen, onClose, notifications, onMarkAsRea
     const { t } = useTranslation();
     const [selectedIds, setSelectedIds] = useState<number[]>([]);
     const [isMarking, setIsMarking] = useState(false);
-    const [viewingNotification, setViewingNotification] = useState<Notification | null>(null);
+    const [hoveredNotification, setHoveredNotification] = useState<Notification | null>(null);
+    const [popoverPosition, setPopoverPosition] = useState<{ top: number; left: number } | null>(null);
+    const [showPopover, setShowPopover] = useState(false);
+    const hideTimeoutRef = React.useRef<number | null>(null);
+    const showTimeoutRef = React.useRef<number | null>(null);
 
     // Reset selection when modal opens or notifications change
     useEffect(() => {
         if (isOpen) {
             setSelectedIds([]);
-            setViewingNotification(null);
+            setHoveredNotification(null);
+            setShowPopover(false);
         }
     }, [isOpen, notifications]);
 
@@ -56,11 +61,16 @@ export const NotificationsModal = ({ isOpen, onClose, notifications, onMarkAsRea
     };
 
     const handleMarkSelectedAsRead = async () => {
-        if (selectedIds.length === 0) return;
+        // Si no hay selección, marcar todas las notificaciones sin leer
+        const idsToMark = selectedIds.length > 0
+            ? selectedIds
+            : displayedNotifications.map(n => n.id);
+
+        if (idsToMark.length === 0) return;
 
         try {
             setIsMarking(true);
-            await onMarkAsRead(selectedIds);
+            await onMarkAsRead(idsToMark);
             setSelectedIds([]);
         } catch (error) {
             console.error('Error marking notifications as read', error);
@@ -69,11 +79,36 @@ export const NotificationsModal = ({ isOpen, onClose, notifications, onMarkAsRea
         }
     };
 
-    // Helper to parse message
+    // Helper to format date to Spanish format with time
+    const formatSpanishDate = (dateString: string) => {
+        try {
+            const date = new Date(dateString);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        } catch {
+            return dateString;
+        }
+    };
+
+    // Helper to parse and format message in a friendly way
     const getMessageParts = (msg: string) => {
         const parts = msg.split('|');
         if (parts.length > 1) {
-            return { title: parts[0], detail: parts[1] };
+            // Extract campaign name from the message if present
+            const titlePart = parts[0];
+            const match = titlePart.match(/campaña\s+(.+)/i);
+            if (match && match[1]) {
+                const campaignName = match[1].trim();
+                return {
+                    title: `Nueva inscripción a la campaña ${campaignName}`,
+                    detail: parts[1]
+                };
+            }
+            return { title: titlePart, detail: parts[1] };
         }
         return { title: msg, detail: msg };
     };
@@ -84,7 +119,7 @@ export const NotificationsModal = ({ isOpen, onClose, notifications, onMarkAsRea
             const data = JSON.parse(detailString);
             if (data.nombre && data.dni) {
                 return (
-                    <div className="w-full bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col items-start">
+                    <div className="w-full flex flex-col items-start">
 
                         {/* Header: Avatar + Nombre */}
                         <div className="flex items-center gap-4 mb-5">
@@ -121,7 +156,7 @@ export const NotificationsModal = ({ isOpen, onClose, notifications, onMarkAsRea
         }
 
         return (
-            <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-xl text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+            <div className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                 <p>{detailString}</p>
             </div>
         );
@@ -149,13 +184,13 @@ export const NotificationsModal = ({ isOpen, onClose, notifications, onMarkAsRea
 
                     <div className="flex items-center gap-3">
                         {/* Mark Read Button */}
-                        {selectedIds.length > 0 && (
+                        {displayedNotifications.length > 0 && (
                             <button
                                 onClick={handleMarkSelectedAsRead}
                                 disabled={isMarking}
                                 className="text-sm px-3 py-1.5 bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-300 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors font-medium"
                             >
-                                {isMarking ? '...' : (t('notifications.markAllRead') || 'Marcar leídas')}
+                                {isMarking ? '...' : (t('notifications.markAllRead') || 'Marcar todas como leídas')}
                             </button>
                         )}
 
@@ -186,15 +221,53 @@ export const NotificationsModal = ({ isOpen, onClose, notifications, onMarkAsRea
                                 return (
                                     <div
                                         key={notification.id}
-                                        className={`flex items-start justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors cursor-pointer ${selectedIds.includes(notification.id) ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`}
-                                        onClick={() => setViewingNotification(notification)}
+                                        className={`flex items-start justify-between p-4 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer relative ${selectedIds.includes(notification.id) ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`}
+                                        onMouseEnter={(e) => {
+                                            // Cancel any pending hide or show
+                                            if (hideTimeoutRef.current) {
+                                                clearTimeout(hideTimeoutRef.current);
+                                                hideTimeoutRef.current = null;
+                                            }
+                                            if (showTimeoutRef.current) {
+                                                clearTimeout(showTimeoutRef.current);
+                                                showTimeoutRef.current = null;
+                                            }
+
+                                            const rect = e.currentTarget.getBoundingClientRect();
+                                            setPopoverPosition({
+                                                top: rect.top,
+                                                left: rect.right + 16 // 16px spacing from notification
+                                            });
+                                            setHoveredNotification(notification);
+
+                                            // Delay showing the popover for smooth effect
+                                            showTimeoutRef.current = window.setTimeout(() => {
+                                                setShowPopover(true);
+                                            }, 400); // 400ms delay
+                                        }}
+                                        onMouseLeave={() => {
+                                            // Cancel show timeout if still pending
+                                            if (showTimeoutRef.current) {
+                                                clearTimeout(showTimeoutRef.current);
+                                                showTimeoutRef.current = null;
+                                            }
+
+                                            // Immediately hide the popover animation
+                                            setShowPopover(false);
+
+                                            // Delay removing the notification data
+                                            hideTimeoutRef.current = window.setTimeout(() => {
+                                                setHoveredNotification(null);
+                                                setPopoverPosition(null);
+                                            }, 150);
+                                        }}
                                     >
                                         <div className="flex-1 pr-4">
                                             <p className="text-gray-800 dark:text-gray-200 text-sm font-medium leading-relaxed">
                                                 {title}
                                             </p>
                                             <span className="text-xs text-gray-400 dark:text-gray-500 mt-1 block">
-                                                {notification.dateNotification}
+                                                {formatSpanishDate(notification.dateNotification)}
                                             </span>
                                         </div>
 
@@ -229,35 +302,57 @@ export const NotificationsModal = ({ isOpen, onClose, notifications, onMarkAsRea
                 </div>
             </div>
 
-            {/* Detail Modal Overlay */}
-            {viewingNotification && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+            {/* Hover Popover - Positioned to the right */}
+            {hoveredNotification && popoverPosition && (
+                <div
+                    className="fixed z-[70] pointer-events-none"
+                    style={{
+                        top: `${popoverPosition.top}px`,
+                        left: `${popoverPosition.left}px`,
+                        transform: 'translateY(-10%)'
+                    }}
+                    onMouseEnter={() => {
+                        // Cancel any pending hide when entering popover
+                        if (hideTimeoutRef.current) {
+                            clearTimeout(hideTimeoutRef.current);
+                            hideTimeoutRef.current = null;
+                        }
+                        if (showTimeoutRef.current) {
+                            clearTimeout(showTimeoutRef.current);
+                            showTimeoutRef.current = null;
+                        }
+                        setShowPopover(true);
+                    }}
+                    onMouseLeave={() => {
+                        // Immediately hide animation
+                        setShowPopover(false);
+
+                        // Hide when leaving popover
+                        hideTimeoutRef.current = window.setTimeout(() => {
+                            setHoveredNotification(null);
+                            setPopoverPosition(null);
+                        }, 150);
+                    }}
+                >
+                    {/* Connecting line - subtle visual connection */}
                     <div
-                        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-                        onClick={() => setViewingNotification(null)}
-                    ></div>
-                    <div className="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-sm w-full p-6 animate-in fade-in zoom-in duration-200 z-10 transition-all">
-                        <div className="flex justify-end mb-2">
-                            <button
-                                onClick={() => setViewingNotification(null)}
-                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
-                            >
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
+                        className={`absolute left-0 top-[12%] h-12 transition-all duration-300 ${showPopover ? 'w-3 opacity-100' : 'w-0 opacity-0'
+                            }`}
+                        style={{
+                            background: 'linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, rgba(59, 130, 246, 0) 100%)',
+                        }}
+                    />
 
-                        {renderDetailContent(getMessageParts(viewingNotification.message).detail)}
-
-                        <div className="flex justify-center pt-6">
-                            <button
-                                onClick={() => setViewingNotification(null)}
-                                className="w-full py-2.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition font-medium"
-                            >
-                                Cerrar
-                            </button>
-                        </div>
+                    <div
+                        className={`bg-white dark:bg-gray-800 rounded-lg shadow-2xl max-w-sm w-80 p-5 border-t border-r border-b border-gray-200 dark:border-gray-700 pointer-events-auto transition-all duration-300 ${showPopover
+                            ? 'opacity-100 translate-x-0'
+                            : 'opacity-0 -translate-x-4'
+                            }`}
+                        style={{
+                            borderLeft: '4px solid #3b82f6'
+                        }}
+                    >
+                        {renderDetailContent(getMessageParts(hoveredNotification.message).detail)}
                     </div>
                 </div>
             )}

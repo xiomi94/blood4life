@@ -74,7 +74,7 @@ public class AppointmentController {
   }
 
   @Autowired
-  private SimpMessagingTemplate messagingTemplate;
+  private com.xiojuandawt.blood4life.services.HospitalWebSocketService hospitalWebSocketService;
 
   @Autowired
   private com.xiojuandawt.blood4life.services.NotificationService notificationService;
@@ -90,7 +90,7 @@ public class AppointmentController {
 
     appointment.setCampaign(
         campaignRepository.findById(dto.getCampaignId())
-            .orElseThrow(() -> new RuntimeException("CampaÃ±a no encontrada")));
+            .orElseThrow(() -> new RuntimeException("Campaña no encontrada")));
 
     appointment.setBloodDonor(
         bloodDonorRepository.findById(dto.getBloodDonorId())
@@ -108,7 +108,7 @@ public class AppointmentController {
 
     Appointment saved = appointmentRepository.save(appointment);
 
-    // --- Convert entity â†’ DTO ---
+    // --- Convert entity -> DTO ---
     AppointmentDTO result = new AppointmentDTO();
     result.setId(saved.getId());
     result.setAppointmentStatus(saved.getAppointmentStatus());
@@ -156,8 +156,8 @@ public class AppointmentController {
       e.printStackTrace();
     }
 
-    // Notificar vÃ­a WebSocket
-    messagingTemplate.convertAndSend("/topic/appointments", result);
+    // Notificar vía WebSocket
+    hospitalWebSocketService.notifyAppointmentUpdate(result);
 
     return ResponseEntity.ok(result);
   }
@@ -182,7 +182,7 @@ public class AppointmentController {
 
     appointment.setCampaign(
         campaignRepository.findById(dto.getCampaignId())
-            .orElseThrow(() -> new RuntimeException("CampaÃ±a no encontrada")));
+            .orElseThrow(() -> new RuntimeException("Campaña no encontrada")));
 
     appointment.setBloodDonor(
         bloodDonorRepository.findById(dto.getBloodDonorId())
@@ -193,7 +193,7 @@ public class AppointmentController {
 
     Appointment updated = appointmentRepository.save(appointment);
 
-    // Convert entity â†’ DTO
+    // Convert entity -> DTO
     AppointmentDTO result = new AppointmentDTO();
     result.setId(updated.getId());
     result.setAppointmentStatus(updated.getAppointmentStatus());
@@ -204,8 +204,8 @@ public class AppointmentController {
     result.setDateAppointment(updated.getDateAppointment());
     result.setHourAppointment(updated.getHourAppointment());
 
-    // Notificar vÃ­a WebSocket
-    messagingTemplate.convertAndSend("/topic/appointments", result);
+    // Notificar vía WebSocket
+    hospitalWebSocketService.notifyAppointmentUpdate(result);
 
     return ResponseEntity.ok(result);
   }

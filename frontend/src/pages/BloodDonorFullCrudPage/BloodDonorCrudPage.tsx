@@ -38,8 +38,8 @@ function BloodDonorCrudPage() {
   ));
 
   useEffect(() => {
-    bloodDonorService.getAll().then((response) => {
-      setBloodDonors(response.data);
+    bloodDonorService.getAll().then((donors) => {
+      setBloodDonors(donors);
     });
   }, []);
 

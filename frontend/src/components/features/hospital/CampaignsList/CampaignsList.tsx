@@ -70,7 +70,7 @@ const CampaignsList: React.FC<CampaignsListProps> = ({
                                 </button>
                                 <button
                                     onClick={() => onDeleteCampaign(campaign)}
-                                    className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 p-1 rounded hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
+                                    className="text-[#E7000B] hover:text-[#c40009] p-1 rounded hover:bg-[#E7000B]/10 transition-colors"
                                     title={t('dashboard.campaigns.deleteButton')}
                                 >
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,11 +97,23 @@ const CampaignsList: React.FC<CampaignsListProps> = ({
                             <div>
                                 <span className="font-semibold block mb-1">{t('dashboard.campaigns.bloodTypesLabel')}:</span>
                                 <div className="flex flex-wrap gap-1">
-                                    {campaign.requiredBloodType.split(',').map((type, idx) => (
-                                        <span key={idx} className="bg-red-100 text-red-700 px-2 py-0.5 rounded text-xs font-bold">
-                                            {type.replace(/[\[\]\s"]/g, '')}
-                                        </span>
-                                    ))}
+                                    {(() => {
+                                        const bloodOrder = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+                                        return campaign.requiredBloodType
+                                            .split(',')
+                                            .map(t => t.replace(/[\[\]\s"]/g, ''))
+                                            .filter(t => t) // Eliminar vacíos
+                                            .sort((a, b) => {
+                                                const idxA = bloodOrder.indexOf(a);
+                                                const idxB = bloodOrder.indexOf(b);
+                                                return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+                                            })
+                                            .map((type, idx) => (
+                                                <span key={idx} className="bg-[#E7000B]/10 dark:bg-[#E7000B]/20 text-[#E7000B] dark:text-[#ff8080] px-2 py-0.5 rounded text-xs font-bold border border-[#E7000B]/20">
+                                                    {type}
+                                                </span>
+                                            ));
+                                    })()}
                                 </div>
                             </div>
                         </div>

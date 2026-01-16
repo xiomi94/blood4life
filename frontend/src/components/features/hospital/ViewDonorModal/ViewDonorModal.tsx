@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useModalAnimation } from '../../../../hooks/useModalAnimation';
 
 
 interface BloodDonorProfile {
@@ -16,10 +17,11 @@ interface BloodDonorProfile {
 }
 
 interface ViewDonorModalProps {
+    isOpen: boolean;
     donor: BloodDonorProfile;
     onClose: () => void;
 }
-const ViewDonorModal: React.FC<ViewDonorModalProps> = ({ donor, onClose }) => {
+const ViewDonorModal: React.FC<ViewDonorModalProps> = ({ isOpen, donor, onClose }) => {
     const { t } = useTranslation();
 
     const getBloodTypeString = (bt: any) => {
@@ -40,9 +42,19 @@ const ViewDonorModal: React.FC<ViewDonorModalProps> = ({ donor, onClose }) => {
         ? `/images/${donor.imageName}`
         : null;
 
+    const { shouldRender, isVisible } = useModalAnimation(isOpen);
+
+    if (!shouldRender) return null;
+
     return (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-lg w-full p-6 relative animate-in fade-in zoom-in duration-200">
+        <div
+            className={`fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+            onClick={onClose}
+        >
+            <div
+                className={`bg-white dark:bg-gray-800 rounded-2xl shadow-xl max-w-lg w-full p-6 relative animate-in fade-in zoom-in duration-200 transition-all transform ${isVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
+                onClick={(e) => e.stopPropagation()}
+            >
                 <button
                     onClick={onClose}
                     className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
@@ -91,7 +103,7 @@ const ViewDonorModal: React.FC<ViewDonorModalProps> = ({ donor, onClose }) => {
                         <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-xl border border-gray-100 dark:border-gray-700">
                             <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{t('auth.register.bloodDonor.dateOfBirth')}</p>
                             <p className="font-medium text-gray-800 dark:text-gray-200">
-                                {donor.dateOfBirth ? new Date(donor.dateOfBirth).toLocaleDateString() : 'N/A'}
+                                {donor.dateOfBirth ? new Date(donor.dateOfBirth).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) : 'N/A'}
                             </p>
                         </div>
                     </div>

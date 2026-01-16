@@ -8,7 +8,7 @@ import { AdminTabs, type TabType } from './components/AdminTabs';
 import { EditDonorModal, EditAppointmentModal, EditHospitalModal, EditCampaignModal } from './components/modals';
 import Button from '../../components/common/ui/Button/Button';
 import ConfirmDialog from '../../components/common/feedback/ConfirmDialog/ConfirmDialog';
-import type { BloodDonor, Hospital, Appointment, Campaign } from '../../services/adminService';
+import type { BloodDonor, Hospital, AdminAppointment, Campaign } from '../../services/adminService';
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
@@ -17,14 +17,14 @@ const AdminDashboard = () => {
   // Estados de modales
   const [editingDonor, setEditingDonor] = useState<BloodDonor | null>(null);
   const [editingHospital, setEditingHospital] = useState<Hospital | null>(null);
-  const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
+  const [editingAppointment, setEditingAppointment] = useState<AdminAppointment | null>(null);
   const [editingCampaign, setEditingCampaign] = useState<Campaign | null>(null);
 
   // Estados para confirmación de eliminación
   const [confirmDelete, setConfirmDelete] = useState<{
     isOpen: boolean;
     type: 'donor' | 'hospital' | 'appointment' | 'campaign' | null;
-    data: BloodDonor | Hospital | Appointment | Campaign | null;
+    data: BloodDonor | Hospital | AdminAppointment | Campaign | null;
   }>({ isOpen: false, type: null, data: null });
 
   // Hook personalizado para datos admin
@@ -69,7 +69,7 @@ const AdminDashboard = () => {
   });
 
   // Funciones wrapper para confirmación de eliminación
-  const openDeleteConfirm = (type: 'donor' | 'hospital' | 'appointment' | 'campaign', data: BloodDonor | Hospital | Appointment | Campaign) => {
+  const openDeleteConfirm = (type: 'donor' | 'hospital' | 'appointment' | 'campaign', data: BloodDonor | Hospital | AdminAppointment | Campaign) => {
     setConfirmDelete({ isOpen: true, type, data });
   };
 
@@ -80,7 +80,7 @@ const AdminDashboard = () => {
   const confirmDeleteAction = async () => {
     if (!confirmDelete.data || !confirmDelete.type) return;
 
-    const id = confirmDelete.data.id;
+    const id = confirmDelete.data.id!;
 
     switch (confirmDelete.type) {
       case 'donor':
@@ -515,7 +515,7 @@ const AdminDashboard = () => {
                   <div className="flex flex-col">
                     <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Cita de</span>
                     <span className="text-lg font-bold text-gray-900 dark:text-gray-100">
-                      {(confirmDelete.data as Appointment).bloodDonor?.firstName} {(confirmDelete.data as Appointment).bloodDonor?.lastName}
+                      {(confirmDelete.data as AdminAppointment).bloodDonor?.firstName} {(confirmDelete.data as AdminAppointment).bloodDonor?.lastName}
                     </span>
                   </div>
                 </div>
@@ -523,14 +523,14 @@ const AdminDashboard = () => {
                 <div className="flex flex-col gap-2 pl-12 w-full text-sm text-gray-600 dark:text-gray-400">
                   <div className="flex items-center gap-2">
                     <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-                    <span className="font-medium text-gray-800 dark:text-gray-200 line-clamp-1">{(confirmDelete.data as Appointment).campaignName}</span>
+                    <span className="font-medium text-gray-800 dark:text-gray-200 line-clamp-1">{(confirmDelete.data as AdminAppointment).campaignName}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     <span className="font-medium">
-                      {new Date((confirmDelete.data as Appointment).dateAppointment).toLocaleDateString()}
+                      {new Date((confirmDelete.data as AdminAppointment).dateAppointment).toLocaleDateString()}
                       <span className="mx-1.5 text-gray-300">|</span>
-                      {(confirmDelete.data as Appointment).hourAppointment?.substring(0, 5)}
+                      {(confirmDelete.data as AdminAppointment).hourAppointment?.substring(0, 5)}
                     </span>
                   </div>
                 </div>

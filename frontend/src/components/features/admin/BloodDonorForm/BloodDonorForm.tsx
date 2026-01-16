@@ -21,7 +21,7 @@ const BloodDonorForm: React.FC<BloodDonorFormProps> = ({ bloodDonor, onSubmit, o
         email: '',
         phoneNumber: '',
         gender: '',
-        bloodType: '',
+        bloodType: undefined,
         dateOfBirth: ''
     });
 
@@ -39,7 +39,7 @@ const BloodDonorForm: React.FC<BloodDonorFormProps> = ({ bloodDonor, onSubmit, o
                 email: '',
                 phoneNumber: '',
                 gender: '',
-                bloodType: '',
+                bloodType: undefined,
                 dateOfBirth: ''
             });
         }
@@ -140,7 +140,7 @@ const BloodDonorForm: React.FC<BloodDonorFormProps> = ({ bloodDonor, onSubmit, o
                     id="bloodType"
                     name="bloodType"
                     label={t('auth.register.bloodDonor.bloodType')}
-                    value={formData.bloodType || ''}
+                    value={formData.bloodType?.type || ''}
                     onChange={handleSelectChange}
                     required
                     options={bloodTypeOptions}

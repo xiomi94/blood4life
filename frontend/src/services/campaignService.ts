@@ -1,6 +1,9 @@
 import axiosInstance from '../utils/axiosInstance';
 import type { Campaign, CampaignFormData } from '../types/common.types';
 
+// Re-export types for convenience
+export type { Campaign, CampaignFormData };
+
 /**
  * Endpoints del servicio de campañas
  */

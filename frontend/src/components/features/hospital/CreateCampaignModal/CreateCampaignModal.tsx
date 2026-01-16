@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { campaignService, type CampaignFormData } from '../../../../services/campaignService';
 import DatePicker from '../../../common/forms/DatePicker/DatePicker';
+import { useModalAnimation } from '../../../../hooks/useModalAnimation';
 
 interface CreateCampaignModalProps {
     isOpen: boolean;
@@ -12,6 +13,8 @@ interface CreateCampaignModalProps {
 const BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
 const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClose, onSuccess }) => {
+    const { shouldRender, isVisible } = useModalAnimation(isOpen);
+
     const [formData, setFormData] = useState<CampaignFormData>({
         name: '',
         description: '',
@@ -171,10 +174,10 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
         }
     };
 
-    if (!isOpen) return null;
+    if (!shouldRender) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity">
+        <div className={`fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
             {/* Backdrop - click to close */}
             <div
                 className="absolute inset-0"

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import DatePicker from '../../../common/forms/DatePicker/DatePicker';
 import { campaignService, type CampaignFormData, type Campaign } from '../../../../services/campaignService';
+import { useModalAnimation } from '../../../../hooks/useModalAnimation';
 
 interface EditCampaignModalProps {
     isOpen: boolean;
@@ -13,6 +14,7 @@ interface EditCampaignModalProps {
 const BLOOD_TYPES = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
 const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign, onClose, onSuccess }) => {
+    const { shouldRender, isVisible } = useModalAnimation(isOpen);
     const [formData, setFormData] = useState<CampaignFormData>({
         name: '',
         description: '',
@@ -246,10 +248,10 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
         }
     };
 
-    if (!isOpen || !campaign) return null;
+    if (!shouldRender || !campaign) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity">
+        <div className={`fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-200 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
             {/* Backdrop - click to close */}
             <div
                 className="absolute inset-0"
@@ -257,7 +259,7 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
             ></div>
 
             {/* Modal */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-10">
+            <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-10 transition-all duration-200 transform ${isVisible ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
                 {/* Header */}
                 <div className="sticky top-0 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center">
                     <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">Editar Campaña</h2>
