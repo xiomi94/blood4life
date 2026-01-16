@@ -47,6 +47,9 @@ public class AuthController {
   private com.xiojuandawt.blood4life.services.AdminService adminService;
 
   @Autowired
+  private com.xiojuandawt.blood4life.services.LdapService ldapService;
+
+  @Autowired
   private SimpMessagingTemplate messagingTemplate;
 
   @PostMapping("/bloodDonor/register")
@@ -297,6 +300,55 @@ public class AuthController {
       Map<String, Object> response = new HashMap<>();
       response.put("status", "OK");
       response.put("message", "Login successful");
+
+      return ResponseEntity.ok()
+          .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+          .body(response);
+
+    } catch (IllegalArgumentException e) {
+      return errorResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @PostMapping("/admin/ldap-login")
+  public ResponseEntity<?> loginAdminLdap(@RequestHeader("Authorization") String authHeader) {
+    try {
+      String[] credentials = extractCredentials(authHeader);
+      String email = credentials[0];
+      String password = credentials[1];
+
+      // 1. Authenticate against LDAP
+      boolean ldapAuthenticated = ldapService.authenticate(email, password);
+
+      if (!ldapAuthenticated) {
+        System.out.println("LDAP AUTH DEBUG: Failed for email: " + email);
+        return errorResponse("Invalid credentials (LDAP)", HttpStatus.UNAUTHORIZED);
+      }
+
+      // 2. Find admin in local DB to get ID/Role
+      Optional<com.xiojuandawt.blood4life.entities.Admin> adminOpt = adminService.findByEmail(email);
+      if (adminOpt.isEmpty()) {
+        System.out.println("AUTH DEBUG: Admin not found in local DB for email: " + email);
+        return errorResponse("User not found locally", HttpStatus.UNAUTHORIZED);
+      }
+
+      com.xiojuandawt.blood4life.entities.Admin admin = adminOpt.get();
+
+      // 3. Generate Token
+      String token = jwtService.generateToken(admin.getId(), "admin");
+
+      ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
+          .httpOnly(true)
+          .secure(false)
+          .path("/")
+          .maxAge(7 * 24 * 60 * 60)
+          .sameSite("Lax")
+          .build();
+
+      Map<String, Object> response = new HashMap<>();
+      response.put("status", "OK");
+      response.put("message", "LDAP Login successful");
+      response.put("token", token); // Add token to response for frontend
 
       return ResponseEntity.ok()
           .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())

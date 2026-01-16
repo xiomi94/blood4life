@@ -1,14 +1,14 @@
 package com.xiojuandawt.blood4life.repositories;
 
 import com.xiojuandawt.blood4life.entities.BloodDonor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface BloodDonorRepository extends CrudRepository<BloodDonor, Integer> {
+public interface BloodDonorRepository extends JpaRepository<BloodDonor, Integer> {
   Optional<BloodDonor> findByEmail(String email);
 
   Optional<BloodDonor> findById(Integer id);
