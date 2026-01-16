@@ -5,6 +5,7 @@ import HospitalCrudPage from "./pages/HospitalFullCrudPage/HospitalCrudPage.tsx"
 import HospitalRegisterPage from "./pages/HospitalRegisterPage/HospitalRegisterPage.tsx";
 import Index from "./pages/Index.tsx";
 import Login from "./pages/Login/Login.tsx";
+import LdapLoginPage from "./pages/LdapLoginPage/LdapLoginPage.tsx";
 import Register from "./pages/Register/Register.tsx";
 import Header from "./components/layout/Header/Header.tsx";
 import Footer from "./components/layout/Footer/Footer.tsx";
@@ -27,6 +28,7 @@ function App() {
           {/* Public Routes */}
           <Route path="/index" element={<Index />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/ldaplogin" element={<LdapLoginPage />} />
           <Route path="/register" element={<Register />} />
           <Route path="/registerbloodDonor" element={<BloodDonorRegisterPage />} />
           <Route path="/registerHospital" element={<HospitalRegisterPage />} />
