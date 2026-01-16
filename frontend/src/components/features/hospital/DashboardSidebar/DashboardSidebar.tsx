@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../../context/AuthContext';
+import { NewsModal } from '../../../modals/NewsModal';
 
 interface DashboardSidebarProps {
     onCreateCampaign: () => void;
@@ -10,6 +11,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ onCreateCampaign })
     const { t } = useTranslation();
     const { logout } = useAuth();
     const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+    const [isNewsModalOpen, setIsNewsModalOpen] = useState(false);
 
     return (
         <aside className="w-80 border-r border-gray-300 dark:border-gray-700 dark:bg-gray-900 flex flex-col py-4 min-h-full relative">
@@ -52,9 +54,9 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ onCreateCampaign })
                         </svg>
                         <span className="font-medium">{t('dashboard.sidebar.myCampaigns')}</span>
                     </a>
-                    <a
-                        href="#"
-                        className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg mb-1 relative"
+                    <button
+                        onClick={() => setIsNewsModalOpen(true)}
+                        className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg mb-1 relative w-full text-left"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path
@@ -68,7 +70,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ onCreateCampaign })
                         <span className="absolute right-4 top-3 bg-blue-600 text-white text-xs font-bold px-1.5 py-0.5 rounded">
                             {t('dashboard.sidebar.newBadge')}
                         </span>
-                    </a>
+                    </button>
                 </div>
 
                 {/* Logout Button */}
@@ -109,6 +111,9 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ onCreateCampaign })
                     </div>
                 </div>
             )}
+
+            {/* News Modal */}
+            <NewsModal isOpen={isNewsModalOpen} onClose={() => setIsNewsModalOpen(false)} />
         </aside>
     );
 };

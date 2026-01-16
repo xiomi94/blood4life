@@ -37,7 +37,7 @@ const DashboardBloodDonorPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [allCampaigns, setAllCampaigns] = useState<Campaign[]>([]);
   const [myAppointments, setMyAppointments] = useState<Appointment[]>([]);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  // currentDate removed; handled internally by Calendar
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [filteredCampaigns, setFilteredCampaigns] = useState<Campaign[]>([]);
   const [isDonationModalOpen, setIsDonationModalOpen] = useState(false);
@@ -243,10 +243,6 @@ const DashboardBloodDonorPage = () => {
     };
   };
 
-  const changeMonth = (increment: number) => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + increment, 1));
-  };
-
   const handleDayClick = (dateStr: string, campaignsOnDay: Campaign[]) => {
     if (campaignsOnDay.length > 0) {
       setSelectedDate(dateStr);
@@ -329,9 +325,7 @@ const DashboardBloodDonorPage = () => {
 
             <div className="space-y-6">
               <Calendar
-                currentDate={currentDate}
                 allCampaigns={allCampaigns}
-                onMonthChange={changeMonth}
                 onDayClick={handleDayClick}
               />
 
