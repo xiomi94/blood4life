@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../context/AuthContext';
+import { NewsModal } from '../../modals/NewsModal';
 
 interface DonorSidebarProps {
   onNewDonationClick?: () => void;
@@ -12,6 +13,7 @@ export const DonorSidebar = ({ onNewDonationClick, canDonate = true, nextAvailab
   const { t } = useTranslation();
   const { logout } = useAuth();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [isNewsModalOpen, setIsNewsModalOpen] = useState(false);
 
   const buttonDisabled = !canDonate;
   const tooltipText = nextAvailableDate
@@ -27,8 +29,8 @@ export const DonorSidebar = ({ onNewDonationClick, canDonate = true, nextAvailab
           disabled={buttonDisabled}
           title={buttonDisabled ? tooltipText : undefined}
           className={`w-full font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors ${buttonDisabled
-              ? 'bg-gray-400 dark:bg-gray-600 text-gray-200 dark:text-gray-400 cursor-not-allowed'
-              : 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white'
+            ? 'bg-gray-400 dark:bg-gray-600 text-gray-200 dark:text-gray-400 cursor-not-allowed'
+            : 'bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white'
             }`}>
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -67,8 +69,9 @@ export const DonorSidebar = ({ onNewDonationClick, canDonate = true, nextAvailab
             </svg>
             <span className="font-medium">{t('dashboard.sidebar.myCampaigns')}</span>
           </a>
-          <a href="#"
-            className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg mb-1 transition-colors relative">
+          <button
+            onClick={() => setIsNewsModalOpen(true)}
+            className="flex items-center gap-3 px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg mb-1 transition-colors relative w-full text-left">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
                 d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -76,7 +79,7 @@ export const DonorSidebar = ({ onNewDonationClick, canDonate = true, nextAvailab
             <span className="font-medium">{t('dashboard.sidebar.news')}</span>
             <span
               className="absolute right-4 top-3 bg-blue-600 text-white text-xs font-bold px-1.5 py-0.5 rounded">{t('dashboard.sidebar.newBadge')}</span>
-          </a>
+          </button>
         </div>
 
         {/* Logout Button */}
@@ -117,6 +120,9 @@ export const DonorSidebar = ({ onNewDonationClick, canDonate = true, nextAvailab
           </div>
         </div>
       )}
+
+      {/* News Modal */}
+      <NewsModal isOpen={isNewsModalOpen} onClose={() => setIsNewsModalOpen(false)} />
     </aside>
   );
 };
