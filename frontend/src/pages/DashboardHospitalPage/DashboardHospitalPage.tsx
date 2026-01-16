@@ -59,7 +59,7 @@ const DashboardHospitalPage: React.FC = () => {
     setShowAllCampaigns,
     setShowCreateCampaignModal,
     setShowEditModal,
-    setCampaignToEdit,
+    setShowDeleteModal,
     setDeleteConfirmText,
 
     // Actions
@@ -68,8 +68,7 @@ const DashboardHospitalPage: React.FC = () => {
     clearSelectedDate,
     handleDeleteClick,
     handleEditClick,
-    handleDeleteConfirm,
-    handleCancelDelete
+    handleDeleteConfirm
   } = useHospitalDashboard();
 
   // Si está cargando, mostramos un mensaje
@@ -150,7 +149,7 @@ const DashboardHospitalPage: React.FC = () => {
                 />
 
                 {/* Stats Cards */}
-                <section className="space-y-4">
+                <section className="grid grid-cols-2 gap-4">
                   <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3">
                     <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">{t('dashboard.stats.appointmentsToday')}</p>
                     <p className="text-4xl font-bold text-gray-800 dark:text-white">{todayAppointments.length}</p>
@@ -177,7 +176,7 @@ const DashboardHospitalPage: React.FC = () => {
           isOpen={showEditModal}
           onClose={() => {
             setShowEditModal(false);
-            setCampaignToEdit(null);
+            // No limpiamos campaignToEdit aquí para permitir la animación de salida
           }}
           campaign={campaignToEdit}
           onSuccess={refreshCampaigns}
@@ -190,7 +189,7 @@ const DashboardHospitalPage: React.FC = () => {
           confirmText={deleteConfirmText}
           onConfirmTextChange={setDeleteConfirmText}
           onConfirm={handleDeleteConfirm}
-          onCancel={handleCancelDelete}
+          onCancel={() => setShowDeleteModal(false)}
         />
       </div>
     </>

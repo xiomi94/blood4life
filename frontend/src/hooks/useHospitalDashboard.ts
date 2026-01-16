@@ -104,7 +104,7 @@ export const useHospitalDashboard = () => {
     useEffect(() => {
         if (!isConnected) return;
 
-        const unsubscribeCampaigns = subscribe('/topic/campaigns', (message) => {
+        const unsubscribeCampaigns = subscribe('/topic/campaigns', (_message) => {
             // Check message structure - if it's just the object or has type, we refresh anyway for safety
             refreshCampaigns();
         });
@@ -192,6 +192,7 @@ export const useHospitalDashboard = () => {
         setShowAllCampaigns,
         setShowCreateCampaignModal,
         setShowEditModal,
+        setShowDeleteModal,
         setCampaignToEdit,
         setDeleteConfirmText,
 

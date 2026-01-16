@@ -104,7 +104,8 @@ public class SecurityConfig {
                 "/js/**",
                 "/error",
                 "/registerhospital",
-                "/registerblooddonor")
+                "/registerblooddonor",
+                "/ws/**")
             .permitAll()
             .anyRequest().authenticated())
         .exceptionHandling(ex -> ex

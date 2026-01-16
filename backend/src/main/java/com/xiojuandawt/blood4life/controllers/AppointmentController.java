@@ -74,7 +74,10 @@ public class AppointmentController {
   }
 
   @Autowired
-  private SimpMessagingTemplate messagingTemplate;
+  private com.xiojuandawt.blood4life.services.HospitalWebSocketService hospitalWebSocketService;
+
+  @Autowired
+  private com.xiojuandawt.blood4life.services.NotificationService notificationService;
 
   @PostMapping("/create")
   public ResponseEntity<AppointmentDTO> createAppointment(
@@ -87,7 +90,7 @@ public class AppointmentController {
 
     appointment.setCampaign(
         campaignRepository.findById(dto.getCampaignId())
-            .orElseThrow(() -> new RuntimeException("CampaÃ±a no encontrada")));
+            .orElseThrow(() -> new RuntimeException("Campaña no encontrada")));
 
     appointment.setBloodDonor(
         bloodDonorRepository.findById(dto.getBloodDonorId())
@@ -105,7 +108,7 @@ public class AppointmentController {
 
     Appointment saved = appointmentRepository.save(appointment);
 
-    // --- Convert entity â†’ DTO ---
+    // --- Convert entity -> DTO ---
     AppointmentDTO result = new AppointmentDTO();
     result.setId(saved.getId());
     result.setAppointmentStatus(saved.getAppointmentStatus());
@@ -125,8 +128,36 @@ public class AppointmentController {
     donorDTO.setEmail(donor.getEmail());
     result.setBloodDonor(donorDTO);
 
-    // Notificar vÃ­a WebSocket
-    messagingTemplate.convertAndSend("/topic/appointments", result);
+    // Notify Hospital (Internal)
+    try {
+      if (saved.getCampaign().getHospital() != null) {
+        System.out.println("DEBUG: Notificando a Hospital ID: " + saved.getCampaign().getHospital().getId());
+      } else {
+        System.out.println("DEBUG: ERROR - La campaña no tiene hospital asignado!");
+      }
+
+      String title = "Nueva inscripción del donante " + donor.getFirstName() + " a la campaña "
+          + saved.getCampaign().getName();
+
+      String jsonDetail = "{" +
+          "\"nombre\": \"" + donor.getFirstName() + " " + donor.getLastName() + "\"," +
+          "\"dni\": \"" + donor.getDni() + "\"," +
+          "\"tipoSangre\": \"" + donor.getBloodType().getType() + "\"," +
+          "\"campaignName\": \"" + saved.getCampaign().getName() + "\"," +
+          "\"fecha\": \"" + saved.getDateAppointment() + "\"," +
+          "\"hora\": \"" + saved.getHourAppointment() + "\"" +
+          "}";
+
+      String msg = title + "|" + jsonDetail;
+      notificationService.createNotification(saved.getCampaign().getHospital(), msg);
+      System.out.println("DEBUG: Notificación creada exitosamente.");
+    } catch (Exception e) {
+      System.err.println("Error creando notificación interna: " + e.getMessage());
+      e.printStackTrace();
+    }
+
+    // Notificar vía WebSocket
+    hospitalWebSocketService.notifyAppointmentUpdate(result);
 
     return ResponseEntity.ok(result);
   }
@@ -151,7 +182,7 @@ public class AppointmentController {
 
     appointment.setCampaign(
         campaignRepository.findById(dto.getCampaignId())
-            .orElseThrow(() -> new RuntimeException("CampaÃ±a no encontrada")));
+            .orElseThrow(() -> new RuntimeException("Campaña no encontrada")));
 
     appointment.setBloodDonor(
         bloodDonorRepository.findById(dto.getBloodDonorId())
@@ -162,7 +193,7 @@ public class AppointmentController {
 
     Appointment updated = appointmentRepository.save(appointment);
 
-    // Convert entity â†’ DTO
+    // Convert entity -> DTO
     AppointmentDTO result = new AppointmentDTO();
     result.setId(updated.getId());
     result.setAppointmentStatus(updated.getAppointmentStatus());
@@ -173,8 +204,8 @@ public class AppointmentController {
     result.setDateAppointment(updated.getDateAppointment());
     result.setHourAppointment(updated.getHourAppointment());
 
-    // Notificar vÃ­a WebSocket
-    messagingTemplate.convertAndSend("/topic/appointments", result);
+    // Notificar vía WebSocket
+    hospitalWebSocketService.notifyAppointmentUpdate(result);
 
     return ResponseEntity.ok(result);
   }

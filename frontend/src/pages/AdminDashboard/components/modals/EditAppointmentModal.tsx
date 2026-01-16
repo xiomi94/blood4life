@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Appointment, AppointmentStatus } from '../../../../services/adminService';
+import type { AdminAppointment, AppointmentStatus } from '../../../../services/adminService';
 
 interface EditAppointmentModalProps {
-    appointment: Appointment;
+    appointment: AdminAppointment;
     appointmentStatuses: AppointmentStatus[];
-    onSave: (appointment: Appointment) => Promise<boolean>;
+    onSave: (appointment: AdminAppointment) => Promise<boolean>;
     onClose: () => void;
 }
 

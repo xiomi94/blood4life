@@ -377,5 +377,13 @@
             "confirmPlaceholder": "Repeat new password",
             "hint": "Must contain: uppercase, lowercase, number (8-32 characters)"
         }
+    },
+    "notifications": {
+        "title": "Notifications",
+        "empty": "No notifications",
+        "markAllRead": "Mark all as read",
+        "new": "New",
+        "viewAll": "View all",
+        "menuTitle": "Notifications"
     }
 }

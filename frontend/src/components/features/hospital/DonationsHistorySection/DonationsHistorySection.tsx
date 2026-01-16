@@ -19,8 +19,8 @@ const DonationsHistorySection: React.FC<DonationsHistorySectionProps> = () => {
             <div className="space-y-3">
                 <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
                     <div className="flex items-center gap-4">
-                        <span className="inline-flex items-center gap-2 px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs font-medium rounded-full">
-                            <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                        <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#E7000B]/10 dark:bg-[#E7000B]/20 text-[#E7000B] dark:text-[#ff8080] text-xs font-medium rounded-full border border-[#E7000B]/20">
+                            <span className="w-2 h-2 bg-[#E7000B] dark:bg-[#ff8080] rounded-full"></span>
                             {t('dashboard.donations.completed')}
                         </span>
                         <div>
@@ -41,8 +41,8 @@ const DonationsHistorySection: React.FC<DonationsHistorySectionProps> = () => {
 
                 <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">
                     <div className="flex items-center gap-4">
-                        <span className="inline-flex items-center gap-2 px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs font-medium rounded-full">
-                            <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+                        <span className="inline-flex items-center gap-2 px-3 py-1 bg-[#E7000B]/10 dark:bg-[#E7000B]/20 text-[#E7000B] dark:text-[#ff8080] text-xs font-medium rounded-full border border-[#E7000B]/20">
+                            <span className="w-2 h-2 bg-[#E7000B] dark:bg-[#ff8080] rounded-full"></span>
                             {t('dashboard.donations.completed')}
                         </span>
                         <div>

@@ -2,17 +2,17 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useWebSocket } from '../../../hooks/useWebSocket';
-import type { BloodDonor, Hospital, Appointment, Campaign } from '../../../services/adminService';
+import type { BloodDonor, Hospital, AdminAppointment, Campaign } from '../../../services/adminService';
 
 interface UseAdminWebSocketProps {
     isConnected: boolean;
     donors: BloodDonor[];
     hospitals: Hospital[];
-    appointments: Appointment[];
+    appointments: AdminAppointment[];
     campaigns: Campaign[];
     setDonors: React.Dispatch<React.SetStateAction<BloodDonor[]>>;
     setHospitals: React.Dispatch<React.SetStateAction<Hospital[]>>;
-    setAppointments: React.Dispatch<React.SetStateAction<Appointment[]>>;
+    setAppointments: React.Dispatch<React.SetStateAction<AdminAppointment[]>>;
     setCampaigns: React.Dispatch<React.SetStateAction<Campaign[]>>;
     refreshData: () => Promise<void>;
 }

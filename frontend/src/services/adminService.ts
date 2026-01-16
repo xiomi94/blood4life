@@ -1,4 +1,10 @@
 import axiosInstance from '../utils/axiosInstance';
+import type { Campaign, Appointment } from '../types/common.types';
+import type { BloodDonor } from '../models/BloodDonor';
+import type { Hospital } from '../models/Hospital';
+
+// Re-export types for convenience
+export type { BloodDonor, Hospital, Appointment, Campaign };
 
 /**
  * Nota: Reutilizamos tipos de common.types y models donde sea posible

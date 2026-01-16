@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useAuth } from '../../../context/AuthContext';
 import { dashboardService, type DashboardStats } from '../../../services/dashboardService';
-import { adminService, type BloodDonor, type Hospital, type Appointment, type AppointmentStatus, type Campaign } from '../../../services/adminService';
+import { adminService, type BloodDonor, type Hospital, type Campaign, type AdminAppointment, type AppointmentStatus } from '../../../services/adminService';
 
 export const useAdminData = () => {
     const [stats, setStats] = useState<DashboardStats | null>(null);
     const [donors, setDonors] = useState<BloodDonor[]>([]);
     const [hospitals, setHospitals] = useState<Hospital[]>([]);
-    const [appointments, setAppointments] = useState<Appointment[]>([]);
+    const [appointments, setAppointments] = useState<AdminAppointment[]>([]);
     const [campaigns, setCampaigns] = useState<Campaign[]>([]);
     const [appointmentStatuses, setAppointmentStatuses] = useState<AppointmentStatus[]>([]);
     const [loading, setLoading] = useState(true);
@@ -142,7 +142,7 @@ export const useAdminData = () => {
                 donorData.bloodType = { id: donor.bloodType.id };
             }
 
-            const updated = await adminService.updateBloodDonor(donor.id, donorData);
+            const updated = await adminService.updateBloodDonor(donor.id!, donorData);
             setDonors(donors.map(d => d.id === updated.id ? updated : d));
             toast.success(t('dashboard.admin.toasts.updateDonorSuccess'));
             return true;
@@ -156,7 +156,7 @@ export const useAdminData = () => {
     // Función para actualizar hospitales
     const updateHospital = async (hospital: Hospital) => {
         try {
-            const updated = await adminService.updateHospital(hospital.id, hospital);
+            const updated = await adminService.updateHospital(hospital.id!, hospital);
             setHospitals(hospitals.map(h => h.id === updated.id ? updated : h));
             toast.success(t('dashboard.admin.toasts.updateHospitalSuccess'));
             return true;
@@ -167,7 +167,7 @@ export const useAdminData = () => {
     };
 
     // Función para actualizar inscripciones
-    const updateAppointment = async (appointment: Appointment) => {
+    const updateAppointment = async (appointment: AdminAppointment) => {
         try {
             const dataToUpdate = {
                 appointmentStatus: appointment.appointmentStatus,

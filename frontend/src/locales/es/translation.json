@@ -166,7 +166,7 @@
             "dniLabel": "DNI",
             "noNextAppointment": "No se encontró una próxima cita disponible.",
             "viewNext": "Ver próxima cita",
-            "donationsLabel": "Horas/Donaciones:",
+            "donationsLabel": "Donaciones:",
             "viewProfile": "Ver perfil",
             "nextAppointmentTitle": "Próxima cita programada",
             "dateTimeLabel": "Fecha y Hora",
@@ -377,5 +377,13 @@
             "confirmPlaceholder": "Repite la nueva contraseña",
             "hint": "Debe contener: mayúscula, minúscula, número (8-32 caracteres)"
         }
+    },
+    "notifications": {
+        "title": "Notificaciones",
+        "empty": "No tienes notificaciones",
+        "markAllRead": "Marcar todas como leídas",
+        "new": "Nueva",
+        "viewAll": "Ver todas",
+        "menuTitle": "Notificaciones"
     }
 }

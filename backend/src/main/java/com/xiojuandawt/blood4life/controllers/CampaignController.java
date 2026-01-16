@@ -27,6 +27,12 @@ public class CampaignController {
   @Autowired
   private SimpMessagingTemplate messagingTemplate;
 
+  @Autowired
+  private com.xiojuandawt.blood4life.repositories.HospitalRepository hospitalRepository;
+
+  @Autowired
+  private com.xiojuandawt.blood4life.services.NotificationService notificationService;
+
   @GetMapping("/all")
   public ResponseEntity<List<CampaignDTO>> getAllCampaigns() {
     List<CampaignDTO> campaigns = campaignService.findAll();
@@ -92,8 +98,24 @@ public class CampaignController {
       // Save campaign with blood types
       CampaignDTO createdCampaign = campaignService.createCampaign(campaign, requiredBloodTypes);
 
+      // Notify other hospitals
+      try {
+        List<Hospital> allHospitals = hospitalRepository.findAll();
+        for (Hospital h : allHospitals) {
+          if (h.getId() != hospital.getId()) { // Don't notify itself
+            String msg = "El hospital " + hospital.getName() + " ha creado la campaña: " + name;
+            notificationService.createNotification(h, msg);
+          }
+        }
+      } catch (Exception e) {
+        System.err.println("Error enviando notificaciones a hospitales: " + e.getMessage());
+      }
+
       // Send WebSocket notification
-      messagingTemplate.convertAndSend("/topic/campaigns", createdCampaign);
+      Map<String, Object> wsMessage = new HashMap<>();
+      wsMessage.put("type", "CAMPAIGN_CREATED");
+      wsMessage.put("campaign", createdCampaign);
+      messagingTemplate.convertAndSend("/topic/campaigns", wsMessage);
 
       return ResponseEntity
           .status(HttpStatus.CREATED)
@@ -217,7 +239,10 @@ public class CampaignController {
       CampaignDTO updated = campaignService.updateCampaign(id, updatedCampaign, requiredBloodTypes);
 
       // Send WebSocket notification
-      messagingTemplate.convertAndSend("/topic/campaigns", updated);
+      Map<String, Object> wsMessage = new HashMap<>();
+      wsMessage.put("type", "CAMPAIGN_UPDATED");
+      wsMessage.put("campaign", updated);
+      messagingTemplate.convertAndSend("/topic/campaigns", wsMessage);
 
       return ResponseEntity.ok(updated);
 

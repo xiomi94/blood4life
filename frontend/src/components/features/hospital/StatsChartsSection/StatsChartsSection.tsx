@@ -193,8 +193,8 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
             {
                 label: t('dashboard.stats.female'),
                 data: femaleData,
-                backgroundColor: 'rgba(239, 68, 68, 0.8)',
-                borderColor: 'rgba(239, 68, 68, 1)',
+                backgroundColor: isDarkMode ? 'rgba(153, 27, 27, 1)' : '#E7000B',
+                borderColor: isDarkMode ? 'rgba(153, 27, 27, 1)' : '#E7000B',
                 borderWidth: 1,
                 borderRadius: 6,
             },
@@ -394,8 +394,8 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
                                 transition-all duration-300 ease-in-out
                                 flex items-center gap-2
                                 ${bloodTypeGenderFilter === 'Femenino'
-                                    ? 'bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/50'
-                                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50 hover:border-red-500 dark:hover:border-red-400 hover:shadow-red-500/30 hover:scale-105 hover:text-red-600 dark:hover:text-red-400'
+                                    ? 'bg-[#E7000B] hover:bg-[#c40009] dark:bg-red-800 dark:hover:bg-red-900 text-white shadow-md'
+                                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50 hover:border-[#E7000B] dark:hover:border-red-400 hover:shadow-gray-300/50 hover:scale-105 hover:text-[#E7000B] dark:hover:text-red-400'
                                 }
                             `}
                         >
@@ -462,13 +462,13 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
 
             <div key={selectedChart} className="animate-fade-in w-full">
                 {selectedChart === 'bloodType' && (
-                    <div className="relative h-[450px] w-full">
+                    <div className="relative h-[396px] w-full">
                         <Bar data={bloodTypeChartData} options={bloodTypeOptions} />
                     </div>
                 )}
 
                 {(selectedChart === 'myCampaigns' || selectedChart === 'allCampaigns' || selectedChart === 'completedCampaigns') && (
-                    <div className="relative h-[450px] w-full">
+                    <div className="relative h-[396px] w-full">
                         <div
                             className="h-full overflow-y-auto pr-2 pt-2 pb-2 space-y-3 custom-scrollbar"
                             style={{

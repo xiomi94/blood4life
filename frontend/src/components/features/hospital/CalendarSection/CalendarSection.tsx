@@ -91,11 +91,11 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ campaigns, onDayClick
                 const isActive = campaignsOnDay.some(c => c.startDate <= nowStr && c.endDate >= nowStr);
 
                 if (isActive) {
-                    statusClass = "bg-green-500 text-white font-medium hover:bg-green-600 cursor-pointer relative";
+                    statusClass = "bg-green-600 dark:bg-green-700 text-white font-medium hover:bg-green-700 dark:hover:bg-green-600 cursor-pointer relative";
                 } else if (isFuture) {
                     statusClass = "bg-blue-600 text-white font-medium hover:bg-blue-700 cursor-pointer relative";
                 } else if (isPast) {
-                    statusClass = "bg-red-500 text-white font-medium hover:bg-red-600 cursor-pointer relative";
+                    statusClass = "bg-red-600 dark:bg-red-700 text-white font-medium hover:bg-red-700 dark:hover:bg-red-600 cursor-pointer relative";
                 }
             }
 
@@ -185,7 +185,9 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ campaigns, onDayClick
                         &gt;
                     </button>
                 </div>
+            </div>
 
+            <div>
                 {calendarView === 'days' && (
                     <>
                         <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">
@@ -246,8 +248,8 @@ const CalendarSection: React.FC<CalendarSectionProps> = ({ campaigns, onDayClick
                 )}
 
                 <div className="mt-4 flex flex-wrap gap-2 text-xs justify-center text-gray-500">
-                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-red-500 rounded"></div> {t('dashboard.calendar.legend.completed')}</div>
-                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-green-500 rounded"></div> {t('dashboard.calendar.legend.active')}</div>
+                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-red-600 dark:bg-red-700 rounded"></div> {t('dashboard.calendar.legend.completed')}</div>
+                    <div className="flex items-center gap-1"><div className="w-3 h-3 bg-green-600 dark:bg-green-700 rounded"></div> {t('dashboard.calendar.legend.active')}</div>
                     <div className="flex items-center gap-1"><div className="w-3 h-3 bg-blue-600 rounded"></div> {t('dashboard.calendar.legend.upcoming')}</div>
                 </div>
             </div>

@@ -1,0 +1,1 @@
+ALTER TABLE notification MODIFY COLUMN title VARCHAR(255) NULL;

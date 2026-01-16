@@ -52,6 +52,7 @@ public class AppointmentStatus {
         this.statusName = statusName;
     }
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     public List<Appointment> getAppointments() {
         return appointments;
     }
@@ -63,6 +64,6 @@ public class AppointmentStatus {
     // toString
     @Override
     public String toString() {
-        return "AppointmentStatus [id=" + id + ", statusName=" + statusName + ", appointments=" + appointments + "]";
+        return "AppointmentStatus [id=" + id + ", statusName=" + statusName + "]";
     }
 }
