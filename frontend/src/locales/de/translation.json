@@ -345,5 +345,122 @@
                 "placeholder": "Kampagnenname..."
             }
         }
+    },
+    "index": {
+        "title": "Blood4Life",
+        "header": {
+            "title": "Blood4Life"
+        },
+        "content": {
+            "p1": "Wir glauben, dass Blutspenden ein einfacher, zugänglicher und gut organisierter Prozess sein sollte. Unsere Plattform wurde mit einem klaren Ziel gegründet: solidarische Menschen mit Krankenhäusern zu verbinden, die Spenden benötigen, und die Kommunikation sowie die Teilnahme an Blutspendekampagnen zu erleichtern.",
+            "p2": "Wir fungieren als digitaler Treffpunkt zwischen Krankenhäusern und Spendern. Gesundheitseinrichtungen können ihre aktiven Kampagnen veröffentlichen, über ihre Bedürfnisse informieren und Termine verwalten, während sich Spender einfach anmelden, verfügbare Kampagnen prüfen oder einen Termin in ihrem bevorzugten Krankenhaus vereinbaren können.",
+            "p3": "Unser Engagement besteht darin, die Effizienz des Spendeprozesses zu verbessern, Informationsmangel zu reduzieren und eine Kultur der kontinuierlichen Solidarität zu fördern. Jede Spende zählt, und wir glauben, dass Technologie einen Unterschied machen kann, wenn sie in den Dienst von Gesundheit und Gesellschaft gestellt wird."
+        },
+        "hero": {
+            "alt": "Blutspende und Verbindung"
+        },
+        "footerSlogan": "\"Weil Blutspenden Leben rettet,<br />stellen wir die Verbindung her.\""
+    },
+    "aboutUs": {
+        "title": "Über Uns",
+        "subtitle": "Spender mit Hoffnung verbinden, Leben mit Leben.",
+        "mission": {
+            "title": "Unsere Mission",
+            "text": "Bei Blood4Life ist es unsere Mission, den Blutspendeprozess zu vereinfachen und zu stärken. Wir arbeiten unermüdlich daran, ein effizientes Netzwerk zu schaffen, das altruistische Spender mit Krankenhäusern und Gesundheitszentren verbindet und sicherstellt, dass Blut diejenigen, die es am dringendsten benötigen, schnell und sicher erreicht. Wir schaffen Technologie, um Leben zu retten."
+        },
+        "vision": {
+            "title": "Unsere Vision",
+            "text": "Wir streben danach, die weltweit führende Plattform für das Blutspendemanagement zu sein und Reservenengpässe in Krankenhäusern durch Bewusstsein, Technologie und Gemeinschaft zu beseitigen. Wir träumen von einer Welt, in der kein Patient auf eine lebenswichtige Transfusion warten muss."
+        },
+        "values": {
+            "title": "Unsere Werte",
+            "solidarity": {
+                "title": "Solidarität",
+                "text": "Wir glauben an die Kraft der gegenseitigen Hilfe und des Altruismus als Motor für Veränderungen."
+            },
+            "transparency": {
+                "title": "Transparenz",
+                "text": "Wir arbeiten mit völliger Klarheit und schaffen Vertrauen in jedem Schritt des Prozesses."
+            },
+            "innovation": {
+                "title": "Innovation",
+                "text": "Wir nutzen die fortschrittlichste Technologie, um das Gesundheitsmanagement zu optimieren."
+            }
+        },
+        "backButton": "Zurück zur Startseite"
+    },
+    "privacyPolicy": {
+        "title": "Datenschutzrichtlinie",
+        "lastUpdate": "Letzte Aktualisierung: Januar 2026",
+        "sections": {
+            "intro": {
+                "title": "1. Einführung",
+                "text": "Bei Blood4Life verpflichten wir uns, Ihre Privatsphäre und Ihre persönlichen Daten zu schützen. Diese Datenschutzrichtlinie erklärt, wie wir Ihre persönlichen Daten erfassen, verwenden, weitergeben und schützen, in Übereinstimmung mit der Datenschutz-Grundverordnung (DSGVO) der Europäischen Union und den geltenden spanischen Vorschriften."
+            },
+            "responsible": {
+                "title": "2. Verantwortlicher für die Verarbeitung",
+                "text": "Der Verantwortliche für die Verarbeitung Ihrer Daten ist:",
+                "company": "Blood4Life S.L.",
+                "address": "Adresse: Calle Tecnología 123, 28000 Madrid, Spanien",
+                "email": "Kontakt-E-Mail: privacidad@blood4life.com"
+            },
+            "dataCollected": {
+                "title": "3. Daten, die wir erfassen",
+                "text": "Wir erfassen die folgenden Informationen, um die Plattform zu verwalten:",
+                "list": {
+                    "id": "Identifikationsdaten: Name, Nachname, Ausweis/NIE.",
+                    "contact": "Kontaktdaten: E-Mail, Telefonnummer, Postanschrift.",
+                    "health": "Gesundheitsdaten (Besondere Kategorie): Blutgruppe, Historie der Spendereignung (verarbeitet mit Ihrer ausdrücklichen Zustimmung oder im öffentlichen Interesse im Bereich der öffentlichen Gesundheit).",
+                    "session": "Sitzungsdaten: IP-Adresse, Zugriffsprotokolle, technische Cookies."
+                }
+            },
+            "purpose": {
+                "title": "4. Zweck der Verarbeitung",
+                "text": "Ihre Daten werden für folgende Zwecke verarbeitet:",
+                "list": {
+                    "users": "Benutzerverwaltung (Spender und Krankenhäuser) und Authentifizierung.",
+                    "appointments": "Koordination von Terminen und Blutspendekampagnen.",
+                    "comms": "Versand relevanter Mitteilungen (Terminerinnerungen, Mangelwarnungen), wenn Sie Ihre Zustimmung gegeben haben.",
+                    "legal": "Einhaltung gesetzlicher Gesundheitsverpflichtungen."
+                }
+            },
+            "legalBasis": {
+                "title": "5. Rechtsgrundlage",
+                "text": "Die Rechtsgrundlage für die Verarbeitung Ihrer Daten ist:",
+                "list": {
+                    "consent": "Zustimmung: Durch die Registrierung stimmen Sie der Verarbeitung Ihrer Daten ausdrücklich zu.",
+                    "publicInterest": "Öffentliches Interesse: Für die Verwaltung öffentlicher Gesundheitsdienste und Spenden.",
+                    "legal": "Gesetzliche Verpflichtung: Zur Einhaltung von Gesundheits- und Steuervorschriften."
+                }
+            },
+            "recipients": {
+                "title": "6. Empfänger der Daten",
+                "text": "Ihre Daten können weitergegeben werden an:",
+                "list": {
+                    "hospitals": "Autorisierte Krankenhäuser und Transfusionszentren, die mit der Plattform verbunden sind.",
+                    "authorities": "Zuständige Gesundheitsbehörden, wenn gesetzlich vorgeschrieben.",
+                    "tech": "Technologiedienstleister (Auftragsverarbeiter), die die Datensicherheit gewährleisten."
+                },
+                "noSale": "Wir verkaufen oder vermieten Ihre persönlichen Daten nicht an Dritte."
+            },
+            "retention": {
+                "title": "7. Datenaufbewahrung",
+                "text": "Wir bewahren Ihre persönlichen Daten auf, solange Sie Ihr Konto aktiv halten. Sobald das Konto geschlossen ist, werden sie für die Zeit gesperrt, die zur Einhaltung gesetzlicher Verpflichtungen (z. B. Gesundheitsvorschriften zur Rückverfolgbarkeit von Spenden) erforderlich ist, danach werden sie sicher gelöscht."
+            },
+            "rights": {
+                "title": "8. Ihre Rechte (ARCO+ Rechte)",
+                "text": "Gemäß der DSGVO haben Sie das Recht auf:",
+                "list": {
+                    "access": "Zugang: Wissen, welche Daten wir über Sie haben.",
+                    "rectification": "Berichtigung: Unrichtige Daten korrigieren.",
+                    "deletion": "Löschung (\"Recht auf Vergessenwerden\"): Löschung Ihrer Daten verlangen, wenn diese nicht mehr erforderlich sind.",
+                    "limitation": "Einschränkung: Verlangen, dass die Verarbeitung unter bestimmten Umständen eingeschränkt wird.",
+                    "portability": "Übertragbarkeit: Ihre Daten in einem strukturierten Format erhalten.",
+                    "opposition": "Widerspruch: Der Verarbeitung Ihrer Daten widersprechen."
+                },
+                "contact": "Um diese Rechte auszuüben, kontaktieren Sie uns unter: privacidad@blood4life.com"
+            }
+        },
+        "backButton": "Zurück zur Startseite"
     }
 }

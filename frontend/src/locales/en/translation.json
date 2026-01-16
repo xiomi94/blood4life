@@ -385,5 +385,122 @@
         "new": "New",
         "viewAll": "View all",
         "menuTitle": "Notifications"
+    },
+    "index": {
+        "title": "Blood4Life",
+        "header": {
+            "title": "Blood4Life"
+        },
+        "content": {
+            "p1": "We believe that donating blood should be a simple, accessible, and well-organized process. Our platform was born with a clear goal: to connect caring people with hospitals in need of donations, facilitating communication and participation in blood donation campaigns.",
+            "p2": "We act as a digital meeting point between hospitals and donors. Healthcare centers can publish their active campaigns, report on their needs, and manage appointments, while donors can easily sign up, check available campaigns, or schedule an appointment at their preferred hospital.",
+            "p3": "Our commitment is to improve the efficiency of the donation process, reduce lack of information, and foster a culture of continuous solidarity. Every donation counts, and we believe technology can make a difference when put at the service of health and society."
+        },
+        "hero": {
+            "alt": "Blood donation and connection"
+        },
+        "footerSlogan": "\"Because donating blood saves lives,<br />we provide the connection.\""
+    },
+    "aboutUs": {
+        "title": "About Us",
+        "subtitle": "Connecting donors with hope, life with life.",
+        "mission": {
+            "title": "Our Mission",
+            "text": "At Blood4Life, our mission is to simplify and empower the blood donation process. We work tirelessly to create an efficient network that connects altruistic donors with hospitals and health centers, ensuring that blood reaches those who need it most quickly and safely. We create technology to save lives."
+        },
+        "vision": {
+            "title": "Our Vision",
+            "text": "We aspire to be the world's leading platform for blood donation management, eradicating reserve shortages in hospitals through awareness, technology, and community. We dream of a world where no patient has to wait for a vital transfusion."
+        },
+        "values": {
+            "title": "Our Values",
+            "solidarity": {
+                "title": "Solidaridad",
+                "text": "We believe in the power of mutual aid and altruism as a driver of change."
+            },
+            "transparency": {
+                "title": "Transparency",
+                "text": "We operate with total clarity, building trust at every step of the process."
+            },
+            "innovation": {
+                "title": "Innovation",
+                "text": "We use the most advanced technology to optimize healthcare management."
+            }
+        },
+        "backButton": "Back to Home"
+    },
+    "privacyPolicy": {
+        "title": "Privacy Policy",
+        "lastUpdate": "Last updated: January 2026",
+        "sections": {
+            "intro": {
+                "title": "1. Introduction",
+                "text": "At Blood4Life, we are committed to protecting your privacy and personal data. This Privacy Policy explains how we collect, use, share, and protect your personal information, in compliance with the General Data Protection Regulation (GDPR) of the European Union and current Spanish regulations."
+            },
+            "responsible": {
+                "title": "2. Data Controller",
+                "text": "The data controller for your data is:",
+                "company": "Blood4Life S.L.",
+                "address": "Address: Calle Tecnología 123, 28000 Madrid, Spain",
+                "email": "Contact email: privacidad@blood4life.com"
+            },
+            "dataCollected": {
+                "title": "3. Data We Collect",
+                "text": "We collect the following information to manage the platform:",
+                "list": {
+                    "id": "Identification Data: Name, surname, ID/NIE.",
+                    "contact": "Contact Data: Email, phone number, postal address.",
+                    "health": "Health Data (Special Category): Blood type, history of eligibility to donate (processed with your explicit consent or under public interest in the field of public health).",
+                    "session": "Session Data: IP address, access logs, technical cookies."
+                }
+            },
+            "purpose": {
+                "title": "4. Purpose of Processing",
+                "text": "Your data will be processed for the following purposes:",
+                "list": {
+                    "users": "User management (donors and hospitals) and authentication.",
+                    "appointments": "Coordination of appointments and blood donation campaigns.",
+                    "comms": "Sending relevant communications (appointment reminders, shortage alerts) if you have given your consent.",
+                    "legal": "Compliance with health legal obligations."
+                }
+            },
+            "legalBasis": {
+                "title": "5. Legal Basis",
+                "text": "The legal basis for processing your data is:",
+                "list": {
+                    "consent": "Consent: By registering, you explicitly consent to the processing of your data.",
+                    "publicInterest": "Public Interest: For the management of public health services and donations.",
+                    "legal": "Legal Obligation: To comply with health and tax regulations."
+                }
+            },
+            "recipients": {
+                "title": "6. Data Recipients",
+                "text": "Your data may be communicated to:",
+                "list": {
+                    "hospitals": "Authorized hospitals and transfusion centers connected to the platform.",
+                    "authorities": "Competent health authorities when required by law.",
+                    "tech": "Technology service providers (data processors) who guarantee data security."
+                },
+                "noSale": "We do not sell or rent your personal data to third parties."
+            },
+            "retention": {
+                "title": "7. Data Retention",
+                "text": "We will retain your personal data while you keep your account active. Once the account is closed, they will be kept blocked for the time necessary to comply with legal obligations (e.g., health regulations on donation traceability), after which they will be securely deleted."
+            },
+            "rights": {
+                "title": "8. Your Rights (ARCO+ Rights)",
+                "text": "Under the GDPR, you have the right to:",
+                "list": {
+                    "access": "Access: Know what data we have about you.",
+                    "rectification": "Rectification: Correct inaccurate data.",
+                    "deletion": "Erasure (\"Right to be Forgotten\"): Request the deletion of your data when they are no longer necessary.",
+                    "limitation": "Restriction: Request that processing be limited in certain circumstances.",
+                    "portability": "Portability: Receive your data in a structured format.",
+                    "opposition": "Objection: Object to the processing of your data."
+                },
+                "contact": "To exercise these rights, contact us at: privacidad@blood4life.com"
+            }
+        },
+        "backButton": "Back to Home"
     }
 }

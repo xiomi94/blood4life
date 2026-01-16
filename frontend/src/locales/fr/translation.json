@@ -345,5 +345,122 @@
                 "placeholder": "Nom de la campagne..."
             }
         }
+    },
+    "index": {
+        "title": "Blood4Life",
+        "header": {
+            "title": "Blood4Life"
+        },
+        "content": {
+            "p1": "Nous pensons que le don de sang doit être un processus simple, accessible et bien organisé. Notre plateforme est née avec un objectif clair : connecter des personnes solidaires avec des hôpitaux ayant besoin de dons, facilitant la communication et la participation aux campagnes de don de sang.",
+            "p2": "Nous agissons comme un point de rencontre numérique entre hôpitaux et donneurs. Les centres de santé peuvent publier leurs campagnes actives, informer sur leurs besoins et gérer les rendez-vous, tandis que les donneurs peuvent s'inscrire facilement, consulter les campagnes disponibles ou prendre rendez-vous dans l'hôpital de leur choix.",
+            "p3": "Notre engagement est d'améliorer l'efficacité du processus de don, de réduire le manque d'information et de favoriser une culture de solidarité continue. Chaque don compte, et nous pensons que la technologie peut faire la différence lorsqu'elle est mise au service de la santé et de la société."
+        },
+        "hero": {
+            "alt": "Don de sang et connexion"
+        },
+        "footerSlogan": "\"Parce que donner son sang sauve des vies,<br />nous assurons la connexion.\""
+    },
+    "aboutUs": {
+        "title": "À Propos de Nous",
+        "subtitle": "Connecter les donneurs avec l'espoir, la vie avec la vie.",
+        "mission": {
+            "title": "Notre Mission",
+            "text": "Chez Blood4Life, notre mission est de simplifier et de renforcer le processus de don de sang. Nous travaillons sans relâche pour créer un réseau efficace qui connecte les donneurs altruistes avec les hôpitaux et les centres de santé, assurant que le sang parvienne à ceux qui en ont le plus besoin rapidement et en toute sécurité. Nous créons la technologie pour sauver des vies."
+        },
+        "vision": {
+            "title": "Notre Vision",
+            "text": "Nous aspirons à être la plateforme leader mondial dans la gestion des dons de sang, éradiquant les pénuries de réserves dans les hôpitaux grâce à la sensibilisation, la technologie et la communauté. Nous rêvons d'un monde où aucun patient n'a à attendre une transfusion vitale."
+        },
+        "values": {
+            "title": "Nos Valeurs",
+            "solidarity": {
+                "title": "Solidarité",
+                "text": "Nous croyons au pouvoir de l'entraide et de l'altruisme comme moteur de changement."
+            },
+            "transparency": {
+                "title": "Transparence",
+                "text": "Nous opérons avec une clarté totale, générant la confiance à chaque étape du processus."
+            },
+            "innovation": {
+                "title": "Innovation",
+                "text": "Nous utilisons la technologie la plus avancée pour optimiser la gestion sanitaire."
+            }
+        },
+        "backButton": "Retour à l'Accueil"
+    },
+    "privacyPolicy": {
+        "title": "Politique de Confidentialité",
+        "lastUpdate": "Dernière mise à jour : Janvier 2026",
+        "sections": {
+            "intro": {
+                "title": "1. Introduction",
+                "text": "Chez Blood4Life, nous nous engageons à protéger votre vie privée et vos données personnelles. Cette Politique de Confidentialité explique comment nous collectons, utilisons, partageons et protégeons vos informations personnelles, conformément au Règlement Général sur la Protection des Données (RGPD) de l'Union Européenne et à la réglementation espagnole en vigueur."
+            },
+            "responsible": {
+                "title": "2. Responsable du Traitement",
+                "text": "Le responsable du traitement de vos données est :",
+                "company": "Blood4Life S.L.",
+                "address": "Adresse : Calle Tecnología 123, 28000 Madrid, Espagne",
+                "email": "E-mail de contact : privacidad@blood4life.com"
+            },
+            "dataCollected": {
+                "title": "3. Données que nous collectons",
+                "text": "Nous collectons les informations suivantes pour gérer la plateforme :",
+                "list": {
+                    "id": "Données d'identification : Nom, prénom, DNI/NIE.",
+                    "contact": "Données de contact : E-mail, numéro de téléphone, adresse postale.",
+                    "health": "Données de santé (Catégorie spéciale) : Groupe sanguin, historique d'éligibilité au don (traitées avec votre consentement explicite ou sous intérêt public dans le domaine de la santé publique).",
+                    "session": "Données de session : Adresse IP, journaux d'accès, cookies techniques."
+                }
+            },
+            "purpose": {
+                "title": "4. Finalité du Traitement",
+                "text": "Vos données seront traitées pour les finalités suivantes :",
+                "list": {
+                    "users": "Gestion des utilisateurs (donneurs et hôpitaux) et authentification.",
+                    "appointments": "Coordination des rendez-vous et des campagnes de don de sang.",
+                    "comms": "Envoi de communications pertinentes (rappels de rendez-vous, alertes de pénurie) si vous avez donné votre consentement.",
+                    "legal": "Respect des obligations légales sanitaires."
+                }
+            },
+            "legalBasis": {
+                "title": "5. Base Légale",
+                "text": "La base légale pour le traitement de vos données est :",
+                "list": {
+                    "consent": "Consentement : En vous inscrivant, vous consentez explicitement au traitement de vos données.",
+                    "publicInterest": "Intérêt Public : Pour la gestion des services de santé publique et des dons.",
+                    "legal": "Obligation Légale : Pour respecter les réglementations sanitaires et fiscales."
+                }
+            },
+            "recipients": {
+                "title": "6. Destinataires des Données",
+                "text": "Vos données pourront être communiquées à :",
+                "list": {
+                    "hospitals": "Hôpitaux et centres de transfusion autorisés connectés à la plateforme.",
+                    "authorities": "Autorités sanitaires compétentes lorsque la loi l'exige.",
+                    "tech": "Prestataires de services technologiques (sous-traitants) qui garantissent la sécurité des données."
+                },
+                "noSale": "Nous ne vendons ni ne louons vos données personnelles à des tiers."
+            },
+            "retention": {
+                "title": "7. Conservation des Données",
+                "text": "Nous conserverons vos données personnelles tant que vous maintiendrez votre compte actif. Une fois le compte fermé, elles seront bloquées pendant le temps nécessaire pour respecter les obligations légales (ex. réglementations sanitaires sur la traçabilité des dons), après quoi elles seront supprimées de manière sécurisée."
+            },
+            "rights": {
+                "title": "8. Vos Droits (Droits ARCO+)",
+                "text": "Selon le RGPD, vous avez le droit de :",
+                "list": {
+                    "access": "Accès : Savoir quelles données nous avons sur vous.",
+                    "rectification": "Rectification : Corriger des données inexactes.",
+                    "deletion": "Suppression (\"Droit à l'oubli\") : Demander l'effacement de vos données lorsqu'elles ne sont plus nécessaires.",
+                    "limitation": "Limitation : Demander que le traitement soit limité dans certaines circonstances.",
+                    "portability": "Portabilité : Recevoir vos données dans un format structuré.",
+                    "opposition": "Opposition : S'opposer au traitement de vos données."
+                },
+                "contact": "Pour exercer ces droits, contactez-nous à : privacidad@blood4life.com"
+            }
+        },
+        "backButton": "Retour à l'Accueil"
     }
 }
