@@ -4,9 +4,11 @@ import Logo from "../../assets/images/LogoShadowMini.webp";
 import Button from "../../components/common/ui/Button/Button";
 import FormField from "../../components/common/forms/FormField/FormField";
 import { toast } from 'sonner';
+import { useAuth } from '../../context/AuthContext';
 
 const LdapLoginPage = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -23,7 +25,8 @@ const LdapLoginPage = () => {
         try {
             const response = await fetch('http://localhost:8080/api/auth/admin/ldap-login', {
                 method: 'POST',
-                headers: { 'Authorization': authHeader }
+                headers: { 'Authorization': authHeader },
+                credentials: 'include'
             });
 
             const data = await response.json();
@@ -33,6 +36,9 @@ const LdapLoginPage = () => {
                 if (data.token) {
                     localStorage.setItem('token', data.token);
                 }
+
+                // Update AuthContext state and persistence
+                login('admin');
 
                 toast.success('Login exitoso');
                 // Success - redirect to admin dashboard
