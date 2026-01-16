@@ -12,6 +12,8 @@ import SkipLink from "./components/common/ui/SkipLink/SkipLink.tsx";
 import ProtectedRoute from "./components/features/auth/ProtectedRoute/ProtectedRoute";
 import UnifiedDashboard from "./pages/UnifiedDashboard/UnifiedDashboard";
 import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
+import AboutUsPage from "./pages/AboutUsPage/AboutUsPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage/PrivacyPolicyPage";
 import { Toaster } from 'sonner';
 
 function App() {
@@ -29,6 +31,8 @@ function App() {
           <Route path="/registerbloodDonor" element={<BloodDonorRegisterPage />} />
           <Route path="/registerHospital" element={<HospitalRegisterPage />} />
           <Route path="/dashboard" element={<UnifiedDashboard />} />
+          <Route path="/about-us" element={<AboutUsPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/" element={<Index />} />
 
           {/* Protected Routes */}

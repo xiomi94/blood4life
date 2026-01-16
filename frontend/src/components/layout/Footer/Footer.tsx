@@ -19,10 +19,10 @@ function Footer() {
           </p>
 
           <div className="flex flex-wrap items-center gap-4 mt-3 sm:mt-0">
-            <ButtonFooter className="text-sm text-gray-600 dark:text-gray-100 hover:underline">
+            <ButtonFooter to="/about-us" className="text-sm text-gray-600 dark:text-gray-100 hover:underline">
               {t('footer.aboutUs')}
             </ButtonFooter>
-            <ButtonFooter className="text-sm text-gray-600 dark:text-gray-100 hover:underline">
+            <ButtonFooter to="/privacy-policy" className="text-sm text-gray-600 dark:text-gray-100 hover:underline">
               {t('footer.privacyPolicy')}
             </ButtonFooter>
           </div>
@@ -34,10 +34,10 @@ function Footer() {
           </p>
 
           <div className="flex flex-wrap items-center gap-4 mt-3 sm:mt-0">
-            <ButtonFooter className="text-sm text-gray-600 dark:text-gray-100 hover:underline">
+            <ButtonFooter to="/about-us" className="text-sm text-gray-600 dark:text-gray-100 hover:underline">
               {t('footer.aboutUs')}
             </ButtonFooter>
-            <ButtonFooter className="text-sm text-gray-600 dark:text-gray-100 hover:underline">
+            <ButtonFooter to="/privacy-policy" className="text-sm text-gray-600 dark:text-gray-100 hover:underline">
               {t('footer.privacyPolicy')}
             </ButtonFooter>
           </div>
