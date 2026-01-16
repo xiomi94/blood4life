@@ -14,26 +14,26 @@ public interface NotificationRepository extends JpaRepository<Notification, Inte
 
     // Find all notifications for a specific blood donor, ordered by date (newest
     // first)
-    @Query("SELECT n FROM Notification n WHERE n.received = :donor ORDER BY n.dateNotification DESC")
-    List<Notification> findByReceivedOrderByDateNotificationDesc(@Param("donor") BloodDonor donor);
+    @Query("SELECT n FROM Notification n WHERE n.received = ?1 ORDER BY n.dateNotification DESC")
+    List<Notification> findByReceivedOrderByDateNotificationDesc(BloodDonor donor);
 
     // Count unread notifications for a specific blood donor
-    @Query("SELECT COUNT(n) FROM Notification n WHERE n.received = :donor AND n.read = false")
-    Long countUnreadByReceived(@Param("donor") BloodDonor donor);
+    @Query("SELECT COUNT(n) FROM Notification n WHERE n.received = ?1 AND n.read = false")
+    Long countUnreadByReceived(BloodDonor donor);
 
     // Find unread notifications for a specific blood donor
-    @Query("SELECT n FROM Notification n WHERE n.received = :donor AND n.read = false ORDER BY n.dateNotification DESC")
-    List<Notification> findUnreadByReceivedOrderByDateNotificationDesc(@Param("donor") BloodDonor donor);
+    @Query("SELECT n FROM Notification n WHERE n.received = ?1 AND n.read = false ORDER BY n.dateNotification DESC")
+    List<Notification> findUnreadByReceivedOrderByDateNotificationDesc(BloodDonor donor);
 
     // Find all notifications for a specific hospital
-    @Query("SELECT n FROM Notification n WHERE n.receivedHospital = :hospital ORDER BY n.dateNotification DESC")
-    List<Notification> findByReceivedHospitalOrderByDateNotificationDesc(@Param("hospital") Hospital hospital);
+    @Query("SELECT n FROM Notification n WHERE n.receivedHospital = ?1 ORDER BY n.dateNotification DESC")
+    List<Notification> findByReceivedHospitalOrderByDateNotificationDesc(Hospital hospital);
 
     // Count unread notifications for a specific hospital
-    @Query("SELECT COUNT(n) FROM Notification n WHERE n.receivedHospital = :hospital AND n.read = false")
-    Long countUnreadByReceivedHospital(@Param("hospital") Hospital hospital);
+    @Query("SELECT COUNT(n) FROM Notification n WHERE n.receivedHospital = ?1 AND n.read = false")
+    Long countUnreadByReceivedHospital(Hospital hospital);
 
     // Find unread notifications for a specific hospital
-    @Query("SELECT n FROM Notification n WHERE n.receivedHospital = :hospital AND n.read = false ORDER BY n.dateNotification DESC")
-    List<Notification> findUnreadByReceivedHospitalOrderByDateNotificationDesc(@Param("hospital") Hospital hospital);
+    @Query("SELECT n FROM Notification n WHERE n.receivedHospital = ?1 AND n.read = false ORDER BY n.dateNotification DESC")
+    List<Notification> findUnreadByReceivedHospitalOrderByDateNotificationDesc(Hospital hospital);
 }

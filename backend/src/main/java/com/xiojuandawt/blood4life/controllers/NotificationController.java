@@ -23,9 +23,7 @@ public class NotificationController {
     @Autowired
     private NotificationService notificationService;
 
-    /**
-     * Get all notifications for the authenticated user (donor or hospital)
-     */
+    // Get all notifications for the authenticated user (donor or hospital)
     @GetMapping
     public ResponseEntity<?> getMyNotifications(Authentication authentication) {
         try {
@@ -47,9 +45,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Get the count of unread notifications for the authenticated user
-     */
+    // Get the count of unread notifications for the authenticated user
     @GetMapping("/unread/count")
     public ResponseEntity<?> getUnreadCount(Authentication authentication) {
         try {
@@ -79,9 +75,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Get all unread notifications for the authenticated user
-     */
+    // Get all unread notifications for the authenticated user
     @GetMapping("/unread")
     public ResponseEntity<?> getUnreadNotifications(Authentication authentication) {
         try {
@@ -106,9 +100,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Mark a specific notification as read
-     */
+    // Mark a specific notification as read
     @PutMapping("/{id}/read")
     public ResponseEntity<?> markAsRead(
             @PathVariable Integer id,
@@ -138,9 +130,7 @@ public class NotificationController {
         }
     }
 
-    /**
-     * Mark all notifications as read for the authenticated user
-     */
+    // Mark all notifications as read for the authenticated user
     @PutMapping("/read-all")
     public ResponseEntity<?> markAllAsRead(Authentication authentication) {
         try {
