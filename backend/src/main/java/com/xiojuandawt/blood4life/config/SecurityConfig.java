@@ -57,20 +57,28 @@ public class SecurityConfig {
         .csrf(csrf -> csrf.disable())
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers(
-                "/api/auth/**",
-                "/api/dashboard/**",
-                "/api/campaign")
-            .permitAll() // Allow public GET all campaigns
-            .requestMatchers("/api/ws/**").permitAll() // Allow WebSocket
-            .requestMatchers("/api/ldap/**").permitAll() // TEMPORARY: Allow LDAP management
-            .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+            // Public Endpoints (Priority High)
+            .requestMatchers("/api/ws/**").permitAll() // WebSocket Handshake (CRITICAL)
+            .requestMatchers("/api/auth/**").permitAll() // Login/Register
+            .requestMatchers("/api/campaign").permitAll() // Public Campaign List
+
+            // Registration endpoints (explicitly public)
             .requestMatchers("/api/hospital/register", "/api/bloodDonor/register").permitAll()
-            .requestMatchers("/api/hospital/me", "/api/bloodDonor/me").permitAll() // Allow /me to handle own auth (MUST
-                                                                                   // be before generic rules)
+
+            // Dynamic User Endpoints (Self-Info) -> Allow access to handle own auth logic
+            // The logic inside the controller currently checks AuthenticationPrincipal
+            .requestMatchers("/api/hospital/me", "/api/bloodDonor/me").permitAll()
+
+            // Admin Management
+            .requestMatchers("/api/ldap/**").permitAll() // Legacy LDAP endpoint
+            .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+
+            // Protected Resources
             .requestMatchers("/api/campaign/**").authenticated()
             .requestMatchers("/api/bloodDonor/**").authenticated()
             .requestMatchers("/api/hospital/**").authenticated()
+
+            // Default Rule
             .anyRequest().authenticated())
         .sessionManagement(sess -> sess
             .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)) // Changed from STATELESS
