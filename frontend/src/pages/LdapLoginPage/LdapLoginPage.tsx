@@ -5,6 +5,7 @@ import Button from "../../components/common/ui/Button/Button";
 import FormField from "../../components/common/forms/FormField/FormField";
 import { toast } from 'sonner';
 import { useAuth } from '../../context/AuthContext';
+import axiosInstance from '../../utils/axiosInstance';
 
 const LdapLoginPage = () => {
     const navigate = useNavigate();
@@ -23,33 +24,25 @@ const LdapLoginPage = () => {
         const authHeader = 'Basic ' + btoa(username + ':' + password);
 
         try {
-            const response = await fetch('http://localhost:8080/api/auth/admin/ldap-login', {
-                method: 'POST',
-                headers: { 'Authorization': authHeader },
-                credentials: 'include'
+            const response = await axiosInstance.post('/auth/admin/ldap-login', {}, {
+                headers: { 'Authorization': authHeader }
             });
 
-            const data = await response.json();
+            const data = response.data;
 
-            if (response.ok) {
-                // Extract JWT token from response if present
-                if (data.token) {
-                    localStorage.setItem('token', data.token);
-                }
-
-                // Update AuthContext state and persistence
-                login('admin');
-
-                toast.success('Login exitoso');
-                // Success - redirect to admin dashboard
-                navigate('/dashboard');
-            } else {
-                const errorMsg = data.message || data.error || 'Error de autenticación';
-                setError(errorMsg);
-                toast.error(errorMsg);
+            // Extract JWT token from response if present
+            if (data.token) {
+                localStorage.setItem('token', data.token);
             }
-        } catch (err) {
-            const errorMsg = 'Error de conexión con el servidor';
+
+            // Update AuthContext state and persistence
+            login('admin');
+
+            toast.success('Login exitoso');
+            // Success - redirect to admin dashboard
+            navigate('/dashboard');
+        } catch (err: any) {
+            const errorMsg = err.response?.data?.message || err.response?.data?.error || 'Error de autenticación';
             setError(errorMsg);
             toast.error(errorMsg);
         } finally {
