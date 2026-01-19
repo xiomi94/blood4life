@@ -1,0 +1,8 @@
+DEBUG 2026-01-16T18:50:26.151107500 URI: /api/notifications/unread/count
+Exception: JWT expired 76126156 milliseconds ago at 2026-01-15T21:41:40.000Z. Current time: 2026-01-16T18:50:26.156Z. Allowed clock skew: 0 milliseconds.
+DEBUG 2026-01-16T18:51:26.152648400 URI: /api/notifications/unread/count
+Exception: JWT expired 76186154 milliseconds ago at 2026-01-15T21:41:40.000Z. Current time: 2026-01-16T18:51:26.154Z. Allowed clock skew: 0 milliseconds.
+DEBUG 2026-01-16T18:52:26.146342200 URI: /api/notifications/unread/count
+Exception: JWT expired 76246146 milliseconds ago at 2026-01-15T21:41:40.000Z. Current time: 2026-01-16T18:52:26.146Z. Allowed clock skew: 0 milliseconds.
+DEBUG 2026-01-16T18:53:26.151265200 URI: /api/notifications/unread/count
+Exception: JWT expired 76306157 milliseconds ago at 2026-01-15T21:41:40.000Z. Current time: 2026-01-16T18:53:26.157Z. Allowed clock skew: 0 milliseconds.
