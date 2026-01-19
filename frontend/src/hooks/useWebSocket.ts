@@ -8,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 const getWebSocketURL = () => {
     // If we're in development (localhost), always use the Vite dev server proxy
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return `${window.location.protocol}//${window.location.host}/ws`;
+        return `${window.location.protocol}//${window.location.host}/api/ws`;
     }
 
     // In production, use VITE_API_URL if configured
@@ -59,8 +59,13 @@ export const useWebSocket = () => {
         return websocketService.subscribe(destination, callback);
     }, []);
 
+    const publish = useCallback((destination: string, body: any) => {
+        websocketService.publish(destination, body);
+    }, []);
+
     return {
         isConnected,
         subscribe,
+        publish,
     };
 };

@@ -21,24 +21,24 @@ class WebSocketService {
 
                 // Set up connection handlers
                 this.client.onConnect = () => {
-                    console.log('✅ WebSocket connected');
+                    console.log('✅ WebSocket conectado');
                     this.connected = true;
                     resolve();
                 };
 
                 this.client.onStompError = (frame: any) => {
-                    console.error('❌ WebSocket error:', frame.headers['message']);
-                    console.error('Additional details:', frame.body);
+                    console.error(' Error de WebSocket:', frame.headers['message']);
+                    console.error('Detalles adicionales:', frame.body);
                     reject(new Error(frame.headers['message']));
                 };
 
                 this.client.onWebSocketError = (error: any) => {
-                    console.error('❌ WebSocket connection error:', error);
+                    console.error(' Error de WebSocket:', error);
                     reject(error);
                 };
 
                 this.client.onDisconnect = () => {
-                    console.log('🔌 WebSocket disconnected');
+                    console.log('🔌 WebSocket desconectado');
                     this.connected = false;
                 };
 
@@ -65,7 +65,7 @@ class WebSocketService {
                 const parsedMessage = JSON.parse(message.body);
                 callback(parsedMessage);
             } catch (error) {
-                console.error('❌ Error parsing WebSocket message:', error);
+                console.error(' Error al analizar el mensaje de WebSocket:', error);
             }
         });
 
@@ -80,12 +80,23 @@ class WebSocketService {
             this.client.deactivate();
             this.client = null;
             this.connected = false;
-            console.log('🔌 WebSocket disconnected');
+            console.log('🔌 WebSocket desconectado');
         }
     }
 
     isConnected(): boolean {
         return this.connected;
+    }
+
+    publish(destination: string, body: any): void {
+        if (this.client && this.connected) {
+            this.client.publish({
+                destination,
+                body: typeof body === 'string' ? body : JSON.stringify(body)
+            });
+        } else {
+            console.warn(' No se puede publicar: WebSocket no conectado');
+        }
     }
 }
 

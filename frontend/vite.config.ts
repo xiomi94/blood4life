@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
-import type { IncomingMessage, ServerResponse } from 'http' // <-- cambiar a 'http'
+import type { IncomingMessage, ServerResponse } from 'node:http' // <-- cambiar a 'http'
 
 export default defineConfig({
   plugins: [
@@ -19,6 +19,7 @@ export default defineConfig({
         secure: false,
         cookieDomainRewrite: 'localhost',
         cookiePathRewrite: '/',
+        ws: true,
         configure: (proxy, _options) => {
           proxy.on('proxyReq', (_proxyReq, req: IncomingMessage, _res: ServerResponse) => {
             console.log('\n=== Proxying ===');
@@ -33,14 +34,6 @@ export default defineConfig({
         target: 'http://localhost:8080',
         changeOrigin: true,
         secure: false
-      },
-      '/ws': {
-        target: 'http://localhost:8080',
-        ws: true,
-        changeOrigin: true,
-        secure: false,
-        cookieDomainRewrite: 'localhost',
-        cookiePathRewrite: '/',
       }
     }
   }

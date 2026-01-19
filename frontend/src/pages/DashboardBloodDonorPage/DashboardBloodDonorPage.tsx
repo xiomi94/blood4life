@@ -21,8 +21,7 @@ import { CampaignProgressChart } from '../../components/features/donor/CampaignP
 import { DonationHistory } from '../../components/features/donor/DonationHistory';
 import { Calendar } from '../../components/features/donor/Calendar';
 import { StatsCards } from '../../components/features/donor/StatsCards';
-import SockJS from 'sockjs-client';
-import { Client } from '@stomp/stompjs';
+
 import CreateDonationModal from '../../components/features/donor/CreateDonationModal/CreateDonationModal';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -54,7 +53,7 @@ const DashboardBloodDonorPage = () => {
       setError(null);
     } catch (err) {
       setError('Error al cargar las estadísticas');
-      console.error('Error fetching dashboard stats:', err);
+      console.error('Error al cargar las estadísticas:', err);
     } finally {
       setLoading(false);
     }
@@ -65,9 +64,9 @@ const DashboardBloodDonorPage = () => {
     try {
       const campaigns = await campaignService.getAllCampaigns();
       setAllCampaigns(campaigns);
-      console.log('✅ Campaigns refreshed:', campaigns.length, 'campaigns loaded');
+      console.log(' Campaigns cargadas:', campaigns.length, 'campaigns loaded');
     } catch (err) {
-      console.error('Error fetching campaigns:', err);
+      console.error('Error al cargar las campañas:', err);
     }
   }, []);
 
@@ -78,7 +77,7 @@ const DashboardBloodDonorPage = () => {
       const appointments = await appointmentService.getAppointmentsByDonor(user.id);
       setMyAppointments(appointments);
     } catch (err) {
-      console.error('Error fetching appointments:', err);
+      console.error('Error al cargar las citas:', err);
     }
   };
 
@@ -93,7 +92,7 @@ const DashboardBloodDonorPage = () => {
       // Show success message
       toast.success('Cita eliminada correctamente');
     } catch (err) {
-      console.error('Error deleting appointment:', err);
+      console.error('Error al eliminar la cita:', err);
       toast.error('Error al eliminar la cita. Por favor, intenta de nuevo.');
     }
   };
@@ -109,14 +108,14 @@ const DashboardBloodDonorPage = () => {
 
   // WebSocket subscription for campaign updates
   useEffect(() => {
-    const unsubscribe = subscribe('/topic/campaigns', (message) => {
+    const unsubscribe = subscribe('/topic/campaigns', (message: any) => {
       console.log('📨 Donor Dashboard - Received WebSocket message:', message);
       if (
         message.type === 'CAMPAIGN_CREATED' ||
         message.type === 'CAMPAIGN_UPDATED' ||
         message.type === 'CAMPAIGN_DELETED'
       ) {
-        console.log('🔄 Refreshing campaigns in donor dashboard');
+        console.log('Actualizando campañas en el dashboard del donante');
         fetchAllCampaigns();
       }
     });
@@ -127,41 +126,27 @@ const DashboardBloodDonorPage = () => {
   }, [subscribe, fetchAllCampaigns]);
 
   // WebSocket connection for total donors counter
+  // WebSocket connection for total donors counter
+  const { isConnected, publish } = useWebSocket();
+
   useEffect(() => {
-    const socket = new SockJS('http://localhost:8080/ws');
+    if (!user?.id || !isConnected) return;
 
-    const client = new Client({
-      webSocketFactory: () => socket,
-      onConnect: () => {
-        console.log('WebSocket conectado al servidor');
+    console.log(' Suscribiéndose a contador de donantes');
 
-        // Subscribe to topic for updates
-        client.subscribe('/topic/total-bloodDonors', (message) => {
-          console.log('Total de donantes recibido:', message.body);
-          setTotalDonors(Number(message.body));
-        });
-
-        // Request current total from server
-        client.publish({
-          destination: '/app/getTotalDonors',
-          body: '',
-        });
-      },
-      onStompError: (frame) => {
-        console.error('Error en WebSocket:', frame);
-      },
-      onWebSocketClose: () => {
-        console.log('🔌 WebSocket desconectado');
-      },
+    // 1. Subscribe
+    const unsubscribe = subscribe('/topic/total-bloodDonors', (message: any) => {
+      console.log('Total de donantes recibido:', message);
+      setTotalDonors(Number(message));
     });
 
-    client.activate();
+    // 2. Request initial value (after subscription is set up)
+    publish('/app/getTotalDonors', '');
 
     return () => {
-      console.log('Cerrando conexión WebSocket...');
-      client.deactivate();
+      if (unsubscribe) unsubscribe();
     };
-  }, []);
+  }, [subscribe, publish, user?.id, isConnected]);
 
   // Helper functions
   const getCompletedDonations = () => {
