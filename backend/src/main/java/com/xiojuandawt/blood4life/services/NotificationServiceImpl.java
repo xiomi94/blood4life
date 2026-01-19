@@ -23,6 +23,9 @@ public class NotificationServiceImpl implements NotificationService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
+    @Autowired
+    private PushNotificationService pushService;
+
     @Override
     public List<Notification> getNotificationsByDonor(BloodDonor donor) {
         return notificationRepository.findByReceivedOrderByDateNotificationDesc(donor);
@@ -90,6 +93,7 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setRead(false);
         Notification saved = notificationRepository.save(notification);
         messagingTemplate.convertAndSend("/topic/notifications/donor/" + receiver.getId(), saved);
+        pushService.sendPushNotification(receiver, message);
         return saved;
     }
 
@@ -103,6 +107,7 @@ public class NotificationServiceImpl implements NotificationService {
         notification.setRead(false);
         Notification saved = notificationRepository.save(notification);
         messagingTemplate.convertAndSend("/topic/notifications/hospital/" + receiver.getId(), saved);
+        pushService.sendPushNotification(receiver, message);
         return saved;
     }
 }
