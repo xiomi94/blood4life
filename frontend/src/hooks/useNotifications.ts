@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import notificationService from '../services/notificationService';
 import type { Notification } from '../services/notificationService';
 import { useWebSocket } from './useWebSocket';
+import { toast } from 'sonner';
 
 export const useNotifications = () => {
     const { isAuthenticated, userType, user } = useAuth();
@@ -83,9 +84,6 @@ export const useNotifications = () => {
             // Setup WebSocket subscription ONLY if connected
             let unsubscribe: (() => void) | undefined;
             if (isConnected && user?.id) {
-                // Adjust mapping based on UserType from AuthContext
-                // Typically: 'hospital' or 'donante'/'bloodDonor'. 
-                // Using 'donor' in path for bloodDonors to match backend logic
                 const topic = userType === 'hospital'
                     ? `/topic/notifications/hospital/${user.id}`
                     : `/topic/notifications/donor/${user.id}`;
@@ -95,21 +93,35 @@ export const useNotifications = () => {
                     unsubscribe = subscribe(topic, (message) => {
                         console.log("🔔 Notificación recibida:", message);
                         if (message && message.body) {
-                            try {
-                                const newNotification: Notification = JSON.parse(message.body);
+                            // Parse notification
+                            const newNotification: Notification = typeof message.body === 'string'
+                                ? JSON.parse(message.body)
+                                : message.body;
 
-                                // Update local state immediately
-                                setNotifications(prev => {
-                                    if (prev.some(n => n.id === newNotification.id)) return prev;
-                                    return [newNotification, ...prev];
+                            // CRITICAL: Update state immediately (always succeeds)
+                            setNotifications(prev => {
+                                if (prev.some(n => n.id === newNotification.id)) return prev;
+                                return [newNotification, ...prev];
+                            });
+                            setUnreadCount(prev => prev + 1);
+                            console.log("✅ Badge actualizado en tiempo real");
+
+                            // NON-CRITICAL: Try to show toast
+                            try {
+                                const toastMessage = newNotification.message.includes('|')
+                                    ? newNotification.message.substring(0, newNotification.message.indexOf('|'))
+                                    : newNotification.message;
+
+                                toast.info(toastMessage, {
+                                    duration: 5000,
+                                    action: {
+                                        label: 'Ver',
+                                        onClick: () => console.log('Notification clicked')
+                                    }
                                 });
-                                setUnreadCount(prev => prev + 1);
-                            } catch (e) {
-                                console.error("Error parsing notification from WS:", e);
-                                fetchNotifications();
+                            } catch (toastError) {
+                                console.warn("Toast failed:", toastError);
                             }
-                        } else {
-                            fetchNotifications();
                         }
                     });
                 } catch (e) {
