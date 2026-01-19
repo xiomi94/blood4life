@@ -66,7 +66,13 @@ function LoginForm() {
     setIsLoading(true);
 
     try {
-      await authService.login(formData.username, formData.password, formData.userType);
+      const loginResponse = await authService.login(formData.username, formData.password, formData.userType);
+
+      // If backend returns a token, save it to localStorage
+      if (loginResponse.token) {
+        localStorage.setItem('token', loginResponse.token);
+      }
+
       login(formData.userType);
       clearPersistedData();
       navigate(ROUTES.DASHBOARD);
