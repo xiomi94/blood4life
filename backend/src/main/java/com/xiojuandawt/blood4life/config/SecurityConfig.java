@@ -62,6 +62,7 @@ public class SecurityConfig {
                 "/api/dashboard/**",
                 "/api/campaign")
             .permitAll() // Allow public GET all campaigns
+            .requestMatchers("/api/ws/**").permitAll() // Allow WebSocket
             .requestMatchers("/api/ldap/**").permitAll() // TEMPORARY: Allow LDAP management
             .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
             .requestMatchers("/api/hospital/register", "/api/bloodDonor/register").permitAll()
