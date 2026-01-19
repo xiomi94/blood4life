@@ -1,0 +1,24 @@
+dn: dc=blood4life,dc=com
+objectClass: top
+objectClass: domain
+dc: blood4life
+
+dn: ou=empleados,dc=blood4life,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: empleados
+
+dn: ou=grupos,dc=blood4life,dc=com
+objectClass: top
+objectClass: organizationalUnit
+ou: grupos
+
+dn: uid=admin,ou=empleados,dc=blood4life,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: Admin System
+sn: Admin
+uid: admin
+userPassword: admin1234
