@@ -1,6 +1,6 @@
 import notificationService from '../services/notificationService';
 
-const VAPID_PUBLIC_KEY = 'BKmNEpf1iaYSAhvoMsvkNyJrXXDm0nb4AdmmLA20w1iLmB6659JnDDCHkadcBgUr2mjNYJAJl9F6_HyLyMKnVKs';
+const VAPID_PUBLIC_KEY = 'BNKNUOXjanoua_8k8XB3w34Lg8hWOvxXiqBifTkfYK5cnsZvHnBtIiWtCVuT2Fi4nAqe4UOP9S6vwg5gHiyRHRg';
 
 export const registerPushNotifications = async () => {
     if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
