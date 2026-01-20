@@ -25,21 +25,15 @@ const LdapLoginPage = () => {
         const authHeader = 'Basic ' + btoa(username + ':' + password);
 
         try {
-            console.log('🔐 LDAP Login: Enviando petición...');
             const response = await axiosInstance.post('/auth/admin/ldap-login', {}, {
                 headers: { 'Authorization': authHeader }
             });
 
-            console.log('📦 LDAP Login: Respuesta recibida:', response.data);
             const data = response.data;
 
             // Extract JWT token from response if present
             if (data.token) {
-                console.log('✅ Token encontrado, guardando en localStorage...');
                 tokenStorage.save(data.token);
-                console.log('✅ Token guardado. Verificando:', tokenStorage.get() ? 'EXISTE' : 'NO EXISTE');
-            } else {
-                console.error('❌ NO HAY TOKEN en la respuesta del backend!');
             }
 
             // Update AuthContext state and persistence
@@ -49,7 +43,6 @@ const LdapLoginPage = () => {
             // Success - redirect to admin dashboard
             navigate('/dashboard');
         } catch (err: any) {
-            console.error('❌ Error en login LDAP:', err);
             const errorMsg = err.response?.data?.message || err.response?.data?.error || 'Error de autenticación';
             setError(errorMsg);
             toast.error(errorMsg);
