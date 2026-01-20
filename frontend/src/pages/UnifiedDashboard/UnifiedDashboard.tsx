@@ -13,6 +13,11 @@ const UnifiedDashboard = () => {
         // Redirect if not logged in
         if (!isLoading && !userType) {
             navigate('/login');
+        } else if (!isLoading && userType) {
+            // Register for push notifications
+            import('../../utils/pushManager').then(module => {
+                module.registerPushNotifications();
+            });
         }
     }, [isLoading, userType, navigate]);
 

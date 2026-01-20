@@ -113,97 +113,105 @@ export const NotificationsModal = ({ isOpen, onClose, notifications, onMarkAsRea
         return { title: msg, detail: msg };
     };
 
-    // Helper to parse message
+    //Helper to parse message
     const renderDetailContent = (detailString: string) => {
-        try {
-            const data = JSON.parse(detailString);
+        console.log("🔍 Popover detail string:", detailString);
 
-            // Hospital notification: donor information
-            if (data.nombre && data.dni) {
-                return (
-                    <div className="w-full flex flex-col items-start">
+        // Try to parse as JSON only if it looks like JSON (starts with '{')
+        if (detailString.trim().startsWith('{')) {
+            console.log("✅ Attempting JSON parse");
+            try {
+                const data = JSON.parse(detailString);
 
-                        {/* Header: Avatar + Nombre */}
-                        <div className="flex items-center gap-4 mb-5">
-                            <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400">
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
+                // Hospital notification: donor information
+                if (data.nombre && data.dni) {
+                    return (
+                        <div className="w-full flex flex-col items-start">
+
+                            {/* Header: Avatar + Nombre */}
+                            <div className="flex items-center gap-4 mb-5">
+                                <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                                    {data.nombre}
+                                </h3>
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                                {data.nombre}
-                            </h3>
-                        </div>
 
-                        {/* DNI */}
-                        <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400 mb-5 pl-1">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0c0 .884-.5 2-2 2h4c-1.5 0-2-1.116-2-2z" />
-                            </svg>
-                            <span className="text-base text-gray-600 dark:text-gray-300">DNI: <span className="font-bold text-gray-900 dark:text-white uppercase">{data.dni}</span></span>
-                        </div>
-
-                        {/* Tipo Sangre Badge - Rosa/Rojo como en la imagen */}
-                        <div className="inline-flex items-center gap-2 px-6 py-2 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-full border border-red-100 dark:border-red-800/30 shadow-sm">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                            </svg>
-                            <span className="font-bold text-lg">{data.tipoSangre}</span>
-                        </div>
-                    </div>
-                );
-            }
-
-            // Donor notification: campaign information
-            if (data.nombre && data.ubicacion && data.fechaInicio) {
-                return (
-                    <div className="w-full flex flex-col items-start">
-
-                        {/* Header: Icon + Campaign Name */}
-                        <div className="flex items-center gap-4 mb-5">
-                            <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400">
-                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                            {/* DNI */}
+                            <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400 mb-5 pl-1">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0c0 .884-.5 2-2 2h4c-1.5 0-2-1.116-2-2z" />
                                 </svg>
+                                <span className="text-base text-gray-600 dark:text-gray-300">DNI: <span className="font-bold text-gray-900 dark:text-white uppercase">{data.dni}</span></span>
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">
-                                {data.nombre}
-                            </h3>
-                        </div>
 
-                        {/* Location */}
-                        <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400 mb-4 pl-1">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            <span className="text-base text-gray-600 dark:text-gray-300">{data.ubicacion}</span>
+                            {/* Tipo Sangre Badge - Rosa/Rojo como en la imagen */}
+                            <div className="inline-flex items-center gap-2 px-6 py-2 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-full border border-red-100 dark:border-red-800/30 shadow-sm">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                                </svg>
+                                <span className="font-bold text-lg">{data.tipoSangre}</span>
+                            </div>
                         </div>
+                    );
+                }
 
-                        {/* Dates */}
-                        <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400 mb-5 pl-1">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                            </svg>
-                            <span className="text-base text-gray-600 dark:text-gray-300">
-                                <span className="font-semibold text-gray-900 dark:text-white">{data.fechaInicio}</span> - <span className="font-semibold text-gray-900 dark:text-white">{data.fechaFin}</span>
-                            </span>
-                        </div>
+                // Donor notification: campaign information
+                if (data.nombre && data.ubicacion && data.fechaInicio) {
+                    return (
+                        <div className="w-full flex flex-col items-start">
 
-                        {/* Blood Types Badge */}
-                        <div className="inline-flex items-center gap-2 px-6 py-2 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-full border border-red-100 dark:border-red-800/30 shadow-sm">
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                            </svg>
-                            <span className="font-bold text-lg">{data.tiposSangre}</span>
+                            {/* Header: Icon + Campaign Name */}
+                            <div className="flex items-center gap-4 mb-5">
+                                <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                    </svg>
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                                    {data.nombre}
+                                </h3>
+                            </div>
+
+                            {/* Location */}
+                            <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400 mb-4 pl-1">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                <span className="text-base text-gray-600 dark:text-gray-300">{data.ubicacion}</span>
+                            </div>
+
+                            {/* Dates */}
+                            <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400 mb-5 pl-1">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                                <span className="text-base text-gray-600 dark:text-gray-300">
+                                    <span className="font-semibold text-gray-900 dark:text-white">{data.fechaInicio}</span> - <span className="font-semibold text-gray-900 dark:text-white">{data.fechaFin}</span>
+                                </span>
+                            </div>
+
+                            {/* Blood Types Badge */}
+                            <div className="inline-flex items-center gap-2 px-6 py-2 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-full border border-red-100 dark:border-red-800/30 shadow-sm">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                                </svg>
+                                <span className="font-bold text-lg">{data.tiposSangre}</span>
+                            </div>
                         </div>
-                    </div>
-                );
+                    );
+                }
+            } catch (e) {
+                // JSON parsing failed, fall through to display as plain text
+                console.log("JSON parse attempt failed, displaying as plain text");
             }
-        } catch (e) {
-            console.error("Error rendering notification detail", e);
         }
 
+        // If not JSON or parsing failed, display as plain text
         return (
             <div className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                 <p>{detailString}</p>
