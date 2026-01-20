@@ -6,6 +6,7 @@ import FormField from "../../components/common/forms/FormField/FormField";
 import { toast } from 'sonner';
 import { useAuth } from '../../context/AuthContext';
 import axiosInstance from '../../utils/axiosInstance';
+import { tokenStorage } from '../../utils/tokenStorage';
 
 const LdapLoginPage = () => {
     const navigate = useNavigate();
@@ -32,7 +33,7 @@ const LdapLoginPage = () => {
 
             // Extract JWT token from response if present
             if (data.token) {
-                localStorage.setItem('token', data.token);
+                tokenStorage.save(data.token);
             }
 
             // Update AuthContext state and persistence
