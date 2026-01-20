@@ -52,6 +52,13 @@ const notificationService = {
      */
     markAllAsRead: async (): Promise<void> => {
         await axiosInstance.put('/notifications/read-all');
+    },
+
+    /**
+     * Subscribe to Web Push Notifications
+     */
+    subscribePush: async (subscription: PushSubscriptionJSON): Promise<void> => {
+        await axiosInstance.post('/push/subscribe', subscription);
     }
 };
 
