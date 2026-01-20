@@ -55,7 +55,13 @@ export const clearSavedUserType = (): void => {
  */
 export const clearAuthData = (): void => {
     clearSavedUserType();
-    // Aquí se pueden limpiar otros datos relacionados con autenticación si es necesario
+
+    // Limpiar JWT token
+    try {
+        localStorage.removeItem('jwtToken');
+    } catch (error) {
+        console.error('Error al eliminar el token JWT:', error);
+    }
 };
 
 /**
