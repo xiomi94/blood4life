@@ -301,6 +301,7 @@ public class AuthController {
       Map<String, Object> response = new HashMap<>();
       response.put("status", "OK");
       response.put("message", "Login successful");
+      response.put("token", token); // Add token to response for localStorage compatibility
 
       return ResponseEntity.ok()
           .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
