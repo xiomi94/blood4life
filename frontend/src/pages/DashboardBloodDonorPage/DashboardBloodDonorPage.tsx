@@ -28,7 +28,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 const DashboardBloodDonorPage = () => {
   const { user } = useAuth();
-  const { subscribe } = useWebSocket();
+  const { subscribe, isConnected, publish } = useWebSocket();
 
   // Dashboard state
   const [stats, setStats] = useState<DashboardStats | null>(null);
@@ -108,6 +108,13 @@ const DashboardBloodDonorPage = () => {
 
   // WebSocket subscription for campaign updates
   useEffect(() => {
+    // Solo suscribirse si el WebSocket está conectado
+    if (!isConnected) {
+      console.log('⏳ Esperando conexión WebSocket para suscribirse a campañas...');
+      return;
+    }
+
+    console.log('✅ WebSocket conectado - Suscribiéndose a /topic/campaigns');
     const unsubscribe = subscribe('/topic/campaigns', (message: any) => {
       console.log('📨 Donor Dashboard - Received WebSocket message:', message);
       if (
@@ -115,7 +122,7 @@ const DashboardBloodDonorPage = () => {
         message.type === 'CAMPAIGN_UPDATED' ||
         message.type === 'CAMPAIGN_DELETED'
       ) {
-        console.log('Actualizando campañas en el dashboard del donante');
+        console.log('🔄 Actualizando campañas en el dashboard del donante');
         fetchAllCampaigns();
       }
     });
@@ -123,12 +130,9 @@ const DashboardBloodDonorPage = () => {
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [subscribe, fetchAllCampaigns]);
+  }, [subscribe, fetchAllCampaigns, isConnected]); // Agregado isConnected a dependencies
 
   // WebSocket connection for total donors counter
-  // WebSocket connection for total donors counter
-  const { isConnected, publish } = useWebSocket();
-
   useEffect(() => {
     if (!user?.id || !isConnected) return;
 
