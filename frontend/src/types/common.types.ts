@@ -71,6 +71,8 @@ export interface CampaignFormData {
     location: string;
     requiredDonorQuantity: number;
     requiredBloodTypes: string[];
+    startTime: string; // Format: HH:mm
+    endTime: string; // Format: HH:mm
 }
 
 /** Campaña completa */
@@ -86,6 +88,8 @@ export interface Campaign {
     requiredDonorQuantity: number;
     requiredBloodType: string;
     currentDonorCount?: number;
+    startTime: string; // Format: HH:mm
+    endTime: string; // Format: HH:mm
 }
 
 // ========================================

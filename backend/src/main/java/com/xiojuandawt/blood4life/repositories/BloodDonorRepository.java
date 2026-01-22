@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface BloodDonorRepository extends JpaRepository<BloodDonor, Integer> {
   Optional<BloodDonor> findByEmail(String email);
 
+  Optional<BloodDonor> findByDni(String dni);
+
   Optional<BloodDonor> findById(Integer id);
 
   @Query("SELECT b.bloodType.type, COUNT(b) FROM BloodDonor b GROUP BY b.bloodType.type")

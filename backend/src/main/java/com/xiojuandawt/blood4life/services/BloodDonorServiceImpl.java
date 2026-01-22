@@ -81,6 +81,11 @@ public class BloodDonorServiceImpl implements BloodDonorService {
     return bloodDonorRepository.findByEmail(email);
   }
 
+  @Override
+  public Optional<BloodDonor> findByDni(String dni) {
+    return bloodDonorRepository.findByDni(dni);
+  }
+
   public BloodDonorDTO parseEntityToDto(BloodDonor bloodDonor) {
     BloodDonorDTO bloodDonorDTO = new BloodDonorDTO();
     bloodDonorDTO.setId(bloodDonor.getId());

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { Campaign } from '../../../services/campaignService';
 
 interface EnrollCampaignModalProps {
@@ -22,11 +22,20 @@ export const EnrollCampaignModal = ({
     const [calendarView, setCalendarView] = useState<'days' | 'months' | 'years'>('days');
     const [showConfirmation, setShowConfirmation] = useState(false);
 
-    const timeSlots = [];
-    for (let i = 8; i <= 18; i++) {
-        timeSlots.push(`${i.toString().padStart(2, '0')}:00`);
-        if (i !== 18) timeSlots.push(`${i.toString().padStart(2, '0')}:30`);
-    }
+    const timeSlots = useMemo(() => {
+        // Horario fijo estándar: 08:00 a 18:00
+        const startH = 8;
+        const endH = 18;
+        const slots: string[] = [];
+
+        for (let h = startH; h <= endH; h++) {
+            slots.push(`${h.toString().padStart(2, '0')}:00`);
+            if (h !== endH) {
+                slots.push(`${h.toString().padStart(2, '0')}:30`);
+            }
+        }
+        return slots;
+    }, []);
 
     if (!isOpen || !campaign) return null;
 
