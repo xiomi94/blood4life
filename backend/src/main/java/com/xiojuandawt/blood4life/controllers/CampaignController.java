@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -51,6 +52,8 @@ public class CampaignController {
       @RequestParam("location") String location,
       @RequestParam("requiredDonorQuantity") Integer requiredDonorQuantity,
       @RequestParam("requiredBloodTypes") List<String> requiredBloodTypes,
+      @RequestParam(value = "startTime", defaultValue = "08:00") String startTime,
+      @RequestParam(value = "endTime", defaultValue = "18:00") String endTime,
       Authentication authentication) {
 
     try {
@@ -60,6 +63,19 @@ public class CampaignController {
       // Parse dates
       LocalDate start = LocalDate.parse(startDate);
       LocalDate end = LocalDate.parse(endDate);
+
+      // Parse times
+      LocalTime campaignStartTime = LocalTime.parse(startTime);
+      LocalTime campaignEndTime = LocalTime.parse(endTime);
+
+      // Validate times
+      if (campaignEndTime.isBefore(campaignStartTime) || campaignEndTime.equals(campaignStartTime)) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "La hora de fin debe ser posterior a la hora de inicio");
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(body);
+      }
 
       // Validate dates
       if (end.isBefore(start)) {
@@ -97,6 +113,8 @@ public class CampaignController {
       campaign.setEndDate(end);
       campaign.setLocation(location);
       campaign.setRequiredDonorQuantity(requiredDonorQuantity);
+      campaign.setStartTime(campaignStartTime);
+      campaign.setEndTime(campaignEndTime);
 
       // Save campaign with blood types
       CampaignDTO createdCampaign = campaignService.createCampaign(campaign, requiredBloodTypes);

@@ -84,6 +84,10 @@ public class CampaignServiceImpl implements CampaignService {
                 campaign.getRequiredDonorQuantity(),
                 campaign.getRequiredBloodType());
 
+        // Set time fields
+        dto.setStartTime(campaign.getStartTime());
+        dto.setEndTime(campaign.getEndTime());
+
         if (campaign.getId() != null) {
             Integer count = appointmentRepository.countByCampaignId(campaign.getId());
             dto.setCurrentDonorCount(count.intValue());

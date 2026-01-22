@@ -19,6 +19,8 @@ public interface BloodDonorService {
 
   Optional<BloodDonor> findByEmail(String email);
 
+  Optional<BloodDonor> findByDni(String dni);
+
   Optional<BloodDonor> findByIdWithRole(Integer id);
 
   Optional<BloodType> findBloodTypeById(Integer bloodTypeId);

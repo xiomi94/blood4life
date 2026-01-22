@@ -169,7 +169,19 @@ export const useHospitalRegister = (
             resetForm();
         } catch (err: any) {
             console.error(err);
-            const errorMessage = err.response?.data?.error || 'Error al registrar hospital';
+
+            // Detectar errores específicos del backend
+            const backendError = err.response?.data?.error || '';
+            let errorMessage = '';
+
+            if (backendError.includes('CIF already registered')) {
+                errorMessage = 'Ya existe un hospital registrado con este CIF';
+            } else if (backendError.includes('Email already registered')) {
+                errorMessage = 'Ya existe una cuenta registrada con este email';
+            } else {
+                errorMessage = backendError || 'Error al registrar hospital';
+            }
+
             onError?.(errorMessage);
         } finally {
             setLoading(false);

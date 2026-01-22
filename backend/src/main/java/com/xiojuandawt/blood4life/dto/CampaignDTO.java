@@ -1,6 +1,7 @@
 package com.xiojuandawt.blood4life.dto;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class CampaignDTO {
     private Integer id;
@@ -14,6 +15,8 @@ public class CampaignDTO {
     private Integer requiredDonorQuantity;
     private String requiredBloodType;
     private Integer currentDonorCount;
+    private LocalTime startTime;
+    private LocalTime endTime;
 
     // ...
 
@@ -121,5 +124,21 @@ public class CampaignDTO {
 
     public void setRequiredBloodType(String requiredBloodType) {
         this.requiredBloodType = requiredBloodType;
+    }
+
+    public LocalTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
     }
 }

@@ -71,6 +71,11 @@ public class HospitalServiceImpl implements HospitalService {
     return hospitalRepository.findHospitalByEmail(email);
   }
 
+  @Override
+  public Optional<Hospital> findByCif(String cif) {
+    return hospitalRepository.findByCif(cif);
+  }
+
   private HospitalDTO parseEntityToDTO(Hospital hospital) {
     HospitalDTO dto = new HospitalDTO();
     dto.setId(hospital.getId());

@@ -33,8 +33,7 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
     const genderOptions = [
         { value: '', label: t('auth.register.bloodDonor.genderSelect') },
         { value: 'Masculino', label: t('auth.register.bloodDonor.male') },
-        { value: 'Femenino', label: t('auth.register.bloodDonor.female') },
-        { value: 'Prefiero no decirlo', label: t('auth.register.bloodDonor.preferNotToSay') }
+        { value: 'Femenino', label: t('auth.register.bloodDonor.female') }
     ];
 
     const bloodTypeOptions = [
@@ -153,7 +152,20 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
             })
             .catch((err) => {
                 console.error("Error registrando donante:", err);
-                onError?.(err.response?.data?.error || t('auth.register.bloodDonor.error'));
+
+                // Detectar errores específicos del backend
+                const backendError = err.response?.data?.error || '';
+                let errorMessage = '';
+
+                if (backendError.includes('DNI already registered')) {
+                    errorMessage = t('auth.register.bloodDonor.validation.dniAlreadyRegistered');
+                } else if (backendError.includes('Email already registered')) {
+                    errorMessage = t('auth.register.bloodDonor.validation.emailAlreadyRegistered');
+                } else {
+                    errorMessage = backendError || t('auth.register.bloodDonor.error');
+                }
+
+                onError?.(errorMessage);
             })
             .finally(() => {
                 setLoading(false);
