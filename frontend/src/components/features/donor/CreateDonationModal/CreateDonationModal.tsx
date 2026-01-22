@@ -45,12 +45,16 @@ const CreateDonationModal: React.FC<CreateDonationModalProps> = ({ isOpen, onClo
     if (i !== 18) timeSlots.push(`${i.toString().padStart(2, '0')}:30`);
   }
 
+  // Confirmation State
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
   // Load Hospitals on Open and Check Availability
   useEffect(() => {
     if (isOpen) {
       loadHospitals();
       resetState();
       checkDonationEligibility();
+      setShowConfirmation(false);
     }
   }, [isOpen]);
 
@@ -73,6 +77,7 @@ const CreateDonationModal: React.FC<CreateDonationModalProps> = ({ isOpen, onClo
     setSelectedTime('');
     setCurrentDate(new Date());
     setCalendarView('days');
+    setShowConfirmation(false);
   };
 
   // Check if donor can create a new appointment
@@ -168,7 +173,6 @@ const CreateDonationModal: React.FC<CreateDonationModalProps> = ({ isOpen, onClo
     }
   };
 
-  // Calendar Logic
   const getDaysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
   const getFirstDayOfMonth = (year: number, month: number) => {
     const day = new Date(year, month, 1).getDay();
@@ -183,7 +187,9 @@ const CreateDonationModal: React.FC<CreateDonationModalProps> = ({ isOpen, onClo
     setCurrentDate(new Date(currentDate.getFullYear() + increment, currentDate.getMonth(), 1));
   };
 
+
   const renderCalendarDays = () => {
+    // ... existing implementation ...
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     const daysInMonth = getDaysInMonth(year, month);
@@ -242,20 +248,17 @@ const CreateDonationModal: React.FC<CreateDonationModalProps> = ({ isOpen, onClo
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Check required fields. Note: activeCampaign might be null if we allow "general" appointments.
-    // However, backend likely requires Campaign ID. 
-    // If no active campaign is found, we might be unable to foster the request unless we have a dummy ID.
-    // I will assume for now we NEED the found campaign, OR we try to proceed if we want to risk it.
-    // Given user instructions "cita cualquier dia", it implies we shouldn't restrict by campaign dates.
-    // But backend restriction on 'campaignId' likely remains. 
-    // I'll proceed with activeCampaign.id if it exists, otherwise we might fail validation.
-
     if (!user?.id || !selectedDate || !selectedTime) return;
 
     if (!activeCampaign) {
       toast.error('No se encontró una campaña activa para asociar la cita.');
       return;
     }
+    setShowConfirmation(true);
+  };
+
+  const handleConfirmSubmission = async () => {
+    if (!user?.id || !activeCampaign) return;
 
     setLoading(true);
     try {
@@ -291,12 +294,13 @@ const CreateDonationModal: React.FC<CreateDonationModalProps> = ({ isOpen, onClo
 
         {/* Header */}
         <div className="flex justify-between items-start mb-8">
+          {/* Header Content hidden in confirmation mode for cleaner look or kept? Kept is fine */}
           <div>
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Nueva Donación
+              {showConfirmation ? 'Confirmación Requerida' : 'Nueva Donación'}
             </h2>
             <p className="text-gray-500 dark:text-gray-400 mt-1">
-              Selecciona un hospital y elige cualquier fecha disponible
+              {showConfirmation ? 'Por favor revisa la siguiente información' : 'Selecciona un hospital y elige cualquier fecha disponible'}
             </p>
           </div>
           <button
@@ -307,236 +311,297 @@ const CreateDonationModal: React.FC<CreateDonationModalProps> = ({ isOpen, onClo
           </button>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        {!showConfirmation ? (
+          <div className="flex flex-col lg:flex-row gap-8">
 
-          {/* Left Column: Form & Info */}
-          <div className="flex-1 space-y-6">
-            {/* Hospital Selector */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                Hospital / Centro
-              </label>
-              <select
-                value={selectedHospitalId}
-                onChange={handleHospitalChange}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow outline-none"
-              >
-                <option value="" disabled hidden>Seleccionar hospital...</option>
-                {hospitals.map(h => (
-                  <option key={h.id} value={h.id}>{h.name}</option>
-                ))}
-              </select>
-              {loadingData && <p className="text-sm text-blue-500 mt-2 animate-pulse">Buscando disponibilidad...</p>}
-            </div>
-
-            {/* Selected Date Display */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                Fecha seleccionada
-              </label>
-              <div className={`px-4 py-3 rounded-xl border transition-colors ${selectedDate
-                ? 'bg-white dark:bg-gray-700 border-green-500/50 text-gray-900 dark:text-white'
-                : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-400'
-                }`}>
-                {selectedDate ? (
-                  <span className="font-medium">
-                    {(() => {
-                      const dateStr = new Date(selectedDate).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-                      return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-                    })()}
-                  </span>
-                ) : (
-                  <span>Selecciona una fecha en el calendario</span>
-                )}
-              </div>
-            </div>
-
-            {/* Time Slots */}
-            {selectedDate && (
-              <div className="animate-fade-in">
+            {/* Left Column: Form & Info */}
+            <div className="flex-1 space-y-6">
+              {/* Hospital Selector */}
+              <div>
                 <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                  Hora
+                  Hospital / Centro
                 </label>
-                <div className="grid grid-cols-4 gap-2">
-                  {timeSlots.map(time => (
-                    <button
-                      key={time}
-                      type="button"
-                      onClick={() => setSelectedTime(time)}
-                      className={`py-2 text-sm rounded-lg border transition-all duration-200 ${selectedTime === time
-                        ? 'bg-blue-600 text-white border-blue-600 shadow-md transform scale-105'
-                        : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:border-blue-400 hover:text-blue-500'
-                        }`}
-                    >
-                      {time}
-                    </button>
+                <select
+                  value={selectedHospitalId}
+                  onChange={handleHospitalChange}
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow outline-none"
+                >
+                  <option value="" disabled hidden>Seleccionar hospital...</option>
+                  {hospitals.map(h => (
+                    <option key={h.id} value={h.id}>{h.name}</option>
                   ))}
+                </select>
+                {loadingData && <p className="text-sm text-blue-500 mt-2 animate-pulse">Buscando disponibilidad...</p>}
+              </div>
+
+              {/* Selected Date Display */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                  Fecha seleccionada
+                </label>
+                <div className={`px-4 py-3 rounded-xl border transition-colors ${selectedDate
+                  ? 'bg-white dark:bg-gray-700 border-green-500/50 text-gray-900 dark:text-white'
+                  : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-400'
+                  }`}>
+                  {selectedDate ? (
+                    <span className="font-medium">
+                      {(() => {
+                        const dateStr = new Date(selectedDate).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                        return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+                      })()}
+                    </span>
+                  ) : (
+                    <span>Selecciona una fecha en el calendario</span>
+                  )}
                 </div>
               </div>
-            )}
 
-            {/* Action Buttons */}
-            <div className="pt-4 flex gap-3">
-              <button
-                onClick={onClose}
-                className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 font-medium transition-colors"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleSubmit}
-                disabled={loading || !selectedDate || !selectedTime || !activeCampaign}
-                className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-medium shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed"
-              >
-                {loading ? 'Confirmando...' : 'Confirmar Cita'}
-              </button>
-            </div>
-          </div>
-
-          {/* Right Column: Custom Calendar */}
-          <div className="lg:w-[400px] flex-shrink-0">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
-
-              {/* Calendar Header */}
-              <div className="flex justify-between items-center mb-6">
-                <button
-                  onClick={() => {
-                    if (calendarView === 'days') changeMonth(-1);
-                    else if (calendarView === 'months') changeYear(-1);
-                    else changeYear(-10);
-                  }}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-600 dark:text-gray-400 font-bold"
-                >
-                  &lt;
-                </button>
-
-                <div className="flex gap-2 items-center">
-                  {calendarView === 'days' && (
-                    <>
+              {/* Time Slots */}
+              {selectedDate && (
+                <div className="animate-fade-in">
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                    Hora
+                  </label>
+                  <div className="grid grid-cols-4 gap-2">
+                    {timeSlots.map(time => (
                       <button
-                        onClick={() => setCalendarView('months')}
-                        className="font-bold text-gray-900 dark:text-white text-lg capitalize hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        key={time}
+                        type="button"
+                        onClick={() => setSelectedTime(time)}
+                        className={`py-2 text-sm rounded-lg border transition-all duration-200 ${selectedTime === time
+                          ? 'bg-blue-600 text-white border-blue-600 shadow-md transform scale-105'
+                          : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:border-blue-400 hover:text-blue-500'
+                          }`}
                       >
-                        {monthNames[currentDate.getMonth()]}
+                        {time}
                       </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="pt-4 flex gap-3">
+                <button
+                  onClick={onClose}
+                  className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 font-medium transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleSubmit}
+                  disabled={loading || !selectedDate || !selectedTime || !activeCampaign}
+                  className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-medium shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed"
+                >
+                  {loading ? 'Confirmando...' : 'Confirmar Cita'}
+                </button>
+              </div>
+            </div>
+
+            {/* Right Column: Custom Calendar */}
+            <div className="lg:w-[400px] flex-shrink-0">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
+
+                {/* Calendar Header */}
+                <div className="flex justify-between items-center mb-6">
+                  <button
+                    onClick={() => {
+                      if (calendarView === 'days') changeMonth(-1);
+                      else if (calendarView === 'months') changeYear(-1);
+                      else changeYear(-10);
+                    }}
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-600 dark:text-gray-400 font-bold"
+                  >
+                    &lt;
+                  </button>
+
+                  <div className="flex gap-2 items-center">
+                    {calendarView === 'days' && (
+                      <>
+                        <button
+                          onClick={() => setCalendarView('months')}
+                          className="font-bold text-gray-900 dark:text-white text-lg capitalize hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        >
+                          {monthNames[currentDate.getMonth()]}
+                        </button>
+                        <button
+                          onClick={() => setCalendarView('years')}
+                          className="font-bold text-gray-900 dark:text-white text-lg hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                        >
+                          {currentDate.getFullYear()}
+                        </button>
+                      </>
+                    )}
+                    {calendarView === 'months' && (
                       <button
                         onClick={() => setCalendarView('years')}
                         className="font-bold text-gray-900 dark:text-white text-lg hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                       >
                         {currentDate.getFullYear()}
                       </button>
+                    )}
+                    {calendarView === 'years' && (
+                      <span className="font-bold text-gray-900 dark:text-white text-lg">
+                        {Math.floor(currentDate.getFullYear() / 10) * 10} - {Math.floor(currentDate.getFullYear() / 10) * 10 + 9}
+                      </span>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      if (calendarView === 'days') changeMonth(1);
+                      else if (calendarView === 'months') changeYear(1);
+                      else changeYear(10);
+                    }}
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-600 dark:text-gray-400 font-bold"
+                  >
+                    &gt;
+                  </button>
+                </div>
+
+                {/* Calendar Views */}
+                <div className="mb-2">
+                  {calendarView === 'days' && (
+                    <>
+                      <div className="grid grid-cols-7 gap-1 text-center mb-2">
+                        {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map(d => (
+                          <div key={d} className="text-xs font-bold text-gray-400 dark:text-gray-500">
+                            {d}
+                          </div>
+                        ))}
+                      </div>
+                      <div className="grid grid-cols-7 gap-2">
+                        {renderCalendarDays()}
+                      </div>
                     </>
                   )}
+
                   {calendarView === 'months' && (
-                    <button
-                      onClick={() => setCalendarView('years')}
-                      className="font-bold text-gray-900 dark:text-white text-lg hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                    >
-                      {currentDate.getFullYear()}
-                    </button>
-                  )}
-                  {calendarView === 'years' && (
-                    <span className="font-bold text-gray-900 dark:text-white text-lg">
-                      {Math.floor(currentDate.getFullYear() / 10) * 10} - {Math.floor(currentDate.getFullYear() / 10) * 10 + 9}
-                    </span>
-                  )}
-                </div>
-
-                <button
-                  onClick={() => {
-                    if (calendarView === 'days') changeMonth(1);
-                    else if (calendarView === 'months') changeYear(1);
-                    else changeYear(10);
-                  }}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-600 dark:text-gray-400 font-bold"
-                >
-                  &gt;
-                </button>
-              </div>
-
-              {/* Calendar Views */}
-              <div className="mb-2">
-                {calendarView === 'days' && (
-                  <>
-                    <div className="grid grid-cols-7 gap-1 text-center mb-2">
-                      {['L', 'M', 'X', 'J', 'V', 'S', 'D'].map(d => (
-                        <div key={d} className="text-xs font-bold text-gray-400 dark:text-gray-500">
-                          {d}
-                        </div>
-                      ))}
-                    </div>
-                    <div className="grid grid-cols-7 gap-2">
-                      {renderCalendarDays()}
-                    </div>
-                  </>
-                )}
-
-                {calendarView === 'months' && (
-                  <div className="grid grid-cols-3 gap-3">
-                    {monthNames.map((month, index) => (
-                      <button
-                        key={month}
-                        onClick={() => {
-                          const newDate = new Date(currentDate);
-                          newDate.setMonth(index);
-                          setCurrentDate(newDate);
-                          setCalendarView('days');
-                        }}
-                        className={`p-3 rounded-xl text-sm font-semibold transition-all ${currentDate.getMonth() === index
-                          ? 'bg-blue-600 text-white shadow-lg'
-                          : 'bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
-                          }`}
-                      >
-                        {month}
-                      </button>
-                    ))}
-                  </div>
-                )}
-
-                {calendarView === 'years' && (
-                  <div className="grid grid-cols-3 gap-3">
-                    {Array.from({ length: 12 }, (_, i) => {
-                      const startYear = Math.floor(currentDate.getFullYear() / 10) * 10 - 1;
-                      const year = startYear + i;
-                      const isCurrentDecade = year >= startYear + 1 && year <= startYear + 10;
-
-                      return (
+                    <div className="grid grid-cols-3 gap-3">
+                      {monthNames.map((month, index) => (
                         <button
-                          key={year}
+                          key={month}
                           onClick={() => {
                             const newDate = new Date(currentDate);
-                            newDate.setFullYear(year);
+                            newDate.setMonth(index);
                             setCurrentDate(newDate);
-                            setCalendarView('months');
+                            setCalendarView('days');
                           }}
-                          className={`p-3 rounded-xl text-sm font-semibold transition-all ${currentDate.getFullYear() === year
+                          className={`p-3 rounded-xl text-sm font-semibold transition-all ${currentDate.getMonth() === index
                             ? 'bg-blue-600 text-white shadow-lg'
-                            : isCurrentDecade
-                              ? 'bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
-                              : 'text-gray-400 dark:text-gray-600'
+                            : 'bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
                             }`}
                         >
-                          {year}
+                          {month}
                         </button>
-                      );
-                    })}
-                  </div>
-                )}
+                      ))}
+                    </div>
+                  )}
+
+                  {calendarView === 'years' && (
+                    <div className="grid grid-cols-3 gap-3">
+                      {Array.from({ length: 12 }, (_, i) => {
+                        const startYear = Math.floor(currentDate.getFullYear() / 10) * 10 - 1;
+                        const year = startYear + i;
+                        const isCurrentDecade = year >= startYear + 1 && year <= startYear + 10;
+
+                        return (
+                          <button
+                            key={year}
+                            onClick={() => {
+                              const newDate = new Date(currentDate);
+                              newDate.setFullYear(year);
+                              setCurrentDate(newDate);
+                              setCalendarView('months');
+                            }}
+                            className={`p-3 rounded-xl text-sm font-semibold transition-all ${currentDate.getFullYear() === year
+                              ? 'bg-blue-600 text-white shadow-lg'
+                              : isCurrentDecade
+                                ? 'bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
+                                : 'text-gray-400 dark:text-gray-600'
+                              }`}
+                          >
+                            {year}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
               </div>
 
+              {/* Legend - Outside Calendar */}
+              {selectedHospitalId ? (
+                <div className="mt-3 flex justify-center gap-4 text-xs text-gray-400 dark:text-gray-500">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-blue-600 opacity-70" aria-hidden="true"></span>
+                    <span>Día seleccionado</span>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        ) : (
+          <div className="p-8 flex flex-col items-center text-center space-y-8 animate-fade-in">
+            <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full flex items-center justify-center">
+              <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
             </div>
 
-            {/* Legend - Outside Calendar */}
-            {selectedHospitalId ? (
-              <div className="mt-3 flex justify-center gap-4 text-xs text-gray-400 dark:text-gray-500">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-blue-600 opacity-70" aria-hidden="true"></span>
-                  <span>Día seleccionado</span>
-                </div>
+            <div>
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+                Información Importante
+              </h3>
+              <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed max-w-lg mx-auto">
+                Una vez programada la cita tendrás un tiempo de espera hasta poder donar de nuevo:
+              </p>
+              <div className="mt-6 bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-900/20 rounded-xl p-4 inline-block text-left">
+                <ul className="space-y-2 text-gray-700 dark:text-gray-200">
+                  <li className="flex items-center gap-3">
+                    <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
+                    <span><strong>3 meses</strong> para los hombres</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <span className="w-2 h-2 bg-pink-500 rounded-full"></span>
+                    <span><strong>4 meses</strong> para las mujeres</span>
+                  </li>
+                </ul>
               </div>
-            ) : null}
+              <p className="text-gray-500 dark:text-gray-400 mt-6">
+                ¿Estás de acuerdo con estas condiciones?
+              </p>
+            </div>
+
+            <div className="flex gap-4 w-full max-w-md pt-2">
+              <button
+                onClick={() => setShowConfirmation(false)}
+                disabled={loading}
+                className="flex-1 px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors font-medium disabled:opacity-50"
+              >
+                Volver
+              </button>
+              <button
+                onClick={handleConfirmSubmission}
+                disabled={loading}
+                className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition-colors font-bold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-50 disabled:transform-none disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Confirmando...
+                  </>
+                ) : (
+                  'Sí, acepto'
+                )}
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
