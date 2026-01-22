@@ -58,7 +58,7 @@ public class PushNotificationService {
 
         PushSubscription entity = new PushSubscription();
         entity.setEndpoint(subscription.endpoint);
-        entity.setP256dh(subscription.keys.p256dh);
+        entity.setEncryptionKey(subscription.keys.p256dh);
         entity.setAuth(subscription.keys.auth);
         entity.setDonor(donor);
         entity.setHospital(hospital);
@@ -85,7 +85,7 @@ public class PushNotificationService {
         for (PushSubscription sub : subs) {
             try {
                 Subscription webPushSub = new Subscription(sub.getEndpoint(),
-                        new Subscription.Keys(sub.getP256dh(), sub.getAuth()));
+                        new Subscription.Keys(sub.getEncryptionKey(), sub.getAuth()));
 
                 // Extract only the title part (before the "|" separator) for push notifications
                 String titleOnly = messageJson;
