@@ -2,6 +2,32 @@ package com.xiojuandawt.blood4life.entities;
 
 import jakarta.persistence.*;
 
+/**
+ * Represents a Web Push subscription for receiving push notifications.
+ * 
+ * <p>
+ * <strong>Integrity Constraint (XOR):</strong>
+ * </p>
+ * <ul>
+ * <li>A subscription must belong to <strong>exactly one owner</strong>: either
+ * a {@link BloodDonor} OR a {@link Hospital}</li>
+ * <li>It cannot belong to both simultaneously</li>
+ * <li>It cannot exist without an owner</li>
+ * </ul>
+ * 
+ * <p>
+ * This constraint is enforced at two levels:
+ * </p>
+ * <ul>
+ * <li><strong>Application level:</strong> {@link #validateOwnership()} method
+ * called on persist/update</li>
+ * <li><strong>Database level:</strong> CHECK constraint in the database
+ * schema</li>
+ * </ul>
+ * 
+ * @see BloodDonor
+ * @see Hospital
+ */
 @Entity
 @Table(name = "push_subscriptions")
 public class PushSubscription {
@@ -13,8 +39,8 @@ public class PushSubscription {
     @Column(columnDefinition = "TEXT")
     private String endpoint;
 
-    @Column(columnDefinition = "TEXT")
-    private String p256dh;
+    @Column(name = "encryption_key", columnDefinition = "TEXT")
+    private String encryptionKey;
 
     @Column(columnDefinition = "TEXT")
     private String auth;
@@ -30,9 +56,9 @@ public class PushSubscription {
     public PushSubscription() {
     }
 
-    public PushSubscription(String endpoint, String p256dh, String auth) {
+    public PushSubscription(String endpoint, String encryptionKey, String auth) {
         this.endpoint = endpoint;
-        this.p256dh = p256dh;
+        this.encryptionKey = encryptionKey;
         this.auth = auth;
     }
 
@@ -52,12 +78,12 @@ public class PushSubscription {
         this.endpoint = endpoint;
     }
 
-    public String getP256dh() {
-        return p256dh;
+    public String getEncryptionKey() {
+        return encryptionKey;
     }
 
-    public void setP256dh(String p256dh) {
-        this.p256dh = p256dh;
+    public void setEncryptionKey(String encryptionKey) {
+        this.encryptionKey = encryptionKey;
     }
 
     public String getAuth() {
@@ -82,5 +108,32 @@ public class PushSubscription {
 
     public void setHospital(Hospital hospital) {
         this.hospital = hospital;
+    }
+
+    /**
+     * Validates that a subscription belongs to exactly one owner (donor XOR
+     * hospital).
+     * This method is called before persisting or updating the entity.
+     * 
+     * @throws IllegalStateException if both donor and hospital are set, or if
+     *                               neither is set
+     */
+    @PrePersist
+    @PreUpdate
+    private void validateOwnership() {
+        boolean hasDonor = (donor != null);
+        boolean hasHospital = (hospital != null);
+
+        if (hasDonor && hasHospital) {
+            throw new IllegalStateException(
+                    "Una suscripción push no puede pertenecer simultáneamente a un donante y a un hospital. " +
+                            "Debe pertenecer exclusivamente a uno de ellos.");
+        }
+
+        if (!hasDonor && !hasHospital) {
+            throw new IllegalStateException(
+                    "Una suscripción push debe pertenecer a un donante o a un hospital. " +
+                            "No puede existir una suscripción sin propietario.");
+        }
     }
 }
