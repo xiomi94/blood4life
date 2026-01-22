@@ -43,20 +43,7 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
         if (newChart === 'myCampaigns') {
             onToggleAllCampaigns(false);
         } else if (newChart === 'allCampaigns' || newChart === 'completedCampaigns') {
-            onToggleAllCampaigns(true); // Completed campaigns are typically viewed from "All" history, or maybe just "My"?
-            // User requirement: "mostrar en el card de campañas... campañas realizadas"
-            // Usually "Completed" implies history. If the user wants ONLY THEIR completed, we might need a flag.
-            // But usually "All" vs "My" is one toggle.
-            // Let's assume 'completedCampaigns' fetches/uses ALL campaigns to filter from, OR respects the current user context?
-            // The user said: "Hay una opción (por defecto) en el que se muestran las campañas hechas por el propio usuario... Hay una opción... total de campañas... opción más... campañas realizadas".
-            // It seems "Completed" is a sibling to "My" and "All".
-            // Let's assume "Completed" shows "My" completed campaigns if we follow "My Campaigns" logic, or maybe "All".
-            // Given the context of "Dashboard", usually you want to see YOUR history.
-            // But if "All Campaigns" shows everyone's, "Completed" might typically show everyone's too?
-            // To be safe, let's keep `showAllCampaigns` as true for 'completedCampaigns' to ensure we have the candidate set, 
-            // BUT actually, we probably want "My Completed" vs "All Completed"?
-            // The user didn't specify. I will assume "All Completed" for now as it's a separate category in the list.
-            // Actually, if I toggle `onToggleAllCampaigns(true)`, `campaigns` prop will contain ALL campaigns.
+            onToggleAllCampaigns(true);
         }
     };
 
@@ -131,13 +118,11 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
     // Prepare gender-separated data for grouped bar chart
     let maleData: number[] = [];
     let femaleData: number[] = [];
-    let otherData: number[] = [];
 
     if (bloodTypeGenderFilter === 'all' && stats.breakdown) {
         // Create grouped data showing all genders
         const maleMap = new Map<string, number>();
         const femaleMap = new Map<string, number>();
-        const otherMap = new Map<string, number>();
 
         stats.breakdown.forEach(item => {
             // Normalize blood type
@@ -147,15 +132,11 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
                 maleMap.set(normalizedType, item.count);
             } else if (genderLower === 'femenino') {
                 femaleMap.set(normalizedType, item.count);
-            } else {
-                // Captura cualquier otra variación (Otro, Prefiero no decirlo, etc.)
-                otherMap.set(normalizedType, item.count);
             }
         });
 
         maleData = orderedBloodTypes.map(type => maleMap.get(type) || 0);
         femaleData = orderedBloodTypes.map(type => femaleMap.get(type) || 0);
-        otherData = orderedBloodTypes.map(type => otherMap.get(type) || 0);
     } else if (stats.breakdown) {
         // When filtered by gender, use breakdown to show only that gender's data
         const genderMap = new Map<string, number>();
@@ -170,12 +151,10 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
 
         maleData = bloodTypeGenderFilter === 'Masculino' ? filteredCounts : new Array(8).fill(0);
         femaleData = bloodTypeGenderFilter === 'Femenino' ? filteredCounts : new Array(8).fill(0);
-        otherData = bloodTypeGenderFilter === 'Prefiero no decirlo' ? filteredCounts : new Array(8).fill(0);
     } else {
         // Fallback: use finalBloodTypeCounts if breakdown is not available
         maleData = bloodTypeGenderFilter === 'Masculino' ? finalBloodTypeCounts : new Array(8).fill(0);
         femaleData = bloodTypeGenderFilter === 'Femenino' ? finalBloodTypeCounts : new Array(8).fill(0);
-        otherData = bloodTypeGenderFilter === 'Prefiero no decirlo' ? finalBloodTypeCounts : new Array(8).fill(0);
     }
 
     // Blood Type Chart Data (Stacked)
@@ -198,19 +177,11 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
                 borderWidth: 1,
                 borderRadius: 6,
             },
-            {
-                label: t('dashboard.stats.preferNotToSay'),
-                data: otherData,
-                backgroundColor: 'rgba(107, 114, 128, 0.8)',
-                borderColor: 'rgba(107, 114, 128, 1)',
-                borderWidth: 1,
-                borderRadius: 6,
-            },
         ],
     };
 
     // Calcular el máximo para el eje Y (redondeo al siguiente múltiplo de 5)
-    const allValues = [...maleData, ...femaleData, ...otherData];
+    const allValues = [...maleData, ...femaleData];
     const maxBloodTypeCount = Math.max(...allValues, 0);
     // Redondear al siguiente múltiplo de 5 (mínimo 5)
     const bloodTypeYAxisMax = Math.ceil(maxBloodTypeCount / 5) * 5 || 5;
@@ -404,23 +375,7 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
                             </svg>
                             {t('dashboard.stats.female')}
                         </button>
-                        <button
-                            onClick={() => setBloodTypeGenderFilter('Prefiero no decirlo')}
-                            className={`
-                                group relative px-4 py-2.5 text-sm font-semibold rounded-lg 
-                                transition-all duration-300 ease-in-out
-                                flex items-center gap-2
-                                ${bloodTypeGenderFilter === 'Prefiero no decirlo'
-                                    ? 'bg-gradient-to-r from-gray-600 to-gray-700 text-white shadow-lg shadow-gray-500/50'
-                                    : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 shadow-lg shadow-gray-200/50 dark:shadow-gray-900/50 hover:border-gray-500 dark:hover:border-gray-400 hover:shadow-gray-500/30 hover:scale-105 hover:text-gray-600 dark:hover:text-gray-400'
-                                }
-                            `}
-                        >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            {t('dashboard.stats.preferNotToSay')}
-                        </button>
+
                     </div>
                 )}
 
@@ -504,7 +459,7 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
                     </div>
                 )}
             </div>
-        </section>
+        </section >
     );
 };
 

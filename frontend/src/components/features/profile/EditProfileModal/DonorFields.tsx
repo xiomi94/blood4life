@@ -94,17 +94,16 @@ export const DonorFields: React.FC<DonorFieldsProps> = ({ formData, errors, onIn
 
             {/* Gender */}
             <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Género</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sexo</label>
                 <select
                     name="gender"
                     value={formData.gender || ''}
                     onChange={onInputChange}
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                    <option value="">Seleccionar género</option>
+                    <option value="">Seleccionar sexo</option>
                     <option value="Masculino">Masculino</option>
                     <option value="Femenino">Femenino</option>
-                    <option value="Prefiero no decirlo">Prefiero no decirlo</option>
                 </select>
             </div>
 
