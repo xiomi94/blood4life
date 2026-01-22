@@ -16,7 +16,7 @@ public interface BloodDonorRepository extends JpaRepository<BloodDonor, Integer>
   @Query("SELECT b.bloodType.type, COUNT(b) FROM BloodDonor b GROUP BY b.bloodType.type")
   java.util.List<Object[]> countDonorsByBloodType();
 
-  @Query("SELECT b.gender, COUNT(b) FROM BloodDonor b WHERE b.gender IN ('Masculino', 'Femenino', 'Prefiero no decirlo') GROUP BY b.gender")
+  @Query("SELECT b.gender, COUNT(b) FROM BloodDonor b WHERE b.gender IN ('Masculino', 'Femenino') GROUP BY b.gender")
   java.util.List<Object[]> countDonorsByGender();
 
   @org.springframework.transaction.annotation.Transactional
@@ -24,6 +24,6 @@ public interface BloodDonorRepository extends JpaRepository<BloodDonor, Integer>
 
   java.util.List<BloodDonor> findByBloodTypeIsNull();
 
-  @Query("SELECT b.gender, b.bloodType.type, COUNT(b) FROM BloodDonor b WHERE b.gender IN ('Masculino', 'Femenino', 'Prefiero no decirlo') GROUP BY b.gender, b.bloodType.type")
+  @Query("SELECT b.gender, b.bloodType.type, COUNT(b) FROM BloodDonor b WHERE b.gender IN ('Masculino', 'Femenino') GROUP BY b.gender, b.bloodType.type")
   java.util.List<Object[]> countDonorsByGenderAndBloodType();
 }
