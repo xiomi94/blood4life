@@ -150,8 +150,9 @@ public class AppointmentController {
           "\"hora\": \"" + saved.getHourAppointment() + "\"" +
           "}";
 
-      String msg = title + "|" + jsonDetail;
-      notificationService.createNotification(saved.getCampaign().getHospital(), msg);
+      // Send clean title for notification list, but include JSON detail for popover
+      String fullMessage = title + "|" + jsonDetail;
+      notificationService.createNotification(saved.getCampaign().getHospital(), fullMessage);
       System.out.println("DEBUG: Notificación creada exitosamente.");
     } catch (Exception e) {
       System.err.println("Error creando notificación interna: " + e.getMessage());

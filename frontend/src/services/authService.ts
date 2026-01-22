@@ -1,6 +1,7 @@
 import axiosInstance from "../utils/axiosInstance.ts";
 import { AUTH_ENDPOINTS, HEADERS } from '../constants/app.constants';
 import { getLoginEndpoint } from '../utils/userTypeDetector';
+import { tokenStorage } from '../utils/tokenStorage';
 import type { LoginResponse, UserType } from '../types/common.types';
 
 export const authService = {
@@ -16,6 +17,12 @@ export const authService = {
         }
       }
     );
+
+    // Guardar el token JWT en localStorage para futuras peticiones
+    if (response.data.token) {
+      tokenStorage.save(response.data.token);
+    }
+
     return response.data;
   },
 

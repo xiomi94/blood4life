@@ -55,6 +55,7 @@ export interface LoginCredentials {
 export interface LoginResponse {
     status: string;
     message: string;
+    token?: string; // JWT token devuelto por el backend
 }
 
 // ========================================

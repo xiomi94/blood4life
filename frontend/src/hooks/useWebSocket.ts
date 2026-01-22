@@ -3,21 +3,20 @@ import { websocketService } from '../services/websocketService';
 import { useAuth } from '../context/AuthContext';
 
 // Build WebSocket URL
-// In development, always use the local Vite dev server which will proxy to backend
-// In production, use the production API URL
+// SockJS requires http/https URLs, NOT ws/wss (it handles the upgrade automatically)
 const getWebSocketURL = () => {
     // If we're in development (localhost), always use the Vite dev server proxy
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         return `${window.location.protocol}//${window.location.host}/api/ws`;
     }
 
-    // In production, use VITE_API_URL if configured
+    // In production, use VITE_API_URL (keep http/https, SockJS handles WebSocket upgrade)
     if (import.meta.env.VITE_API_URL) {
         return `${import.meta.env.VITE_API_URL}/ws`;
     }
 
-    // Fallback
-    return `${window.location.protocol}//${window.location.host}/ws`;
+    // Fallback: use current location
+    return `${window.location.protocol}//${window.location.host}/api/ws`;
 };
 
 const WEBSOCKET_URL = getWebSocketURL();

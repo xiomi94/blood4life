@@ -17,7 +17,8 @@ public class ImageService {
   @Autowired
   private ImageRepository imageRepository;
 
-  private final String uploadDir = "uploads/";
+  @org.springframework.beans.factory.annotation.Value("${app.file-upload-dir}")
+  private String uploadDir;
 
   public Image saveImage(MultipartFile multipartFile, String fileName) throws IOException {
 
