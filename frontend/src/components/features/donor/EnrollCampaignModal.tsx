@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import type { Campaign } from '../../../services/campaignService';
 
 interface EnrollCampaignModalProps {
@@ -21,11 +21,20 @@ export const EnrollCampaignModal = ({
     const [currentDate, setCurrentDate] = useState(new Date());
     const [calendarView, setCalendarView] = useState<'days' | 'months' | 'years'>('days');
 
-    const timeSlots = [];
-    for (let i = 8; i <= 18; i++) {
-        timeSlots.push(`${i.toString().padStart(2, '0')}:00`);
-        if (i !== 18) timeSlots.push(`${i.toString().padStart(2, '0')}:30`);
-    }
+    const timeSlots = useMemo(() => {
+        // Horario fijo estándar: 08:00 a 18:00
+        const startH = 8;
+        const endH = 18;
+        const slots: string[] = [];
+
+        for (let h = startH; h <= endH; h++) {
+            slots.push(`${h.toString().padStart(2, '0')}:00`);
+            if (h !== endH) {
+                slots.push(`${h.toString().padStart(2, '0')}:30`);
+            }
+        }
+        return slots;
+    }, []);
 
     if (!isOpen || !campaign) return null;
 
@@ -208,19 +217,47 @@ export const EnrollCampaignModal = ({
                                         Hora disponible
                                     </label>
                                     <div className="grid grid-cols-4 gap-2 max-h-40 overflow-y-auto p-1">
-                                        {timeSlots.map((time) => (
-                                            <button
-                                                key={time}
-                                                type="button"
-                                                onClick={() => setSelectedTime(time)}
-                                                className={`py-2 px-1 text-sm rounded-lg border transition-colors ${selectedTime === time
-                                                    ? 'bg-blue-600 text-white border-blue-600'
-                                                    : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-blue-500 hover:text-blue-500'
-                                                    }`}
-                                            >
-                                                {time}
-                                            </button>
-                                        ))}
+                                        {timeSlots.map((time) => {
+                                            // Check time availability logic specific for TODAY
+                                            const [h, m] = time.split(':').map(Number);
+                                            const slotTime = new Date();
+                                            slotTime.setHours(h, m, 0, 0);
+
+                                            const now = new Date(); // Current system time
+                                            const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000); // 1 hour buffer
+
+                                            // Parse selectedDate strictly (YYYY-MM-DD)
+                                            const [sy, sm, sd] = selectedDate.split('-').map(Number);
+                                            const selectedDateObj = new Date(sy, sm - 1, sd);
+                                            const today = new Date();
+                                            today.setHours(0, 0, 0, 0);
+
+                                            let isTimeAvailable = true;
+
+                                            // If selected date is today, check if time slot is past or within buffer
+                                            if (selectedDateObj.getTime() === today.getTime()) {
+                                                if (slotTime < oneHourFromNow) {
+                                                    isTimeAvailable = false;
+                                                }
+                                            }
+
+                                            return (
+                                                <button
+                                                    key={time}
+                                                    type="button"
+                                                    disabled={!isTimeAvailable}
+                                                    onClick={() => isTimeAvailable && setSelectedTime(time)}
+                                                    className={`py-2 px-1 text-sm rounded-lg border transition-colors ${selectedTime === time
+                                                        ? 'bg-blue-600 text-white border-blue-600'
+                                                        : isTimeAvailable
+                                                            ? 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-blue-500 hover:text-blue-500 cursor-pointer'
+                                                            : 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 border-gray-200 dark:border-gray-700 cursor-not-allowed opacity-50'
+                                                        }`}
+                                                >
+                                                    {time}
+                                                </button>
+                                            )
+                                        })}
                                     </div>
                                 </div>
                             )}

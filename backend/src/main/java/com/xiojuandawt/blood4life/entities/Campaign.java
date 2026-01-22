@@ -3,6 +3,7 @@ package com.xiojuandawt.blood4life.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -38,6 +39,12 @@ public class Campaign {
   @Column(name = "required_blood_type", nullable = false)
   private String requiredBloodType;
 
+  @Column(name = "start_time", nullable = false)
+  private LocalTime startTime;
+
+  @Column(name = "end_time", nullable = false)
+  private LocalTime endTime;
+
   @ManyToMany
   @JoinTable(name = "blood_type_campaign", joinColumns = @JoinColumn(name = "campaign"), inverseJoinColumns = @JoinColumn(name = "blood_type"))
   private List<BloodType> bloodTypes;
@@ -46,7 +53,8 @@ public class Campaign {
   }
 
   public Campaign(Hospital hospital, String name, String description, LocalDate startDate, LocalDate endDate,
-      String location, Integer requiredDonorQuantity, String requiredBloodType) {
+      String location, Integer requiredDonorQuantity, String requiredBloodType, LocalTime startTime,
+      LocalTime endTime) {
     this.hospital = hospital;
     this.name = name;
     this.description = description;
@@ -55,6 +63,8 @@ public class Campaign {
     this.location = location;
     this.requiredDonorQuantity = requiredDonorQuantity;
     this.requiredBloodType = requiredBloodType;
+    this.startTime = startTime;
+    this.endTime = endTime;
   }
 
   public Campaign(Integer id, Hospital hospital, String name, String description, LocalDate startDate,
@@ -148,5 +158,21 @@ public class Campaign {
 
   public void setBloodTypes(List<BloodType> bloodTypes) {
     this.bloodTypes = bloodTypes;
+  }
+
+  public LocalTime getStartTime() {
+    return startTime;
+  }
+
+  public void setStartTime(LocalTime startTime) {
+    this.startTime = startTime;
+  }
+
+  public LocalTime getEndTime() {
+    return endTime;
+  }
+
+  public void setEndTime(LocalTime endTime) {
+    this.endTime = endTime;
   }
 }

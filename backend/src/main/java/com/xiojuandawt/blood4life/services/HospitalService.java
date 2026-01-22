@@ -22,5 +22,7 @@ public interface HospitalService {
 
   Optional<Hospital> findHospitalByEmail(String email);
 
+  Optional<Hospital> findByCif(String cif);
+
   ImageService getImageService();
 }

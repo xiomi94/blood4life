@@ -70,6 +70,10 @@ public class AuthController {
         return errorResponse("Email already registered", HttpStatus.CONFLICT);
       }
 
+      if (bloodDonorService.findByDni(dni).isPresent()) {
+        return errorResponse("DNI already registered", HttpStatus.CONFLICT);
+      }
+
       Image imageEntity = null;
       if (imageFile != null && !imageFile.isEmpty()) {
         String extension = Optional.ofNullable(imageFile.getOriginalFilename())
@@ -172,6 +176,10 @@ public class AuthController {
     try {
       if (hospitalService.findHospitalByEmail(email).isPresent()) {
         return errorResponse("Email already registered", HttpStatus.CONFLICT);
+      }
+
+      if (hospitalService.findByCif(cif).isPresent()) {
+        return errorResponse("CIF already registered", HttpStatus.CONFLICT);
       }
 
       Image imageEntity = null;

@@ -11,4 +11,6 @@ public interface HospitalRepository extends JpaRepository<Hospital, Integer> {
   Optional<Hospital> findHospitalById(int id);
 
   Optional<Hospital> findHospitalByEmail(String email);
+
+  Optional<Hospital> findByCif(String cif);
 }

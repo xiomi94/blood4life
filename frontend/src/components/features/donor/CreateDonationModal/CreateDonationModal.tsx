@@ -39,11 +39,69 @@ const CreateDonationModal: React.FC<CreateDonationModalProps> = ({ isOpen, onClo
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ];
 
-  const timeSlots = [];
-  for (let i = 8; i <= 18; i++) {
-    timeSlots.push(`${i.toString().padStart(2, '0')}:00`);
-    if (i !== 18) timeSlots.push(`${i.toString().padStart(2, '0')}:30`);
-  }
+  // Generate time slots based on active campaign hours or default 08:00-18:00
+  const generateTimeSlots = (): string[] => {
+    const slots: string[] = [];
+
+    // Default hours if no campaign
+    let startHour = 8;
+    let endHour = 18;
+
+    // Use campaign hours if available
+    if (activeCampaign?.startTime && activeCampaign?.endTime) {
+      const [startH] = activeCampaign.startTime.split(':').map(Number);
+      const [endH] = activeCampaign.endTime.split(':').map(Number);
+      startHour = startH;
+      endHour = endH;
+    }
+
+    // Generate slots from start to end hour
+    for (let i = startHour; i <= endHour; i++) {
+      slots.push(`${i.toString().padStart(2, '0')}:00`);
+      if (i !== endHour) {
+        slots.push(`${i.toString().padStart(2, '0')}:30`);
+      }
+    }
+
+    return slots;
+  };
+
+  const timeSlots = generateTimeSlots();
+
+  // Helper: Check if a time slot is in the past for today's date AND within campaign hours
+  const isTimeSlotAvailable = (timeSlot: string): boolean => {
+    if (!selectedDate) return true;
+
+    // Check if time is within campaign's hours
+    if (activeCampaign?.startTime && activeCampaign?.endTime) {
+      if (timeSlot < activeCampaign.startTime || timeSlot > activeCampaign.endTime) {
+        return false;
+      }
+    }
+
+    // Robust date parsing using local components
+    const [y, m, d] = selectedDate.split('-').map(Number);
+    const selectedDateObj = new Date(y, m - 1, d);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // If selected date is not today check if it's future
+    if (selectedDateObj.getTime() > today.getTime()) return true;
+
+    // If selected date is in the past (shouldn't happen due to calendar logic but safety check)
+    if (selectedDateObj.getTime() < today.getTime()) return false;
+
+    // If it's today, check if time has passed with 1 hour buffer
+    const now = new Date();
+    const [hours, minutes] = timeSlot.split(':').map(Number);
+    const slotTime = new Date();
+    slotTime.setHours(hours, minutes, 0, 0);
+
+    // Add 1 hour buffer - appointments must be at least 1 hour in the future
+    const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
+
+    return slotTime >= oneHourFromNow;
+  };
 
   // Load Hospitals on Open and Check Availability
   useEffect(() => {
@@ -74,6 +132,14 @@ const CreateDonationModal: React.FC<CreateDonationModalProps> = ({ isOpen, onClo
     setCurrentDate(new Date());
     setCalendarView('days');
   };
+
+  // Clear selected time if it's no longer available (e.g., time has passed)
+  useEffect(() => {
+    if (selectedTime && !isTimeSlotAvailable(selectedTime)) {
+      setSelectedTime('');
+      toast.info('La hora seleccionada ya no está disponible. Por favor, selecciona otra hora.');
+    }
+  }, [selectedDate, selectedTime]);
 
   // Check if donor can create a new appointment
   const checkDonationEligibility = async () => {
@@ -257,6 +323,27 @@ const CreateDonationModal: React.FC<CreateDonationModalProps> = ({ isOpen, onClo
       return;
     }
 
+    // Validate that selected date and time are not in the past
+    const now = new Date();
+    const [hours, minutes] = selectedTime.split(':').map(Number);
+
+    // Create date strictly from components to match local string YYYY-MM-DD
+    const [y, m, d] = selectedDate.split('-').map(Number);
+    const appointmentDateTime = new Date(y, m - 1, d);
+    appointmentDateTime.setHours(hours, minutes, 0, 0);
+
+    if (appointmentDateTime < now) {
+      toast.error('No puedes agendar una cita en una fecha u hora pasada. Por favor, selecciona una fecha y hora futuras.');
+      return;
+    }
+
+    // Additional check: appointment must be at least 1 hour in the future
+    const oneHourFromNow = new Date(now.getTime() + 60 * 60 * 1000);
+    if (appointmentDateTime < oneHourFromNow) {
+      toast.error('La cita debe programarse con al menos 1 hora de antelación.');
+      return;
+    }
+
     setLoading(true);
     try {
       const appointmentData = {
@@ -358,20 +445,46 @@ const CreateDonationModal: React.FC<CreateDonationModalProps> = ({ isOpen, onClo
                   Hora
                 </label>
                 <div className="grid grid-cols-4 gap-2">
-                  {timeSlots.map(time => (
-                    <button
-                      key={time}
-                      type="button"
-                      onClick={() => setSelectedTime(time)}
-                      className={`py-2 text-sm rounded-lg border transition-all duration-200 ${selectedTime === time
-                        ? 'bg-blue-600 text-white border-blue-600 shadow-md transform scale-105'
-                        : 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:border-blue-400 hover:text-blue-500'
-                        }`}
-                    >
-                      {time}
-                    </button>
-                  ))}
+                  {timeSlots.map(time => {
+                    const isAvailable = isTimeSlotAvailable(time);
+                    const isSelected = selectedTime === time;
+
+                    return (
+                      <button
+                        key={time}
+                        type="button"
+                        onClick={() => isAvailable && setSelectedTime(time)}
+                        disabled={!isAvailable}
+                        className={`py-2 text-sm rounded-lg border transition-all duration-200 ${isSelected
+                          ? 'bg-blue-600 text-white border-blue-600 shadow-md transform scale-105'
+                          : isAvailable
+                            ? 'bg-white dark:bg-gray-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:border-blue-400 hover:text-blue-500 cursor-pointer'
+                            : 'bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 border-gray-200 dark:border-gray-700 cursor-not-allowed opacity-50'
+                          }`}
+                      >
+                        {time}
+                      </button>
+                    );
+                  })}
                 </div>
+                {/* Info message when viewing today's slots */}
+                {(() => {
+                  const selectedDateObj = new Date(selectedDate);
+                  const today = new Date();
+                  selectedDateObj.setHours(0, 0, 0, 0);
+                  today.setHours(0, 0, 0, 0);
+                  if (selectedDateObj.getTime() === today.getTime()) {
+                    return (
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-3 flex items-center gap-2">
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                        </svg>
+                        Solo se muestran horarios con al menos 1 hora de antelación
+                      </p>
+                    );
+                  }
+                  return null;
+                })()}
               </div>
             )}
 

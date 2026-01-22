@@ -22,7 +22,9 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
         endDate: '',
         location: '',
         requiredDonorQuantity: 1,
-        requiredBloodTypes: []
+        requiredBloodTypes: [],
+        startTime: '08:00',
+        endTime: '18:00'
     });
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -52,7 +54,7 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
         }
     }, [isOpen]);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
 
         // Special handling for number fields to prevent decimal/thousand separators
@@ -126,6 +128,17 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
             }
         }
 
+        // Validar horarios
+        if (!formData.startTime) newErrors.startTime = 'La hora de inicio es obligatoria';
+        if (!formData.endTime) newErrors.endTime = 'La hora de fin es obligatoria';
+
+        // Validar que la hora de fin sea después de la de inicio
+        if (formData.startTime && formData.endTime) {
+            if (formData.endTime <= formData.startTime) {
+                newErrors.endTime = 'La hora de fin debe ser posterior a la de inicio';
+            }
+        }
+
         setErrors(newErrors);
         // Devolvemos true si no hay errores
         return Object.keys(newErrors).length === 0;
@@ -153,7 +166,9 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
                 endDate: '',
                 location: '',
                 requiredDonorQuantity: 1,
-                requiredBloodTypes: []
+                requiredBloodTypes: [],
+                startTime: '08:00',
+                endTime: '18:00'
             });
 
             // Call success callback
@@ -275,6 +290,59 @@ const CreateCampaignModal: React.FC<CreateCampaignModalProps> = ({ isOpen, onClo
                                     error={errors.endDate}
                                 />
                                 {errors.endDate && <p className="text-red-500 text-sm mt-1">{errors.endDate}</p>}
+                            </div>
+                        </div>
+
+                        {/* Time Range */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Hora de inicio *
+                                </label>
+                                <select
+                                    name="startTime"
+                                    value={formData.startTime}
+                                    onChange={handleInputChange}
+                                    className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.startTime ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}`}
+                                >
+                                    {Array.from({ length: 17 }, (_, i) => {
+                                        const hour = i + 6; // 6:00 to 22:00
+                                        return [
+                                            <option key={`${hour}:00`} value={`${hour.toString().padStart(2, '0')}:00`}>
+                                                {`${hour.toString().padStart(2, '0')}:00`}
+                                            </option>,
+                                            hour < 22 && <option key={`${hour}:30`} value={`${hour.toString().padStart(2, '0')}:30`}>
+                                                {`${hour.toString().padStart(2, '0')}:30`}
+                                            </option>
+                                        ];
+                                    })}
+                                </select>
+                                {errors.startTime && <p className="text-red-500 text-sm mt-1">{errors.startTime}</p>}
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Hora de fin *
+                                </label>
+                                <select
+                                    name="endTime"
+                                    value={formData.endTime}
+                                    onChange={handleInputChange}
+                                    className={`w-full px-3 py-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${errors.endTime ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}`}
+                                >
+                                    {Array.from({ length: 17 }, (_, i) => {
+                                        const hour = i + 6; // 6:00 to 22:00
+                                        return [
+                                            <option key={`${hour}:00`} value={`${hour.toString().padStart(2, '0')}:00`}>
+                                                {`${hour.toString().padStart(2, '0')}:00`}
+                                            </option>,
+                                            hour < 22 && <option key={`${hour}:30`} value={`${hour.toString().padStart(2, '0')}:30`}>
+                                                {`${hour.toString().padStart(2, '0')}:30`}
+                                            </option>
+                                        ];
+                                    })}
+                                </select>
+                                {errors.endTime && <p className="text-red-500 text-sm mt-1">{errors.endTime}</p>}
                             </div>
                         </div>
 
