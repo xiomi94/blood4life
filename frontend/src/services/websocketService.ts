@@ -21,7 +21,7 @@ class WebSocketService {
 
                 // Set up connection handlers
                 this.client.onConnect = () => {
-                    console.log('✅ WebSocket conectado');
+                    // console.log('✅ WebSocket conectado');
                     this.connected = true;
                     resolve();
                 };
@@ -38,7 +38,7 @@ class WebSocketService {
                 };
 
                 this.client.onDisconnect = () => {
-                    console.log('🔌 WebSocket desconectado');
+                    // console.log('🔌 WebSocket desconectado');
                     this.connected = false;
                 };
 
@@ -56,7 +56,7 @@ class WebSocketService {
         callback: (message: any) => void
     ): () => void {
         if (!this.client || !this.connected) {
-            console.warn('⚠️ Cannot subscribe: WebSocket not connected');
+            // console.warn('⚠️ Cannot subscribe: WebSocket not connected');
             return () => { };
         }
 
@@ -80,7 +80,7 @@ class WebSocketService {
             this.client.deactivate();
             this.client = null;
             this.connected = false;
-            console.log('🔌 WebSocket desconectado');
+            // console.log('🔌 WebSocket desconectado');
         }
     }
 
@@ -95,7 +95,7 @@ class WebSocketService {
                 body: typeof body === 'string' ? body : JSON.stringify(body)
             });
         } else {
-            console.warn(' No se puede publicar: WebSocket no conectado');
+            // console.warn(' No se puede publicar: WebSocket no conectado');
         }
     }
 }

@@ -21,7 +21,7 @@ function BloodDonorCrudPage() {
   };
 
   const bloodDonorFormOnSubmit = (data: BloodDonor) => {
-    console.log(data);
+    // console.log(data);
   };
 
   const bloodDonorFormOnCancel = () => {

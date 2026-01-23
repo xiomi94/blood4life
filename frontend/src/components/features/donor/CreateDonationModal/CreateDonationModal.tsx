@@ -280,7 +280,7 @@ const CreateDonationModal: React.FC<CreateDonationModalProps> = ({ isOpen, onClo
         appointmentStatus: { id: 1, name: 'Programada' }
       };
 
-      console.log('🚀 Enviando cita al backend:', appointmentData);
+      // console.log('🚀 Enviando cita al backend:', appointmentData);
 
       await appointmentService.createAppointment(appointmentData);
 

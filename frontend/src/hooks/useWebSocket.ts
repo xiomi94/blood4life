@@ -32,7 +32,7 @@ export const useWebSocket = () => {
             if (!isAuthenticated) return;
 
             try {
-                console.log('🔗 Connecting to WebSocket:', WEBSOCKET_URL);
+                // console.log('🔗 Connecting to WebSocket:', WEBSOCKET_URL);
                 await websocketService.connect(WEBSOCKET_URL);
                 if (mounted) {
                     setIsConnected(true);
