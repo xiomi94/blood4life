@@ -63,7 +63,9 @@ describe('UpcomingAppointments Component', () => {
             endDate: '2026-05-31',
             location: 'Av. Principal 123',
             requiredDonorQuantity: 100,
-            requiredBloodType: 'A+'
+            requiredBloodType: 'A+',
+            startTime: '09:00',
+            endTime: '17:00'
         },
         {
             id: 11,
@@ -75,7 +77,9 @@ describe('UpcomingAppointments Component', () => {
             endDate: '2026-06-30',
             location: 'Calle Norte 456',
             requiredDonorQuantity: 50,
-            requiredBloodType: 'O-'
+            requiredBloodType: 'O-',
+            startTime: '08:00',
+            endTime: '16:00'
         }
     ];
 

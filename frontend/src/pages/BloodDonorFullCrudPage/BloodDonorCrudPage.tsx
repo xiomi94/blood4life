@@ -20,7 +20,7 @@ function BloodDonorCrudPage() {
     });
   };
 
-  const bloodDonorFormOnSubmit = (data: BloodDonor) => {
+  const bloodDonorFormOnSubmit = () => {
     // console.log(data);
   };
 
