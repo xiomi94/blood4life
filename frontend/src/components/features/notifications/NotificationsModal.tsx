@@ -207,7 +207,7 @@ export const NotificationsModal = ({ isOpen, onClose, notifications, onMarkAsRea
                 }
             } catch (e) {
                 // JSON parsing failed, fall through to display as plain text
-                console.log("JSON parse attempt failed, displaying as plain text");
+                // console.log("JSON parse attempt failed, displaying as plain text");
             }
         }
 

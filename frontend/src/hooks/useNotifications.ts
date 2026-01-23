@@ -88,10 +88,10 @@ export const useNotifications = () => {
                     ? `/topic/notifications/hospital/${user.id}`
                     : `/topic/notifications/donor/${user.id}`;
 
-                console.log('🔔 Suscribiéndose a notificaciones:', topic);
+                // console.log('🔔 Suscribiéndose a notificaciones:', topic);
                 try {
                     unsubscribe = subscribe(topic, (message) => {
-                        console.log("🔔 Notificación recibida:", message);
+                        // console.log("🔔 Notificación recibida:", message);
                         if (message && message.body) {
                             // Parse notification
                             const newNotification: Notification = typeof message.body === 'string'
@@ -104,7 +104,7 @@ export const useNotifications = () => {
                                 return [newNotification, ...prev];
                             });
                             setUnreadCount(prev => prev + 1);
-                            console.log("✅ Badge actualizado en tiempo real");
+                            // console.log("✅ Badge actualizado en tiempo real");
 
                             // NON-CRITICAL: Try to show toast
                             try {
@@ -116,7 +116,7 @@ export const useNotifications = () => {
                                     duration: 5000,
                                     action: {
                                         label: 'Ver',
-                                        onClick: () => console.log('Notification clicked')
+                                        onClick: () => { } // Silenced for production
                                     }
                                 });
                             } catch (toastError) {

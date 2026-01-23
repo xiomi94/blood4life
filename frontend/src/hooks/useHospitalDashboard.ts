@@ -44,7 +44,7 @@ export const useHospitalDashboard = () => {
         try {
             if (!isBackground) setLoading(true);
             const data = await dashboardService.getStats();
-            console.log('📊 Dashboard Stats Refreshed:', data);
+            // console.log('📊 Dashboard Stats Refreshed:', data);
             setStats(data);
             setError(null);
         } catch (err) {
@@ -59,7 +59,7 @@ export const useHospitalDashboard = () => {
     // Función para recargar las campañas
     const refreshCampaigns = async () => {
         try {
-            console.log('🔄 Refreshing campaigns...');
+            // console.log('🔄 Refreshing campaigns...');
             // Cargamos todas para el admin o filtros globales
             const allCamps = await campaignService.getAllCampaigns();
             setAllCampaigns(allCamps);

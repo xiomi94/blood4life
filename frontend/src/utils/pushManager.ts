@@ -10,7 +10,7 @@ export const registerPushNotifications = async () => {
 
     try {
         const registration = await navigator.serviceWorker.register('/sw.js');
-        console.log('Service Worker registered with scope:', registration.scope);
+        // console.log('Service Worker registered with scope:', registration.scope);
 
         // Wait for the service worker to be ready (active)
         await navigator.serviceWorker.ready;
@@ -27,9 +27,15 @@ export const registerPushNotifications = async () => {
 
         // Always send to backend to ensure sync (or check if changed logic could be here)
         await notificationService.subscribePush(subscription.toJSON());
-        console.log('User is subscribed to push notifications');
+        // console.log('User is subscribed to push notifications');
 
     } catch (error) {
+        // Handle permission denied gracefully (user blocked notifications)
+        if (error instanceof Error && error.name === 'NotAllowedError') {
+            console.warn('Push notifications permission denied. User can enable them in browser settings.');
+            return;
+        }
+        // Only log other errors as actual errors
         console.error('Failed to register/subscribe to push notifications:', error);
     }
 };

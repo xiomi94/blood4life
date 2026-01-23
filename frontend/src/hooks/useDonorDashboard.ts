@@ -45,11 +45,11 @@ export const useDonorDashboard = () => {
     if (!isConnected) return;
 
     const unsubscribe = subscribe('/topic/campaigns', (message) => {
-      console.log('📨 Donor Dashboard - Received WebSocket message:', message);
+      // console.log('📨 Donor Dashboard - Received WebSocket message:', message);
       if (message.type === 'CAMPAIGN_CREATED' ||
         message.type === 'CAMPAIGN_UPDATED' ||
         message.type === 'CAMPAIGN_DELETED') {
-        console.log('🔄 Refreshing campaigns in donor dashboard');
+        // console.log('🔄 Refreshing campaigns in donor dashboard');
         fetchAllCampaigns();
       }
     });

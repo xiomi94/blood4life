@@ -64,7 +64,7 @@ const DashboardBloodDonorPage = () => {
     try {
       const campaigns = await campaignService.getAllCampaigns();
       setAllCampaigns(campaigns);
-      console.log(' Campaigns cargadas:', campaigns.length, 'campaigns loaded');
+      // console.log(' Campaigns cargadas:', campaigns.length, 'campaigns loaded');
     } catch (err) {
       console.error('Error al cargar las campañas:', err);
     }
@@ -110,19 +110,19 @@ const DashboardBloodDonorPage = () => {
   useEffect(() => {
     // Solo suscribirse si el WebSocket está conectado
     if (!isConnected) {
-      console.log('⏳ Esperando conexión WebSocket para suscribirse a campañas...');
+      // console.log('⏳ Esperando conexión WebSocket para suscribirse a campañas...');
       return;
     }
 
-    console.log('✅ WebSocket conectado - Suscribiéndose a /topic/campaigns');
+    // console.log('✅ WebSocket conectado - Suscribiéndose a /topic/campaigns');
     const unsubscribe = subscribe('/topic/campaigns', (message: any) => {
-      console.log('📨 Donor Dashboard - Received WebSocket message:', message);
+      // console.log('📨 Donor Dashboard - Received WebSocket message:', message);
       if (
         message.type === 'CAMPAIGN_CREATED' ||
         message.type === 'CAMPAIGN_UPDATED' ||
         message.type === 'CAMPAIGN_DELETED'
       ) {
-        console.log('🔄 Actualizando campañas en el dashboard del donante');
+        // console.log('🔄 Actualizando campañas en el dashboard del donante');
         fetchAllCampaigns();
       }
     });
@@ -136,11 +136,11 @@ const DashboardBloodDonorPage = () => {
   useEffect(() => {
     if (!user?.id || !isConnected) return;
 
-    console.log(' Suscribiéndose a contador de donantes');
+    // console.log(' Suscribiéndose a contador de donantes');
 
     // 1. Subscribe
     const unsubscribe = subscribe('/topic/total-bloodDonors', (message: any) => {
-      console.log('Total de donantes recibido:', message);
+      // console.log('Total de donantes recibido:', message);
       setTotalDonors(Number(message));
     });
 
