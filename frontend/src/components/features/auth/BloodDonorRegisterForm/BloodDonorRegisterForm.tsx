@@ -146,7 +146,7 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
 
         authService.registerBloodDonor(formData)
             .then((response) => {
-                console.log("Registro exitoso:", response.data);
+                // console.log("Registro exitoso:", response.data);
                 onSuccess?.(t('auth.register.bloodDonor.success'));
                 resetForm();
             })

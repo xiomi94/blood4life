@@ -12,7 +12,7 @@ interface UpcomingAppointmentsProps {
 
 export const UpcomingAppointments = ({ appointments, campaigns, onDelete, userBloodType }: UpcomingAppointmentsProps) => {
   // Debug: Log appointments to see the data
-  console.log('📅 Upcoming Appointments Data:', appointments);
+  // console.log('📅 Upcoming Appointments Data:', appointments);
 
   // State for confirmation dialog
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -63,7 +63,7 @@ export const UpcomingAppointments = ({ appointments, campaigns, onDelete, userBl
             </div>
           ) : (
             appointments.map(apt => {
-              console.log(`Cita #${apt.id} - hourAppointment:`, apt.hourAppointment);
+              // console.log(`Cita #${apt.id} - hourAppointment:`, apt.hourAppointment);
               const { hospitalName, location } = getCampaignDetails(apt.campaignId);
               const formattedDate = new Date(apt.dateAppointment).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
 

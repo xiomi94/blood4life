@@ -90,7 +90,7 @@ export const CampaignProgressChart = ({
         }
       };
 
-      console.log('Sending appointment data:', appointmentData);
+      // console.log('Sending appointment data:', appointmentData);
 
       await appointmentService.createAppointment(appointmentData);
 
