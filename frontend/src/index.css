@@ -109,59 +109,131 @@ input[type="number"]::-webkit-outer-spin-button {
 
 @layer components {
     .text-display {
-        font-size: 3.5rem;
+        font-size: 2rem;
         line-height: 1.1;
         font-family: var(--font-poppins);
         font-weight: 700;
     }
 
+    @media (min-width: 640px) {
+        .text-display {
+            font-size: 2.75rem;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .text-display {
+            font-size: 3.5rem;
+        }
+    }
+
     .text-h1 {
-        font-size: 2.5rem;
+        font-size: 1.75rem;
         line-height: 1.2;
         font-family: var(--font-poppins);
         font-weight: 700;
     }
 
+    @media (min-width: 640px) {
+        .text-h1 {
+            font-size: 2rem;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .text-h1 {
+            font-size: 2.5rem;
+        }
+    }
+
     .text-h2 {
-        font-size: 2rem;
+        font-size: 1.5rem;
         line-height: 1.3;
         font-family: var(--font-poppins);
         font-weight: 600;
     }
 
+    @media (min-width: 640px) {
+        .text-h2 {
+            font-size: 1.75rem;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .text-h2 {
+            font-size: 2rem;
+        }
+    }
+
     .text-h3 {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         line-height: 1.4;
         font-family: var(--font-poppins);
         font-weight: 600;
     }
 
+    @media (min-width: 640px) {
+        .text-h3 {
+            font-size: 1.375rem;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .text-h3 {
+            font-size: 1.5rem;
+        }
+    }
+
     .text-body {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        font-family: var(--font-roboto);
+        font-weight: 400;
+    }
+
+    @media (min-width: 1024px) {
+        .text-body {
+            font-size: 1rem;
+        }
+    }
+
+    .text-body-lg {
         font-size: 1rem;
         line-height: 1.6;
         font-family: var(--font-roboto);
         font-weight: 400;
     }
 
-    .text-body-lg {
-        font-size: 1.125rem;
-        line-height: 1.6;
-        font-family: var(--font-roboto);
-        font-weight: 400;
+    @media (min-width: 1024px) {
+        .text-body-lg {
+            font-size: 1.125rem;
+        }
     }
 
     .text-body-sm {
-        font-size: 0.875rem;
+        font-size: 0.8125rem;
         line-height: 1.5;
         font-family: var(--font-roboto);
         font-weight: 400;
     }
 
+    @media (min-width: 1024px) {
+        .text-body-sm {
+            font-size: 0.875rem;
+        }
+    }
+
     .text-caption {
-        font-size: 0.75rem;
+        font-size: 0.6875rem;
         line-height: 1.4;
         font-family: var(--font-roboto);
         font-weight: 400;
+    }
+
+    @media (min-width: 1024px) {
+        .text-caption {
+            font-size: 0.75rem;
+        }
     }
 }
 

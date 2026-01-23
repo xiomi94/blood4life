@@ -295,7 +295,7 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
     return (
         <section className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 w-full sm:w-auto">
                     {selectedDate ? (
                         <>
                             <h2 className="text-xl font-bold text-gray-800 dark:text-white">{t('dashboard.stats.selectedCampaigns')}</h2>
@@ -311,12 +311,12 @@ const StatsChartsSection: React.FC<StatsChartsSectionProps> = ({
                             id="chartType"
                             value={selectedChart}
                             onChange={(e) => handleChartChange(e.target.value as ChartType)}
-                            className="appearance-none pr-8 pl-0 py-1 bg-transparent text-xl font-bold text-gray-800 dark:text-white dark:bg-gray-800 border-none focus:ring-0 focus:outline-none cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22%234b5563%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:24px_24px] bg-[right_-4px_center] bg-no-repeat"
+                            className="appearance-none pr-8 pl-0 py-1 bg-transparent text-lg sm:text-xl font-bold text-gray-800 dark:text-white dark:bg-gray-800 border-none focus:ring-0 focus:outline-none cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20fill%3D%22none%22%20stroke%3D%22%234b5563%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%209l6%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[length:24px_24px] bg-[right_-4px_center] bg-no-repeat w-full max-w-full whitespace-normal h-auto"
                         >
-                            <option value="completedCampaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.completedCampaigns')}</option>
-                            <option value="bloodType" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.bloodTypeOption')}</option>
-                            <option value="myCampaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.myCampaigns')}</option>
-                            <option value="allCampaigns" className="text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800">{t('dashboard.stats.allCampaigns')}</option>
+                            <option value="completedCampaigns" className="text-base sm:text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800 text-wrap">{t('dashboard.stats.completedCampaigns')}</option>
+                            <option value="bloodType" className="text-base sm:text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800 text-wrap">{t('dashboard.stats.bloodTypeOption')}</option>
+                            <option value="myCampaigns" className="text-base sm:text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800 text-wrap">{t('dashboard.stats.myCampaigns')}</option>
+                            <option value="allCampaigns" className="text-base sm:text-lg font-semibold text-gray-700 dark:text-gray-200 dark:bg-gray-800 text-wrap">{t('dashboard.stats.allCampaigns')}</option>
                         </select>
                     )}
                 </div>

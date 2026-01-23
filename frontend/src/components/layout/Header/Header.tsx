@@ -41,15 +41,15 @@ function Header() {
 
   return (
     <div
-      className={`flex flex-row w-full items-center justify-end ${isAuthenticated ? 'px-8 py-4 relative' : 'px-8 py-4'}`}
+      className={`flex flex-row w-full items-center justify-end ${isAuthenticated ? 'px-4 sm:px-6 lg:px-8 py-3 sm:py-4 relative' : 'px-4 sm:px-6 lg:px-8 py-3 sm:py-4'}`}
     >
       {isAuthenticated ? (
         <>
           <div className="flex flex-row w-full justify-between items-center">
             <Link to="/index" aria-label="Ir a la página principal">
-              <img src={Logo} alt="Blood4Life - Plataforma de donación de sangre" className="h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
+              <img src={Logo} alt="Blood4Life - Plataforma de donación de sangre" className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 rounded-full aspect-square object-contain p-1 cursor-pointer hover:opacity-80 transition-opacity" />
             </Link>
-            <div className="flex flex-row w-full items-center justify-end gap-4 h-14">
+            <div className="flex flex-row w-full items-center justify-end gap-2 sm:gap-3 md:gap-4 h-10 sm:h-12 md:h-14">
               {/* Theme and Language Controls */}
               <ThemeToggle />
               <LanguageSwitcher />
@@ -58,7 +58,7 @@ function Header() {
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="w-10 h-10 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 overflow-hidden relative"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 overflow-hidden relative"
                   aria-label={t('header.userMenu')}
                   aria-haspopup="true"
                   aria-expanded={isDropdownOpen}
@@ -117,9 +117,9 @@ function Header() {
           {(location.pathname === '/register' || location.pathname === '/registerbloodDonor' || location.pathname === '/registerhospital') ? (
             <div className="flex flex-row w-full justify-between items-center">
               <Link to="/index">
-                <img src={Logo} alt="Logo" className="h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
+                <img src={Logo} alt="Logo" className="h-10 sm:h-12 md:h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity" />
               </Link>
-              <div className="flex items-center gap-4 h-14">
+              <div className="flex items-center gap-2 sm:gap-3 md:gap-4 h-10 sm:h-12 md:h-14">
                 <Button to="/index">{t('header.home')}</Button>
                 <ThemeToggle />
                 <LanguageSwitcher />
@@ -128,19 +128,29 @@ function Header() {
           ) : (
             <>
               {(location.pathname === '/index' || location.pathname === '/') ? (
-                <div className="flex items-center gap-4 h-14">
-                  <Button to="/login">
-                    {t('header.login')}
+                <div className="flex items-center gap-2 sm:gap-3 md:gap-4 h-10 sm:h-12 md:h-14">
+                  <Button to="/login" className="!px-2 !py-2 !text-xs sm:!px-4 sm:!py-2.5 sm:!text-sm whitespace-nowrap" aria-label={t('header.login')}>
+                    <span className="sm:hidden">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                      </svg>
+                    </span>
+                    <span className="hidden sm:inline">{t('header.login')}</span>
                   </Button>
-                  <Button to="/register">
-                    {t('header.register')}
+                  <Button to="/register" className="!px-2 !py-2 !text-xs sm:!px-4 sm:!py-2.5 sm:!text-sm whitespace-nowrap" aria-label={t('header.register')}>
+                    <span className="sm:hidden">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
+                      </svg>
+                    </span>
+                    <span className="hidden sm:inline">{t('header.register')}</span>
                   </Button>
                   <ThemeToggle />
                   <LanguageSwitcher />
                 </div>
               ) : (
                 // Default fallback for other public pages (like Login)
-                <div className="flex items-center gap-4 h-14">
+                <div className="flex items-center gap-2 sm:gap-3 md:gap-4 h-10 sm:h-12 md:h-14">
                   <Button to="/index">
                     {t('header.home')}
                   </Button>
