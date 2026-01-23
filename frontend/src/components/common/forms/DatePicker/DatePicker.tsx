@@ -120,7 +120,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
         // Empty cells for days before the 1st
         for (let i = 0; i < startDay; i++) {
-            days.push(<div key={`empty-${i}`} className="w-7 h-7 sm:w-8 sm:h-8"></div>);
+            days.push(<div key={`empty-${i}`} className="w-8 h-8"></div>);
         }
 
         // Days
@@ -143,7 +143,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                     disabled={isDisabled}
                     type="button"
                     className={cn(
-                        "w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full text-xs sm:text-sm transition-colors relative",
+                        "w-8 h-8 flex items-center justify-center rounded-full text-sm transition-colors relative",
                         isSelected
                             ? "bg-red-600 text-white hover:bg-red-700 font-medium"
                             : isCurrentDay
@@ -212,23 +212,23 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 {/* Calendar Dropdown */}
                 {isOpen && (
                     <div
-                        className="absolute z-50 p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 w-full sm:w-[320px] max-w-[320px] animate-in fade-in zoom-in-95 duration-200"
+                        className="absolute z-50 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 w-[320px] animate-in fade-in zoom-in-95 duration-200"
                         style={{
                             top: 'calc(100% + 4px)',
                             left: '0',
                         }}
                     >
                         {/* Header: Navigation */}
-                        <div className="flex items-center justify-between mb-3 sm:mb-4">
+                        <div className="flex items-center justify-between mb-4">
                             <button
                                 onClick={handlePrevClick}
                                 type="button"
                                 className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full text-gray-600 dark:text-gray-300 transition-colors"
                             >
-                                <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+                                <ChevronLeft className="w-5 h-5" />
                             </button>
 
-                            <div className="flex gap-1 sm:gap-2 text-xs sm:text-sm font-semibold text-gray-800 dark:text-gray-200">
+                            <div className="flex gap-2 text-sm font-semibold text-gray-800 dark:text-gray-200">
                                 {calendarView === 'days' && (
                                     <>
                                         <button onClick={() => setCalendarView('months')} className="hover:text-red-600 transition-colors">
@@ -256,34 +256,34 @@ const DatePicker: React.FC<DatePickerProps> = ({
                                 type="button"
                                 className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full text-gray-600 dark:text-gray-300 transition-colors"
                             >
-                                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                                <ChevronRight className="w-5 h-5" />
                             </button>
                         </div>
 
                         {/* Views */}
                         {calendarView === 'days' && (
                             <>
-                                <div className="grid grid-cols-7 mb-1 sm:mb-2">
+                                <div className="grid grid-cols-7 mb-2">
                                     {DAYS.map(day => (
-                                        <div key={day} className="text-center text-[10px] sm:text-xs font-medium text-gray-400 dark:text-gray-500 py-0.5 sm:py-1">
+                                        <div key={day} className="text-center text-xs font-medium text-gray-400 dark:text-gray-500 py-1">
                                             {day}
                                         </div>
                                     ))}
                                 </div>
-                                <div className="grid grid-cols-7 gap-0.5 sm:gap-1 place-items-center">
+                                <div className="grid grid-cols-7 gap-1 place-items-center">
                                     {renderCalendarDays()}
                                 </div>
                             </>
                         )}
 
                         {calendarView === 'months' && (
-                            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+                            <div className="grid grid-cols-3 gap-2">
                                 {MONTHS.map((month, index) => (
                                     <button
                                         key={month}
                                         onClick={() => handleMonthSelect(index)}
                                         className={cn(
-                                            "p-1.5 sm:p-2 rounded-lg text-xs sm:text-sm font-medium transition-colors",
+                                            "p-2 rounded-lg text-sm font-medium transition-colors",
                                             viewDate.getMonth() === index
                                                 ? "bg-red-600 text-white"
                                                 : "bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600"
@@ -296,7 +296,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                         )}
 
                         {calendarView === 'years' && (
-                            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+                            <div className="grid grid-cols-3 gap-2">
                                 {Array.from({ length: 12 }, (_, i) => {
                                     const startDecade = Math.floor(viewDate.getFullYear() / 10) * 10;
                                     const year = startDecade - 1 + i;
@@ -308,7 +308,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                                             key={year}
                                             onClick={() => handleYearSelect(year)}
                                             className={cn(
-                                                "p-1.5 sm:p-2 rounded-lg text-xs sm:text-sm font-medium transition-colors",
+                                                "p-2 rounded-lg text-sm font-medium transition-colors",
                                                 isCurrentYear
                                                     ? "bg-red-600 text-white"
                                                     : "bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600",
@@ -323,7 +323,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                         )}
 
                         {/* Footer: Today Button */}
-                        <div className="mt-3 sm:mt-4 pt-2 sm:pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-center">
+                        <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-700 flex justify-center">
                             <button
                                 type="button"
                                 onClick={() => {
@@ -332,7 +332,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                                     setCalendarView('days');
                                     handleDateSelect(today.getDate());
                                 }}
-                                className="text-[11px] sm:text-xs font-medium text-red-600 hover:text-red-700 dark:text-red-400 transition-colors"
+                                className="text-xs font-medium text-red-600 hover:text-red-700 dark:text-red-400 transition-colors"
                             >
                                 Seleccionar Hoy
                             </button>
