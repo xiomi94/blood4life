@@ -14,7 +14,7 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({ onCreateCampaign })
     const [isNewsModalOpen, setIsNewsModalOpen] = useState(false);
 
     return (
-        <aside className="w-80 border-r border-gray-300 dark:border-gray-700 dark:bg-gray-900 flex flex-col py-4 min-h-full relative">
+        <aside className="w-80 border-r border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-900 flex flex-col py-4 h-screen relative">
             {/* Action Button */}
             <div className="px-4 mb-6">
                 <button

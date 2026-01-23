@@ -30,6 +30,12 @@ export const registerPushNotifications = async () => {
         console.log('User is subscribed to push notifications');
 
     } catch (error) {
+        // Handle permission denied gracefully (user blocked notifications)
+        if (error instanceof Error && error.name === 'NotAllowedError') {
+            console.warn('Push notifications permission denied. User can enable them in browser settings.');
+            return;
+        }
+        // Only log other errors as actual errors
         console.error('Failed to register/subscribe to push notifications:', error);
     }
 };
