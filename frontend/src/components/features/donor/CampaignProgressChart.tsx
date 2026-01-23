@@ -112,12 +112,12 @@ export const CampaignProgressChart = ({
   const displayedCampaigns = getFilteredCampaigns();
 
   return (
-    <section className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3">
+    <section className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-2 sm:p-3">
       {/* Title and Search bar in same row */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4 mb-2 sm:mb-4">
         {selectedDate ? (
           <>
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white">Campañas seleccionadas</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Campañas seleccionadas</h2>
             <button
               onClick={onClearFilter}
               className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg transition-colors"
@@ -127,15 +127,15 @@ export const CampaignProgressChart = ({
           </>
         ) : (
           <>
-            <h2 className="text-xl font-bold text-gray-800 dark:text-white">Progreso de Campañas</h2>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white">Mis campañas</h2>
             {/* Search bar */}
-            <div className="relative w-full sm:w-64">
+            <div className="relative w-full sm:w-auto sm:min-w-[240px]">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Buscar por título o ubicación..."
-                className="w-full pl-10 pr-4 py-2 text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                className="w-full pl-8 sm:pl-10 pr-8 sm:pr-10 py-1.5 sm:py-2 text-xs sm:text-sm border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
               />
               <svg
                 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500"
@@ -182,7 +182,7 @@ export const CampaignProgressChart = ({
       )}
 
       <div className="relative h-[400px] w-full">
-        <div className="h-full overflow-y-auto pr-2 pt-2 pb-2 space-y-3 custom-scrollbar"
+        <div className="h-full overflow-y-auto pr-1 sm:pr-2 pt-1 sm:pt-2 pb-1 sm:pb-2 space-y-2 sm:space-y-3 custom-scrollbar"
           style={{
             scrollbarWidth: 'thin',
             scrollbarColor: '#cbd5e1 transparent'
@@ -203,10 +203,10 @@ export const CampaignProgressChart = ({
                   : 0;
 
                 return (
-                  <div key={campaign.id} className="p-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:shadow-md transition-shadow">
+                  <div key={campaign.id} className="p-2 sm:p-4 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:shadow-md transition-shadow">
                     <div className="flex justify-between items-start mb-2">
                       <div className="flex flex-col gap-1 flex-1">
-                        <h3 className="text-lg font-bold text-gray-800 dark:text-white">{campaign.name}</h3>
+                        <h3 className="text-base sm:text-lg font-bold text-gray-800 dark:text-white">{campaign.name}</h3>
                         <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2">{campaign.description}</p>
                       </div>
                     </div>
@@ -300,11 +300,12 @@ export const CampaignProgressChart = ({
                         return (
                           <button
                             onClick={() => setSelectedCampaign(campaign)}
-                            className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2">
+                            className="w-full px-3 sm:px-4 py-1.5 sm:py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm sm:text-base font-medium rounded-lg transition-colors flex items-center justify-center gap-1 sm:gap-2">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                             </svg>
-                            Inscribirse en esta campaña
+                            <span className="hidden sm:inline">Inscribirse en esta campaña</span>
+                            <span className="sm:hidden">Inscribirse</span>
                           </button>
                         );
                       })()}

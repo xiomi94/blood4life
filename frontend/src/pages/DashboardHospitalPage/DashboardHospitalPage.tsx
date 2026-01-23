@@ -111,20 +111,20 @@ const DashboardHospitalPage: React.FC = () => {
           }
         `}
       </style>
-      <div className="flex flex-row flex-grow w-full bg-gray-100 dark:bg-gray-900">
+      <div className="flex flex-col lg:flex-row flex-grow w-full bg-gray-100 dark:bg-gray-900">
         {/* Sidebar: Menú de navegación */}
         <DashboardSidebar onCreateCampaign={() => setShowCreateCampaignModal(true)} />
 
         {/* Main Content: Aquí va todo el contenido principal */}
         <main className="grid w-full">
-          <div className="p-8">
+          <div className="px-2 pt-0 pb-2 sm:p-3 md:p-4 lg:p-6">
             {/* Appointments Section */}
             <AppointmentsSection appointments={todayAppointments} />
 
             {/* Main Grid: Charts + Sidebar */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
               {/* Left Column: Charts Section */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="lg:col-span-2 space-y-4 sm:space-y-6">
                 {/* Stats Charts Section */}
                 <StatsChartsSection
                   stats={stats}
@@ -142,21 +142,21 @@ const DashboardHospitalPage: React.FC = () => {
               </div>
 
               {/* Right Column: Calendar */}
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <CalendarSection
                   campaigns={allCampaigns}
                   onDayClick={handleDayClick}
                 />
 
                 {/* Stats Cards */}
-                <section className="grid grid-cols-2 gap-4">
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">{t('dashboard.stats.appointmentsToday')}</p>
-                    <p className="text-4xl font-bold text-gray-800 dark:text-white">{todayAppointments.length}</p>
+                <section className="grid grid-cols-2 gap-3 sm:gap-4">
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3 flex flex-col h-full">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2 min-h-[2rem]">{t('dashboard.stats.appointmentsToday')}</p>
+                    <p className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white">{todayAppointments.length}</p>
                   </div>
-                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3">
-                    <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">{t('dashboard.stats.donationsThisMonth')}</p>
-                    <p className="text-4xl font-bold text-gray-800 dark:text-white">{monthlyDonations}</p>
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-3 flex flex-col h-full">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2 min-h-[2rem]">{t('dashboard.stats.donationsThisMonth')}</p>
+                    <p className="text-3xl sm:text-4xl font-bold text-gray-800 dark:text-white">{monthlyDonations}</p>
                   </div>
                 </section>
               </div>
