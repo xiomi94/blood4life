@@ -273,7 +273,7 @@ const DashboardBloodDonorPage = () => {
   const { canSchedule, nextDate } = canScheduleNewAppointment();
 
   return (
-    <div className="flex flex-col lg:flex-row flex-grow w-full bg-gray-100 dark:bg-gray-900">
+    <div className="flex flex-row flex-grow w-full bg-gray-100 dark:bg-gray-900">
       <DonorSidebar
         onNewDonationClick={() => setIsDonationModalOpen(true)}
         canDonate={canSchedule}
@@ -290,7 +290,7 @@ const DashboardBloodDonorPage = () => {
       />
 
       <main className="grid w-full">
-        <div className="px-2 pt-0 pb-2 sm:p-3 md:p-4 lg:p-6">
+        <div className="p-8">
           <UpcomingAppointments
             appointments={upcomingAppointments}
             campaigns={allCampaigns}
@@ -298,8 +298,8 @@ const DashboardBloodDonorPage = () => {
             userBloodType={user?.bloodType?.type}
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
-            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
               <CampaignProgressChart
                 campaigns={allCampaigns}
                 selectedDate={selectedDate}
@@ -312,7 +312,7 @@ const DashboardBloodDonorPage = () => {
               <DonationHistory donations={completedDonations} />
             </div>
 
-            <div className="space-y-4 sm:space-y-6">
+            <div className="space-y-6">
               <Calendar
                 allCampaigns={allCampaigns}
                 onDayClick={handleDayClick}

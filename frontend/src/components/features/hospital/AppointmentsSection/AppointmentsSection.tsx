@@ -46,8 +46,8 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ appointments 
     };
 
     return (
-        <section className="mb-2 sm:mb-4 relative -mt-[380px] sm:mt-0">
-            <div className="flex justify-between items-center mb-2 sm:mb-4">
+        <section className="mb-4 relative">
+            <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
                     {t('dashboard.appointments.title')}
                 </h2>
@@ -62,7 +62,7 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ appointments 
 
             {/* Contenedor limitado en ancho */}
             <div className="w-full overflow-hidden">
-                <div className="flex flex-row gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pr-4 pb-4 custom-scrollbar justify-center">
+                <div className="flex flex-row gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pt-4 pr-4 pb-4 custom-scrollbar">
                     {appointments.length === 0 ? (
                         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 min-w-[280px]">
                             <p className="text-sm text-gray-500 dark:text-gray-400 text-center">

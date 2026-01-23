@@ -198,9 +198,9 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
 
             <form
                 onSubmit={handleSubmit}
-                className="flex flex-col w-full max-w-4xl bg-white dark:bg-gray-800 rounded-xl md:rounded-2xl shadow-sm p-3 sm:p-4 md:p-6 lg:p-8"
+                className="flex flex-col w-full max-w-4xl bg-white dark:bg-gray-800 rounded-xl md:rounded-2xl shadow-sm p-4 sm:p-6 md:p-8"
             >
-                <div className="grid grid-cols-1 gap-3 sm:gap-4 md:gap-6 w-full">
+                <div className="grid grid-cols-1 gap-4 md:gap-6 w-full">
                     <FormField
                         type="text"
                         id="dni"
@@ -329,7 +329,7 @@ const BloodDonorRegisterForm: React.FC<BloodDonorRegisterFormProps> = ({ onSucce
                     </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 mt-6 sm:mt-8 w-full">
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-8 w-full">
                     <Button
                         type="submit"
                         disabled={loading}

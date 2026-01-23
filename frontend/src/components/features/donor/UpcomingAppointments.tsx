@@ -50,13 +50,13 @@ export const UpcomingAppointments = ({ appointments, campaigns, onDelete, userBl
   };
 
   return (
-    <section className="mb-2 sm:mb-4 -mt-[380px] sm:mt-0">
-      <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-2 sm:mb-4">
+    <section className="mb-8">
+      <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
         Mis próximas citas de donación
       </h2>
 
       <div className="w-full overflow-hidden">
-        <div className="flex flex-row gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 justify-center">
+        <div className="flex flex-row gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4">
           {appointments.length === 0 ? (
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 min-w-[280px]">
               <p className="text-sm text-gray-500 dark:text-gray-400 text-center">No tienes citas programadas</p>
