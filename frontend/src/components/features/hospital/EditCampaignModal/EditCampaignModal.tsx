@@ -22,7 +22,9 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
         endDate: '',
         location: '',
         requiredDonorQuantity: 1,
-        requiredBloodTypes: []
+        requiredBloodTypes: [],
+        startTime: '',
+        endTime: ''
     });
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -47,7 +49,9 @@ const EditCampaignModal: React.FC<EditCampaignModalProps> = ({ isOpen, campaign,
                 endDate: campaign.endDate || '',
                 location: campaign.location || '',
                 requiredDonorQuantity: campaign.requiredDonorQuantity || 1,
-                requiredBloodTypes: cleanedBloodTypes
+                requiredBloodTypes: cleanedBloodTypes,
+                startTime: campaign.startTime || '',
+                endTime: campaign.endTime || ''
             });
 
             // Clear any previous errors
